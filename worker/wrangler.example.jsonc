@@ -1,0 +1,16 @@
+{
+  // ПРИКЛАД. Не деплоїти без погодження власника. Створення bucket/Worker — окремий крок (див. CONNECT-PLAN.md).
+  "name": "maisternia-feeds",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-01",
+  "observability": { "enabled": true },
+  "r2_buckets": [
+    { "binding": "FEEDS_BUCKET", "bucket_name": "maisternia-feeds" }
+  ],
+  "vars": {
+    "FEEDS": "main"
+  }
+  // Секрет задається лише командою, не у файлі:
+  //   npx wrangler secret put FEED_ACCESS_KEY
+  // Розкладу (crons) немає: Worker лише віддає готові файли.
+}

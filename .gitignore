@@ -1,0 +1,14 @@
+# Секрети — ніколи не комітити
+.env
+.env.*
+!.env.example
+*.pem
+*service-account*.json
+
+# Локальні дані прототипу (сховище, синтетика, звіти запусків)
+.data/
+tmp/
+*.log
+
+node_modules/
+.DS_Store

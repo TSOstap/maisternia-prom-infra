@@ -1,0 +1,64 @@
+# HANDOFF — точка продовження (Claude → Codex або інший агент)
+
+Оновлено: 21.10.2026. Цей файл — головний persistent-стан проєкту. `PROJECT_STATE.md` лише посилається сюди.
+
+## 1. Де що
+
+| Що | Шлях |
+|---|---|
+| Цей проєкт (Claude) | `E:\Programe\Orca\workspaces\Інструменти пром\claude-infra` — окремий git-репозиторій, гілка `main`, **без remote** |
+| Проєкт Codex (лише читати) | `E:\Programe\Orca\workspaces\Інструменти пром\codex`, гілка `orca/codex` |
+| Імпорт 92 (Codex, не втручатися) | `codex/docs/IMPORT92-HANDOFF.uk.md`, `codex/outputs/new-products-20261020/import-preflight/capacity-review/dual-feed/README.uk.md` |
+| Еталон LIVE Apps Script | `reference/apps-script-live/*.gs` (SHA — `reference/README.md`) |
+| Worktree Claude з контентом (інша задача) | `…\claude`, гілка `orca/claude` — там незакомічені файли контентних партій; **цей проєкт їх не чіпає** |
+
+## 2. Межі повноважень (діють, доки власник не скасує)
+
+ЗАБОРОНЕНО: змінювати робочу Google-таблицю, Apps Script, mtUpdate і тригери, поточні YML-посилання, Prom; публікувати в GitHub без дозволу; створювати хмарні ресурси без погодження; змінювати файли Codex; копіювати секрети в репозиторій. Тести — лише на синтетиці або на локальних знімках поза репозиторієм. Реальні дані не комітити.
+
+## 3. Стан
+
+- **Stage:** прототип завершено (етапи 1–6 брифу). Очікується погодження наступного етапу тестування.
+- **Тести:** `npm test` → 35/35 PASS. `node tools/snapshot-parity.mjs --inspect="../codex/outputs/full-catalog-20261016/Майстерня-Маркет-каталог.xlsx.inspect.ndjson" --yml="../codex/apps-script/tools-catalog/Yml.gs"` → exit 0 (5029/5029 печаток, YML ідентичний LIVE).
+- **Failing tests:** немає.
+- **Не реалізовано свідомо:** адаптери Google Sheets API і R2 (не можна перевірити без доступів), розклад cron (закоментований), SEO.
+
+## 4. Перевірені факти та припущення
+
+**Факти:**
+
+- Бізнес-логіка LIVE (BUSINESS-RULES.md). Ядро нової системи дає ідентичний результат: це доведено запуском LIVE-коду у VM.
+- На реальному знімку 16.10 алгоритм печаток збігається з MTY.
+- Ліміти безплатних сервісів — COSTS.md, кожен із джерелом і статусом.
+
+**Припущення, які треба перевірити:**
+
+- тривалість job на GitHub runner — 3–5 хв (оцінка без вимірювання);
+- реальне стиснення gzip ≈ 0,16–0,2;
+- Prom приймає `.xml.gz` за посиланням нашого Worker;
+- рекомендація Prom 180 МБ застосовується до розпакованого чи до стиснутого розміру — невідомо;
+- Sheets API `UNFORMATTED_VALUE` дає ті самі печатки, що `getValues()`;
+- R2 вимагає картку (за даними спільноти).
+
+## 5. Як продовжити (інструкції для Codex)
+
+1. `cd claude-infra && npm test` — має бути 35/35. Залежностей ставити не треба, потрібен Node ≥22.
+2. Перед змінами прочитати ARCHITECTURE.md (розділ 4 «Ключові рішення») і BUSINESS-RULES.md. **Не змінювати** `src/core/{pricing,supplier-feed,sync-plan,seal,yml}.mjs` без тесту паритету: будь-яка зміна бізнес-логіки — лише з погодження власника.
+3. Наступні технічні задачі, кожна після відповідного погодження з CONNECT-PLAN.md:
+   - **C2-A:** конвертер xlsx → знімок (формат `*.inspect.ndjson` або `NdjsonCatalogSource`), запуск `tools/snapshot-parity.mjs` з `--yml=reference/apps-script-live/Yml.LIVE-CURRENT.gs`. Очікувано contentSha = `e2871d9e…`;
+   - **C2-B / C3:** `GoogleSheetsCatalogSource` і `R2ObjectStore` з тим самим контрактом. Проганяти `test/pipeline.test.mjs` проти них як contract tests;
+   - **C4:** розкоментувати cron у `.github/workflows/update.yml` і перевести його на реальні джерела через Secrets.
+4. Інтеграція з 92: після імпорту Codex додати фіди `new92` (`sheets: ["Нові товари"], filterByManifest: true`) і, пізніше, `all` (5121). Паспорти генеруються командою `node src/cli.mjs approve` або з погоджених Codex idsSha/contentSha/groupsSha + списку ID. Не читати лише main: інакше загубляться 92.
+5. Після будь-якої зміни: `npm test`, оновити PROGRESS.md / TESTS.md і цей файл.
+
+## 6. Наступний крок (одна ручна дія власника)
+
+**Погодити етап C2-A.** Відкрити робочу таблицю → Файл → Завантажити → Microsoft Excel (.xlsx) → зберегти в `E:\Downloads`. Дія нічого не змінює в таблиці. Після цього Claude звірить печатки й YML зі свіжим станом LIVE 21.10 — повністю локально.
+
+Альтернатива: дозвіл створити приватний репозиторій GitHub (C1), щоб виміряти хвилини на справжньому runner.
+
+## 7. Важливі хеші
+
+- LIVE Code `2007bdd1…41fdf`, Yml `94e939a6…e8463a`, Management `f78fce84…3f8b` (= BUILD.json Codex)
+- LIVE MTY: count 5029; idsSha `2720329d…2a32`; contentSha `e2871d9e…56c2`; groupsSha `1b578d5f…1b38`
+- Архів 16.10: contentSha `0d95ba85…a9e5` (= tools-catalog/Yml.gs); YML 47 808 343 Б

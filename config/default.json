@@ -1,0 +1,49 @@
+{
+  "_comment": "Значення pricing/supplier/yml.maximumSyncAgeHours скопійовані з чинного Apps Script (reference/apps-script-live). Зміна = зміна бізнес-логіки, лише з погодження власника.",
+  "pricing": {
+    "extra": 5,
+    "markup": 0.25,
+    "discount": 20,
+    "rounding": 0.01
+  },
+  "supplier": {
+    "allowedUrlPattern": "^https://market-tools\\.com\\.ua/",
+    "operationalParams": {
+      "exclude_fields": "description,picture,param,keywords",
+      "html_description": "0",
+      "extra_fields": "0"
+    },
+    "maximumChars": 45000000,
+    "minimumOffers": 4157,
+    "dropRatio": 0.8,
+    "maximumAgeHours": 48,
+    "maximumFutureHours": 2,
+    "timeZone": "Europe/Kyiv"
+  },
+  "catalog": {
+    "syncSheets": ["Основний каталог", "Нові товари"],
+    "requiredNonEmptySheet": "Основний каталог",
+    "knownSheets": ["Основний каталог", "Нові товари", "Відкладені товари"]
+  },
+  "yml": {
+    "maximumSyncAgeHours": 12,
+    "shopName": "Майстерня Маркет",
+    "company": "Майстерня Маркет",
+    "timeZone": "Europe/Kyiv"
+  },
+  "feeds": [
+    {
+      "name": "main",
+      "sheets": ["Основний каталог"],
+      "manifest": "approved/main.json",
+      "maximumBytes": 50000000
+    }
+  ],
+  "publish": {
+    "retainVersions": 7,
+    "readback": "full"
+  },
+  "guards": {
+    "maxRemovedWithoutApproval": 0
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "maisternia-prom-infra",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Прототип масштабованої інфраструктури «Майстерня Маркет»: оновлення цін/наявності, YML, публікація. Shadow-режим, без доступу до робочого магазину.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\"",
+    "test:scale": "node tools/scale-test.mjs",
+    "synth": "node tools/synth.mjs",
+    "cost": "node tools/cost-model.mjs",
+    "cli": "node src/cli.mjs"
+  }
+}

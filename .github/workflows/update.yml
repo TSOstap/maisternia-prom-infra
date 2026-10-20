@@ -1,0 +1,35 @@
+# Цикл оновлення. ЗАРАЗ: лише ручний запуск у режимі synthetic (без доступу до магазину) —
+# щоб виміряти фактичний час і пам'ять на справжньому runner (COSTS.md).
+# Розклад і реальні джерела вмикаються ОКРЕМИМ погодженням власника (CONNECT-PLAN.md, етапи C3–C5).
+name: update
+on:
+  workflow_dispatch:
+    inputs:
+      products:
+        description: "Кількість синтетичних товарів"
+        default: "5121"
+  # schedule:
+  #   - cron: "17 */4 * * *"   # не на початку години: GitHub попереджає про затримки о :00
+permissions:
+  contents: read
+concurrency:
+  group: update            # аналог ScriptLock: два цикли одночасно не виконуються
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15    # жорстка межа витрати хвилин на один запуск
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Синтетичні дані
+        run: node tools/synth.mjs --products=${{ inputs.products }} --new=25 --out=.data/run
+      - name: Цикл оновлення (shadow, локальне сховище runner)
+        run: |
+          /usr/bin/time -v node src/cli.mjs update --store=.data/store --catalog=.data/run/catalog \
+            --supplier=.data/run/supplier.xml --manifest=.data/run/approved-main.json --max-bytes=2000000000 \
+            > .data/report.json 2> .data/time.txt || (cat .data/time.txt; exit 1)
+          grep -E "Elapsed|Maximum resident" .data/time.txt
+          node -e "const r=require('./.data/report.json');console.log(JSON.stringify({sync:r.sync.state,feeds:r.feeds,timingsMs:r.timingsMs}))"
