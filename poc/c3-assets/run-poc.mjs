@@ -1,5 +1,5 @@
 /** PoC C3 у Cloudflare (Workers Free, ЛИШЕ синтетика). Кожна фаза — окремий запуск: node poc/c3-assets/run-poc.mjs <фаза>
- *  Облікові дані: ~/.mm-feed-poc/cloudflare.env (CLOUDFLARE_ACCOUNT_ID=…, CLOUDFLARE_API_TOKEN=…) — поза репозиторієм.
+ *  Облікові дані: файл із MM_CF_ENV (або ~/.mm-feed-poc/cloudflare.env) (CLOUDFLARE_ACCOUNT_ID=…, CLOUDFLARE_API_TOKEN=…) — поза репозиторієм.
  *  Токен і ID акаунта лише передаються дочірньому wrangler / в заголовок GraphQL і вирізаються з будь-якого виводу.
  *  Стан (адреса workers.dev, ID версій) — ~/.mm-feed-poc/state.json, теж поза репозиторієм. */
 import { spawnSync } from "node:child_process";
@@ -15,7 +15,7 @@ const STATE = path.join(SECRET_DIR, "state.json");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 function creds() {
-  const file = path.join(SECRET_DIR, "cloudflare.env");
+  const file = process.env.MM_CF_ENV || path.join(SECRET_DIR, "cloudflare.env"); // шлях до файлу власника; вміст не виводиться
   if (!fs.existsSync(file)) throw new Error(`немає файлу облікових даних (${file}) — див. інструкцію власнику`);
   const env = {};
   for (const line of fs.readFileSync(file, "utf8").split(/\r?\n/)) {
