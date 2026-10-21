@@ -126,26 +126,26 @@ export class GoogleSheetsCatalogSource {
     return (meta.sheets || []).map((s) => ({ title: s.properties.title, rows: s.properties.gridProperties?.rowCount || 0, columns: s.properties.gridProperties?.columnCount || 0 }));
   }
 
-  /** Плани діапазонів → пакети batchGet (кілька малих аркушів в одному запиті). */
-  #plan(found) {
-    const ranges = [];
-    for (const s of found) {
-      const cols = Math.max(1, s.columns);
-      const step = Math.max(1, Math.floor(this.chunkCells / cols));
-      for (let from = 1; from <= Math.max(1, s.rows); from += step) {
-        const to = Math.min(Math.max(1, s.rows), from + step - 1);
-        ranges.push({ title: s.title, from, to, cells: (to - from + 1) * cols, a1: a1Range(s.title, from, to, cols) });
-      }
-    }
-    const batches = [];
-    let current = [];
-    let cells = 0;
-    for (const r of ranges) {
-      if (current.length && cells + r.cells > this.chunkCells) { batches.push(current); current = []; cells = 0; }
-      current.push(r); cells += r.cells;
-    }
-    if (current.length) batches.push(current);
-    return batches;
+  /** Один batchGet; значення кладуться на абсолютні позиції рядків. Повертає кількість отриманих рядків на діапазон. */
+  async #fetch(batch, byTitle) {
+    const params = batch.map((r) => ["ranges", r.a1]);
+    params.push(["valueRenderOption", "UNFORMATTED_VALUE"], ["dateTimeRenderOption", "FORMATTED_STRING"], ["majorDimension", "ROWS"]);
+    const res = await this.#get("/values:batchGet", params);
+    const vr = res.valueRanges || [];
+    if (vr.length !== batch.length) throw new Error("Sheets API: кількість діапазонів у відповіді не збігається із запитом");
+    return batch.map((r, i) => {
+      this.metrics.ranges++;
+      const rows = vr[i].values || [];
+      if (rows.length > r.to - r.from + 1) throw new Error("Sheets API: діапазон повернув більше рядків, ніж запитано");
+      // Абсолютні позиції: API обрізає порожні рядки в КІНЦІ діапазону — без цього зсунулися б наступні порції.
+      rows.forEach((row, k) => { byTitle[r.title][r.from - 1 + k] = row; });
+      return rows.length;
+    });
+  }
+
+  #range(s, from, to) {
+    const cols = Math.max(1, s.columns);
+    return { title: s.title, from, to, cells: (to - from + 1) * cols, a1: a1Range(s.title, from, to, cols) };
   }
 
   async load(sheetNames) {
@@ -154,19 +154,35 @@ export class GoogleSheetsCatalogSource {
     const wanted = new Set([...sheetNames, this.groupsSheet]);
     const found = meta.filter((s) => wanted.has(s.title));
     const byTitle = Object.fromEntries(found.map((s) => [s.title, []]));
-    for (const batch of this.#plan(found)) {
-      const params = batch.map((r) => ["ranges", r.a1]);
-      params.push(["valueRenderOption", "UNFORMATTED_VALUE"], ["dateTimeRenderOption", "FORMATTED_STRING"], ["majorDimension", "ROWS"]);
-      const res = await this.#get("/values:batchGet", params);
-      const vr = res.valueRanges || [];
-      if (vr.length !== batch.length) throw new Error("Sheets API: кількість діапазонів у відповіді не збігається із запитом");
-      batch.forEach((r, i) => {
-        this.metrics.ranges++;
-        const rows = vr[i].values || [];
-        if (rows.length > r.to - r.from + 1) throw new Error("Sheets API: діапазон повернув більше рядків, ніж запитано");
-        // Абсолютні позиції: API обрізає порожні рядки в КІНЦІ діапазону — без цього зсунулися б наступні порції.
-        rows.forEach((row, k) => { byTitle[r.title][r.from - 1 + k] = row; });
-      });
+    const rowsOf = (s) => Math.max(1, s.rows);
+    const fits = (s) => rowsOf(s) * Math.max(1, s.columns) <= this.chunkCells;
+
+    // Малі аркуші (цілком у бюджет клітинок) — разом, кількома діапазонами в одному запиті.
+    let batch = [];
+    let cells = 0;
+    for (const s of found.filter(fits)) {
+      const r = this.#range(s, 1, rowsOf(s));
+      if (batch.length && cells + r.cells > this.chunkCells) { await this.#fetch(batch, byTitle); batch = []; cells = 0; }
+      batch.push(r); cells += r.cells;
+    }
+    if (batch.length) await this.#fetch(batch, byTitle);
+
+    // Великі аркуші — послідовними порціями. Сітка Google часто має тисячі порожніх рядків після даних:
+    // щойно порція повернула менше рядків, ніж запитано, увесь залишок перевіряється ОДНИМ запитом
+    // (порожня відповідь майже нічого не важить), а не десятками порцій.
+    for (const s of found.filter((x) => !fits(x))) {
+      const step = Math.max(1, Math.floor(this.chunkCells / Math.max(1, s.columns)));
+      for (let from = 1; from <= rowsOf(s); from += step) {
+        const to = Math.min(rowsOf(s), from + step - 1);
+        const [got] = await this.#fetch([this.#range(s, from, to)], byTitle);
+        if (got < to - from + 1 && to < rowsOf(s)) {
+          this.metrics.tailProbes = (this.metrics.tailProbes || 0) + 1;
+          const [tail] = await this.#fetch([this.#range(s, to + 1, rowsOf(s))], byTitle);
+          // Дані після порожнього проміжку — аномалія (readSheet зупинить як «порожній рядок усередині»), але позиції збережено.
+          if (tail > 0) this.metrics.dataAfterGap = (this.metrics.dataAfterGap || 0) + 1;
+          break;
+        }
+      }
     }
     const sheets = {};
     for (const s of found) if (s.title !== this.groupsSheet || sheetNames.includes(s.title)) sheets[s.title] = rectangular(byTitle[s.title]);

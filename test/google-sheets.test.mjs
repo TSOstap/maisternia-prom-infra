@@ -125,6 +125,32 @@ test("429 з Retry-After → повтор; стійкий 503 → помилка
   assert.equal(c.src.metrics.requests, 1);
 });
 
+test("сітка з десятками тисяч порожніх рядків: порції лише для даних + ОДИН запит перевірки залишку", async () => {
+  const s = generateSynthetic({ products: 120, seed: 12, now: Date.now() });
+  const book = bookFrom(s);
+  const { src } = source(book, { api: { extraRows: 40000 } });
+  const loaded = await src.load([SHEETS.main]);
+  assert.deepEqual(loaded.sheets[SHEETS.main], book[SHEETS.main]);
+  // metadata + main (121 рядок по 46 на порцію = 3 порції + 1 перевірка залишку) + «Групи» (1 порція + 1 перевірка) = 7
+  assert.ok(src.metrics.requests <= 7, JSON.stringify(src.metrics));
+  assert.equal(src.metrics.tailProbes, 2, "по одній перевірці залишку на кожен великий аркуш (main і «Групи»)");
+  assert.equal(src.metrics.dataAfterGap || 0, 0);
+});
+
+test("дані після порожнього проміжку: позиції збережено, аномалію позначено, readSheet зупиняє (як LIVE)", async () => {
+  const s = generateSynthetic({ products: 120, seed: 13, now: Date.now() });
+  const book = bookFrom(s);
+  const main = book[SHEETS.main];
+  const blank = main[0].map(() => "");
+  book[SHEETS.main] = [...main.slice(0, 45), blank, ...main.slice(45)]; // рядок 46 — останній у 1-й порції (46 рядків) — порожній
+  const { src } = source(book, { api: { extraRows: 5000 } });
+  const loaded = await src.load([SHEETS.main]);
+  assert.equal(loaded.sheets[SHEETS.main].length, book[SHEETS.main].length);
+  assert.deepEqual(loaded.sheets[SHEETS.main].at(-1), book[SHEETS.main].at(-1));
+  assert.equal(src.metrics.dataAfterGap, 1);
+  assert.throws(() => readSheet(loaded.sheets[SHEETS.main], SHEETS.main), /Порожній рядок/);
+});
+
 test("вузький аркуш (1 колонка, тисячі рядків) читається одним запитом", async () => {
   const frozen = [["Offer ID"], ...Array.from({ length: 5143 }, (_, i) => [String(1500000000 + i)])];
   const s = generateSynthetic({ products: 5, seed: 2, now: Date.now() });

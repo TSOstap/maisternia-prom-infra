@@ -71,11 +71,13 @@ assertion.repository_id == '1428429135' && assertion.repository_owner_id == '223
 | 2 | власник | ✅ **21.10.2026:** увімкнено 5 API (IAM, Cloud Resource Manager, IAM Service Account Credentials, Security Token Service, Google Sheets) — **білінг не знадобився**, пробний період не активовано | ризик «verify that billing is enabled» на цьому кроці не підтвердився |
 | 3 | власник | ✅ **21.10.2026:** service account `mm-sheets-reader@maisternia-prom-infra.iam.gserviceaccount.com` — Enabled, No keys, без ролей і доступів | email підтверджено |
 | 4 | власник | ✅ **21.10.2026 (Cloud Shell, `tools/gcp/c2b-step4-wif.sh`):** пул `github`, провайдер `maisternia-prom-infra` (ACTIVE, issuer `https://token.actions.githubusercontent.com`, умова: repository_id 1428429135 + owner 223876873 + refs/heads/main + workflow sheets-verify.yml); на SA одна роль `roles/iam.workloadIdentityUser` для `principalSet://…/attribute.repository_id/1428429135`; ключів 0; білінг не знадобився | `projects/679502453033/locations/global/workloadIdentityPools/github/providers/maisternia-prom-infra` |
-| 5 | власник | Поділитися робочою таблицею з email service account як **«Читач»** (без сповіщення) | у «Налаштуваннях доступу» таблиці — лише Читач |
-| 6 | Claude | Змінні репозиторію `GCP_WIF_PROVIDER`, `GCP_SA_EMAIL`, секрет `MM_SHEET_ID` (через `gh`; значення ID таблиці вводить власник або передає приватно) | `gh variable list` / `gh secret list` |
+| 5 | власник | ✅ **21.10.2026:** таблицю «Інструмент — Майстерня Маркет» поділено з `mm-sheets-reader@…` як «Читач»; ID таблиці `1AhQ…K2L8` = ID у документації Codex | роль «Читач» підтверджено власником |
+| 6 | Claude + власник | Claude: змінні репозиторію `GCP_WIF_PROVIDER`, `GCP_SA_EMAIL` (несекретні, через `gh`). Власник: секрет `MM_SHEET_ID` у GitHub (Settings → Secrets and variables → Actions) | `gh variable list` / `gh secret list` (значення секрету не видно) |
 | 7 | Claude | За дозволом: push коду, один ручний запуск `sheets-verify` | усі перевірки PASS, лог без товарних даних |
 
 Видалення всього (відкат): прибрати шеринг «Читач» у таблиці → видалити провайдер і пул → видалити service account → видалити проєкт. Чинна система від цього не залежить.
+
+**Час запуску.** Чинний mtUpdate записує F:M приблизно о :20 UTC кожні 4 год (01:20, 05:20, 09:20, 13:20, 17:20, 21:20 за журналом). Якщо читання збіжиться із записом, перевірка «одна мітка оновлення» може показати 2 мітки — це не збій, а збіг у часі; повторити поза вікном :10–:35 UTC. Наше читання на чинну систему не впливає (лише читання, без блокувань).
 
 ## 2. Обробка даних (п. 8 вимог)
 

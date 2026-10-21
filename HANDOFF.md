@@ -21,7 +21,7 @@
 ## 3. Стан
 
 - **Stage:** прототип + C2-A + D1 + D1b + C1 виконано; **C2-B підготовлено локально** (код, тести, workflow, C2B-PLAN.md). Хмарних ресурсів C2-B ще немає; локальний коміт без push.
-- **Тести:** `npm test` → **69/69 PASS**. `node tools/prepush-check.mjs` → 0 проблем. Реальні дані: `tools/analysis/fresh-export.mjs`, `identity.mjs`, `shadow-replay.mjs` (команди — DATA-AUDIT-20261021.md). Печатки, хеші LIVE/NEW92, F:M і YML ідентичні; перев'язки — 0 хибних.
+- **Тести:** `npm test` → **71/71 PASS**. `node tools/prepush-check.mjs` → 0 проблем. Реальні дані: `tools/analysis/fresh-export.mjs`, `identity.mjs`, `shadow-replay.mjs` (команди — DATA-AUDIT-20261021.md). Печатки, хеші LIVE/NEW92, F:M і YML ідентичні; перев'язки — 0 хибних.
 - **Failing tests:** немає.
 - **D1/D1b у конфігу:** `policy.missing="unavailable"`, `policy.conflict="isolate"`, `identity.autoRelink=true`, власний залишок ≤7 днів, ціна для продажу з власного залишку при конфлікті ≤3 доби, спільний поріг аномалії max(50, 2%) для зникнень і конфліктів. `block` = LIVE.
 - **Не реалізовано свідомо:** адаптери Google Sheets API і R2 (не можна перевірити без доступів), розклад cron (закоментований), SEO.
@@ -55,7 +55,7 @@
 
 ## 5. Як продовжити (інструкції для Codex)
 
-1. `cd claude-infra && npm test` — має бути 69/69. Залежностей ставити не треба, потрібен Node ≥22.
+1. `cd claude-infra && npm test` — має бути 71/71. Залежностей ставити не треба, потрібен Node ≥22.
 2. Перед змінами прочитати ARCHITECTURE.md (розділ 4 «Ключові рішення») і BUSINESS-RULES.md. **Не змінювати** `src/core/{pricing,supplier-feed,sync-plan,seal,yml}.mjs` без тесту паритету: будь-яка зміна бізнес-логіки — лише з погодження власника.
 3. Наступні технічні задачі, кожна після відповідного погодження з CONNECT-PLAN.md:
    - **C2-A:** конвертер xlsx → знімок (формат `*.inspect.ndjson` або `NdjsonCatalogSource`), запуск `tools/snapshot-parity.mjs` з `--yml=reference/apps-script-live/Yml.LIVE-CURRENT.gs`. Очікувано contentSha = `e2871d9e…`;
@@ -67,7 +67,7 @@
 
 ## 6. Наступний крок (одна ручна дія власника)
 
-C2-B: кроки 1–4 виконано 21.10 (проєкт `maisternia-prom-infra` / 679502453033 без білінгу; 5 API; SA `mm-sheets-reader@…` без ролей і ключів; WIF-пул `github` + провайдер `maisternia-prom-infra` ACTIVE з умовою на repository_id/owner_id/main/sheets-verify.yml; роль workloadIdentityUser лише для repository_id 1428429135). Зараз — крок 5: власник ділиться робочою таблицею з SA як «Читач».
+C2-B: кроки 1–4 виконано 21.10 (проєкт `maisternia-prom-infra` / 679502453033 без білінгу; 5 API; SA `mm-sheets-reader@…` без ролей і ключів; WIF-пул `github` + провайдер `maisternia-prom-infra` ACTIVE з умовою на repository_id/owner_id/main/sheets-verify.yml; роль workloadIdentityUser лише для repository_id 1428429135). Крок 5: таблицю поділено з SA як «Читач» (ID 1AhQ…K2L8). Зараз — крок 6: секрет `MM_SHEET_ID` (власник); змінні GCP_WIF_PROVIDER/GCP_SA_EMAIL встановлено Claude. Далі — за дозволом push і один запуск `sheets-verify` (поза вікном :10–:35 UTC).
 
 Для Codex: якщо продовжуєш C2-B — не пропускай кроки, не створюй ключів service account, не надавай ролей на проєкт; вимога білінгу на будь-якому кроці = STOP.
 
