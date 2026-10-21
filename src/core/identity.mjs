@@ -17,7 +17,19 @@
 import { mtKey, mtSku, mtText } from "./text.mjs";
 
 export const looseSku = (v) => mtSku(v).toUpperCase().replace(/[\s\-./_\\]/g, "");
-export const brandKey = (v) => mtText(v).normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
+/** Синоніми написання одного бренду (погоджено власником 22.10.2026; аудит 60 розбіжностей «Виробник» ↔ vendor).
+ *  Лише для ПОРІВНЯННЯ брендів (ідентичність, звірки) — картки, таблиця та фід не змінюються.
+ *  Ключ — нормалізоване написання-варіант, значення — канонічний ключ. Додавати лише підтверджені варіанти:
+ *  Titan/Титан і SEVER/Север свідомо не додано (лише маркетплейси, без офіційного джерела). */
+export const BRAND_SYNONYMS = Object.freeze({
+  "felső": "felso",               // основне написання — Felso (сайт бренду)
+  "kärcher": "karcher",           // Kärcher = Karcher (kaercher.com)
+  "kentavr": "кентавр",           // Кентавр = Kentavr (kentavr.ua)
+  "фиолент": "phiolent",          // Phiolent = Фиолент
+  "makitacorporation": "makita",  // юрособа-виробник, бренд — Makita
+});
+const brandBase = (v) => mtText(v).normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
+export const brandKey = (v) => { const k = brandBase(v); return BRAND_SYNONYMS[k] ?? k; };
 export const modelKey = (v) => mtText(v).normalize("NFKC").toUpperCase().replace(/[^\p{L}\p{N}]/gu, "");
 
 /** Slug сторінки постачальника без ID: https://…/p1500000001-tovar-test.html → tovar-test */
