@@ -1,0 +1,48 @@
+# Етап C2-B: ЛИШЕ ЧИТАННЯ робочої Google-таблиці через Sheets API і перевірка 5121 товарів двох фідів.
+# Авторизація: Workload Identity Federation (OIDC) → імперсонація service account (роль «Читач» лише на цю таблицю).
+# JSON-ключів немає. Токен живе 10 хв, маскується action-ом. Товарні дані не потрапляють у логи/summary/artifacts.
+# Запуск лише вручну і лише з main; доступ додатково обмежено attribute-condition у Google (repository_id,
+# repository_owner_id, ref, цей файл workflow) — див. C2B-PLAN.md. НЕ запускати до погодження власника.
+name: sheets-verify
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write          # лише запит OIDC-токена GitHub; права запису в репозиторій не дає
+concurrency:
+  group: sheets-read       # не більше одного читання таблиці одночасно (квота 60 read/хв)
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Перевірка налаштувань (без звернень до Google)
+        env:
+          WIF: ${{ vars.GCP_WIF_PROVIDER }}
+          SA: ${{ vars.GCP_SA_EMAIL }}
+          SHEET: ${{ secrets.MM_SHEET_ID }}
+        run: |
+          test -n "$WIF" || { echo "Не задано змінну репозиторію GCP_WIF_PROVIDER"; exit 2; }
+          test -n "$SA" || { echo "Не задано змінну репозиторію GCP_SA_EMAIL"; exit 2; }
+          test -n "$SHEET" || { echo "Не задано секрет MM_SHEET_ID"; exit 2; }
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_SA_EMAIL }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/spreadsheets.readonly
+          access_token_lifetime: 600s
+          create_credentials_file: false
+          export_environment_variables: false
+      - name: Читання таблиці й перевірка (лише агрегати в лог)
+        env:
+          MM_SHEET_ID: ${{ secrets.MM_SHEET_ID }}
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+        run: node tools/sheets-verify.mjs --source=api --replay --summary="$GITHUB_STEP_SUMMARY" --tmp="$RUNNER_TEMP"

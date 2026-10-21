@@ -12,3 +12,6 @@ tmp/
 
 node_modules/
 .DS_Store
+
+# Облікові дані google-github-actions/auth (не створюються: create_credentials_file=false; про всяк випадок)
+gha-creds-*.json

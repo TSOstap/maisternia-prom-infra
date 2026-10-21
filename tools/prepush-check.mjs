@@ -22,6 +22,9 @@ const SECRET_PATTERNS = [
   [/AKIA[0-9A-Z]{16}/, "ключ доступу S3/AWS"],
   [/-----BEGIN [A-Z ]*PRIVATE KEY-----/, "приватний ключ"],
   [/"private_key_id"\s*:/, "файл service account Google"],
+  [/"type"\s*:\s*"service_account"/, "JSON-ключ service account Google"],
+  [/ya29\.[A-Za-z0-9_-]{60,}/, "access token Google OAuth"],
+  [/docs\.google\.com\/spreadsheets\/d\/[A-Za-z0-9_-]{30,}/, "посилання на Google-таблицю з ID"],
   [/\bgh[pousr]_[A-Za-z0-9]{30,}/, "токен GitHub"],
   [/Bearer\s+[A-Za-z0-9_\-.]{30,}/, "Bearer-токен"],
 ];

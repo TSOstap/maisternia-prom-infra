@@ -46,6 +46,8 @@
 | `src/core/xml-verify.mjs` | Незалежний потоковий валідатор XML + ID + SHA | mtAssertOwnXml_ (XmlService) |
 | `src/core/identity.mjs` | Стабільна ідентичність картки: ключі, класи збігу, взаємна однозначність, реєстр прив'язок з історією | — (нове, D1) |
 | `src/core/d1.mjs` | Політика D1: перев'язка до плану, власний залишок, облік днів відсутності, захист від масового зникнення | — (нове, D1) |
+| `src/pipeline/google-sheets.mjs` | Джерело каталогу через Google Sheets API (лише читання): порції за бюджетом клітинок, вирівнювання як getDataRange, backoff 429/5xx, темп і межа запитів | `getDataRange().getValues()` |
+| `src/verify/catalog-verify.mjs`, `tools/sheets-verify.mjs` | Перевірка 5121 товарів двох фідів (SHA, печатки, ціни, наявність, контент, SEO, YML, replay конвеєра); у звіт — лише агрегати | — (C2-B) |
 | `src/core/catalog-guards.mjs` | Погодження набору із забороною видалення, дублікати, нові товари | — (нове) |
 | `src/publish/publisher.mjs` | Кандидат → readback → один запис маніфесту → ротація; ручний відкат | mtPublishYml_ |
 | `worker/src/index.js` | Постійне посилання, ключ, fallback на previous, 503 замість порожнього | doGet |

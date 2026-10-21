@@ -1,0 +1,15 @@
+{
+  "_comment": "Еталонні паспорти двох активних фідів (лише хеші, без товарних даних). main = MTY з reference/apps-script-live/Yml.LIVE-CURRENT.gs; new92 = MT92 з Codex dual-feed/New92Config.gs (NEW92-20261021-r1). Звірено з експортом 21.10.2026 (DATA-AUDIT-20261021.md). Після погоджених змін каталогу оновлювати окремим комітом.",
+  "main": {
+    "count": 5029,
+    "idsSha": "2720329d45d4d9457781dc06352e131d5116f049d00c3587f070259be2912a32",
+    "contentSha": "e2871d9e97b9b2f761d0d718da2e669cafaea35de0b311f49d6d1d605d7e56c2",
+    "groupsSha": "1b578d5fc44a412692e201722c13b26cc1edaf76438a611612da09e664941b38"
+  },
+  "new92": {
+    "count": 92,
+    "idsSha": "cec2578780901d4a4052b135c4ca61d579ae29714d2de3b4e5aa6120063117ae",
+    "contentSha": "03db82f94c5df90747447a02335d339f5e1f99dbc6010f1b6c9061498c00c239",
+    "groupsSha": "1b578d5fc44a412692e201722c13b26cc1edaf76438a611612da09e664941b38"
+  }
+}
