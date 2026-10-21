@@ -67,10 +67,10 @@ assertion.repository_id == '1428429135' && assertion.repository_owner_id == '223
 
 | # | Хто | Дія | Перевірка |
 |---|---|---|---|
-| 1 | власник | Створити окремий проєкт Google Cloud **без** білінг-акаунта | ID і номер проєкту |
-| 2 | власник | Увімкнути API: IAM, IAM Service Account Credentials, Security Token Service, Google Sheets (Claude дасть одне посилання з ID проєкту) | **Якщо Google попросить білінг — STOP** (документація WIF містить фразу «verify that billing is enabled», практичну вимогу не підтверджено) |
-| 3 | власник | Створити service account `mm-sheets-reader` без ролей і без ключів | email service account |
-| 4 | власник | Workload Identity Pool + OIDC Provider з умовою з розділу 1.1; роль `workloadIdentityUser` на service account для `principalSet://…/attribute.repository_id/1428429135` (Claude дасть готові команди для Cloud Shell або кроки Console) | повна назва провайдера `projects/<номер>/locations/global/workloadIdentityPools/github/providers/maisternia-prom-infra` |
+| 1 | власник | ✅ **21.10.2026:** проєкт створено без білінгу й без пробного періоду. Project ID `maisternia-prom-infra`, Project number `679502453033`, Organization: No organization | ID і номер проєкту |
+| 2 | власник | Увімкнути 5 API одним посиланням: IAM, Cloud Resource Manager, IAM Service Account Credentials, Security Token Service, Google Sheets — `https://console.cloud.google.com/flows/enableapi?apiid=iam.googleapis.com,cloudresourcemanager.googleapis.com,iamcredentials.googleapis.com,sts.googleapis.com,sheets.googleapis.com&project=maisternia-prom-infra` | **Якщо Google попросить білінг / пробний період — STOP** (документація WIF містить фразу «verify that billing is enabled», практичну вимогу не підтверджено) |
+| 3 | власник | Створити service account `mm-sheets-reader` без ролей і без ключів | email: `mm-sheets-reader@maisternia-prom-infra.iam.gserviceaccount.com` |
+| 4 | власник | Workload Identity Pool + OIDC Provider з умовою з розділу 1.1; роль `workloadIdentityUser` на service account для `principalSet://…/attribute.repository_id/1428429135` (Claude дасть готові команди для Cloud Shell або кроки Console) | повна назва провайдера `projects/679502453033/locations/global/workloadIdentityPools/github/providers/maisternia-prom-infra` |
 | 5 | власник | Поділитися робочою таблицею з email service account як **«Читач»** (без сповіщення) | у «Налаштуваннях доступу» таблиці — лише Читач |
 | 6 | Claude | Змінні репозиторію `GCP_WIF_PROVIDER`, `GCP_SA_EMAIL`, секрет `MM_SHEET_ID` (через `gh`; значення ID таблиці вводить власник або передає приватно) | `gh variable list` / `gh secret list` |
 | 7 | Claude | За дозволом: push коду, один ручний запуск `sheets-verify` | усі перевірки PASS, лог без товарних даних |
