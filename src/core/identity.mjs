@@ -20,7 +20,7 @@ export const looseSku = (v) => mtSku(v).toUpperCase().replace(/[\s\-./_\\]/g, ""
 export const brandKey = (v) => mtText(v).normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
 export const modelKey = (v) => mtText(v).normalize("NFKC").toUpperCase().replace(/[^\p{L}\p{N}]/gu, "");
 
-/** Slug сторінки постачальника без ID: https://…/p1600959450-udlinitel-katushke.html → udlinitel-katushke */
+/** Slug сторінки постачальника без ID: https://…/p1500000001-tovar-test.html → tovar-test */
 export function urlSlug(url) {
   const m = /\/p\d+-([^/?#]+?)(?:\.html)?(?:[?#].*)?$/.exec(mtText(url));
   return m ? m[1].toLowerCase() : "";
@@ -144,7 +144,7 @@ export function resolveUnknownOffers({ offers, cards, orphanIds }) {
   return decisions.map(({ offer, candidates }) => {
     const strong = candidates.filter((c) => c.level === "STRONG");
     // Блокують перев'язку лише суперники, яких не відрізнити: ті самі опорні назви або той самий GTIN.
-    // Той самий артикул з ІНШИМИ назвами — інший товар (реальний приклад: G0386 у постачальника — і бур, і бензопила).
+    // Той самий артикул з ІНШИМИ назвами — інший товар (реальний приклад: в постачальника один артикул має і бур, і бензопила).
     // Спільний slug чи бренд+модель — масові ознаки (сотні груп у реальному каталозі), лише інформація.
     const IDENTIFYING = ["gtin", "names"];
     const others = candidates.filter((c) => c.level !== "STRONG" && c.evidence.some((e) => IDENTIFYING.includes(e)));

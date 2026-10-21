@@ -35,7 +35,7 @@ const config = JSON.parse(await fsp.readFile(arg("config", path.join(root, "conf
 const expected = JSON.parse(await fsp.readFile(arg("expected", path.join(root, "config", "expected-live.json")), "utf8"));
 const JOURNAL = "Журнал";
 const wanted = [SHEETS.main, SHEETS.queue, SHEETS.deferred, SHEETS.frozen];
-// Числа від 6 цифр (у т.ч. притиснуті до літер: «ID1234567», «p1600959450-…») → ***; URL у будь-якому регістрі приховано.
+// Числа від 6 цифр (у т.ч. притиснуті до літер: «ID1234567», «p1500000001-…») → ***; URL у будь-якому регістрі приховано.
 const scrub = (e) => sanitize(e).replace(/\d{6,}/g, "***");
 
 // Фрагменти, яких НЕ може бути у виводі: точні значення секретів і похідні форми.

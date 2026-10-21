@@ -207,7 +207,7 @@ test("autoRelink=false: достовірний збіг лише пропону�
 test("identity: ознаки комплектації з кирилицею, GTIN, взаємна однозначність", () => {
   assert.deepEqual(kitConflict("Шуруповерт 18 В 2 АКБ 4 Аг", "Шуруповерт 18 В 1 АКБ 4 Аг"), ["batteries"]);
   assert.deepEqual(kitConflict("Шуруповерт 18 В без АКБ", "Шуруповерт 18 В 2 АКБ"), ["solo"]);
-  assert.deepEqual(kitConflict("Пила 2000 Вт", "Пила 2000 Вт (ALTC200)"), []);
+  assert.deepEqual(kitConflict("Пила 2000 Вт", "Пила 2000 Вт (XYZ900)"), []);
   assert.deepEqual(kitConflict("Дриль 18 В", "Дриль 12 В"), ["volts"]);
   assert.equal(validGtin("4006381333931"), "4006381333931");
   assert.equal(validGtin("4006381333932"), "");
