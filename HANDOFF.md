@@ -20,7 +20,7 @@
 
 ## 3. Стан
 
-- **Stage:** прототип + C2-A + D1 + D1b + C1 виконано; **C2-B підготовлено локально** (код, тести, workflow, C2B-PLAN.md). Хмарних ресурсів C2-B ще немає; локальний коміт без push.
+- **Stage:** прототип + C2-A + D1 + D1b + C1 + **C2-B виконано (PASS)**: GitHub Actions читає робочу таблицю через WIF (лише читання), перевірено 5121 товарів (C2B-REPORT-20261021.md). Нічого не розгорнуто й не перемкнено; чекаємо погодження наступного етапу.
 - **Тести:** `npm test` → **71/71 PASS**. `node tools/prepush-check.mjs` → 0 проблем. Реальні дані: `tools/analysis/fresh-export.mjs`, `identity.mjs`, `shadow-replay.mjs` (команди — DATA-AUDIT-20261021.md). Печатки, хеші LIVE/NEW92, F:M і YML ідентичні; перев'язки — 0 хибних.
 - **Failing tests:** немає.
 - **D1/D1b у конфігу:** `policy.missing="unavailable"`, `policy.conflict="isolate"`, `identity.autoRelink=true`, власний залишок ≤7 днів, ціна для продажу з власного залишку при конфлікті ≤3 доби, спільний поріг аномалії max(50, 2%) для зникнень і конфліктів. `block` = LIVE.
@@ -65,15 +65,22 @@
 5. Інтеграція з 92: після імпорту Codex додати фіди `new92` (`sheets: ["Нові товари"], filterByManifest: true`) і, пізніше, `all` (5121). Паспорти генеруються командою `node src/cli.mjs approve` або з погоджених Codex idsSha/contentSha/groupsSha + списку ID. Не читати лише main: інакше загубляться 92.
 6. Після будь-якої зміни: `npm test`, оновити PROGRESS.md / TESTS.md і цей файл.
 
-## 6. Наступний крок (одна ручна дія власника)
+## 6. Наступний крок (потрібне погодження власника)
 
-C2-B: кроки 1–4 виконано 21.10 (проєкт `maisternia-prom-infra` / 679502453033 без білінгу; 5 API; SA `mm-sheets-reader@…` без ролей і ключів; WIF-пул `github` + провайдер `maisternia-prom-infra` ACTIVE з умовою на repository_id/owner_id/main/sheets-verify.yml; роль workloadIdentityUser лише для repository_id 1428429135). Крок 5: таблицю поділено з SA як «Читач» (ID 1AhQ…K2L8). Зараз — крок 6: секрет `MM_SHEET_ID` (власник); змінні GCP_WIF_PROVIDER/GCP_SA_EMAIL встановлено Claude. Далі — за дозволом push і один запуск `sheets-verify` (поза вікном :10–:35 UTC).
+C2-B завершено (PASS). Повторні запуски `sheets-verify` — лише з нового погодження.
 
-Для Codex: якщо продовжуєш C2-B — не пропускай кроки, не створюй ключів service account, не надавай ролей на проєкт; вимога білінгу на будь-якому кроці = STOP.
+Варіанти наступного етапу:
+- **C2-C (рекомендовано першим):** read-only звірка з фідом постачальника. Власник додає секрет `MM_SUPPLIER_FEED_URL`. Workflow читає таблицю й операційний фід постачальника, рахує F:M новою системою і порівнює з F:M у таблиці після штатного mtUpdate. Перевіряються зіставлення, D1 і D1b на живому фіді. Без сховища, без Cloudflare, без запису; у лог — лише агрегати.
+- **C3:** Cloudflare R2 + Worker під тестовою назвою, без Prom. Потрібне рішення щодо активації R2: можливо, знадобиться картка (COSTS.md, B2); жорсткого ліміту витрат немає.
+
+Перед будь-яким етапом:
+- оновити `actions/checkout` і `actions/setup-node` до актуальних мажорних версій (попередження про Node 20);
+- рішення власника щодо Offer ID і назв моделей у документах репозиторію.
 
 ## 7. Важливі хеші
 
 - LIVE Code `2007bdd1…41fdf`, Yml `94e939a6…e8463a`, Management `f78fce84…3f8b` (= BUILD.json Codex)
 - LIVE MTY: count 5029; idsSha `2720329d…2a32`; contentSha `e2871d9e…56c2`; groupsSha `1b578d5f…1b38`
 - Архів 16.10: contentSha `0d95ba85…a9e5` (= tools-catalog/Yml.gs); YML 47 808 343 Б
+- C2-B (Sheets API, 21.10 17:40 UTC): main = LIVE MTY, new92 = NEW92 Codex; YML main 49 061 893 Б, new92 915 267 Б
 - Свіжий 21.10: main = LIVE MTY; queue idsSha `cec25787…17ae`, contentSha `03db82f9…c239` (= NEW92 Codex); YML main 49 062 107 Б, sourceDigest `743379b6…0817`; new92 915 267 Б

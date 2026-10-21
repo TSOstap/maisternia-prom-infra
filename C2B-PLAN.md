@@ -1,6 +1,6 @@
 # Етап C2-B — читання робочої Google-таблиці через Sheets API (лише читання)
 
-Стан: **код готовий і протестований на синтетиці (69/69); хмарних ресурсів не створено, доступів не надано, реальних даних через API не читали, push не робили.** Кожен крок нижче — окреме погодження власника.
+Стан: **ВИКОНАНО 21.10.2026 — PASS** (C2B-REPORT-20261021.md). Авторизація GitHub → Google WIF працює; перевірено 5121 товарів; один запуск, поза вікном mtUpdate.
 
 ## 1. Що робить C2-B
 
@@ -72,8 +72,8 @@ assertion.repository_id == '1428429135' && assertion.repository_owner_id == '223
 | 3 | власник | ✅ **21.10.2026:** service account `mm-sheets-reader@maisternia-prom-infra.iam.gserviceaccount.com` — Enabled, No keys, без ролей і доступів | email підтверджено |
 | 4 | власник | ✅ **21.10.2026 (Cloud Shell, `tools/gcp/c2b-step4-wif.sh`):** пул `github`, провайдер `maisternia-prom-infra` (ACTIVE, issuer `https://token.actions.githubusercontent.com`, умова: repository_id 1428429135 + owner 223876873 + refs/heads/main + workflow sheets-verify.yml); на SA одна роль `roles/iam.workloadIdentityUser` для `principalSet://…/attribute.repository_id/1428429135`; ключів 0; білінг не знадобився | `projects/679502453033/locations/global/workloadIdentityPools/github/providers/maisternia-prom-infra` |
 | 5 | власник | ✅ **21.10.2026:** таблицю «Інструмент — Майстерня Маркет» поділено з `mm-sheets-reader@…` як «Читач»; ID таблиці `1AhQ…K2L8` = ID у документації Codex | роль «Читач» підтверджено власником |
-| 6 | Claude + власник | Claude: змінні репозиторію `GCP_WIF_PROVIDER`, `GCP_SA_EMAIL` (несекретні, через `gh`). Власник: секрет `MM_SHEET_ID` у GitHub (Settings → Secrets and variables → Actions) | `gh variable list` / `gh secret list` (значення секрету не видно) |
-| 7 | Claude | За дозволом: push коду, один ручний запуск `sheets-verify` | усі перевірки PASS, лог без товарних даних |
+| 6 | Claude + власник | ✅ **21.10.2026:** змінні `GCP_WIF_PROVIDER`, `GCP_SA_EMAIL` (Claude), секрет `MM_SHEET_ID` (власник) | `gh variable list` / `gh secret list` |
+| 7 | Claude | ✅ **21.10.2026:** push 7 комітів (prepush 0 проблем) → один запуск `sheets-verify` о 17:40 UTC → **PASS**, лог без товарних даних і секретів | C2B-REPORT-20261021.md |
 
 Видалення всього (відкат): прибрати шеринг «Читач» у таблиці → видалити провайдер і пул → видалити service account → видалити проєкт. Чинна система від цього не залежить.
 
@@ -97,13 +97,13 @@ assertion.repository_id == '1428429135' && assertion.repository_owner_id == '223
 
 ## 4. DONE для C2-B
 
-- [ ] проєкт Google Cloud без білінгу; увімкнені лише потрібні API;
-- [ ] Workload Identity Federation з умовою на `repository_id`/`repository_owner_id` (і гілку main); жодного JSON-ключа;
-- [ ] service account має доступ «Читач» лише до цієї таблиці; жодних ролей проєкту, крім потрібних для федерації;
-- [ ] `sheets-verify` на runner: усі перевірки PASS для 5121 товарів, replay PASS;
-- [ ] у логах/summary немає товарних даних і секретів (перевірено переглядом логу);
-- [ ] виміряно: час читання, запити, пам'ять, хвилини; COSTS.md оновлено;
-- [ ] чинна система не змінювалась: Apps Script, тригери, YML-посилання, Prom.
+- [x] проєкт Google Cloud без білінгу; увімкнені лише потрібні API;
+- [x] Workload Identity Federation з умовою на `repository_id`/`repository_owner_id` (і гілку main); жодного JSON-ключа;
+- [x] service account має доступ «Читач» лише до цієї таблиці; жодних ролей проєкту, крім потрібних для федерації;
+- [x] `sheets-verify` на runner: усі перевірки PASS для 5121 товарів, replay PASS;
+- [x] у логах/summary немає товарних даних і секретів (перевірено переглядом логу);
+- [x] виміряно: час читання, запити, пам'ять, хвилини; COSTS.md оновлено;
+- [x] чинна система не змінювалась: Apps Script, тригери, YML-посилання, Prom.
 
 ## 5. STOP-умови
 

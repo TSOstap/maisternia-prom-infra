@@ -13,6 +13,6 @@ node src/cli.mjs status --store=.data/store
 node tools/prepush-check.mjs              # обов'язково перед будь-яким push
 ```
 
-Документи: [RULES](RULES.md) · [C2B-PLAN](C2B-PLAN.md) · [C1-PLAN](C1-PLAN.md) · [DATA-AUDIT-20261021](DATA-AUDIT-20261021.md) · [ARCHITECTURE](ARCHITECTURE.md) · [BUSINESS-RULES](BUSINESS-RULES.md) · [COSTS](COSTS.md) · [TESTS](TESTS.md) · [CONNECT-PLAN](CONNECT-PLAN.md) · [PROGRESS](PROGRESS.md) · [HANDOFF](HANDOFF.md)
+Документи: [RULES](RULES.md) · [C2B-REPORT](C2B-REPORT-20261021.md) · [C2B-PLAN](C2B-PLAN.md) · [C1-PLAN](C1-PLAN.md) · [DATA-AUDIT-20261021](DATA-AUDIT-20261021.md) · [ARCHITECTURE](ARCHITECTURE.md) · [BUSINESS-RULES](BUSINESS-RULES.md) · [COSTS](COSTS.md) · [TESTS](TESTS.md) · [CONNECT-PLAN](CONNECT-PLAN.md) · [PROGRESS](PROGRESS.md) · [HANDOFF](HANDOFF.md)
 
 Вимоги: Node ≥22, без npm-залежностей.
