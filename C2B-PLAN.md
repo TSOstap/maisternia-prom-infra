@@ -69,8 +69,8 @@ assertion.repository_id == '1428429135' && assertion.repository_owner_id == '223
 |---|---|---|---|
 | 1 | власник | ✅ **21.10.2026:** проєкт створено без білінгу й без пробного періоду. Project ID `maisternia-prom-infra`, Project number `679502453033`, Organization: No organization | ID і номер проєкту |
 | 2 | власник | ✅ **21.10.2026:** увімкнено 5 API (IAM, Cloud Resource Manager, IAM Service Account Credentials, Security Token Service, Google Sheets) — **білінг не знадобився**, пробний період не активовано | ризик «verify that billing is enabled» на цьому кроці не підтвердився |
-| 3 | власник | Створити service account `mm-sheets-reader` без ролей і без ключів | email: `mm-sheets-reader@maisternia-prom-infra.iam.gserviceaccount.com` |
-| 4 | власник | Workload Identity Pool + OIDC Provider з умовою з розділу 1.1; роль `workloadIdentityUser` на service account для `principalSet://…/attribute.repository_id/1428429135` (Claude дасть готові команди для Cloud Shell або кроки Console) | повна назва провайдера `projects/679502453033/locations/global/workloadIdentityPools/github/providers/maisternia-prom-infra` |
+| 3 | власник | ✅ **21.10.2026:** service account `mm-sheets-reader@maisternia-prom-infra.iam.gserviceaccount.com` — Enabled, No keys, без ролей і доступів | email підтверджено |
+| 4 | власник | Workload Identity Pool + OIDC Provider з умовою з розділу 1.1; роль `workloadIdentityUser` на service account для `principalSet://…/attribute.repository_id/1428429135` — скрипт `tools/gcp/c2b-step4-wif.sh` (Cloud Shell; без ключів і білінгу) | повна назва провайдера `projects/679502453033/locations/global/workloadIdentityPools/github/providers/maisternia-prom-infra` |
 | 5 | власник | Поділитися робочою таблицею з email service account як **«Читач»** (без сповіщення) | у «Налаштуваннях доступу» таблиці — лише Читач |
 | 6 | Claude | Змінні репозиторію `GCP_WIF_PROVIDER`, `GCP_SA_EMAIL`, секрет `MM_SHEET_ID` (через `gh`; значення ID таблиці вводить власник або передає приватно) | `gh variable list` / `gh secret list` |
 | 7 | Claude | За дозволом: push коду, один ручний запуск `sheets-verify` | усі перевірки PASS, лог без товарних даних |

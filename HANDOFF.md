@@ -67,7 +67,7 @@
 
 ## 6. Наступний крок (одна ручна дія власника)
 
-C2-B: кроки 1–2 виконано 21.10 (проєкт `maisternia-prom-infra`, номер 679502453033, без білінгу; 5 API увімкнено без білінгу). Зараз — крок 3 із C2B-PLAN.md (розділ 1.2): service account `mm-sheets-reader` без ролей і без ключів.
+C2-B: кроки 1–3 виконано 21.10 (проєкт `maisternia-prom-infra` / 679502453033 без білінгу; 5 API; service account `mm-sheets-reader@…` без ролей і ключів). Зараз — крок 4: пул і провайдер WIF + роль workloadIdentityUser, скрипт `tools/gcp/c2b-step4-wif.sh` у Cloud Shell.
 
 Для Codex: якщо продовжуєш C2-B — не пропускай кроки, не створюй ключів service account, не надавай ролей на проєкт; вимога білінгу на будь-якому кроці = STOP.
 
