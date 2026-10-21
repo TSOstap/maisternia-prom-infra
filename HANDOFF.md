@@ -67,7 +67,7 @@
 
 ## 6. Наступний крок (одна ручна дія власника)
 
-C2-B: кроки 1–3 виконано 21.10 (проєкт `maisternia-prom-infra` / 679502453033 без білінгу; 5 API; service account `mm-sheets-reader@…` без ролей і ключів). Зараз — крок 4: пул і провайдер WIF + роль workloadIdentityUser, скрипт `tools/gcp/c2b-step4-wif.sh` у Cloud Shell.
+C2-B: кроки 1–4 виконано 21.10 (проєкт `maisternia-prom-infra` / 679502453033 без білінгу; 5 API; SA `mm-sheets-reader@…` без ролей і ключів; WIF-пул `github` + провайдер `maisternia-prom-infra` ACTIVE з умовою на repository_id/owner_id/main/sheets-verify.yml; роль workloadIdentityUser лише для repository_id 1428429135). Зараз — крок 5: власник ділиться робочою таблицею з SA як «Читач».
 
 Для Codex: якщо продовжуєш C2-B — не пропускай кроки, не створюй ключів service account, не надавай ролей на проєкт; вимога білінгу на будь-якому кроці = STOP.
 
