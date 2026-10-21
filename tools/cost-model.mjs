@@ -12,7 +12,8 @@ for (const products of [5121, 10000, 20000, 30000]) {
   for (const gzip of [false, true]) {
     const u = monthlyUsage({
       products, gzip, bytesPerOffer: arg("bytes-per-offer", 9750), gzipRatio: arg("gzip-ratio", 0.2),
-      runsPerDay: 6, extraRunsPerMonth: 30, minutesPerRun: arg("minutes", products <= 10000 ? 3 : 5),
+      runsPerDay: 6, extraRunsPerMonth: 30, // C1 (21.10.2026): job update на runner — 9 с (5121) і 34 с (30 000) без мережі; 2 хв = з округленням і запасом на мережу
+      minutesPerRun: arg("minutes", 2),
       ciMinutesPerMonth: 60, retainVersions: 7, publishShare: 1, promFetchesPerDay: 24, statusChecksPerDay: 6,
     });
     rows.push({
