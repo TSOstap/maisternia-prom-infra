@@ -1,0 +1,9 @@
+{
+  "name": "mm-feed-poc",
+  "private": true,
+  "description": "PoC C3: Workers Free + Static Assets на синтетиці. Окремо від основного пакета (там нуль залежностей).",
+  "type": "module",
+  "devDependencies": {
+    "wrangler": "4.151.3"
+  }
+}
