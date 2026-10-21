@@ -45,5 +45,19 @@
   },
   "guards": {
     "maxRemovedWithoutApproval": 0
+  },
+  "_policy": "Рішення D1 власника від 21.10.2026 (ARCHITECTURE.md, розділ 6). missing='block' — чинна поведінка LIVE.",
+  "policy": {
+    "missing": "unavailable",
+    "ownStockMaxAgeDays": 7,
+    "proposeHideAfterDays": 60,
+    "proposeArchiveAfterDays": 90,
+    "anomaly": {
+      "maxNewlyMissing": 50,
+      "maxNewlyMissingRatio": 0.02
+    }
+  },
+  "identity": {
+    "autoRelink": true
   }
 }

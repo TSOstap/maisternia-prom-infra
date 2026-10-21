@@ -120,8 +120,8 @@ test("різке падіння кількості товарів у фіді (>
   assert.equal((await store.getJson(manifestKey("main"))).active.count, 120);
 });
 
-test("товар зник у постачальника: наявність '-', синк OK, але фід заблоковано (паритет, ризик R1)", async () => {
-  const { ctx, store } = await setup({ synth: { missingFromSupplier: ["1500000035"] } });
+test("режим block (чинна поведінка LIVE): зниклий товар блокує весь фід (ризик R1)", async () => {
+  const { ctx, store } = await setup({ synth: { missingFromSupplier: ["1500000035"] }, config: (c) => { c.policy.missing = "block"; } });
   const r = await runUpdate(ctx());
   assert.equal(r.sync.state, "OK");
   assert.equal(r.sync.sheets[0].byStatus["ВІДСУТНІЙ_У_YML"], 1);

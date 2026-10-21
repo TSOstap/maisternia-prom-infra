@@ -74,6 +74,8 @@ export async function parseSupplierFeed(chunks, options = {}) {
       OFFER_OPEN.lastIndex = 0;
       if (OFFER_OPEN.test(body) || attrs.includes("<")) throw new Error("Пошкоджений запис offer");
       const offer = offerFrom(attrs, body);
+      // Додаткові поля для зіставлення ідентичності (D1). За замовчуванням вимкнено — форма offer = mtParse.
+      if (options.identityFields) { offer.vendor = mtTag(body, "vendor"); offer.model = mtTag(body, "model"); }
       if (!/^\d+$/.test(offer.id) || offers.has(offer.id)) throw new Error("Невалідний або повторений ID у YML");
       offers.set(offer.id, offer);
       count++;

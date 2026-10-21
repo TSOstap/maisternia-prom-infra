@@ -106,9 +106,23 @@ function preflight(rows, groups, meta, manifest, config) {
 }
 
 /** Серіалізація одного товару — порядок і умови тегів як у mtBuildYml_. */
-export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING) {
+/** Політика D1 (погоджено власником 21.10.2026): товар, що зник із повного коректного фіду, публікується
+ *  як «немає в наявності» (або з підтвердженим власним залишком), а не блокує весь фід.
+ *  'block' — чинна поведінка LIVE (для паритету). */
+export const MISSING_POLICIES = Object.freeze(["block", "unavailable"]);
+export const STATUS_MISSING = "ВІДСУТНІЙ_У_YML";
+export const STATUS_OWN_STOCK = "ВЛАСНИЙ_ЗАЛИШОК";
+
+function statusAllowed(r, missingPolicy) {
+  const st = r["Стан синхронізації"];
+  if (st === "ЗІСТАВЛЕНО") return true;
+  if (missingPolicy !== "unavailable") return false;
+  return (st === STATUS_MISSING && r["Наявність"] === "-") || (st === STATUS_OWN_STOCK && r["Наявність"] === "+");
+}
+
+export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missingPolicy = "block") {
   const id = mtText(r["Offer ID"]);
-  if (r["Статус імпорту"] !== "ДОЗВОЛЕНО" || r["Стан синхронізації"] !== "ЗІСТАВЛЕНО") throw new Error("Непідтверджений статус; ID " + id);
+  if (r["Статус імпорту"] !== "ДОЗВОЛЕНО" || !statusAllowed(r, missingPolicy)) throw new Error("Непідтверджений статус; ID " + id);
   if (new Date(r["Оновлено"]).getTime() !== success) throw new Error("Рядок не належить останньому успішному оновленню; ID " + id);
   if (r["Валюта"] !== "UAH" || ["+", "-"].indexOf(r["Наявність"]) < 0) throw new Error("Невизначена валюта/наявність; ID " + id);
   const available = r["Наявність"] === "+";
@@ -172,7 +186,8 @@ const FOOTER = "</offers></shop></yml_catalog>";
  * rows/groups — об'єкти (див. objectsFromValues). manifest — паспорт погодженого набору.
  * Повертає метадані, сумісні з маніфестом публікатора LIVE (sha256, bytes, sourceDigest, ...).
  */
-export async function buildYml({ rows, groups, meta, manifest, config, pricing = DEFAULT_PRICING, maximumBytes, sink }) {
+export async function buildYml({ rows, groups, meta, manifest, config, pricing = DEFAULT_PRICING, maximumBytes, sink, missingPolicy = "block" }) {
+  if (!MISSING_POLICIES.includes(missingPolicy)) throw new Error("Невідома політика відсутніх товарів: " + missingPolicy);
   const { success, now, groupMap, categories } = preflight(rows, groups, meta, manifest, config);
   const full = crypto.createHash("sha256");
   const digest = crypto.createHash("sha256");
@@ -186,17 +201,37 @@ export async function buildYml({ rows, groups, meta, manifest, config, pricing =
     await sink.write(text);
   };
   await emit(headerXml(formatYmlDate(now, config.timeZone), config, categories), headerXml("", config, categories));
-  for (const r of rows) await emit("\n" + offerXml(r, success, groupMap, pricing));
+  const published = [];
+  const excluded = [];
+  let unavailableMissing = 0;
+  let ownStock = 0;
+  for (const r of rows) {
+    const st = r["Стан синхронізації"];
+    // Відсутній товар без жодної перевіреної ціни ніколи не публікувався — у Prom його нема чого вимикати.
+    if (missingPolicy === "unavailable" && st === STATUS_MISSING && mtText(r["Ціна постачальника"]).trim() === "") {
+      excluded.push(mtText(r["Offer ID"]));
+      continue;
+    }
+    await emit("\n" + offerXml(r, success, groupMap, pricing, missingPolicy));
+    published.push(mtText(r["Offer ID"]));
+    if (st === STATUS_MISSING) unavailableMissing++;
+    if (st === STATUS_OWN_STOCK) ownStock++;
+  }
   await emit("\n" + FOOTER);
   return {
-    count: rows.length,
+    count: published.length,
     bytes,
     sha256: full.digest("hex"),
     sourceDigest: digest.digest("hex"),
     sourceSuccess: meta.lastSuccess,
     generatedAt: new Date(meta.now).toISOString(),
-    idsSha: manifest.idsSha,
+    // Паспорт перевірено на ВСІХ погоджених рядках; опубліковано — без ніколи не оцінених відсутніх.
+    idsSha: excluded.length ? idsSha(published) : manifest.idsSha,
     contentSha: manifest.contentSha,
+    approvedCount: rows.length,
+    excludedNeverPriced: excluded,
+    unavailableMissing,
+    ownStock,
   };
 }
 

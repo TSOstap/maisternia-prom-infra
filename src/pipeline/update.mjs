@@ -19,10 +19,13 @@ import { buildYml, objectsFromValues } from "../core/yml.mjs";
 import { GROUP_HEADERS, YML_HEADERS } from "../core/seal.mjs";
 import { detectNewProducts, duplicateReport } from "../core/catalog-guards.mjs";
 import { publishFeed } from "../publish/publisher.mjs";
+import { applyAvailabilityPolicy, planView, resolveIdentity } from "../core/d1.mjs";
 
 const OPERATIONAL_KEY = "state/operational.json";
 const SYNC_KEY = "state/sync.json";
 const SEEN_KEY = "state/supplier-seen.json";
+const LINKS_KEY = "state/links.json";
+const OWN_STOCK_KEY = "state/own-stock.json";
 
 function fileSink(file) {
   const out = fs.createWriteStream(file, { encoding: "utf8" });
@@ -67,7 +70,7 @@ export async function runUpdate(ctx) {
   let rowsBySheet;
   let operational;
   try {
-    const parsed = await parseSupplierFeed(supplier.chunks(), { maximumChars: config.supplier.maximumChars });
+    const parsed = await parseSupplierFeed(supplier.chunks(), { maximumChars: config.supplier.maximumChars, identityFields: true });
     validateFeed(parsed, syncState.lastFeedCount, now, config.supplier);
     t.lap("постачальник");
 
@@ -78,6 +81,7 @@ export async function runUpdate(ctx) {
     const allIds = new Set();
     rowsBySheet = {};
     const plans = {};
+    const sheetRows = {};
     for (const name of config.catalog.syncSheets) {
       const values = snapshot.sheets[name];
       if (!values) throw new Error("Немає аркуша " + name);
@@ -87,9 +91,31 @@ export async function runUpdate(ctx) {
         if (allIds.has(r["Offer ID"])) throw new Error("ID є в обох аркушах");
         allIds.add(r["Offer ID"]);
       }
-      const rows = overlayOperational(view.rows, previous);
-      plans[name] = planRows(rows, parsed.offers, stamp, config.pricing);
-      rowsBySheet[name] = rows.map((r, i) => {
+      sheetRows[name] = overlayOperational(view.rows, previous);
+    }
+    const otherRows = config.catalog.knownSheets.filter((n) => !config.catalog.syncSheets.includes(n) && snapshot.sheets[n]?.length)
+      .flatMap((n) => readSheet(snapshot.sheets[n], n).rows);
+
+    // D1 п. 4–7: стабільна картка при зміні ID постачальника (до плану, щоб перев'язані картки оновились у цьому ж запуску).
+    const syncAll = Object.values(sheetRows).flat();
+    const identity = resolveIdentity({
+      syncRows: syncAll, knownRows: [...syncAll, ...otherRows], offers: parsed.offers,
+      links: await store.getJson(LINKS_KEY), autoRelink: config.identity?.autoRelink !== false, now,
+    });
+    for (const name of config.catalog.syncSheets) {
+      const rows = sheetRows[name];
+      plans[name] = planRows(rows.map((r) => planView(r, identity.effective)), parsed.offers, stamp, config.pricing);
+    }
+    // D1 п. 2, 3, 8, 9: власний залишок, облік відсутності, пропозиції, захист від масового «зникнення».
+    const availability = applyAvailabilityPolicy({
+      plans: Object.values(plans), previousMissing: previous?.missing || {}, ownStock: await store.getJson(OWN_STOCK_KEY),
+      now, policy: config.policy, pricing: config.pricing,
+    });
+    if (availability.anomaly) {
+      throw new Error(`Аномально багато товарів зникло за один запуск (${availability.anomaly.newlyMissing} > ${availability.anomaly.limit}): вважаємо фід несправним, стан і фіди не змінено`);
+    }
+    for (const name of config.catalog.syncSheets) {
+      rowsBySheet[name] = sheetRows[name].map((r, i) => {
         const copy = { ...r };
         LIVE_COLUMNS.forEach((k, j) => { copy[k] = plans[name][i].next[j]; });
         return copy;
@@ -99,9 +125,18 @@ export async function runUpdate(ctx) {
 
     const opRows = {};
     for (const name of config.catalog.syncSheets) for (const p of plans[name]) opRows[p.id] = p.next;
-    operational = { kind: "OPERATIONAL_STATE_V1", syncState: "OK", lastSuccess: stamp, feedDate: parsed.date, feedCount: parsed.count, rows: opRows };
+    if (identity.relinked.length || !(await store.head(LINKS_KEY))) await store.putJson(LINKS_KEY, identity.links);
+    operational = { kind: "OPERATIONAL_STATE_V1", syncState: "OK", lastSuccess: stamp, feedDate: parsed.date, feedCount: parsed.count, rows: opRows, missing: availability.missing };
     await store.putJson(OPERATIONAL_KEY, operational); // комміт синхронізації — один запис
     t.lap("запис стану");
+
+    await store.putJson("reports/identity/latest.json", { generatedAt: stamp, relinked: identity.relinked, manualReview: identity.manual });
+    await store.putJson("reports/missing/latest.json", {
+      generatedAt: stamp, missing: Object.keys(availability.missing).length, newlyMissing: availability.newlyMissing,
+      returned: availability.returned, proposals: availability.proposals, note: "Лише пропозиції. Автоматичного приховування/видалення немає.",
+    });
+    report.identity = { relinked: identity.relinked.length, manualReview: identity.manual.length };
+    report.availability = { missing: Object.keys(availability.missing).length, newlyMissing: availability.newlyMissing.length, returned: availability.returned.length, proposals: availability.proposals.length };
 
     const changes = config.catalog.syncSheets.flatMap((name) => changeEntries(stamp, name, plans[name]));
     if (changes.length) await store.putJson(`runs/${stamp.slice(0, 7)}/${stamp.replace(/[:.]/g, "-")}-changes.json`, changes);
@@ -127,6 +162,9 @@ export async function runUpdate(ctx) {
       const j = h.indexOf("Offer ID");
       for (const row of values.slice(1)) { if (i >= 0 && row[i] !== "" && row[i] != null) knownIds.add(mtText(row[i])); if (j >= 0 && row[j]) knownIds.add(mtText(row[j])); }
     }
+    // Перев'язані та неоднозначні offers — не «нові товари» (щоб не створити другу картку).
+    for (const r of identity.relinked) knownIds.add(r.to);
+    for (const m of identity.manual) knownIds.add(m.offerId);
     const seen = (await store.getJson(SEEN_KEY)) || {};
     const detected = detectNewProducts({ offers: parsed.offers, knownIds, seen: seen.items || {}, now });
     await store.putJson(SEEN_KEY, { kind: "SUPPLIER_SEEN_V1", updatedAt: stamp, items: detected.seen });
@@ -150,7 +188,7 @@ export async function runUpdate(ctx) {
   // ---------- фіди (кожен ізольовано) ----------
   const groups = objectsFromValues(ctx.groups, GROUP_HEADERS);
   const tmpDir = ctx.tmpDir || os.tmpdir();
-  for (const feed of config.feeds) {
+  for (const feed of config.feeds.filter((f) => f.enabled !== false)) {
     const result = { feed: feed.name };
     const file = path.join(tmpDir, `feed-${feed.name}-${process.pid}-${Date.now()}.xml`);
     try {
@@ -168,7 +206,7 @@ export async function runUpdate(ctx) {
       let built;
       try {
         built = await buildYml({
-          rows, groups, manifest, pricing: config.pricing, maximumBytes: feed.maximumBytes, sink,
+          rows, groups, manifest, pricing: config.pricing, maximumBytes: feed.maximumBytes, sink, missingPolicy: config.policy?.missing || "block",
           meta: { syncState: operational.syncState, lastSuccess: operational.lastSuccess, now },
           config: config.yml,
         });
@@ -182,7 +220,7 @@ export async function runUpdate(ctx) {
         },
       });
       t.lap("публікація " + feed.name);
-      Object.assign(result, { state: published.reused ? "REUSED" : "PUBLISHED", count: built.count, bytes: built.bytes, sha256: built.sha256, storedBytes: published.active.storedBytes, removedVersions: published.removed?.length || 0 });
+      Object.assign(result, { state: published.reused ? "REUSED" : "PUBLISHED", count: built.count, bytes: built.bytes, sha256: built.sha256, storedBytes: published.active.storedBytes, removedVersions: published.removed?.length || 0, unavailableMissing: built.unavailableMissing, ownStock: built.ownStock, excludedNeverPriced: built.excludedNeverPriced });
     } catch (error) {
       Object.assign(result, { state: "ERROR", error: sanitize(error) });
       await store.putJson(`state/feed-${feed.name}-error.json`, { at: stamp, error: result.error }).catch(() => {});

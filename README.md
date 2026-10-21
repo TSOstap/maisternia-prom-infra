@@ -4,7 +4,7 @@
 **Shadow-режим:** робочий магазин, таблиця, Apps Script і Prom не змінюються.
 
 ```
-npm test                                   # 35 тестів, включно з паритетом проти живого Apps Script
+npm test                                   # 48 тестів, включно з паритетом проти живого Apps Script
 node tools/scale-test.mjs                  # 5k/10k/30k синтетичних товарів: час, пам'ять, розмір
 node tools/cost-model.mjs                  # прогноз безплатних квот
 node tools/synth.mjs --products=500 --new=5 --out=.data/demo
@@ -12,6 +12,6 @@ node src/cli.mjs update --store=.data/store --catalog=.data/demo/catalog --suppl
 node src/cli.mjs status --store=.data/store
 ```
 
-Документи: [ARCHITECTURE](ARCHITECTURE.md) · [BUSINESS-RULES](BUSINESS-RULES.md) · [COSTS](COSTS.md) · [TESTS](TESTS.md) · [CONNECT-PLAN](CONNECT-PLAN.md) · [PROGRESS](PROGRESS.md) · [HANDOFF](HANDOFF.md)
+Документи: [DATA-AUDIT-20261021](DATA-AUDIT-20261021.md) · [ARCHITECTURE](ARCHITECTURE.md) · [BUSINESS-RULES](BUSINESS-RULES.md) · [COSTS](COSTS.md) · [TESTS](TESTS.md) · [CONNECT-PLAN](CONNECT-PLAN.md) · [PROGRESS](PROGRESS.md) · [HANDOFF](HANDOFF.md)
 
 Вимоги: Node ≥22, без npm-залежностей.
