@@ -19,9 +19,13 @@ import { STATUS_OWN_STOCK, STATUS_MODEL_CONFLICT, isConflictStatus } from "./yml
  * @param knownRows  усі відомі рядки (включно з «Відкладеними») — щоб не вважати їх новими
  * @param offers     Map<id, offer> повного коректного фіду
  * @param links      реєстр прив'язок (SUPPLIER_LINKS_V1) або null
- * @returns { links, relinked[], manual[], newOfferIds[], decisions[] }
+ * @param frozenIds  ID з аркушів лише-ID (`catalog.knownIdSheets`, «Заморожені ID»): зафіксований набір каталогу,
+ *                   зокрема свідомо виключені товари. Вони не є «невідомими» і не йдуть у загальну ручну чергу.
+ *                   Але якщо є картки-сироти (їхній ID зник із фіду), заморожені offers перевіряються ПРОТИ НИХ:
+ *                   схожий — у ручну чергу з окремою причиною; автоматична прив'язка до замороженого offer — ніколи.
+ * @returns { links, relinked[], manual[], newOfferIds[], effective, frozen: { inFeed, ignored, flagged } }
  */
-export function resolveIdentity({ syncRows, knownRows, offers, links, autoRelink, now }) {
+export function resolveIdentity({ syncRows, knownRows, offers, links, autoRelink, now, frozenIds = new Set() }) {
   const at = new Date(now).toISOString();
   let next = links ? structuredClone(links) : { kind: "SUPPLIER_LINKS_V1", cards: {}, retired: {} };
   next.cards ||= {};
@@ -51,7 +55,9 @@ export function resolveIdentity({ syncRows, knownRows, offers, links, autoRelink
 
   // 4–6. Невідомі offers проти карток-сиріт.
   const knownCardIds = new Set([...linked, ...columnIds, ...Object.keys(next.retired)]);
-  const unknown = [...offers.values()].filter((o) => !knownCardIds.has(o.id));
+  const notCard = [...offers.values()].filter((o) => !knownCardIds.has(o.id));
+  const unknown = notCard.filter((o) => !frozenIds.has(o.id));
+  const frozenOffers = notCard.filter((o) => frozenIds.has(o.id));
   const orphanIds = new Set([...syncIds].filter((id) => !offers.has(effective.get(id))));
   const cards = knownRows.map((r) => ({ ...cardKeys(r), supplierId: effective.get(mtText(r["Offer ID"])) }));
   const decisions = unknown.length ? resolveUnknownOffers({ offers: unknown, cards, orphanIds }) : [];
@@ -65,7 +71,18 @@ export function resolveIdentity({ syncRows, knownRows, offers, links, autoRelink
       manual.push({ ...d, decision: "RELINK_PROPOSED" });
     } else if (d.decision === "MANUAL_REVIEW") manual.push(d);
   }
-  return { links: next, relinked, manual, newOfferIds: decisions.filter((d) => d.decision === "NEW").map((d) => d.offerId), effective };
+
+  // Заморожені offers: лише перевірка проти карток-сиріт (можливий новий ID для зниклої картки).
+  const frozen = { inFeed: frozenOffers.length, ignored: 0, flagged: 0 };
+  if (frozenOffers.length && orphanIds.size) {
+    for (const d of resolveUnknownOffers({ offers: frozenOffers, cards, orphanIds })) {
+      if (d.candidates.some((c) => c.orphan && c.level !== "NONE")) {
+        frozen.flagged++;
+        manual.push({ ...d, decision: "MANUAL_REVIEW", target: d.target || null, frozen: true, reason: "заморожений (свідомо виключений) offer схожий на картку, чий ID зник із фіду — можливий новий ID; автоматично не прив'язується" });
+      } else frozen.ignored++;
+    }
+  } else frozen.ignored = frozenOffers.length;
+  return { links: next, relinked, manual, newOfferIds: decisions.filter((d) => d.decision === "NEW").map((d) => d.offerId), effective, frozen };
 }
 
 /** Рядок для плану: ID постачальника береться з реєстру прив'язок, незмінні колонки не чіпаються. */

@@ -95,12 +95,21 @@ export async function runUpdate(ctx) {
     }
     const otherRows = config.catalog.knownSheets.filter((n) => !config.catalog.syncSheets.includes(n) && snapshot.sheets[n]?.length)
       .flatMap((n) => readSheet(snapshot.sheets[n], n).rows);
+    // Аркуші лише з колонкою Offer ID («Заморожені ID»): зафіксований набір каталогу, у т.ч. свідомо виключені.
+    const frozenIds = new Set();
+    for (const n of config.catalog.knownIdSheets || []) {
+      const v = snapshot.sheets[n];
+      if (!v?.length) continue;
+      const col = v[0].map(mtText).indexOf("Offer ID");
+      if (col < 0) continue;
+      for (const r of v.slice(1)) if (r[col] !== "" && r[col] != null) frozenIds.add(mtText(r[col]));
+    }
 
     // D1 п. 4–7: стабільна картка при зміні ID постачальника (до плану, щоб перев'язані картки оновились у цьому ж запуску).
     const syncAll = Object.values(sheetRows).flat();
     const identity = resolveIdentity({
       syncRows: syncAll, knownRows: [...syncAll, ...otherRows], offers: parsed.offers,
-      links: await store.getJson(LINKS_KEY), autoRelink: config.identity?.autoRelink !== false, now,
+      links: await store.getJson(LINKS_KEY), autoRelink: config.identity?.autoRelink !== false, now, frozenIds,
     });
     const views = {};
     for (const name of config.catalog.syncSheets) {
@@ -133,12 +142,12 @@ export async function runUpdate(ctx) {
     await store.putJson(OPERATIONAL_KEY, operational); // комміт синхронізації — один запис
     t.lap("запис стану");
 
-    await store.putJson("reports/identity/latest.json", { generatedAt: stamp, relinked: identity.relinked, manualReview: identity.manual });
+    await store.putJson("reports/identity/latest.json", { generatedAt: stamp, relinked: identity.relinked, manualReview: identity.manual, frozen: identity.frozen });
     await store.putJson("reports/missing/latest.json", {
       generatedAt: stamp, missing: Object.keys(availability.missing).length, newlyMissing: availability.newlyMissing,
       returned: availability.returned, proposals: availability.proposals, note: "Лише пропозиції. Автоматичного приховування/видалення немає.",
     });
-    report.identity = { relinked: identity.relinked.length, manualReview: identity.manual.length };
+    report.identity = { relinked: identity.relinked.length, manualReview: identity.manual.length, frozenInFeed: identity.frozen.inFeed, frozenIgnored: identity.frozen.ignored, frozenFlagged: identity.frozen.flagged };
     // D1b п. 6: журнал конфліктів — окремий файл подій на запуск (лише якщо є події), плюс поточний реєстр.
     if (availability.events.length) await store.putJson(`journal/conflicts/${stamp.slice(0, 7)}/${stamp.replace(/[:.]/g, "-")}.json`, availability.events);
     await store.putJson("reports/conflicts/latest.json", {
