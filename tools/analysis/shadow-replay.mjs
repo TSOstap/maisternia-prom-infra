@@ -37,11 +37,12 @@ const queueRows = objectsFromValues(book["Нові товари"], YML_HEADERS);
 const new92 = { ...approvalManifest(queueRows, groups), ids: queueRows.map((r) => String(r["Offer ID"])).sort() };
 
 const syncRows = [...objectsFromValues(book["Основний каталог"], YML_HEADERS), ...queueRows];
-function supplierXml(now, { drop = [], reissue = new Map() } = {}) {
+function supplierXml(now, { drop = [], reissue = new Map(), conflict = new Map() } = {}) {
   const offers = syncRows.filter((r) => !drop.includes(String(r["ID постачальника"]))).map((r) => {
     const sid = String(r["ID постачальника"]);
     const oid = reissue.get(sid) || sid;
-    return `<offer id="${oid}" available="${r["Наявність"] === "+"}"><url>${xmlEscape(String(r["URL постачальника"]).replace(`/p${sid}-`, `/p${oid}-`))}</url><price>${r["Ціна постачальника"]}</price><currencyId>UAH</currencyId><name>${xmlEscape(r["Назва постачальника RU"])}</name><name_ua>${xmlEscape(r["Назва постачальника UA"])}</name_ua><vendorCode>${xmlEscape(r["Артикул постачальника"])}</vendorCode><vendor>${xmlEscape(r["Виробник"])}</vendor><quantity_in_stock>${r["Кількість постачальника"]}</quantity_in_stock></offer>`;
+    const c = conflict.get(sid) || {};
+    return `<offer id="${oid}" available="${r["Наявність"] === "+"}"><url>${xmlEscape(String(r["URL постачальника"]).replace(`/p${sid}-`, `/p${oid}-`))}</url><price>${c.price ?? r["Ціна постачальника"]}</price><currencyId>${c.currency ?? "UAH"}</currencyId><name>${xmlEscape(r["Назва постачальника RU"])}</name><name_ua>${xmlEscape(c.nameUa ?? r["Назва постачальника UA"])}</name_ua><vendorCode>${xmlEscape(c.sku ?? r["Артикул постачальника"])}</vendorCode><vendor>${xmlEscape(r["Виробник"])}</vendor><quantity_in_stock>${r["Кількість постачальника"]}</quantity_in_stock></offer>`;
   });
   return `<?xml version="1.0" encoding="UTF-8"?>\n<yml_catalog date="${formatYmlDate(now - 15 * 60000, "Europe/Kyiv")}"><shop><offers>\n${offers.join("\n")}\n</offers></shop></yml_catalog>\n`;
 }
@@ -54,7 +55,7 @@ const run = async (now, opts) => {
   await fsp.writeFile(supplierFile, supplierXml(now, opts));
   return runUpdate({ store, config, manifests: { main: liveMain, new92 }, catalog: new NdjsonCatalogSource(path.join(out, "catalog")), supplier: new FileSupplierSource(supplierFile), now: () => now, tmpDir: out });
 };
-const brief = (r) => ({ sync: r.sync.state, error: r.sync.error, sheets: r.sync.sheets?.map((s) => [s.name, s.matched, s.held, s.byStatus]), identity: r.identity, availability: r.availability, feeds: r.feeds.map((f) => ({ feed: f.feed, state: f.state, count: f.count, bytes: f.bytes, unavailableMissing: f.unavailableMissing, error: f.error })), ms: r.timingsMs });
+const brief = (r) => ({ sync: r.sync.state, error: r.sync.error, sheets: r.sync.sheets?.map((s) => [s.name, s.matched, s.held, s.byStatus]), identity: r.identity, availability: r.availability, conflicts: r.conflicts, feeds: r.feeds.map((f) => ({ feed: f.feed, state: f.state, count: f.count, bytes: f.bytes, unavailableMissing: f.unavailableMissing, isolatedConflicts: f.isolatedConflicts, error: f.error })), ms: r.timingsMs });
 
 const t0 = Date.now();
 const r1 = await run(t0);
@@ -64,11 +65,18 @@ console.log("  main sourceDigest:", m1?.active?.sourceDigest);
 
 const drop = syncRows.slice(100, 100 + Number(arg("drop", 3))).map((r) => String(r["ID постачальника"]));
 const reissue = new Map(syncRows.slice(200, 200 + Number(arg("reissue", 5))).map((r, i) => [String(r["ID постачальника"]), String(3900000000 + i)]));
-const r2 = await run(t0 + 4 * 3600000, { drop, reissue });
-console.log("ПРОГІН 2 (D1: зникли " + drop.length + ", перевипущено " + reissue.size + "):", JSON.stringify(brief(r2)));
+const cs = syncRows.slice(300, 304).map((r) => String(r["ID постачальника"]));
+const conflict = new Map([[cs[0], { sku: "CONFLICT-SKU" }], [cs[1], { price: 0 }], [cs[2], { currency: "USD" }], [cs[3], { nameUa: "Інший комплект 2 АКБ" }]]);
+const r2 = await run(t0 + 4 * 3600000, { drop, reissue, conflict });
+console.log("ПРОГІН 2 (D1: зникли " + drop.length + ", перевипущено " + reissue.size + "; D1b: конфліктів " + conflict.size + "):", JSON.stringify(brief(r2)));
+const cr = await store.getJson("reports/conflicts/latest.json");
+console.log("  конфлікти:", JSON.stringify(cr.byReason));
 const idr = await store.getJson("reports/identity/latest.json");
 console.log("  перев'язки:", JSON.stringify(idr.relinked.map((x) => [x.offerId, x.from, "→", x.to, (x.evidence || []).join("+")])));
 const correct = idr.relinked.filter((x) => reissue.get(x.from) === x.to).length;
 console.log("  правильних перев'язок:", correct, "із", reissue.size, "; хибних:", idr.relinked.length - correct, "; ручних:", idr.manualReview.length);
 const news = await store.getJson("reports/new-products/latest.json");
 console.log("  нових товарів у звіті:", news.total);
+
+const r3 = await run(t0 + 8 * 3600000, { drop, reissue });
+console.log("ПРОГІН 3 (конфлікти виправлено):", JSON.stringify(brief(r3)));

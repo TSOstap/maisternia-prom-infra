@@ -10,8 +10,8 @@
  *  10. Окреме зникнення не блокує публікацію (див. missingPolicy у yml.mjs). */
 import { mtText } from "./text.mjs";
 import { MATCH } from "./sync-plan.mjs";
-import { applyRelink, cardKeys, effectiveSupplierId, resolveUnknownOffers } from "./identity.mjs";
-import { STATUS_OWN_STOCK } from "./yml.mjs";
+import { applyRelink, cardKeys, effectiveSupplierId, modelKey, resolveUnknownOffers } from "./identity.mjs";
+import { STATUS_OWN_STOCK, STATUS_MODEL_CONFLICT, isConflictStatus } from "./yml.mjs";
 
 /**
  * Зіставлення ідентичності до плану F:M.
@@ -84,38 +84,110 @@ export function ownStockFor(ownStock, offerId, now, maxAgeDays) {
   return { qty };
 }
 
+const DAY = 86400000;
+const hasVerifiedPrice = (p) => p.before.slice(0, 3).every((v) => mtText(v).trim() !== "");
+
+/** Останні перевірені значення картки та нові значення постачальника — для журналу конфліктів (D1b п. 6). */
+function conflictValues(row, p, offer, verifiedAt) {
+  return {
+    old: {
+      supplierId: mtText(row["ID постачальника"]), sku: mtText(row["Артикул постачальника"]), nameUa: mtText(row["Назва постачальника UA"]),
+      nameRu: mtText(row["Назва постачальника RU"]), model: mtText(row["Модель"]), price: p.before[0], base: p.before[1], final: p.before[2],
+      availability: p.before[4], verifiedAt: verifiedAt || null,
+    },
+    new: offer ? {
+      supplierId: offer.id, sku: offer.sku, nameUa: offer.nameUa, nameRu: offer.nameRu, model: offer.model ?? null,
+      price: offer.price, currency: offer.currency, available: offer.available, quantity: offer.quantity,
+    } : null,
+  };
+}
+
 /**
- * Пост-обробка плану (п. 2, 3, 8): власний залишок, облік днів відсутності, пропозиції приховати/архівувати.
- * Мутує next у плані лише для рядків ВІДСУТНІЙ_У_YML із підтвердженим власним залишком.
+ * Пост-обробка плану: рішення D1 (зникнення) і D1b (конфлікти) — ізоляція окремої картки замість блокування фіду.
+ *
+ * sheets   [{ rows (рядки, за якими будувався план), plan }] — next/match у плані мутуються
+ * offers   Map<id, offer> фіду (для журналу й перевірки моделі)
+ * previous { missing, conflicts, verifiedAt } з попереднього стану
+ *
+ * D1:  ВІДСУТНІЙ_У_YML → «-» (або підтверджений власний залишок), облік днів, пропозиції 60/90.
+ * D1b: будь-який конфлікт (ID, артикул, ідентичність/комплект, опорна назва, модель, валюта, ціна, наявність, кількість):
+ *      - картка лишається, контент і остання ПЕРЕВІРЕНА ціна не змінюються (plan вже зберіг F:H);
+ *      - policy.conflict='isolate': «-», знижка '', кількість ''. Продаж зберігається ЛИШЕ якщо є підтверджений
+ *        власний залишок І ціна перевірена не давніше ownStockConflictPriceMaxAgeDays;
+ *      - журнал подій OPENED / CHANGED / RESOLVED зі старими й новими значеннями;
+ *      - після виправлення звичайний mtMatch знову дає ЗІСТАВЛЕНО → RESOLVED, та сама картка.
+ * Аномалія: нових ізоляцій (зникнення + конфлікти) за запуск понад max(N, частка каталогу) → фід несправний.
  */
-export function applyAvailabilityPolicy({ plans, previousMissing = {}, ownStock, now, policy, pricing }) {
+export function applyAvailabilityPolicy({ sheets, offers = new Map(), previous = {}, ownStock, now, policy, pricing }) {
   const stamp = new Date(now).toISOString();
+  const prevMissing = previous.missing || {};
+  const prevConflicts = previous.conflicts || {};
+  const prevVerified = previous.verifiedAt || {};
+  const isolate = (policy.conflict || "block") === "isolate";
   const missing = {};
+  const conflicts = {};
+  const verifiedAt = {};
   const returned = [];
   const newlyMissing = [];
+  const newlyConflicted = [];
   const proposals = [];
+  const events = [];
   let total = 0;
-  for (const plan of plans) {
-    for (const p of plan) {
+
+  for (const { rows, plan } of sheets) {
+    plan.forEach((p, i) => {
       total++;
+      const row = rows[i];
+      const offer = offers.get(mtText(row["ID постачальника"]));
+      // Конфлікт моделі (D1b п. 1): лише якщо постачальник передає <model> і в картці є «Модель».
+      if (p.match === MATCH.OK && offer?.model && mtText(row["Модель"]).trim() && modelKey(offer.model) !== modelKey(row["Модель"])) {
+        p.next = p.before.slice(); p.next[6] = STATUS_MODEL_CONFLICT; p.next[7] = stamp; p.match = STATUS_MODEL_CONFLICT;
+      }
+      // Час останньої успішної перевірки ціни: зі стану, інакше зі знімка (стан ЗІСТАВЛЕНО + «Оновлено»).
+      verifiedAt[p.id] = p.match === MATCH.OK ? stamp : prevVerified[p.id] || (p.before[6] === MATCH.OK && mtText(p.before[7]) ? mtText(p.before[7]) : null);
+
       if (p.match === MATCH.MISSING) {
         const own = ownStockFor(ownStock, p.id, now, policy.ownStockMaxAgeDays);
-        const prices = p.before.slice(0, 3);
-        if (own && prices.every((v) => mtText(v).trim() !== "")) {
+        if (own && hasVerifiedPrice(p)) {
           p.next[3] = pricing.discount + "%"; p.next[4] = "+"; p.next[5] = own.qty; p.next[6] = STATUS_OWN_STOCK;
           p.match = STATUS_OWN_STOCK;
         }
-        const since = previousMissing[p.id]?.since || stamp;
-        if (!previousMissing[p.id]) newlyMissing.push(p.id);
+        const since = prevMissing[p.id]?.since || stamp;
+        if (!prevMissing[p.id]) newlyMissing.push(p.id);
         missing[p.id] = { since };
-        const days = Math.floor((now - new Date(since).getTime()) / 86400000);
+        const days = Math.floor((now - new Date(since).getTime()) / DAY);
         if (days >= policy.proposeArchiveAfterDays) proposals.push({ id: p.id, days, proposal: "PROPOSE_ARCHIVE" });
         else if (days >= policy.proposeHideAfterDays) proposals.push({ id: p.id, days, proposal: "PROPOSE_HIDE" });
-      } else if (previousMissing[p.id] && p.match === MATCH.OK) {
-        returned.push({ id: p.id, since: previousMissing[p.id].since });
+      } else if (isConflictStatus(p.match)) {
+        const reason = p.match;
+        let sale = "UNAVAILABLE";
+        if (isolate) {
+          const own = ownStockFor(ownStock, p.id, now, policy.ownStockMaxAgeDays);
+          const fresh = verifiedAt[p.id] && now - Date.parse(verifiedAt[p.id]) <= policy.ownStockConflictPriceMaxAgeDays * DAY;
+          if (own && fresh && hasVerifiedPrice(p)) {
+            p.next[3] = pricing.discount + "%"; p.next[4] = "+"; p.next[5] = own.qty; p.next[6] = STATUS_OWN_STOCK;
+            p.match = STATUS_OWN_STOCK; sale = "OWN_STOCK";
+          } else {
+            p.next[3] = ""; p.next[4] = "-"; p.next[5] = "";
+          }
+        } else sale = "BLOCKS_FEED";
+        const prev = prevConflicts[p.id];
+        conflicts[p.id] = { since: prev?.since || stamp, reason, sale, lastSeen: stamp };
+        if (!prev || prev.reason !== reason) {
+          if (!prev) newlyConflicted.push(p.id);
+          events.push({ at: stamp, event: prev ? "CHANGED" : "OPENED", offerId: p.id, reason, previousReason: prev?.reason || null, sale, ...conflictValues(row, p, offer, verifiedAt[p.id]) });
+        }
       }
-    }
+      if (prevMissing[p.id] && p.match === MATCH.OK) returned.push({ id: p.id, since: prevMissing[p.id].since });
+      if (prevConflicts[p.id] && !conflicts[p.id]) {
+        events.push({ at: stamp, event: "RESOLVED", offerId: p.id, reason: prevConflicts[p.id].reason, since: prevConflicts[p.id].since, now: p.match });
+      }
+    });
   }
   const limit = Math.max(policy.anomaly.maxNewlyMissing, Math.ceil(total * policy.anomaly.maxNewlyMissingRatio));
-  return { missing, returned, newlyMissing, proposals, anomaly: newlyMissing.length > limit ? { newlyMissing: newlyMissing.length, limit } : null };
+  const newlyIsolated = newlyMissing.length + newlyConflicted.length;
+  return {
+    missing, conflicts, verifiedAt, returned, newlyMissing, newlyConflicted, proposals, events,
+    anomaly: newlyIsolated > limit ? { newlyMissing: newlyMissing.length, newlyConflicted: newlyConflicted.length, limit } : null,
+  };
 }

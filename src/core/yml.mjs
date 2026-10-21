@@ -11,6 +11,7 @@ import { DEFAULT_PRICING, mtPrices } from "./pricing.mjs";
 import { formatYmlDate } from "./time.mjs";
 import { FROZEN_COLUMNS, GROUP_HEADERS, YML_HEADERS, canonicalGroups, contentSha, idsSha, rowSeal, SEAL_COLUMN } from "./seal.mjs";
 import { sha256 } from "./text.mjs";
+import { MATCH } from "./sync-plan.mjs";
 
 const SECRET_RE = /hash_tag\s*(?:=|&(?:amp|#38);)|products_feed\.xml|Bearer\s+[A-Za-z0-9_-]{12,}/i;
 
@@ -110,19 +111,29 @@ function preflight(rows, groups, meta, manifest, config) {
  *  як «немає в наявності» (або з підтвердженим власним залишком), а не блокує весь фід.
  *  'block' — чинна поведінка LIVE (для паритету). */
 export const MISSING_POLICIES = Object.freeze(["block", "unavailable"]);
+/** Політика D1b (погоджено власником 21.10.2026): конфлікт однієї картки ізолює лише її. 'block' — LIVE. */
+export const CONFLICT_POLICIES = Object.freeze(["block", "isolate"]);
 export const STATUS_MISSING = "ВІДСУТНІЙ_У_YML";
 export const STATUS_OWN_STOCK = "ВЛАСНИЙ_ЗАЛИШОК";
+export const STATUS_MODEL_CONFLICT = "КОНФЛІКТ_МОДЕЛІ";
+const CONFLICTS = new Set([...Object.values(MATCH).filter((s) => s !== MATCH.OK && s !== MATCH.MISSING), STATUS_MODEL_CONFLICT]);
+export const isConflictStatus = (status) => CONFLICTS.has(status);
+/** Ізольована картка: зникла або конфліктна (не ЗІСТАВЛЕНО і не власний залишок). */
+export const isIsolatedStatus = (status) => status === STATUS_MISSING || CONFLICTS.has(status);
 
-function statusAllowed(r, missingPolicy) {
+function statusAllowed(r, missingPolicy, conflictPolicy) {
   const st = r["Стан синхронізації"];
   if (st === "ЗІСТАВЛЕНО") return true;
-  if (missingPolicy !== "unavailable") return false;
-  return (st === STATUS_MISSING && r["Наявність"] === "-") || (st === STATUS_OWN_STOCK && r["Наявність"] === "+");
+  const unavailable = r["Наявність"] === "-";
+  if (st === STATUS_MISSING) return missingPolicy === "unavailable" && unavailable;
+  if (CONFLICTS.has(st)) return conflictPolicy === "isolate" && unavailable;
+  if (st === STATUS_OWN_STOCK) return (missingPolicy === "unavailable" || conflictPolicy === "isolate") && r["Наявність"] === "+";
+  return false;
 }
 
-export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missingPolicy = "block") {
+export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missingPolicy = "block", conflictPolicy = "block") {
   const id = mtText(r["Offer ID"]);
-  if (r["Статус імпорту"] !== "ДОЗВОЛЕНО" || !statusAllowed(r, missingPolicy)) throw new Error("Непідтверджений статус; ID " + id);
+  if (r["Статус імпорту"] !== "ДОЗВОЛЕНО" || !statusAllowed(r, missingPolicy, conflictPolicy)) throw new Error("Непідтверджений статус; ID " + id);
   if (new Date(r["Оновлено"]).getTime() !== success) throw new Error("Рядок не належить останньому успішному оновленню; ID " + id);
   if (r["Валюта"] !== "UAH" || ["+", "-"].indexOf(r["Наявність"]) < 0) throw new Error("Невизначена валюта/наявність; ID " + id);
   const available = r["Наявність"] === "+";
@@ -186,8 +197,9 @@ const FOOTER = "</offers></shop></yml_catalog>";
  * rows/groups — об'єкти (див. objectsFromValues). manifest — паспорт погодженого набору.
  * Повертає метадані, сумісні з маніфестом публікатора LIVE (sha256, bytes, sourceDigest, ...).
  */
-export async function buildYml({ rows, groups, meta, manifest, config, pricing = DEFAULT_PRICING, maximumBytes, sink, missingPolicy = "block" }) {
+export async function buildYml({ rows, groups, meta, manifest, config, pricing = DEFAULT_PRICING, maximumBytes, sink, missingPolicy = "block", conflictPolicy = "block" }) {
   if (!MISSING_POLICIES.includes(missingPolicy)) throw new Error("Невідома політика відсутніх товарів: " + missingPolicy);
+  if (!CONFLICT_POLICIES.includes(conflictPolicy)) throw new Error("Невідома політика конфліктів: " + conflictPolicy);
   const { success, now, groupMap, categories } = preflight(rows, groups, meta, manifest, config);
   const full = crypto.createHash("sha256");
   const digest = crypto.createHash("sha256");
@@ -204,17 +216,20 @@ export async function buildYml({ rows, groups, meta, manifest, config, pricing =
   const published = [];
   const excluded = [];
   let unavailableMissing = 0;
+  let isolatedConflicts = 0;
   let ownStock = 0;
   for (const r of rows) {
     const st = r["Стан синхронізації"];
-    // Відсутній товар без жодної перевіреної ціни ніколи не публікувався — у Prom його нема чого вимикати.
-    if (missingPolicy === "unavailable" && st === STATUS_MISSING && mtText(r["Ціна постачальника"]).trim() === "") {
+    // Ізольована картка без жодної перевіреної ціни ніколи не публікувалась — у Prom її нема чого вимикати.
+    const isolatedHere = (st === STATUS_MISSING && missingPolicy === "unavailable") || (CONFLICTS.has(st) && conflictPolicy === "isolate");
+    if (isolatedHere && mtText(r["Ціна постачальника"]).trim() === "") {
       excluded.push(mtText(r["Offer ID"]));
       continue;
     }
-    await emit("\n" + offerXml(r, success, groupMap, pricing, missingPolicy));
+    await emit("\n" + offerXml(r, success, groupMap, pricing, missingPolicy, conflictPolicy));
     published.push(mtText(r["Offer ID"]));
     if (st === STATUS_MISSING) unavailableMissing++;
+    if (CONFLICTS.has(st)) isolatedConflicts++;
     if (st === STATUS_OWN_STOCK) ownStock++;
   }
   await emit("\n" + FOOTER);
@@ -231,6 +246,7 @@ export async function buildYml({ rows, groups, meta, manifest, config, pricing =
     approvedCount: rows.length,
     excludedNeverPriced: excluded,
     unavailableMissing,
+    isolatedConflicts,
     ownStock,
   };
 }

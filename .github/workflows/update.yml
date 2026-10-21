@@ -1,5 +1,4 @@
-# Цикл оновлення. ЗАРАЗ: лише ручний запуск у режимі synthetic (без доступу до магазину) —
-# щоб виміряти фактичний час і пам'ять на справжньому runner (COSTS.md).
+# Цикл оновлення. ЗАРАЗ: лише ручний запуск на синтетиці (без доступу до магазину).
 # Розклад і реальні джерела вмикаються ОКРЕМИМ погодженням власника (CONNECT-PLAN.md, етапи C3–C5).
 name: update
 on:
@@ -27,9 +26,8 @@ jobs:
       - name: Синтетичні дані
         run: node tools/synth.mjs --products=${{ inputs.products }} --new=25 --out=.data/run
       - name: Цикл оновлення (shadow, локальне сховище runner)
+        # Ненульовий код виходу = збій синку або фіду → GitHub позначає запуск як failed і надсилає сповіщення.
         run: |
-          /usr/bin/time -v node src/cli.mjs update --store=.data/store --catalog=.data/run/catalog \
-            --supplier=.data/run/supplier.xml --manifest=.data/run/approved-main.json --max-bytes=2000000000 \
-            > .data/report.json 2> .data/time.txt || (cat .data/time.txt; exit 1)
-          grep -E "Elapsed|Maximum resident" .data/time.txt
-          node -e "const r=require('./.data/report.json');console.log(JSON.stringify({sync:r.sync.state,feeds:r.feeds,timingsMs:r.timingsMs}))"
+          node src/cli.mjs update --store=.data/store --catalog=.data/run/catalog \
+            --supplier=.data/run/supplier.xml --manifest=.data/run/approved-main.json --max-bytes=2000000000 > .data/report.json
+          node -e "const r=require('./.data/report.json');console.log(JSON.stringify({sync:r.sync.state,feeds:r.feeds,conflicts:r.conflicts,availability:r.availability,timingsMs:r.timingsMs}))"

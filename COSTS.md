@@ -109,4 +109,6 @@
 - [реалізовано] `budgetVerdict`: WARN від 50% будь-якої квоти, STOP від 80%.
 - [реалізовано] `timeout-minutes` у workflow (15 і 10 хв) — жорстка межа на випадок зависання; `concurrency` не дає запускам накладатися.
 - [план C4] щоденна перевірка через GraphQL Analytics R2 (потрібен read-only API-токен) і зупинка розкладу при STOP.
+- [D1/D1b] Нові записи на запуск: links (лише при перев'язці), reports/identity, reports/missing, reports/conflicts, журнал конфліктів (лише якщо є події) — до +5 операцій класу A на запуск, ≈1 100/міс. Це ≈0,1% квоти 1 млн; вердикт моделі не змінюється.
+- [C1] Вимірювання на runner — ≤30 хв разово (≤1,5% місячної квоти), `timeout-minutes` у кожному job (C1-PLAN.md).
 - [правило] GitHub: не задавати бюджет понад $0. Cloudflare: жодних платних функцій, лише R2 Standard і Workers Free. GCP: не підключати billing account.

@@ -74,7 +74,7 @@ export async function runUpdate(ctx) {
     validateFeed(parsed, syncState.lastFeedCount, now, config.supplier);
     t.lap("постачальник");
 
-    const snapshot = await catalog.load(config.catalog.knownSheets);
+    const snapshot = await catalog.load([...config.catalog.knownSheets, ...(config.catalog.knownIdSheets || [])]);
     const previous = await store.getJson(OPERATIONAL_KEY);
     t.lap("каталог");
 
@@ -102,17 +102,20 @@ export async function runUpdate(ctx) {
       syncRows: syncAll, knownRows: [...syncAll, ...otherRows], offers: parsed.offers,
       links: await store.getJson(LINKS_KEY), autoRelink: config.identity?.autoRelink !== false, now,
     });
+    const views = {};
     for (const name of config.catalog.syncSheets) {
-      const rows = sheetRows[name];
-      plans[name] = planRows(rows.map((r) => planView(r, identity.effective)), parsed.offers, stamp, config.pricing);
+      views[name] = sheetRows[name].map((r) => planView(r, identity.effective));
+      plans[name] = planRows(views[name], parsed.offers, stamp, config.pricing);
     }
-    // D1 п. 2, 3, 8, 9: власний залишок, облік відсутності, пропозиції, захист від масового «зникнення».
+    // D1 (зникнення) і D1b (конфлікти): ізоляція окремої картки, власний залишок, журнал, захист від масових збоїв.
     const availability = applyAvailabilityPolicy({
-      plans: Object.values(plans), previousMissing: previous?.missing || {}, ownStock: await store.getJson(OWN_STOCK_KEY),
-      now, policy: config.policy, pricing: config.pricing,
+      sheets: config.catalog.syncSheets.map((name) => ({ rows: views[name], plan: plans[name] })), offers: parsed.offers,
+      previous: { missing: previous?.missing, conflicts: previous?.conflicts, verifiedAt: previous?.verifiedAt },
+      ownStock: await store.getJson(OWN_STOCK_KEY), now, policy: config.policy, pricing: config.pricing,
     });
     if (availability.anomaly) {
-      throw new Error(`Аномально багато товарів зникло за один запуск (${availability.anomaly.newlyMissing} > ${availability.anomaly.limit}): вважаємо фід несправним, стан і фіди не змінено`);
+      const a = availability.anomaly;
+      throw new Error(`Аномально багато проблемних товарів за один запуск (нових зникнень ${a.newlyMissing}, нових конфліктів ${a.newlyConflicted}; поріг ${a.limit}): вважаємо фід постачальника несправним, стан і фіди не змінено`);
     }
     for (const name of config.catalog.syncSheets) {
       rowsBySheet[name] = sheetRows[name].map((r, i) => {
@@ -126,7 +129,7 @@ export async function runUpdate(ctx) {
     const opRows = {};
     for (const name of config.catalog.syncSheets) for (const p of plans[name]) opRows[p.id] = p.next;
     if (identity.relinked.length || !(await store.head(LINKS_KEY))) await store.putJson(LINKS_KEY, identity.links);
-    operational = { kind: "OPERATIONAL_STATE_V1", syncState: "OK", lastSuccess: stamp, feedDate: parsed.date, feedCount: parsed.count, rows: opRows, missing: availability.missing };
+    operational = { kind: "OPERATIONAL_STATE_V1", syncState: "OK", lastSuccess: stamp, feedDate: parsed.date, feedCount: parsed.count, rows: opRows, missing: availability.missing, conflicts: availability.conflicts, verifiedAt: availability.verifiedAt };
     await store.putJson(OPERATIONAL_KEY, operational); // комміт синхронізації — один запис
     t.lap("запис стану");
 
@@ -136,7 +139,15 @@ export async function runUpdate(ctx) {
       returned: availability.returned, proposals: availability.proposals, note: "Лише пропозиції. Автоматичного приховування/видалення немає.",
     });
     report.identity = { relinked: identity.relinked.length, manualReview: identity.manual.length };
+    // D1b п. 6: журнал конфліктів — окремий файл подій на запуск (лише якщо є події), плюс поточний реєстр.
+    if (availability.events.length) await store.putJson(`journal/conflicts/${stamp.slice(0, 7)}/${stamp.replace(/[:.]/g, "-")}.json`, availability.events);
+    await store.putJson("reports/conflicts/latest.json", {
+      generatedAt: stamp, open: Object.keys(availability.conflicts).length, events: availability.events.length,
+      byReason: Object.values(availability.conflicts).reduce((a, c) => ((a[c.reason] = (a[c.reason] || 0) + 1), a), {}),
+      conflicts: availability.conflicts, note: "Ізольовано лише ці картки. Контент і остання перевірена ціна збережені; перевірте й виправте джерело.",
+    });
     report.availability = { missing: Object.keys(availability.missing).length, newlyMissing: availability.newlyMissing.length, returned: availability.returned.length, proposals: availability.proposals.length };
+    report.conflicts = { open: Object.keys(availability.conflicts).length, opened: availability.events.filter((e) => e.event === "OPENED").length, resolved: availability.events.filter((e) => e.event === "RESOLVED").length };
 
     const changes = config.catalog.syncSheets.flatMap((name) => changeEntries(stamp, name, plans[name]));
     if (changes.length) await store.putJson(`runs/${stamp.slice(0, 7)}/${stamp.replace(/[:.]/g, "-")}-changes.json`, changes);
@@ -206,7 +217,7 @@ export async function runUpdate(ctx) {
       let built;
       try {
         built = await buildYml({
-          rows, groups, manifest, pricing: config.pricing, maximumBytes: feed.maximumBytes, sink, missingPolicy: config.policy?.missing || "block",
+          rows, groups, manifest, pricing: config.pricing, maximumBytes: feed.maximumBytes, sink, missingPolicy: config.policy?.missing || "block", conflictPolicy: config.policy?.conflict || "block",
           meta: { syncState: operational.syncState, lastSuccess: operational.lastSuccess, now },
           config: config.yml,
         });
@@ -220,7 +231,7 @@ export async function runUpdate(ctx) {
         },
       });
       t.lap("публікація " + feed.name);
-      Object.assign(result, { state: published.reused ? "REUSED" : "PUBLISHED", count: built.count, bytes: built.bytes, sha256: built.sha256, storedBytes: published.active.storedBytes, removedVersions: published.removed?.length || 0, unavailableMissing: built.unavailableMissing, ownStock: built.ownStock, excludedNeverPriced: built.excludedNeverPriced });
+      Object.assign(result, { state: published.reused ? "REUSED" : "PUBLISHED", count: built.count, bytes: built.bytes, sha256: built.sha256, storedBytes: published.active.storedBytes, removedVersions: published.removed?.length || 0, unavailableMissing: built.unavailableMissing, isolatedConflicts: built.isolatedConflicts, ownStock: built.ownStock, excludedNeverPriced: built.excludedNeverPriced });
     } catch (error) {
       Object.assign(result, { state: "ERROR", error: sanitize(error) });
       await store.putJson(`state/feed-${feed.name}-error.json`, { at: stamp, error: result.error }).catch(() => {});

@@ -1,0 +1,37 @@
+# Етап C1: вимірювання на справжньому runner GitHub (лише синтетика, без секретів і без доступу до магазину).
+# Запуск вручну: Actions → measure → Run workflow (або `gh workflow run measure -f sizes=5121,30000`).
+name: measure
+on:
+  workflow_dispatch:
+    inputs:
+      sizes:
+        description: "Розміри каталогу через кому"
+        default: "5121,10000,30000"
+permissions:
+  contents: read
+concurrency:
+  group: measure
+  cancel-in-progress: false
+jobs:
+  measure:
+    runs-on: ubuntu-latest   # стандартний безплатний runner; larger runners — платні, не використовуємо
+    timeout-minutes: 15      # жорстка межа витрати хвилин
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Масштабний цикл (синтетика) з виміром часу й пам'яті
+        run: node tools/scale-test.mjs --sizes=${{ inputs.sizes }} --out=.data/scale
+      - name: Підсумок у Job Summary
+        run: |
+          node -e '
+            const r = require("./.data/scale/results.json");
+            const rows = r.results.map(x => `| ${x.products} | ${x.sync}/${x.feed} | ${x.ymlMB} | ${x.gzipMB} | ${x.totalSec} | ${x.maxRssMb} |`);
+            console.log(["### Вимірювання C1", `Node ${r.node}, ${r.platform}`, "", "| Товарів | Синк/фід | YML, МБ | gzip, МБ | Цикл, с | Пам'\''ять, МБ |", "|---|---|---|---|---|---|", ...rows].join("\n"));
+          ' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scale-results
+          path: .data/scale/results.json
+          retention-days: 7    # квота artifacts Free — 500 MB; файл ~2 КБ

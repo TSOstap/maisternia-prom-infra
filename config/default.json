@@ -21,9 +21,19 @@
     "timeZone": "Europe/Kyiv"
   },
   "catalog": {
-    "syncSheets": ["Основний каталог", "Нові товари"],
+    "syncSheets": [
+      "Основний каталог",
+      "Нові товари"
+    ],
     "requiredNonEmptySheet": "Основний каталог",
-    "knownSheets": ["Основний каталог", "Нові товари", "Відкладені товари"]
+    "knownSheets": [
+      "Основний каталог",
+      "Нові товари",
+      "Відкладені товари"
+    ],
+    "knownIdSheets": [
+      "Заморожені ID"
+    ]
   },
   "yml": {
     "maximumSyncAgeHours": 12,
@@ -34,7 +44,9 @@
   "feeds": [
     {
       "name": "main",
-      "sheets": ["Основний каталог"],
+      "sheets": [
+        "Основний каталог"
+      ],
       "manifest": "approved/main.json",
       "maximumBytes": 50000000
     }
@@ -46,10 +58,12 @@
   "guards": {
     "maxRemovedWithoutApproval": 0
   },
-  "_policy": "Рішення D1 власника від 21.10.2026 (ARCHITECTURE.md, розділ 6). missing='block' — чинна поведінка LIVE.",
+  "_policy": "Рішення D1 і D1b власника від 21.10.2026 (ARCHITECTURE.md, розділ 6). missing='block' / conflict='block' — чинна поведінка LIVE.",
   "policy": {
     "missing": "unavailable",
+    "conflict": "isolate",
     "ownStockMaxAgeDays": 7,
+    "ownStockConflictPriceMaxAgeDays": 3,
     "proposeHideAfterDays": 60,
     "proposeArchiveAfterDays": 90,
     "anomaly": {
@@ -59,5 +73,6 @@
   },
   "identity": {
     "autoRelink": true
-  }
+  },
+  "_catalog": "knownIdSheets — аркуші лише з колонкою Offer ID (напр. «Заморожені ID»): ці товари вважаються відомими й не потрапляють у «нові»."
 }
