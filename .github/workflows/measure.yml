@@ -17,10 +17,13 @@ jobs:
     runs-on: ubuntu-latest   # стандартний безплатний runner; larger runners — платні, не використовуємо
     timeout-minutes: 15      # жорстка межа витрати хвилин
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false   # токен GitHub не лишається в git-конфігу runner
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
+          package-manager-cache: false   # залежностей немає; без автоматичного кешу
       - name: Масштабний цикл (синтетика) з виміром часу й пам'яті
         run: node tools/scale-test.mjs --sizes=${{ inputs.sizes }} --out=.data/scale
       - name: Підсумок у Job Summary
@@ -30,7 +33,7 @@ jobs:
             const rows = r.results.map(x => `| ${x.products} | ${x.sync}/${x.feed} | ${x.ymlMB} | ${x.gzipMB} | ${x.totalSec} | ${x.maxRssMb} |`);
             console.log(["### Вимірювання C1", `Node ${r.node}, ${r.platform}`, "", "| Товарів | Синк/фід | YML, МБ | gzip, МБ | Цикл, с | Пам'\''ять, МБ |", "|---|---|---|---|---|---|", ...rows].join("\n"));
           ' >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: scale-results
           path: .data/scale/results.json

@@ -62,6 +62,7 @@ export class GoogleSheetsCatalogSource {
     this.maxRequestsPerMinute = o.maxRequestsPerMinute || 50;
     this.maxRequests = o.maxRequests || 60;
     this.maxAttempts = o.maxAttempts || 5;
+    this.requestTimeoutMs = o.requestTimeoutMs || 170000; // сервер Sheets сам обриває запити понад 180 с
     this.fetch = o.fetchImpl || globalThis.fetch;
     this.sleep = o.sleep || ((ms) => new Promise((r) => setTimeout(r, ms)));
     this.now = o.now || (() => Date.now());
@@ -88,23 +89,28 @@ export class GoogleSheetsCatalogSource {
       await this.#pace();
       this.metrics.requests++;
       const started = this.now();
-      let res;
+      // Відсутність токена — не мережева помилка: без повторів і з точним повідомленням.
+      const token = await this.getAccessToken();
+      let res, text;
       try {
-        res = await this.fetch(url, { headers: { Authorization: "Bearer " + (await this.getAccessToken()), Accept: "application/json" } });
+        res = await this.fetch(url, { headers: { Authorization: "Bearer " + token, Accept: "application/json" }, signal: AbortSignal.timeout(this.requestTimeoutMs) });
+        text = await res.text();
       } catch (e) {
-        if (attempt >= this.maxAttempts) throw new Error("Sheets API недоступний (мережа): " + sanitize(e));
+        if (attempt >= this.maxAttempts) throw new Error(e?.name === "TimeoutError" ? "Sheets API: перевищено час очікування" : "Sheets API недоступний (мережа)");
         this.metrics.retries++;
         await this.sleep(this.#backoff(attempt));
         continue;
       }
-      const text = await res.text();
       this.metrics.ms += this.now() - started;
       this.metrics.bytes += Buffer.byteLength(text, "utf8");
-      if (res.ok) return JSON.parse(text);
+      if (res.ok) {
+        try { return JSON.parse(text); } catch { throw new Error("Sheets API: відповідь не є JSON"); }
+      }
       if (RETRY_STATUS.has(res.status) && attempt < this.maxAttempts) {
         this.metrics.retries++;
         const ra = Number(res.headers?.get?.("retry-after"));
-        await this.sleep(Number.isFinite(ra) && ra > 0 ? ra * 1000 : this.#backoff(attempt));
+        // Retry-After обмежено 60 с: довше чекати в межах job немає сенсу.
+        await this.sleep(Number.isFinite(ra) && ra > 0 ? Math.min(ra, 60) * 1000 : this.#backoff(attempt));
         continue;
       }
       let reason = "";
@@ -120,10 +126,35 @@ export class GoogleSheetsCatalogSource {
     return Math.min(32000, 1000 * 2 ** (attempt - 1)) + Math.floor(Math.random() * 500);
   }
 
-  /** Назви й розміри аркушів (1 запит). */
+  /** Назви й розміри аркушів (1 запит; кешується на час життя джерела). */
   async metadata() {
+    if (this.metaCache) return this.metaCache;
     const meta = await this.#get("", [["fields", "sheets.properties(title,gridProperties(rowCount,columnCount))"]]);
-    return (meta.sheets || []).map((s) => ({ title: s.properties.title, rows: s.properties.gridProperties?.rowCount || 0, columns: s.properties.gridProperties?.columnCount || 0 }));
+    this.metaCache = (meta.sheets || []).map((s) => ({ title: s.properties.title, rows: s.properties.gridProperties?.rowCount || 0, columns: s.properties.gridProperties?.columnCount || 0 }));
+    return this.metaCache;
+  }
+
+  /**
+   * Лише ХВІСТ аркуша (напр. «Журнал», ~48 тис. рядків): вікна по windowRows рядків із кінця сітки назад,
+   * доки не знайдуться рядки з даними. columns — скільки колонок читати (у «Журналі» 7).
+   * Повертає рядки з даними в порядку аркуша (без заголовка) або null, якщо аркуша немає.
+   */
+  async loadTail(title, { windowRows = 2000, maxWindows = 10, columns = 7, until = null } = {}) {
+    const s = (await this.metadata()).find((x) => x.title === title);
+    if (!s) return null;
+    const cols = Math.min(Math.max(1, s.columns), columns);
+    const byTitle = { [title]: [] };
+    const rows = () => byTitle[title].filter((r) => r && r.some((v) => v !== "" && v != null));
+    let to = Math.max(1, s.rows);
+    for (let w = 0; w < maxWindows && to >= 1; w++) {
+      const from = Math.max(1, to - windowRows + 1);
+      const [got] = await this.#fetch([{ title, from, to, cells: (to - from + 1) * cols, a1: a1Range(title, from, to, cols) }], byTitle);
+      // until(rows) — умова зупинки (напр. знайдено останній успішний mtUpdate); без неї — перше вікно з даними.
+      if (got > 0 && (!until || until(rows()))) break;
+      to = from - 1;
+    }
+    this.metrics.tailWindows = (this.metrics.tailWindows || 0) + 1;
+    return rows();
   }
 
   /** Один batchGet; значення кладуться на абсолютні позиції рядків. Повертає кількість отриманих рядків на діапазон. */

@@ -19,10 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15    # жорстка межа витрати хвилин на один запуск
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false   # токен GitHub не лишається в git-конфігу runner
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
+          package-manager-cache: false   # залежностей немає; без автоматичного кешу
       - name: Синтетичні дані
         run: node tools/synth.mjs --products=${{ inputs.products }} --new=25 --out=.data/run
       - name: Цикл оновлення (shadow, локальне сховище runner)

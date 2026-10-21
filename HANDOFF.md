@@ -20,8 +20,8 @@
 
 ## 3. Стан
 
-- **Stage:** прототип + C2-A + D1 + D1b + C1 + **C2-B виконано (PASS)**: GitHub Actions читає робочу таблицю через WIF (лише читання), перевірено 5121 товарів (C2B-REPORT-20261021.md). Нічого не розгорнуто й не перемкнено; чекаємо погодження наступного етапу.
-- **Тести:** `npm test` → **71/71 PASS**. `node tools/prepush-check.mjs` → 0 проблем. Реальні дані: `tools/analysis/fresh-export.mjs`, `identity.mjs`, `shadow-replay.mjs` (команди — DATA-AUDIT-20261021.md). Печатки, хеші LIVE/NEW92, F:M і YML ідентичні; перев'язки — 0 хибних.
+- **Stage:** C2-B виконано (PASS). **C2-C підготовлено локально** (C2C-PLAN.md): shadow-звірка з живим фідом постачальника, незалежний QA пройдено, історичний прогін PASS. Живий XML ще не завантажувався; секрет `MM_SUPPLIER_FEED_URL` не додано; локальні коміти без push.
+- **Тести:** `npm test` → **88/88 PASS**. `node tools/prepush-check.mjs` → 0 проблем. Реальні дані: `tools/analysis/fresh-export.mjs`, `identity.mjs`, `shadow-replay.mjs` (команди — DATA-AUDIT-20261021.md). Печатки, хеші LIVE/NEW92, F:M і YML ідентичні; перев'язки — 0 хибних.
 - **Failing tests:** немає.
 - **D1/D1b у конфігу:** `policy.missing="unavailable"`, `policy.conflict="isolate"`, `identity.autoRelink=true`, власний залишок ≤7 днів, ціна для продажу з власного залишку при конфлікті ≤3 доби, спільний поріг аномалії max(50, 2%) для зникнень і конфліктів. `block` = LIVE.
 - **Не реалізовано свідомо:** адаптери Google Sheets API і R2 (не можна перевірити без доступів), розклад cron (закоментований), SEO.
@@ -55,7 +55,7 @@
 
 ## 5. Як продовжити (інструкції для Codex)
 
-1. `cd claude-infra && npm test` — має бути 71/71. Залежностей ставити не треба, потрібен Node ≥22.
+1. `cd claude-infra && npm test` — має бути 88/88. Залежностей ставити не треба, потрібен Node ≥22.
 2. Перед змінами прочитати ARCHITECTURE.md (розділ 4 «Ключові рішення») і BUSINESS-RULES.md. **Не змінювати** `src/core/{pricing,supplier-feed,sync-plan,seal,yml}.mjs` без тесту паритету: будь-яка зміна бізнес-логіки — лише з погодження власника.
 3. Наступні технічні задачі, кожна після відповідного погодження з CONNECT-PLAN.md:
    - **C2-A:** конвертер xlsx → знімок (формат `*.inspect.ndjson` або `NdjsonCatalogSource`), запуск `tools/snapshot-parity.mjs` з `--yml=reference/apps-script-live/Yml.LIVE-CURRENT.gs`. Очікувано contentSha = `e2871d9e…`;
@@ -65,17 +65,21 @@
 5. Інтеграція з 92: після імпорту Codex додати фіди `new92` (`sheets: ["Нові товари"], filterByManifest: true`) і, пізніше, `all` (5121). Паспорти генеруються командою `node src/cli.mjs approve` або з погоджених Codex idsSha/contentSha/groupsSha + списку ID. Не читати лише main: інакше загубляться 92.
 6. Після будь-якої зміни: `npm test`, оновити PROGRESS.md / TESTS.md і цей файл.
 
-## 6. Наступний крок (потрібне погодження власника)
+## 6. Наступний крок (одна ручна дія власника)
 
-C2-B завершено (PASS). Повторні запуски `sheets-verify` — лише з нового погодження.
+**Додати секрет `MM_SUPPLIER_FEED_URL`** у приватному репозиторії GitHub:
+1. https://github.com/TSOstap/maisternia-prom-infra/settings/secrets/actions/new → Name `MM_SUPPLIER_FEED_URL`.
+2. Secret — повна адреса з `E:\Prom Maisternia Market\Матеріали\Посилання\Посилання.txt`, рядок «Yml постачальника інструментів» (6-й рядок): лише адреса від `https://`, без мітки й пробілів.
 
-Варіанти наступного етапу:
-- **C2-C (рекомендовано першим):** read-only звірка з фідом постачальника. Власник додає секрет `MM_SUPPLIER_FEED_URL`. Workflow читає таблицю й операційний фід постачальника, рахує F:M новою системою і порівнює з F:M у таблиці після штатного mtUpdate. Перевіряються зіставлення, D1 і D1b на живому фіді. Без сховища, без Cloudflare, без запису; у лог — лише агрегати.
-- **C3:** Cloudflare R2 + Worker під тестовою назвою, без Prom. Потрібне рішення щодо активації R2: можливо, знадобиться картка (COSTS.md, B2); жорсткого ліміту витрат немає.
+Адресу не копіювати в чат, Git, документи чи журнали. Якщо власник хоче, щоб звірка йшла саме тим посиланням, що й mtUpdate, — взяти значення `TOOLS_FEED_URL` з Apps Script → Project Settings → Script Properties (лише прочитати, нічого не змінювати).
 
-Перед будь-яким етапом:
-- оновити `actions/checkout` і `actions/setup-node` до актуальних мажорних версій (попередження про Node 20);
-- рішення власника щодо Offer ID і назв моделей у документах репозиторію.
+Після цього — окремий дозвіл власника на:
+- push локальних комітів (перелік — C2C-PLAN.md, розділ 6);
+- **один** запуск `sheets-verify` з `mode=supplier-shadow` поза вікном mtUpdate.
+
+Відкриті рішення: DATA-CLEANUP-PROPOSAL.md (варіант A рекомендовано); C3 (R2 + Worker) — після C2-C.
+
+Для Codex: не запускати живий XML без дозволу; не змінювати умову WIF (новий режим — у тому самому файлі `sheets-verify.yml`); зміни класифікації — лише з тестами `test/supplier-shadow*.test.mjs`.
 
 ## 7. Важливі хеші
 

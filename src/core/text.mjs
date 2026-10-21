@@ -48,5 +48,5 @@ export function sha256(text) {
 
 /** Секретні адреси ніколи не потрапляють у журнали/звіти. */
 export function sanitize(error) {
-  return mtText((error && error.message) || error).replace(/https?:\/\/\S+/g, "[адресу приховано]").slice(0, 1500);
+  return mtText((error && error.message) || error).replace(/https?:\/\/\S+/gi, "[адресу приховано]").slice(0, 1500);
 }

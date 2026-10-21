@@ -15,7 +15,7 @@ import { approvalManifest, rowSeal, YML_HEADERS, GROUP_HEADERS } from "../src/co
 import { objectsFromValues, buildYml, memorySink } from "../src/core/yml.mjs";
 import { mtPrices } from "../src/core/pricing.mjs";
 import { verifyYmlStream } from "../src/core/xml-verify.mjs";
-import { loadLiveAppsScript } from "../test/helpers/apps-script-vm.mjs";
+import { loadLiveAppsScript } from "../src/verify/live-vm.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const arg = (name, def) => {

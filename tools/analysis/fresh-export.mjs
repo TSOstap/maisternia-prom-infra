@@ -14,7 +14,7 @@ import { objectsFromValues, buildYml, memorySink } from "../../src/core/yml.mjs"
 import { mtPrices, mtSameDiscount } from "../../src/core/pricing.mjs";
 import { LIVE_COLUMNS } from "../../src/core/sync-plan.mjs";
 import { verifyYmlStream } from "../../src/core/xml-verify.mjs";
-import { loadLiveAppsScript } from "../../test/helpers/apps-script-vm.mjs";
+import { loadLiveAppsScript } from "../../src/verify/live-vm.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const arg = (name, def) => {

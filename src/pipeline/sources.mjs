@@ -64,10 +64,29 @@ export class FileSupplierSource {
 /** Реальний постачальник (HTTP). Адреса — лише із секрету середовища; у звіти не потрапляє.
  *  Як у Code.gs: без редиректів, потрібен рівно HTTP 200. */
 export class HttpSupplierSource {
-  constructor(url) { this.url = url; }
+  /** timeoutMs — межа на весь запит разом із тілом; maxBytes — зупинка ще під час завантаження (не після). */
+  constructor(url, { timeoutMs = 120000, maxBytes = 90_000_000, fetchImpl = globalThis.fetch } = {}) {
+    this.url = url; this.timeoutMs = timeoutMs; this.maxBytes = maxBytes; this.fetch = fetchImpl;
+    this.bytes = 0;
+  }
   async *chunks() {
-    const response = await fetch(this.url, { redirect: "manual" });
+    let response;
+    try {
+      response = await this.fetch(this.url, { redirect: "manual", signal: AbortSignal.timeout(this.timeoutMs) });
+    } catch (e) {
+      // Повідомлення Node/undici не містить адреси в .message, але не покладаємося: лише тип помилки.
+      throw new Error(e?.name === "TimeoutError" || e?.name === "AbortError" ? "Фід постачальника: перевищено час очікування" : "Фід постачальника недоступний (мережа)");
+    }
     if (response.status !== 200) throw new Error("HTTP " + response.status);
-    for await (const chunk of response.body) yield Buffer.from(chunk);
+    try {
+      for await (const chunk of response.body) {
+        this.bytes += chunk.byteLength;
+        if (this.bytes > this.maxBytes) throw new Error("Фід перевищує безпечний розмір");
+        yield Buffer.from(chunk);
+      }
+    } catch (e) {
+      if (/безпечний розмір/.test(e.message)) throw e;
+      throw new Error(e?.name === "TimeoutError" || e?.name === "AbortError" ? "Фід постачальника: перевищено час очікування" : "Фід постачальника: обрив передачі");
+    }
   }
 }

@@ -1,4 +1,8 @@
-# Етап C2-B: ЛИШЕ ЧИТАННЯ робочої Google-таблиці через Sheets API і перевірка 5121 товарів двох фідів.
+# Етапи C2-B / C2-C: ЛИШЕ ЧИТАННЯ робочої Google-таблиці через Sheets API.
+#   mode=sheets          — перевірка 5121 товарів двох фідів (C2-B);
+#   mode=supplier-shadow — shadow-звірка з живим фідом постачальника (C2-C): паритет LIVE↔нова система на тому
+#                          самому XML, порівняння з таблицею з урахуванням часу mtUpdate, сценарії D1/D1b. Без запису.
+# Обидва режими в ОДНОМУ файлі: умова WIF у Google прив'язана саме до цього workflow (див. C2B-PLAN.md).
 # Авторизація: Workload Identity Federation (OIDC) → імперсонація service account (роль «Читач» лише на цю таблицю).
 # JSON-ключів немає. Токен живе 10 хв, маскується action-ом. Товарні дані не потрапляють у логи/summary/artifacts.
 # Запуск лише вручну і лише з main; доступ додатково обмежено attribute-condition у Google (repository_id,
@@ -6,6 +10,12 @@
 name: sheets-verify
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "sheets — перевірка таблиці (C2-B); supplier-shadow — звірка з живим фідом постачальника (C2-C)"
+        type: choice
+        options: [sheets, supplier-shadow]
+        default: sheets
 permissions:
   contents: read
   id-token: write          # лише запит OIDC-токена GitHub; права запису в репозиторій не дає
@@ -23,16 +33,23 @@ jobs:
           WIF: ${{ vars.GCP_WIF_PROVIDER }}
           SA: ${{ vars.GCP_SA_EMAIL }}
           SHEET: ${{ secrets.MM_SHEET_ID }}
+          SUPPLIER_SET: ${{ secrets.MM_SUPPLIER_FEED_URL != '' }}
+          MODE: ${{ inputs.mode }}
         run: |
           test -n "$WIF" || { echo "Не задано змінну репозиторію GCP_WIF_PROVIDER"; exit 2; }
           test -n "$SA" || { echo "Не задано змінну репозиторію GCP_SA_EMAIL"; exit 2; }
           test -n "$SHEET" || { echo "Не задано секрет MM_SHEET_ID"; exit 2; }
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+          if [ "$MODE" = "supplier-shadow" ] && [ "$SUPPLIER_SET" != "true" ]; then echo "Не задано секрет MM_SUPPLIER_FEED_URL"; exit 2; fi
+          echo "Режим: $MODE"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false   # токен GitHub не лишається в git-конфігу runner
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
+          package-manager-cache: false   # залежностей немає; без автоматичного кешу
       - id: auth
-        uses: google-github-actions/auth@v3
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
         with:
           workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
           service_account: ${{ vars.GCP_SA_EMAIL }}
@@ -42,7 +59,15 @@ jobs:
           create_credentials_file: false
           export_environment_variables: false
       - name: Читання таблиці й перевірка (лише агрегати в лог)
+        if: inputs.mode == 'sheets'
         env:
           MM_SHEET_ID: ${{ secrets.MM_SHEET_ID }}
           GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
         run: node tools/sheets-verify.mjs --source=api --replay --summary="$GITHUB_STEP_SUMMARY" --tmp="$RUNNER_TEMP"
+      - name: Shadow-звірка з живим фідом постачальника (лише агрегати в лог; захист від витоку)
+        if: inputs.mode == 'supplier-shadow'
+        env:
+          MM_SHEET_ID: ${{ secrets.MM_SHEET_ID }}
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          MM_SUPPLIER_FEED_URL: ${{ secrets.MM_SUPPLIER_FEED_URL }}
+        run: node tools/supplier-shadow.mjs --source=api --supplier=env --scenarios --summary="$GITHUB_STEP_SUMMARY" --tmp="$RUNNER_TEMP"
