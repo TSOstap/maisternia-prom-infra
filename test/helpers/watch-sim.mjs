@@ -1,5 +1,6 @@
-/** Симуляція «Сторожа новинок» наскрізно: справжній Worker (KV у пам'яті) → workflow_dispatch → GitHub intake → POST /ack.
- *  Годинник — кроки по 5 хв (cron). Мережа — заглушки: фід постачальника (поточний XML симуляції) і API GitHub. */
+/** Симуляція «Сторожа новинок» наскрізно: вхідний Worker → SQLite Durable Object (справжній SQLite, node:sqlite) →
+ *  alarm кожні 5 хв → workflow_dispatch → GitHub intake → POST /ack. Годинник змодельований (без справжнього очікування).
+ *  Мережа — заглушки: фід постачальника (поточний XML симуляції) і API GitHub. */
 import { generateSynthetic } from "../../src/synth/generator.mjs";
 import { parseSupplierText } from "../../src/core/supplier-feed.mjs";
 import { readSheet } from "../../src/core/sync-plan.mjs";
@@ -7,7 +8,9 @@ import { mtText } from "../../src/core/text.mjs";
 import { SHEET, extractFullOffers } from "../../src/core/sheet-sync.mjs";
 import { mergeNew92, syncSheet } from "../../src/pipeline/sheet-sync-run.mjs";
 import { MemorySheets } from "../../src/pipeline/sheets-writer.mjs";
-import worker, { runWatch } from "../../workers/new-items-watch/src/index.mjs";
+import { route } from "../../workers/new-items-watch/src/router.mjs";
+import { WatchCore } from "../../workers/new-items-watch/src/watch-core.mjs";
+import { doContext, doNamespace } from "./do-sqlite.mjs";
 import { intakeAll } from "./intake.mjs";
 import baseConfig from "../../config/default.json" with { type: "json" };
 
@@ -16,11 +19,6 @@ export const MIN = 60_000;
 const KEY = "test-watch-key-0123456789";
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-export function memoryKv() {
-  const m = new Map();
-  const kv = { m, writes: 0, reads: 0, async get(k, type) { kv.reads++; const v = m.get(k); return v == null ? null : type === "json" ? JSON.parse(v) : v; }, async put(k, v) { kv.writes++; m.set(k, String(v)); } };
-  return kv;
-}
 
 /** Offer у XML постачальника. Порожні поля — справді відсутні теги (як у недозаповненій картці Prom). */
 export function offerXml(o) {
@@ -45,18 +43,22 @@ export class WatchSim {
     this.extra = new Map(); // id → offer (додані/змінені симуляцією)
     this.yearDate = null;   // фіксована дата yml_catalog (сценарій «дата не змінилась»)
     this.now = T0;
-    this.kv = memoryKv();
-    this.env = { WATCH_KV: this.kv, WATCH_KEY: KEY, SUPPLIER_FEED_URL: "https://market-tools.com.ua/products_feed.xml?hash_tag=test", GITHUB_TOKEN: "gh-test-token", GITHUB_REPO: "owner/repo", minOffers: "50" };
+    this.dctx = doContext();
+    this.env = { WATCH_DO: doNamespace(() => this.core), ALARMS_ALLOWED: "yes", WATCH_KEY: KEY, SUPPLIER_FEED_URL: "https://market-tools.com.ua/products_feed.xml?hash_tag=test", GITHUB_TOKEN: "gh-test-token", GITHUB_REPO: "owner/repo", minOffers: "50" };
     this.workerUp = true;
     this.calls = { feed: 0, dispatch: 0, dispatchBodies: [] };
     this.intakes = [];
     this.handled = 0;
+    this.core = this.makeCore();
     this.fetchImpl = async (url, init = {}) => {
       if (String(url).startsWith("https://api.github.com/")) { this.calls.dispatch++; this.calls.dispatchBodies.push(init.body); (this.calls.dispatchAt ||= []).push(this.now); return new Response(null, { status: 204 }); }
       this.calls.feed++;
       return new Response(this.xml(), { status: 200 });
     };
   }
+  /** Екземпляр Durable Object на тому самому сховищі (новий — як після перезапуску / виселення DO). */
+  makeCore() { return new WatchCore(this.dctx.ctx, this.env, { now: () => this.now, fetch: (u, i) => this.fetchImpl(u, i), log: () => {} }); }
+  restart() { this.core = this.makeCore(); }
   stamp() { return new Date(this.now).toISOString(); }
   xml() {
     let xml = this.baseXml;
@@ -78,32 +80,38 @@ export class WatchSim {
   /** Підготовка: перенесення NEW92 і перша синхронізація (дає Worker базу відомих ID). */
   async start() {
     await mergeNew92({ sheets: this.sheets, readBook: this.readBook, stamp: this.stamp() });
-    return this.sync();
+    const r = await this.sync();
+    // Розклад DO (у тестах дозволено змінною ALARMS_ALLOWED; у робочій конфігурації її немає)
+    await route(this.req("/schedule", "POST", { on: true }), this.env);
+    return r;
   }
   /** Синхронізація кожні 4 год (ціни, рішення, сирі дані черги) + звіт у Worker. */
   async sync() {
     const xml = this.xml();
     const r = await syncSheet({ sheets: this.sheets, readBook: this.readBook, parsed: await this.parsed(), fetchFull: async (ids) => extractFullOffers(xml, ids), stamp: this.stamp(), config: this.config, now: this.now });
-    if (r.ack && this.workerUp) await worker.fetch(this.req("/ack", "POST", r.ack), this.env);
+    if (r.ack && this.workerUp) await route(this.req("/ack", "POST", r.ack), this.env);
     return r;
   }
   /** GitHub intake: список — з Worker (GET /intake), звіт — назад (POST /ack). */
   async github() {
-    const list = await (await worker.fetch(this.req("/intake"), this.env)).json();
+    const list = await (await route(this.req("/intake"), this.env)).json();
     const r = await intakeAll({ sheets: this.sheets, readBook: this.readBook }, this.xml(), { stamp: this.stamp(), now: this.now, config: this.config, ready: list.ready });
     this.intakes.push(r);
-    if (r.ack) await worker.fetch(this.req("/ack", "POST", r.ack), this.env);
+    if (r.ack) await route(this.req("/ack", "POST", r.ack), this.env);
     return r;
   }
-  /** Крок cron (+5 хв): Worker; якщо він запустив GitHub — виконати intake. */
+  /** Крок часу (+5 хв): якщо настав час alarm Durable Object — він спрацьовує; якщо DO запустив GitHub — intake. */
   async tick(minutes = 5) {
     this.now += minutes * MIN;
-    if (!this.workerUp) return null;
-    const rep = await runWatch(this.env, this.now, this.fetchImpl);
+    if (!this.workerUp) return null; // Cloudflare недоступний — alarm не доставляється (буде доставлено пізніше)
+    const at = this.dctx.alarm;
+    if (at == null || at > this.now) return { skipped: "alarm ще не настав" };
+    const rep = await this.core.alarm();
     if (this.calls.dispatch > this.handled) { this.handled = this.calls.dispatch; rep.intake = await this.github(); }
     return rep;
   }
-  async status() { return (await worker.fetch(this.req("/status"), this.env)).json(); }
+  async status() { return (await route(this.req("/status"), this.env)).json(); }
+  async run() { return (await route(this.req("/run", "POST"), this.env)).json(); }
   rows(name = SHEET.queue) { return readSheet(this.book[name], name).rows; }
   queueRow(id) { return this.rows().find((r) => mtText(r["Offer ID"]) === id); }
   setDecision(id, value) {

@@ -9,8 +9,10 @@ import {
   INTAKE_RULES, applyAck, changedParts, completeness, emptyState, markDispatched, parseFingerprint, planWatch, rawFromOffer, rawFromQueueRow,
   scanFeed, sheetFingerprint, verifyReady, watchFeedUrl, watchFingerprint,
 } from "../src/core/intake.mjs";
-import worker, { ACK_KEY, STATE_KEY, runWatch } from "../workers/new-items-watch/src/index.mjs";
-import { WatchSim, fullOffer, memoryKv, offerXml, MIN, T0 } from "./helpers/watch-sim.mjs";
+import { route } from "../workers/new-items-watch/src/router.mjs";
+import { WatchCore } from "../workers/new-items-watch/src/watch-core.mjs";
+import { WatchSim, fullOffer, offerXml, MIN, T0 } from "./helpers/watch-sim.mjs";
+import { doContext, doNamespace } from "./helpers/do-sqlite.mjs";
 import baseConfig from "../config/default.json" with { type: "json" };
 
 const raw = (over = {}) => ({ id: "1", nameUa: "Дриль UA", nameRu: "Дрель RU", sku: "D-1", url: "https://market-tools.com.ua/p1-d.html", price: 100, currency: "UAH", available: true,
@@ -120,25 +122,29 @@ test("звіт GitHub: без бази відомих ID — відмова; д�
   assert.equal(d.dispatch.count, 1);
 });
 
-test("Worker: доступ лише за ключем; /ack перевіряє формат і профіль; невідомі шляхи — 404", async () => {
-  const kv = memoryKv();
-  const env = { WATCH_KV: kv, WATCH_KEY: "k".repeat(24) };
-  const call = (path, { key = env.WATCH_KEY, method = "GET", body } = {}) => worker.fetch(new Request("https://w.example" + path, { method, headers: key ? { authorization: "Bearer " + key } : {}, body }), env);
+test("Worker → DO: доступ лише за ключем; /ack перевіряє формат і профіль і одразу записаний у SQLite; невідомі шляхи — 404", async () => {
+  const d = doContext();
+  const env = { WATCH_KEY: "k".repeat(24) };
+  const core = new WatchCore(d.ctx, env, { log: () => {} });
+  env.WATCH_DO = doNamespace(() => core);
+  const call = (path, { key = env.WATCH_KEY, method = "GET", body } = {}) => route(new Request("https://w.example" + path, { method, headers: key ? { authorization: "Bearer " + key } : {}, body }), env);
   assert.equal((await call("/status", { key: "" })).status, 401);
   assert.equal((await call("/status", { key: "k".repeat(23) + "x" })).status, 401);
-  assert.equal((await worker.fetch(new Request("https://w.example/status"), { WATCH_KV: kv })).status, 401, "без налаштованого ключа — доступу немає");
+  assert.equal((await route(new Request("https://w.example/status"), { WATCH_DO: env.WATCH_DO })).status, 401, "без налаштованого ключа — доступу немає");
   assert.equal((await call("/status")).status, 200);
   assert.equal((await call("/ack", { method: "POST", body: "{" })).status, 400);
   assert.equal((await call("/ack", { method: "POST", body: JSON.stringify({ known: [] }) })).status, 400);
   assert.equal((await call("/ack", { method: "POST", body: JSON.stringify({ known: ["1"], profile: "operational" }) })).status, 409);
-  assert.equal((await call("/ack", { method: "POST", body: JSON.stringify({ known: ["1"], profile: "medium", queue: {} }) })).status, 200);
-  assert.ok(kv.m.has(ACK_KEY) && !kv.m.has(STATE_KEY), "звіт — в окремий ключ (стан пише лише cron)");
+  assert.equal((await call("/ack", { method: "POST", body: JSON.stringify({ known: ["1", "2"], profile: "medium", queue: {} }) })).status, 200);
+  assert.equal((await (await call("/status")).json()).knownIds, 2, "звіт застосовано й записано в SQLite");
+  assert.equal(new WatchCore(d.ctx, env).store.load().known.ids.length, 2, "після перезапуску DO — те саме");
   assert.equal((await call("/nope")).status, 404);
-  const intake = await (await call("/intake")).json();
-  assert.deepEqual(intake.ready, []);
+  assert.equal((await call("/schedule", { method: "POST", body: JSON.stringify({ on: true }) })).status, 403, "без ALARMS_ALLOWED розклад не вмикається");
+  assert.equal(d.alarm, null, "alarm не встановлено");
+  assert.deepEqual((await (await call("/intake")).json()).ready, []);
 });
 
-test("Worker: без GitHub-ключа — лише спостереження (жодного запуску); 429 від постачальника — пауза 30 хв без завантажень; пошкоджений фід — стан не змінюється", async () => {
+test("DO: без GitHub-ключа — лише спостереження; 429/503 від постачальника — пауза 30 хв без завантажень; пошкоджений / неповний / з дублями фід — стан не змінюється", async () => {
   const sim = new WatchSim();
   delete sim.env.GITHUB_TOKEN;
   await sim.start();
@@ -148,24 +154,32 @@ test("Worker: без GitHub-ключа — лише спостереження (
   assert.equal(sim.calls.dispatch, 0);
   assert.match(rep.blocked, /лише спостереження/);
   assert.equal((await sim.status()).candidates[0].status, "ГОТОВИЙ");
-  // 429
   const realFetch = sim.fetchImpl;
-  sim.fetchImpl = async (url, init) => (String(url).includes("market-tools") ? new Response("", { status: 429 }) : realFetch(url, init));
-  rep = await runWatch(sim.env, sim.now + 5 * MIN, sim.fetchImpl);
-  assert.match(rep.skipped, /HTTP 429/);
-  const feedBefore = sim.calls.feed;
-  sim.fetchImpl = realFetch;
-  rep = await runWatch(sim.env, sim.now + 10 * MIN, sim.fetchImpl);
-  assert.match(rep.skipped, /ПАУЗА/);
-  assert.equal(sim.calls.feed, feedBefore, "під час паузи фід не завантажується");
-  rep = await runWatch(sim.env, sim.now + 40 * MIN, sim.fetchImpl);
-  assert.ok(!rep.skipped);
-  // пошкоджений фід
-  const stateBefore = sim.kv.m.get(STATE_KEY);
-  sim.fetchImpl = async (url, init) => (String(url).includes("market-tools") ? new Response(sim.xml().slice(0, 5000), { status: 200 }) : realFetch(url, init));
-  rep = await runWatch(sim.env, sim.now + 45 * MIN, sim.fetchImpl);
-  assert.match(rep.error, /пошкоджений/);
-  assert.equal(sim.kv.m.get(STATE_KEY), stateBefore);
+  for (const status of [429, 503]) {
+    const s2 = new WatchSim();
+    await s2.start();
+    const rf = s2.fetchImpl;
+    s2.fetchImpl = async (url, init) => (String(url).includes("market-tools") ? new Response("", { status }) : rf(url, init));
+    rep = await s2.tick();
+    assert.match(rep.skipped, new RegExp("HTTP " + status));
+    s2.fetchImpl = rf;
+    const before = s2.calls.feed;
+    for (let k = 0; k < 5; k++) rep = await s2.tick(); // 25 хв
+    assert.equal(s2.calls.feed, before, "під час паузи фід не завантажується");
+    rep = await s2.tick(); // 30 хв
+    assert.ok(!rep.skipped, "після паузи — знову");
+  }
+  // пошкоджений, обірваний, з повтором ID
+  const snap = () => JSON.stringify([...sim.dctx.db.prepare("SELECT * FROM candidates ORDER BY id").all(), ...sim.dctx.db.prepare("SELECT * FROM queue ORDER BY id").all()]);
+  const before = snap();
+  const xml = sim.xml();
+  const dupId = /<offer id="(\d+)"/.exec(xml)[1];
+  for (const bad of [xml.slice(0, 5000), xml.replace("</yml_catalog>", ""), xml.replace("\n</offers>", `\n<offer id="${dupId}" available="true"><price>1</price></offer>\n</offers>`)]) {
+    sim.fetchImpl = async (url, init) => (String(url).includes("market-tools") ? new Response(bad, { status: 200 }) : realFetch(url, init));
+    rep = await sim.tick();
+    assert.match(rep.error, /пошкоджений|неповний|повторені/);
+  }
+  assert.equal(snap(), before, "кандидати й черга без змін");
 });
 
 test("варіант А: сирі дані оновлюються, SEO-поля (назви, описи, запити) — ніколи; «ПЕРЕВІРЕНО <SHA>» за префіксом; рядок до запуску контролю з відредагованою назвою — SEO вважається початим", async () => {
@@ -232,21 +246,13 @@ test("intake не довіряє Worker на слово: < 10 хв від ост
   assert.match(verifyReady({ id: "6", fp, lastChange: at(30) }, null, T0).reason, /немає у фіді/);
 });
 
-test("Worker: fetch фіду сумісний із Cloudflare (redirect «manual», не «error»); переадресація — помилка без розбору", async () => {
-  const sim = new WatchSim();
-  await sim.start();
-  const seen = [];
-  const rep = await runWatch(sim.env, sim.now + 5 * MIN, async (url, init) => { seen.push(init?.redirect); return new Response("", { status: 302, headers: { location: "https://example.invalid/" } }); });
-  assert.deepEqual(seen, ["manual"]);
-  assert.match(rep.error, /переадресація заборонена, HTTP 302/);
-});
-
-test("перенаправлення: 301/302/307/308 від фіду — помилка, за Location НЕ переходимо (один запит); сторонній хост фіду — запит не надсилається; GitHub API — redirect «manual», 3xx = невдача", async () => {
+test("DO: fetch фіду сумісний із Cloudflare (redirect «manual»); 301/302/307/308 — помилка, за Location НЕ переходимо; сторонній хост — запит не надсилається; GitHub — «manual», 3xx = невдача, пауза 15 хв", async () => {
   for (const status of [301, 302, 307, 308]) {
     const sim = new WatchSim();
     await sim.start();
     const calls = [];
-    const rep = await runWatch(sim.env, sim.now + 5 * MIN, async (url, init) => { calls.push({ url: String(url), redirect: init?.redirect }); return new Response("", { status, headers: { location: "https://attacker.example/steal" } }); });
+    sim.fetchImpl = async (url, init) => { calls.push({ url: String(url), redirect: init?.redirect }); return new Response("", { status, headers: { location: "https://attacker.example/steal" } }); };
+    const rep = await sim.tick();
     assert.equal(calls.length, 1, "лише один запит — без переходу за Location");
     assert.equal(calls[0].redirect, "manual");
     assert.match(rep.error, new RegExp("переадресація заборонена, HTTP " + status));
@@ -254,23 +260,33 @@ test("перенаправлення: 301/302/307/308 від фіду — пом
   const sim = new WatchSim();
   await sim.start();
   let calls = 0;
+  sim.fetchImpl = async () => { calls++; return new Response(""); };
   for (const bad of ["http://market-tools.com.ua/products_feed.xml?x=1", "https://market-tools.com.ua.evil.example/x", "https://evil.example/?u=https://market-tools.com.ua/"]) {
-    const rep = await runWatch({ ...sim.env, SUPPLIER_FEED_URL: bad }, sim.now + 5 * MIN, async () => { calls++; return new Response(""); });
+    sim.env.SUPPLIER_FEED_URL = bad;
+    const rep = await sim.run();
     assert.match(rep.error, /не Market Tools/);
   }
   assert.equal(calls, 0, "на сторонні адреси нічого не надсилається");
-  // GitHub: 3xx — запуск не зараховано, повтор пізніше; redirect «manual»
   const g = new WatchSim();
   await g.start();
   g.setOffer(fullOffer("2970000099"));
   const seen = [];
   const real = g.fetchImpl;
-  g.fetchImpl = async (url, init) => { if (String(url).startsWith("https://api.github.com/")) { seen.push(init.redirect); return new Response("", { status: 302, headers: { location: "https://attacker.example/" } }); } return real(url, init); };
+  let githubDown = true;
+  g.fetchImpl = async (url, init) => { if (String(url).startsWith("https://api.github.com/")) { seen.push(init.redirect); if (githubDown) return new Response("", { status: 302, headers: { location: "https://attacker.example/" } }); } return real(url, init); };
   let rep;
   for (let k = 0; k < 3; k++) rep = await g.tick();
   assert.deepEqual([...new Set(seen)], ["manual"]);
   assert.match(rep.blocked, /GitHub HTTP 302/);
-  assert.equal((await g.status()).dispatch.count, 0, "невдалий запуск не зараховано");
+  const st = await g.status();
+  assert.equal(st.dispatch.count, 0, "невдалий запуск не зараховано");
+  assert.ok(st.githubBackoffUntil > g.now, "пауза GitHub");
+  const tries = seen.length;
+  await g.tick(); await g.tick();
+  assert.equal(seen.length, tries, "під час паузи GitHub не викликається");
+  githubDown = false;
+  for (let k = 0; k < 2; k++) await g.tick();
+  assert.ok(g.queueRow("2970000099"), "GitHub знову доступний — позицію додано");
 });
 
 test("вимірювальний Worker: лише за ключем, лише адреса Market Tools", async () => {

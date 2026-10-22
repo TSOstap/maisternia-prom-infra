@@ -82,11 +82,12 @@ test("3. XML оновився, а дата yml_catalog — та сама: змі
   assert.equal(rep.feedDate, "2026-10-22 13:00");
   const st = (await sim.status()).candidates.find((c) => c.id === ID);
   assert.deepEqual(st.history.map((h) => h.what), ["ПОЯВА", "ЗМІНА: фото"]);
-  // Той самий фід без змін: дата та сама й дані ті самі — стан у KV не переписується щокроку
-  const w0 = sim.kv.writes;
+  // Той самий фід без змін (позиція вже в черзі): кандидати не переписуються — лише службові рядки циклу
+  for (let k = 0; k < 3; k++) await sim.tick();
+  const w0 = sim.dctx.counters.rowsWritten;
   await sim.tick();
   await sim.tick();
-  assert.ok(sim.kv.writes - w0 <= 2, "записи в KV лише при змінах (ліміт Free 1000/добу)");
+  assert.ok(sim.dctx.counters.rowsWritten - w0 <= 2 * 6, `рядків записано ${sim.dctx.counters.rowsWritten - w0} за 2 цикли (без змін даних)`);
 });
 
 test("4. SEO вже підготовлено, а постачальник змінив комплектацію: сирі дані оновлено, SEO не змінено, «ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ», затвердження заблоковано", async () => {
@@ -244,7 +245,9 @@ test("ліміти безкоштовних квот: не більше 12 за�
   const gaps = (sim.calls.dispatchAt || []).slice(1).map((t, i) => t - sim.calls.dispatchAt[i]);
   assert.ok(gaps.every((g) => g >= 15 * MIN), "не частіше ніж раз на 15 хв");
   assert.ok(sim.calls.feed <= 288);
-  assert.ok(sim.kv.writes < 700, `записів у KV ${sim.kv.writes} < 700 (70% від 1000)`);
+  // SQLite DO Free: 100 тис. записаних і 5 млн прочитаних рядків на добу; резерв ≥30%. +288 рядків за setAlarm (рахується Cloudflare).
+  assert.ok(sim.dctx.counters.rowsWritten + 288 < 70_000, `рядків записано ${sim.dctx.counters.rowsWritten} (+288 setAlarm) < 70 тис.`);
+  assert.ok(sim.dctx.counters.rowsRead < 3_500_000, `рядків прочитано ${sim.dctx.counters.rowsRead} < 3,5 млн`);
 });
 
 test("intake перевіряє Worker «не на слово»: дані змінилися після передачі або стабільність не підтверджена — відмова з причиною, кандидат знову під спостереженням", async () => {
@@ -285,7 +288,7 @@ test("чергу редагують під час intake — нічого не �
 test("стартові умови: без бази відомих ID Worker нічого не вирішує; неповний фід — нічого не змінює", async () => {
   const sim = new WatchSim();
   sim.now = T0;
-  let rep = await sim.tick();
+  let rep = await sim.run(); // ручний цикл до першого звіту GitHub
   assert.match(rep.blocked, /НЕМАЄ БАЗИ/);
   await sim.start();
   sim.setOffer(fullOffer(ID));

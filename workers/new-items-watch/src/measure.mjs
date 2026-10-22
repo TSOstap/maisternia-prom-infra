@@ -1,12 +1,12 @@
-/** ТЕСТОВИЙ вимір CPU «Сторожа новинок» у Cloudflare (погоджено 22.10.2026: один ручний запуск).
- *  Окремий Worker без розкладу, без KV, без секретів, без GitHub і без Google Sheets — лише спостереження за XML.
+/** ТЕСТОВИЙ вимір CPU «Сторожа новинок» у Cloudflare (22.10.2026). Окремий Worker mm-new-items-watch-test:
+ *  без розкладу, без сховища, без секретів, без GitHub і без Google Sheets — лише спостереження за XML.
  *  POST /measure (ключ: його SHA-256 — у змінній KEY_SHA256; сам ключ лише в запиті) з тілом
- *    { feedUrl, profile, known: [ID], queue: { ID: відбиток } } →
- *  той самий runWatch, що й у робочому Worker, зі станом у пам'яті одного виклику. Адреса фіду ніде не зберігається. */
-import { FEED_URL_RE, runWatch, STATE_KEY } from "./index.mjs";
+ *    { feedUrl, profile, known: [ID], queue: { ID: відбиток }, skipFeed? } →
+ *  той самий цикл (src/cycle.mjs), що й у Durable Object, зі станом у пам'яті одного виклику. Адреса фіду не зберігається.
+ *  Примітка: у Cloudflare розгорнуто версію від 22.10 (через runWatch); цей файл — та сама логіка на спільному циклі. */
+import { FEED_URL_RE, fetchFeed, json, planFromText, rulesOf } from "./cycle.mjs";
 import { applyAck, emptyState } from "../../../src/core/intake.mjs";
 
-const json = (b, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 async function sha256hex(s) {
   const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -23,18 +23,19 @@ export default {
     if (!body?.feedUrl || !Array.isArray(body.known)) return json({ error: "потрібні feedUrl і known" }, 400);
     if (!FEED_URL_RE.test(body.feedUrl)) return json({ error: "адреса фіду не Market Tools (HTTPS)" }, 400); // не проксі на сторонні адреси
     const now = Date.now();
-    const m = new Map([[STATE_KEY, JSON.stringify(applyAck(emptyState(), { known: body.known, queue: body.queue || {} }, now))]]);
-    const kv = { async get(k, t) { const v = m.get(k); return v == null ? null : t === "json" ? JSON.parse(v) : v; }, async put(k, v) { m.set(k, String(v)); } };
+    const state = applyAck(emptyState(), { known: body.known, queue: body.queue || {} }, now);
     const calls = [];
-    const fetchImpl = async (u, init) => { calls.push(String(u).startsWith("https://api.github.com/") ? "github" : "feed"); return fetch(u, init); };
-    const t0 = Date.now();
-    // Тест А (skipFeed): та сама робота зі станом, але без завантаження XML — базові накладні витрати.
-    const report = await runWatch({ WATCH_KV: kv, SUPPLIER_FEED_URL: body.skipFeed ? "" : body.feedUrl, FEED_PROFILE: body.profile || "medium", minOffers: env.minOffers }, now, fetchImpl);
-    const state = JSON.parse(m.get(STATE_KEY));
+    const fetchImpl = async (u, init) => { calls.push("feed"); return fetch(u, init); };
+    const profile = body.profile === "operational" ? "operational" : "medium";
+    const e2 = { SUPPLIER_FEED_URL: body.skipFeed ? "" : body.feedUrl, minOffers: env.minOffers };
+    const feed = await fetchFeed(e2, profile, fetchImpl);
+    if (!feed.text) return json({ report: feed, subrequests: calls, candidates: [], queueMismatch: [] });
+    const plan = planFromText({ state, text: feed.text, now, rules: rulesOf(e2), profile });
+    if (plan.error) return json({ report: { error: plan.error }, subrequests: calls, candidates: [], queueMismatch: [] });
     return json({
-      report, wallMs: Date.now() - t0, subrequests: calls,
-      candidates: Object.entries(state.candidates).map(([id, r]) => ({ id, fp: r.fp, status: r.status, missing: r.missing })),
-      queueMismatch: Object.entries(state.queue).filter(([, q]) => q.pendingFp).map(([id, q]) => ({ id, fp: q.pendingFp })),
+      report: plan.report, subrequests: calls,
+      candidates: Object.entries(plan.state.candidates).map(([id, r]) => ({ id, fp: r.fp, status: r.status, missing: r.missing })),
+      queueMismatch: Object.entries(plan.state.queue).filter(([, q]) => q.pendingFp).map(([id, q]) => ({ id, fp: q.pendingFp })),
     });
   },
 };
