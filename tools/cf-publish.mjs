@@ -55,7 +55,7 @@ function wrangler(args) {
   });
   const out = (r.stdout || "") + (r.stderr || "");
   if (r.status !== 0) {
-    log({ wrangler: args.slice(0, 2).join(" "), code: r.status, tail: out.split("\n").filter((l) => /ERROR|error|code:/i.test(l)).slice(-4) });
+    log({ wrangler: args.slice(0, 2).join(" "), code: r.status, tail: out.replace(/\x1b\[[0-9;]*m/g, "").split("\n").filter((l) => /ERROR|error|code:/i.test(l)).slice(-4) });
     if (/payment|billing|subscription|credit card|paid plan|upgrade your plan/i.test(out)) throw new Error("Cloudflare вимагає оплату/платний план — СТОП за умовою власника");
   }
   return { code: r.status, out, ms: Date.now() - t };
