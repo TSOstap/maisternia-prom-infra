@@ -5,6 +5,8 @@
 #   mode=shadow-publish  — C3-2: реальний ОСНОВНИЙ YML новим конвеєром, байт-у-байт проти LIVE (VM) на тому самому
 #                          знімку, перевірка цін/знижок/наявності; лише після PASS — тіньова публікація в Cloudflare
 #                          Workers Free (окремий ключ MM_SHADOW_FEED_KEY, без Prom). Таблицю й чинні YML не змінює.
+#   mode=copy-merge / copy-sync / copy-scenario — S1: ЗАПИС лише в ТЕСТОВУ КОПІЮ таблиці (MM_TEST_SHEET_ID, службовий
+#                          акаунт — «Редактор» лише копії). Жива таблиця: «Читач»; код відмовляється писати, якщо ID = живої.
 # Обидва режими в ОДНОМУ файлі: умова WIF у Google прив'язана саме до цього workflow (див. C2B-PLAN.md).
 # Авторизація: Workload Identity Federation (OIDC) → імперсонація service account (роль «Читач» лише на цю таблицю).
 # JSON-ключів немає. Токен живе 10 хв, маскується action-ом. Товарні дані не потрапляють у логи/summary/artifacts.
@@ -17,7 +19,7 @@ on:
       mode:
         description: "sheets — перевірка таблиці (C2-B); supplier-shadow — звірка з постачальником (C2-C); shadow-publish — тіньовий реальний YML у Cloudflare (C3-2)"
         type: choice
-        options: [sheets, supplier-shadow, shadow-publish]
+        options: [sheets, supplier-shadow, shadow-publish, copy-merge, copy-sync, copy-scenario]
         default: sheets
 permissions:
   contents: read
@@ -37,13 +39,15 @@ jobs:
           SA: ${{ vars.GCP_SA_EMAIL }}
           SHEET: ${{ secrets.MM_SHEET_ID }}
           SUPPLIER_SET: ${{ secrets.MM_SUPPLIER_FEED_URL != '' }}
+          TEST_SET: ${{ secrets.MM_TEST_SHEET_ID != '' }}
           SHADOW_SET: ${{ secrets.MM_SHADOW_FEED_KEY != '' && secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.MM_FEED_KEY != '' }}
           MODE: ${{ inputs.mode }}
         run: |
           test -n "$WIF" || { echo "Не задано змінну репозиторію GCP_WIF_PROVIDER"; exit 2; }
           test -n "$SA" || { echo "Не задано змінну репозиторію GCP_SA_EMAIL"; exit 2; }
           test -n "$SHEET" || { echo "Не задано секрет MM_SHEET_ID"; exit 2; }
-          if [ "$MODE" != "sheets" ] && [ "$SUPPLIER_SET" != "true" ]; then echo "Не задано секрет MM_SUPPLIER_FEED_URL"; exit 2; fi
+          if [ "$MODE" != "sheets" ] && [ "$MODE" != "copy-merge" ] && [ "$SUPPLIER_SET" != "true" ]; then echo "Не задано секрет MM_SUPPLIER_FEED_URL"; exit 2; fi
+          case "$MODE" in copy-*) [ "$TEST_SET" = "true" ] || { echo "Не задано секрет MM_TEST_SHEET_ID (тестова копія)"; exit 2; };; esac
           if [ "$MODE" = "shadow-publish" ] && [ "$SHADOW_SET" != "true" ]; then echo "Не задано секрети Cloudflare / MM_SHADOW_FEED_KEY"; exit 2; fi
           echo "Режим: $MODE"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -54,12 +58,24 @@ jobs:
           node-version: 22
           package-manager-cache: false   # залежностей немає; без автоматичного кешу
       - id: auth
+        if: ${{ !startsWith(inputs.mode, 'copy-') }}
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
         with:
           workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
           service_account: ${{ vars.GCP_SA_EMAIL }}
           token_format: access_token
           access_token_scopes: https://www.googleapis.com/auth/spreadsheets.readonly
+          access_token_lifetime: 600s
+          create_credentials_file: false
+          export_environment_variables: false
+      - id: authw   # S1: право запису; Google дозволяє запис лише туди, де акаунт «Редактор» (тестова копія)
+        if: ${{ startsWith(inputs.mode, 'copy-') }}
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_SA_EMAIL }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/spreadsheets
           access_token_lifetime: 600s
           create_credentials_file: false
           export_environment_variables: false
@@ -94,3 +110,12 @@ jobs:
           MM_FEED_KEY: ${{ secrets.MM_FEED_KEY }}
           WRANGLER_SEND_METRICS: "false"
         run: node tools/shadow-publish.mjs --source=api --supplier=env --publish --summary="$GITHUB_STEP_SUMMARY" --tmp="$RUNNER_TEMP"
+      - name: S1 — запис у ТЕСТОВУ копію таблиці (лише агрегати в лог; захист від витоку)
+        if: startsWith(inputs.mode, 'copy-')
+        env:
+          MM_SHEET_ID: ${{ secrets.MM_SHEET_ID }}
+          MM_TEST_SHEET_ID: ${{ secrets.MM_TEST_SHEET_ID }}
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.authw.outputs.access_token }}
+          MM_SUPPLIER_FEED_URL: ${{ secrets.MM_SUPPLIER_FEED_URL }}
+          MODE: ${{ inputs.mode }}
+        run: node tools/sheet-sync.mjs --mode="${MODE#copy-}" --source=api --summary="$GITHUB_STEP_SUMMARY"
