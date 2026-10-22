@@ -95,8 +95,8 @@ export default {
     if (!manifest) return plain(503, "Перевірений YML тимчасово недоступний");
 
     if (statusMatch) {
-      const { version, sha256, bytes, builtAt, parts } = manifest;
-      return new Response(JSON.stringify({ feed, version, sha256, bytes, builtAt, parts: parts.length }), {
+      const { version, sha256, bytes, builtAt, parts, offers = null } = manifest;
+      return new Response(JSON.stringify({ feed, version, sha256, bytes, builtAt, parts: parts.length, offers }), {
         headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
       });
     }
