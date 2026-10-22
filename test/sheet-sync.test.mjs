@@ -93,6 +93,9 @@ test("зміна ціни, зміна наявності і зникнення �
   assert.equal(by.get(c)["Наявність"], "-");
   assert.equal(by.get(c)["Стан синхронізації"], "ВІДСУТНІЙ_У_YML");
   assert.ok(by.get(c)["Опис UA"], "картка й контент лишились");
+  assert.ok(r.stats.main.supplierPriceChanged >= 1 && r.stats.main.availabilityChanged >= 1, JSON.stringify(r.stats.main));
+  assert.equal(r.stats.main.missingInFeed, 1);
+  assert.equal(r.stats.before.uniqueIds, r.stats.before.mainRows);
   assert.ok(sealsIntact(w.book));
 
   const snapshot = structuredClone(w.book);

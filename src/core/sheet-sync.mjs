@@ -157,7 +157,16 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows }) 
   const an = config.policy?.anomaly || { maxNewlyMissing: 50, maxNewlyMissingRatio: 0.02 };
   const limit = Math.max(an.maxNewlyMissing, Math.ceil(main.rows.length * an.maxNewlyMissingRatio));
   if (missing > limit) { out.abort = `зникло ${missing} товарів основного каталогу (поріг ${limit}) — схоже на збій постачальника; нічого не записано`; return out; }
-  out.stats.main = { rows: main.rows.length, match: tally(mainPlan.map((p) => p.match)), changedCells: changeEntries(stamp, SHEET.main, mainPlan).filter((e) => e[3] !== "ПОМИЛКА").length };
+  // Стан до запуску й окремі лічильники змін (лише кількості — без ID).
+  const ids = main.rows.map((r) => mtText(r["Offer ID"]));
+  const diff = (k) => mainPlan.filter((p) => mtText(p.before[LIVE_COLUMNS.indexOf(k)]) !== mtText(p.next[LIVE_COLUMNS.indexOf(k)])).length;
+  out.stats.before = { mainRows: main.rows.length, uniqueIds: new Set(ids).size, queueRows: queue.rows.length, passportCount: passport.count };
+  out.stats.main = {
+    rows: main.rows.length, match: tally(mainPlan.map((p) => p.match)), changedCells: changeEntries(stamp, SHEET.main, mainPlan).filter((e) => e[3] !== "ПОМИЛКА").length,
+    supplierPriceChanged: diff("Ціна постачальника"), salePriceChanged: diff("Ціна кінцева"), availabilityChanged: diff("Наявність"),
+    becameAvailable: mainPlan.filter((p) => p.before[4] !== "+" && p.next[4] === "+").length, becameUnavailable: mainPlan.filter((p) => p.before[4] === "+" && p.next[4] !== "+").length,
+    quantityChanged: diff("Кількість постачальника"), missingInFeed: missing,
+  };
 
   // 2. Нові позиції без дублікатів (D1: перевипуск ID — не новий товар; автоматичних перев'язок у таблиці немає).
   const known = [...main.rows, ...queue.rows, ...deferred];
