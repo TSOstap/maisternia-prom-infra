@@ -253,3 +253,129 @@ test("тестовий режим: вхід за SHA-256 ключа (без се
   rep = await (await call("/run", { feedUrl: FEED })).json();
   assert.match(rep.skipped, /немає адреси фіду/);
 });
+
+// ---------- обмежена серія (тестове розгортання: ALARMS_MAX_CYCLES) ----------
+async function seriesSim({ cycles = 12, feedInRequest = false } = {}) {
+  const sim = new WatchSim();
+  sim.env.ALARMS_MAX_CYCLES = "12";
+  delete sim.env.GITHUB_TOKEN; // як у тестовому розгортанні — GitHub не викликається
+  if (feedInRequest) { delete sim.env.SUPPLIER_FEED_URL; sim.env.TEST_FEED_URL_IN_REQUEST = "yes"; }
+  await sim.start(); // звичайний /schedule без «cycles» тут відхиляється (обмежене розгортання)
+  assert.equal((await sim.status()).schedule, "off");
+  const body = { on: true, cycles, firstDelaySec: 60, ...(feedInRequest ? { feedUrl: FEED } : {}) };
+  const r = await sim.core.fetch(sim.req("/schedule", "POST", body));
+  return { sim, r, body };
+}
+const githubCalls = (sim) => sim.calls.dispatch;
+
+test("серія: рівно 12 циклів — після 12-го alarm видалено й більше не ставиться; журнал 12 циклів лише з числами; GitHub не викликається", async () => {
+  const { sim, r } = await seriesSim();
+  assert.equal(r.status, 200);
+  sim.setOffer(fullOffer("2981000001"));
+  const feeds0 = sim.calls.feed;
+  for (let k = 0; k < 20; k++) await sim.tick();
+  assert.equal(sim.calls.feed - feeds0, 12, "рівно 12 завантажень фіду");
+  assert.equal(sim.dctx.alarm, null, "активного alarm немає");
+  const st = await sim.status();
+  assert.equal(st.schedule, "off");
+  assert.equal(st.series.done, 12);
+  assert.equal(st.series.log.length, 12);
+  assert.match(st.series.stopped, /виконано 12 з 12/);
+  assert.equal(githubCalls(sim), 0);
+  assert.ok(st.series.log.every((c) => c.offers > 0 && !JSON.stringify(c).match(/\d{10}/)), "у журналі серії немає ID");
+  assert.equal(st.series.log[0].appeared + st.series.log.slice(1).reduce((a, c) => a + c.appeared, 0), 1, "одна поява нового ID");
+});
+
+test("серія: перезапуск DO посеред серії — ліміт у SQLite чинний (разом 12); повторний alarm не додає циклу", async () => {
+  const { sim } = await seriesSim();
+  const feeds0 = sim.calls.feed;
+  for (let k = 0; k < 5; k++) await sim.tick();
+  sim.restart();
+  // дубль alarm того самого часу
+  const a = await sim.core.alarm();
+  assert.match(a.skipped, /ПОВТОРНИЙ ALARM/);
+  for (let k = 0; k < 15; k++) await sim.tick();
+  assert.equal(sim.calls.feed - feeds0, 12);
+  assert.equal((await sim.status()).series.done, 12);
+  assert.equal(sim.dctx.alarm, null);
+});
+
+test("серія: помилка циклу (HTTP 500) і 429 від постачальника — цикл зараховано, серію автоматично зупинено, alarm видалено", async () => {
+  for (const status of [500, 429]) {
+    const { sim } = await seriesSim();
+    const real = sim.fetchImpl;
+    let k = 0;
+    sim.fetchImpl = async (url, init) => (String(url).includes("market-tools") && ++k === 3 ? new Response("", { status }) : real(url, init));
+    for (let i = 0; i < 10; i++) await sim.tick();
+    const st = await sim.status();
+    assert.equal(st.series.done, 3, "три цикли, включно з невдалим");
+    assert.match(st.series.stopped, /АВТОЗУПИНКА/);
+    assert.equal(st.schedule, "off");
+    assert.equal(sim.dctx.alarm, null);
+    assert.equal(k, 3, "після зупинки фід більше не завантажується");
+  }
+});
+
+test("серія: критичний збій сховища в alarm — виняток не кидається (без 6 повторів Cloudflare), серію зупинено, alarm видалено", async () => {
+  const { sim } = await seriesSim();
+  sim.now += 5 * MIN;
+  sim.dctx.failOnce("INSERT INTO meta");
+  const rep = await sim.core.alarm();
+  assert.match(rep.error, /збій alarm/);
+  const st = await sim.status();
+  assert.equal(st.schedule, "off");
+  assert.match(st.series.stopped, /критична помилка/);
+  assert.equal(sim.dctx.alarm, null);
+});
+
+test("серія: не більше ALARMS_MAX_CYCLES, без дозволу — ні, повторно — ні; тимчасова адреса фіду стирається після серії й не видна в /status", async () => {
+  let { r } = await seriesSim({ cycles: 13 });
+  assert.equal(r.status, 400);
+  ({ r } = await seriesSim({ cycles: 0 }));
+  assert.equal(r.status, 400);
+  const s2 = new WatchSim();
+  s2.env.ALARMS_MAX_CYCLES = "12";
+  delete s2.env.ALARMS_ALLOWED;
+  await s2.start();
+  assert.equal((await s2.core.fetch(s2.req("/schedule", "POST", { on: true, cycles: 2 }))).status, 403);
+  const { sim, body } = await seriesSim({ cycles: 2, feedInRequest: true });
+  assert.ok(sim.core.store.getMeta("seriesFeedUrl"), "адреса — лише на час серії");
+  assert.ok(!JSON.stringify(await sim.status()).includes("hash_tag"), "у /status адреси немає");
+  for (let k = 0; k < 4; k++) await sim.tick();
+  assert.equal((await sim.status()).series.done, 2);
+  assert.equal(sim.core.store.getMeta("seriesFeedUrl"), null, "після серії стерто");
+  assert.equal((await sim.core.fetch(sim.req("/schedule", "POST", body))).status, 409, "повторна серія заборонена");
+  assert.equal(sim.dctx.alarm, null);
+});
+
+test("серія, рівень 1: під час 12-го циклу alarm уже видалено (якщо DO «впаде» посеред циклу — 13-го не буде)", async () => {
+  const { sim } = await seriesSim();
+  for (let k = 0; k < 11; k++) await sim.tick();
+  assert.equal((await sim.status()).series.done, 11);
+  let release, alarmDuring = "не перевірено";
+  const gate = new Promise((r) => { release = r; });
+  const real = sim.fetchImpl;
+  sim.fetchImpl = async (url, init) => { if (String(url).includes("market-tools")) { alarmDuring = sim.dctx.alarm; await gate; } return real(url, init); };
+  sim.now += 5 * MIN;
+  const last = sim.core.alarm();
+  await new Promise((r) => setTimeout(r, 5));
+  release();
+  await last;
+  assert.equal(alarmDuring, null, "alarm видалено ДО циклу");
+});
+
+test("серія, рівень 2: «залишковий» alarm після завершеної серії (збій зупинки) — цикл НЕ виконується, alarm прибирається", async () => {
+  const { sim } = await seriesSim({ cycles: 2 });
+  for (let k = 0; k < 4; k++) await sim.tick();
+  assert.equal((await sim.status()).series.done, 2);
+  // імітація: зупинка не спрацювала — розклад «on» і alarm лишились
+  sim.core.store.setMeta("schedule", "on");
+  await sim.dctx.ctx.storage.setAlarm(sim.now + MIN);
+  const feeds = sim.calls.feed;
+  sim.now += 5 * MIN;
+  const rep = await sim.core.alarm();
+  assert.match(rep.skipped, /СЕРІЮ ЗАВЕРШЕНО/);
+  assert.equal(sim.calls.feed, feeds, "фід не завантажувався");
+  assert.equal((await sim.status()).series.done, 2);
+  assert.equal(sim.dctx.alarm, null);
+});
