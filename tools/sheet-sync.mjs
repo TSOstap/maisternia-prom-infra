@@ -4,7 +4,9 @@
  *    merge     — одноразово: NEW92 («Нові товари») → «Основний каталог»; «Нові товари» → черга; «Паспорт каталогу»
  *    sync      — ціни/наявність, нові позиції в черзі, рішення власника, паспорт, журнал (майбутній запуск кожні 4 год)
  *    refresh   — освіжити ТЕСТОВУ КОПІЮ з ЖИВОЇ таблиці (жива — лише читання; перевірка печаток, «Код товару Prom» NEW92)
- *    scenario  — як sync, але XML навмисно змінено: ціна одного товару, наявність другого, зникнення третього (лише копія)
+ *    scenario  — як sync, але XML навмисно змінено: ціна одного товару, наявність другого, зникнення третього,
+ *                четвертий — «той самий товар під новим (тестовим) ID» (лише копія, лише в пам'яті запуску)
+ *    scenario-mass — помилковий фід «усе немає в наявності»: очікується ABORTED, нічого не записано
  *  Джерела:
  *    --source=api  : MM_TEST_SHEET_ID (копія, «Редактор»), MM_SHEET_ID (жива — лише для заборони), GOOGLE_OAUTH_ACCESS_TOKEN,
  *                    MM_SUPPLIER_FEED_URL (повний фід; операційний — з тими самими параметрами, що в LIVE)
@@ -107,15 +109,29 @@ try {
     }
     report.metrics.supplierFetchMs = Date.now() - tf;
     if (mode === "scenario") {
-      // Детерміновано обрані 3 товари основного каталогу (за SHA ID, без виводу ID); лише в копії.
+      // Детерміновано обрані 4 товари основного каталогу (за SHA ID, без виводу ID); лише в копії й лише в пам'яті запуску.
       const book = await readBook([SHEET.main]);
-      const ids = readSheet(book[SHEET.main], SHEET.main).rows.map((r) => mtText(r["ID постачальника"])).sort((a, b) => sha256(a).localeCompare(sha256(b))).slice(0, 3);
+      const ids = readSheet(book[SHEET.main], SHEET.main).rows.map((r) => mtText(r["ID постачальника"])).sort((a, b) => sha256(a).localeCompare(sha256(b))).slice(0, 4);
       const pre = await parseSupplierText(xml, { maximumChars: config.supplier.maximumChars });
-      const [a, b, c] = ids;
+      const [a, b, c, d] = ids;
+      // «Той самий товар під новим ID»: блок товару d зникає зі старим ID і з'являється з тестовим ID (у т.ч. в повному XML — з фото).
+      const fakeId = "99" + d.slice(-8);
+      const reissue = (text) => {
+        const m = new RegExp(String.raw`<offer\b[^>]*\bid="` + d + String.raw`"[^>]*>[\s\S]*?</offer>`).exec(text);
+        return m ? text.replace(m[0], m[0].replace(`id="${d}"`, `id="${fakeId}"`).replace(`/p${d}-`, `/p${fakeId}-`)) : text;
+      };
+      xml = reissue(xml);
+      const baseFetch = report.fetchFull;
+      report.fetchFull = async (want) => { const m = await baseFetch([...want, d]); if (m.has(d) && want.includes(fakeId)) m.set(fakeId, m.get(d)); return m; };
       if (pre.offers.get(a)) xml = perturb.tag(xml, a, "price", String(Math.round((pre.offers.get(a).price + 100) * 100) / 100));
       if (pre.offers.get(b)) xml = xml.replace(new RegExp(`(<offer\\b[^>]*\\bid="${b}"[^>]*\\bavailable=")(true|false)`), (_, p, v) => p + (v === "true" ? "false" : "true"));
       xml = perturb.drop(xml, [c]);
-      report.scenario = { priceUp100: Boolean(pre.offers.get(a)), availabilityFlipped: Boolean(pre.offers.get(b)), dropped: 1 };
+      report.scenario = { priceUp100: Boolean(pre.offers.get(a)), availabilityFlipped: Boolean(pre.offers.get(b)), dropped: 1, reissuedUnderTestId: Boolean(pre.offers.get(d)) };
+    }
+    if (mode === "scenario-mass") {
+      // Помилковий фід: усі товари «немає в наявності». Очікується ABORTED — нічого не записано.
+      xml = xml.replace(/(<offer\b[^>]*\bavailable=")true"/g, '$1false"');
+      report.scenario = { allUnavailable: true, expected: "ABORTED" };
     }
     const parsed = await parseSupplierText(xml, { maximumChars: config.supplier.maximumChars, identityFields: true });
     const last = findLastSync(journalTail);
@@ -163,4 +179,4 @@ if (arg("summary")) {
   if ([...secrets].some((x) => lines.includes(x)) || /\d{10,}/.test(lines)) { process.stderr.write("ЗАХИСТ ВІД ВИТОКУ: summary не записано\n"); process.exit(3); }
   fs.appendFileSync(arg("summary"), lines);
 }
-process.exitCode = ["MERGED", "SYNCED", "REFRESHED"].includes(report.result?.state) ? 0 : 1;
+process.exitCode = mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "SYNCED", "REFRESHED"].includes(report.result?.state) ? 0 : 1;

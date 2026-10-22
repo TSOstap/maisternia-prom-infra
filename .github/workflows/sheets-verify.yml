@@ -19,7 +19,7 @@ on:
       mode:
         description: "sheets — перевірка таблиці (C2-B); supplier-shadow — звірка з постачальником (C2-C); shadow-publish — тіньовий реальний YML у Cloudflare (C3-2)"
         type: choice
-        options: [sheets, supplier-shadow, shadow-publish, copy-refresh, copy-merge, copy-sync, copy-scenario]
+        options: [sheets, supplier-shadow, shadow-publish, copy-refresh, copy-merge, copy-sync, copy-scenario, copy-scenario-mass]
         default: sheets
 permissions:
   contents: read

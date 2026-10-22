@@ -6,9 +6,9 @@ import { LIVE_COLUMNS, readSheet } from "../core/sync-plan.mjs";
 import { YML_HEADERS, SEAL_COLUMN, approvalManifest, rowSeal } from "../core/seal.mjs";
 import { objectsFromValues } from "../core/yml.mjs";
 import { GROUP_HEADERS } from "../core/seal.mjs";
-import { SHEET, QUEUE_HEADERS, PASSPORT_HEADER, finalizeSheetSync, passportValues, planSheetSync, readPassport, samePassport } from "../core/sheet-sync.mjs";
+import { SHEET, QUEUE_HEADERS, PASSPORT_HEADER, BINDINGS_SHEET, BINDINGS_HEADERS, finalizeSheetSync, passportValues, planSheetSync, readPassport, samePassport } from "../core/sheet-sync.mjs";
 
-export const SYNC_SHEETS = [SHEET.main, SHEET.queue, SHEET.deferred, SHEET.frozen, SHEET.passport];
+export const SYNC_SHEETS = [SHEET.main, SHEET.queue, SHEET.deferred, SHEET.frozen, SHEET.passport, BINDINGS_SHEET];
 const rowsEqual = (a, b) => a.length === b.length && a.every((r, i) => r.length === b[i].length && r.every((v, j) => mtText(v) === mtText(b[i][j])));
 const pad = (r, n) => Array.from({ length: n }, (_, i) => (r[i] == null ? "" : r[i]));
 const groupsOf = (book) => objectsFromValues(book[SHEET.groups], GROUP_HEADERS);
@@ -103,6 +103,8 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
   // Таблицю редагували під час запуску? Тоді черга не чіпається (лише ціни основного каталогу).
   const fresh = await readBook([SHEET.queue]);
   const queueChanged = !rowsEqual(fresh[SHEET.queue], book[SHEET.queue]);
+  // Ціни вже пораховано з урахуванням прив'язок/скасувань: якщо чергу змінили під час запуску, а такі рішення є — нічого не пишемо.
+  if (queueChanged && plan.main.changedRows.size) return { state: "SKIPPED_CONCURRENT_EDIT", reason: "чергу змінено під час запуску, а в ній є прив'язки/скасування — нічого не записано, повтор наступного запуску" };
   const mainHeader = readSheet(book[SHEET.main], SHEET.main).header;
   const approve = queueChanged ? [] : plan.queue.approve;
   const reject = queueChanged ? [] : plan.queue.reject;
@@ -112,11 +114,24 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
   const before = {
     mainOps: plan.main.plan.map((p) => p.before), queue: book[SHEET.queue].map((r) => r.slice()), mainLen: plan.main.rows.length,
     frozenLen: Math.max(0, (book[SHEET.frozen] || []).length), passport: book[SHEET.passport].map((r) => r.slice()),
+    mainRowsFull: book[SHEET.main].map((r) => r.slice()), historyLen: (book[BINDINGS_SHEET] || [[]]).length, history: (book[BINDINGS_SHEET] || []).map((r) => r.slice()),
   };
+  const changedRows = queueChanged ? [] : [...plan.main.changedRows];
+  const fullRows = changedRows.map((i) => ({ title: SHEET.main, row: i + 2, col: 1, values: [mainHeader.map((k, j) => (LIVE_COLUMNS.includes(k) ? plan.main.plan[i].next[LIVE_COLUMNS.indexOf(k)] : plan.main.rows[i][k] ?? ""))] }));
+  const history = queueChanged ? [] : plan.bindings.history;
+  const undoCells = queueChanged ? [] : plan.bindings.undoCells;
+  const stateCol = BINDINGS_HEADERS.indexOf("Стан") + 1;
   const done = new Set();
   const opsBlock = { title: SHEET.main, row: 2, col: plan.main.start + 1, values: plan.main.plan.map((p) => p.next) };
   try {
     await sheets.updateRanges([opsBlock]); done.add("mainOps");
+    // Прив'язки/скасування змінюють і незмінні колонки картки — повний рядок (печатку перераховано).
+    if (fullRows.length) { await sheets.updateRanges(fullRows); done.add("fullRows"); }
+    if (history.length || undoCells.length) {
+      await sheets.ensureSheet(BINDINGS_SHEET, BINDINGS_HEADERS.slice());
+      if (history.length) { await sheets.appendRows(BINDINGS_SHEET, history); done.add("history"); }
+      if (undoCells.length) { await sheets.updateRanges(undoCells.map((c) => ({ title: BINDINGS_SHEET, row: c.row, col: stateCol, values: [[c.state]] }))); done.add("undoCells"); }
+    }
     if (approve.length) { await sheets.appendRows(SHEET.main, approve.map((r) => mainHeader.map((k) => r[k] ?? ""))); done.add("approve"); }
     if (!queueChanged) { await rewriteData(sheets, SHEET.queue, before.queue.length - 1, fin.queueValues); done.add("queue"); }
     if (reject.length) { await sheets.appendRows(SHEET.frozen, reject.map((r) => [mtText(r["Offer ID"])])); done.add("frozen"); }
@@ -133,18 +148,22 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
       mainCount: m2.rows.length, expectedCount: passportAfter.count, opsWritten: opsOk,
       sealsIntact: m2.rows.every((r) => rowSeal(r) === mtText(r[SEAL_COLUMN])),
       passportOk: samePassport(approvalManifest(m2.rows, groupsRows), passportAfter) && samePassport(readPassport(after[SHEET.passport]), passportAfter),
+      bindingsOk: changedRows.every((i) => mtText(m2.rows[i]["ID постачальника"]) === mtText(plan.main.rows[i]["ID постачальника"])),
       queueOk: queueChanged || rowsEqual(after[SHEET.queue].slice(1).filter((r) => r.some((v) => v !== "" && v != null)).map((r) => pad(r, fin.queueValues[0]?.length || QUEUE_HEADERS.length)), fin.queueValues),
     };
-    if (!(verify.mainCount === verify.expectedCount && verify.opsWritten && verify.sealsIntact && verify.passportOk && verify.queueOk)) throw Object.assign(new Error("перевірка після запису не пройдена"), { verify });
+    if (!(verify.mainCount === verify.expectedCount && verify.opsWritten && verify.sealsIntact && verify.passportOk && verify.queueOk && verify.bindingsOk)) throw Object.assign(new Error("перевірка після запису не пройдена"), { verify });
     await appendJournal(sheets, journal);
     return {
-      state: "SYNCED", queueChanged, verify, stats: { ...plan.stats, approved: approve.length, rejected: reject.length, added: queueChanged ? 0 : fin.newRows.length, mainCountAfter: verify.mainCount },
+      state: "SYNCED", queueChanged, verify, stats: { ...plan.stats, approved: approve.length, rejected: reject.length, added: queueChanged ? 0 : fin.newRows.length, possibleDuplicates: queueChanged ? 0 : fin.possibleDuplicates, bound: queueChanged ? 0 : plan.bindings.done, bindRefused: plan.bindings.refused, unbound: queueChanged ? 0 : plan.bindings.undone, mainCountAfter: verify.mainCount },
       warnings: plan.warnings, frozenSimilar: plan.frozenSimilar, journalEntries: journal.length,
     };
   } catch (e) {
     const restore = [];
     try {
       if (done.has("mainOps")) { await sheets.updateRanges([{ ...opsBlock, values: before.mainOps }]); restore.push("ціни/наявність"); }
+      if (done.has("fullRows")) { await sheets.updateRanges(changedRows.map((i) => ({ title: SHEET.main, row: i + 2, col: 1, values: [before.mainRowsFull[i + 1]] }))); restore.push("прив'язані картки"); }
+      if (done.has("history")) { await sheets.deleteRows(BINDINGS_SHEET, history.map((_, k) => before.historyLen + 1 + k)); restore.push("історія прив'язок"); }
+      if (done.has("undoCells")) { await sheets.updateRanges(undoCells.map((c) => ({ title: BINDINGS_SHEET, row: c.row, col: stateCol, values: [[before.history[c.row - 1]?.[stateCol - 1] ?? ""]] }))); restore.push("стан скасувань"); }
       if (done.has("approve")) { await sheets.deleteRows(SHEET.main, approve.map((_, i) => before.mainLen + 2 + i)); restore.push("перенесені рядки"); }
       if (done.has("queue")) {
         const now2 = await readBook([SHEET.queue]);

@@ -11,7 +11,8 @@ import { mtDecode, mtText } from "./text.mjs";
 import { LIVE_COLUMNS, MATCH, changeEntries, planRows, readSheet } from "./sync-plan.mjs";
 import { YML_HEADERS, SEAL_COLUMN, approvalManifest, rowSeal } from "./seal.mjs";
 import { mtPrices } from "./pricing.mjs";
-import { resolveIdentity } from "./d1.mjs";
+import { cardKeys, resolveUnknownOffers } from "./identity.mjs";
+import { buildDupIndex, compareEntries, dupNote, findDuplicates, rowEntry } from "./dup-check.mjs";
 
 export const SHEET = Object.freeze({ main: "Основний каталог", queue: "Нові товари", deferred: "Відкладені товари", frozen: "Заморожені ID", groups: "Групи", journal: "Журнал", passport: "Паспорт каталогу" });
 export const QUEUE_EXTRA = Object.freeze(["Рішення", "Перевірка", "Виявлено"]);
@@ -19,7 +20,6 @@ export const QUEUE_HEADERS = Object.freeze([...YML_HEADERS, ...QUEUE_EXTRA]);
 export const PASSPORT_HEADER = Object.freeze(["Поле", "Значення"]);
 export const DECISION = Object.freeze({ APPROVE: "ЗАТВЕРДЖЕНО", APPROVE_NOT_DUP: "ЗАТВЕРДЖЕНО (НЕ ДУБЛЬ)", REJECT: "ВІДХИЛЕНО" });
 export const STATUS_NEW = "НОВИЙ_ВІД_ПОСТАЧАЛЬНИКА";
-const DUP_PREFIX = "МОЖЛИВИЙ ДУБЛЬ";
 const CELL_LIMIT = 49000; // ліміт Google — 50 000 символів у клітинці
 
 const norm = (v) => mtText(v).trim().toUpperCase().replace(/\s+/g, " ");
@@ -96,7 +96,7 @@ export function candidateRow(offer, full, stamp, pricing) {
 export function approvalProblems(row, { groupIds, mainIds, dupFlag }) {
   const p = [];
   const decision = norm(row["Рішення"]);
-  if (dupFlag && decision !== DECISION.APPROVE_NOT_DUP) p.push(`позначено «${DUP_PREFIX}» — перевірте й поставте «${DECISION.APPROVE_NOT_DUP}»`);
+  if (dupFlag && decision !== DECISION.APPROVE_NOT_DUP) p.push(`позначено «МОЖЛИВИЙ ДУБЛЬ» — перевірте й поставте «${DECISION.APPROVE_NOT_DUP}»`);
   if (mainIds.has(mtText(row["Offer ID"]))) p.push("такий Offer ID уже є в основному каталозі");
   for (const k of ["Назва UA", "Назва RU", "Опис UA", "Опис RU"]) if (!mtText(row[k]).trim()) p.push(`порожнє «${k}»`);
   let photos = null;
@@ -123,12 +123,114 @@ export function toMainRow(row, groupsById) {
   return out;
 }
 
-const dupNoteOf = (row) => (/^МОЖЛИВИЙ ДУБЛЬ[^;]*/.exec(mtText(row["Перевірка"]))?.[0] || "");
+export const BINDINGS_SHEET = "Історія прив'язок";
+export const BINDINGS_HEADERS = Object.freeze([
+  "Дата", "Offer ID", "Старий ID постачальника", "Новий ID постачальника", "Старий артикул", "Новий артикул",
+  "Старий Код товару Prom", "Новий Код товару Prom", "Стара назва постачальника UA", "Стара назва постачальника RU", "Старий URL постачальника",
+  "Нова назва постачальника UA", "Нова назва постачальника RU", "Новий URL постачальника", "Підстава", "Стан", "Рішення",
+]);
+const BIND_RE = /^ПРИВ['’ʼ`]?ЯЗАТИ ДО\s+(\d+)(\s*\(ПІДТВЕРДЖУЮ\))?$/;
+const UNDO = "СКАСУВАТИ";
+const SUPPLIER_FIELDS = [["ID постачальника", "id"], ["Артикул постачальника", "sku"], ["Назва постачальника UA", "nameUa"], ["Назва постачальника RU", "nameRu"], ["URL постачальника", "url"]];
+
+/** Індекс схожості: основний каталог (з ознакою «зник із фіду»), черга, відкладені. */
+function dupIndexFor({ mainRows, queueRows, deferredRows, offers }) {
+  const entries = [
+    ...mainRows.map((r) => rowEntry(r, SHEET.main, { orphan: !offers.has(mtText(r["ID постачальника"])) })),
+    ...queueRows.map((r) => rowEntry(r, SHEET.queue)),
+    ...deferredRows.map((r) => rowEntry(r, SHEET.deferred)),
+  ];
+  return buildDupIndex(entries);
+}
+const queueEntry = (r) => rowEntry(r, SHEET.queue);
+
+/** Перевірка й застосування «ПРИВ'ЯЗАТИ ДО» (лише рішення власника; автоматичних прив'язок немає). */
+function planBindings({ queueRows, mainRows, deferredRows, offers, stamp }) {
+  const mainById = new Map(mainRows.map((r, i) => [mtText(r["Offer ID"]), i]));
+  const wanted = [];
+  queueRows.forEach((r, qi) => {
+    const m = BIND_RE.exec(norm(r["Рішення"]).replace(/’|ʼ|`/g, "'"));
+    if (m) wanted.push({ qi, row: r, target: m[1], confirmed: Boolean(m[2]) });
+  });
+  const perTarget = wanted.reduce((a, w) => ((a[w.target] = (a[w.target] || 0) + 1), a), {});
+  const usedSupplierIds = new Map([...mainRows, ...deferredRows].map((r) => [mtText(r["ID постачальника"]), mtText(r["Offer ID"])]));
+  const done = [], refused = new Map();
+  for (const w of wanted) {
+    const problems = [];
+    const ti = mainById.get(w.target);
+    const offerId = mtText(w.row["ID постачальника"]);
+    const offer = offers.get(offerId);
+    if (ti === undefined) problems.push(`товару ${w.target} немає в основному каталозі`);
+    if (!offer) problems.push("цієї позиції зараз немає у фіді постачальника");
+    if (perTarget[w.target] > 1) problems.push(`до товару ${w.target} прив'язують кілька позицій — залиште одну`);
+    const owner = usedSupplierIds.get(offerId);
+    if (owner && owner !== w.target) problems.push(`ID постачальника вже використовує товар ${owner}`);
+    if (ti !== undefined) {
+      const card = mainRows[ti];
+      const oldId = mtText(card["ID постачальника"]);
+      if (offers.has(oldId) && oldId !== offerId) problems.push(`стара позиція постачальника товару ${w.target} досі є у фіді — ймовірно, це різні товари`);
+      const cmp = compareEntries(rowEntry(card, SHEET.main), queueEntry(w.row));
+      const doubts = [];
+      if (cmp.kit.length) doubts.push("різниця комплектації: " + cmp.kit.join(", "));
+      if (cmp.brandConflict) doubts.push("різний бренд");
+      if (cmp.photo.card && cmp.photo.offer && !cmp.photo.shared) doubts.push(`фото різні (у картки ${cmp.photo.cardSample}, у нової ${cmp.photo.offerSample})`);
+      if (doubts.length && !w.confirmed) problems.push(`є сумніви (${doubts.join("; ")}) — якщо впевнені, напишіть «ПРИВ'ЯЗАТИ ДО ${w.target} (ПІДТВЕРДЖУЮ)»`);
+      if (!problems.length) done.push({ ...w, ti, offer, evidence: cmp.evidence.join(", ") + (doubts.length ? "; підтверджено попри: " + doubts.join("; ") : "") });
+    }
+    if (problems.length) refused.set(w.qi, "НЕ ПРИВ'ЯЗАНО: " + problems.join("; "));
+  }
+  // Застосування до копій рядків основного каталогу
+  const history = [];
+  for (const b of done) {
+    const card = mainRows[b.ti];
+    const before = Object.fromEntries(SUPPLIER_FIELDS.map(([k]) => [k, card[k]]));
+    const oldCode = mtText(card["Код товару Prom"]);
+    const codeWasSupplierSku = oldCode && oldCode === mtText(card["Артикул постачальника"]);
+    for (const [k, f] of SUPPLIER_FIELDS) card[k] = b.offer[f] ?? "";
+    if (codeWasSupplierSku) card["Код товару Prom"] = b.offer.sku;
+    card[SEAL_COLUMN] = rowSeal(card);
+    history.push([stamp, b.target, mtText(before["ID постачальника"]), b.offer.id, mtText(before["Артикул постачальника"]), b.offer.sku,
+      oldCode, mtText(card["Код товару Prom"]), mtText(before["Назва постачальника UA"]), mtText(before["Назва постачальника RU"]), mtText(before["URL постачальника"]),
+      b.offer.nameUa, b.offer.nameRu, b.offer.url,
+      `рішення власника; збіг: ${b.evidence || "—"}${codeWasSupplierSku ? "" : "; «Код товару Prom» не змінено (не збігався зі старим артикулом)"}`, "АКТИВНА", ""]);
+  }
+  return { done, refused, history, changedMain: new Set(done.map((b) => b.ti)) };
+}
+
+/** Скасування помилкових прив'язок: «СКАСУВАТИ» в колонці «Рішення» аркуша «Історія прив'язок». */
+function planUndos({ historyValues, mainRows, stamp }) {
+  const out = { undone: [], cells: [], changedMain: new Set() };
+  if (!historyValues || historyValues.length < 2) return out;
+  const h = historyValues[0].map(mtText);
+  const col = (k) => h.indexOf(k);
+  const mainById = new Map(mainRows.map((r, i) => [mtText(r["Offer ID"]), i]));
+  historyValues.slice(1).forEach((r, k) => {
+    if (norm(r[col("Рішення")]) !== UNDO || !/^АКТИВНА/.test(mtText(r[col("Стан")]))) return;
+    const ti = mainById.get(mtText(r[col("Offer ID")]));
+    const rowNo = k + 2;
+    if (ti === undefined || mtText(mainRows[ti]["ID постачальника"]) !== mtText(r[col("Новий ID постачальника")])) {
+      out.cells.push({ row: rowNo, state: "АКТИВНА (скасувати неможливо: товар змінено після прив'язки)" });
+      return;
+    }
+    const card = mainRows[ti];
+    card["ID постачальника"] = mtText(r[col("Старий ID постачальника")]);
+    card["Артикул постачальника"] = mtText(r[col("Старий артикул")]);
+    card["Назва постачальника UA"] = mtText(r[col("Стара назва постачальника UA")]);
+    card["Назва постачальника RU"] = mtText(r[col("Стара назва постачальника RU")]);
+    card["URL постачальника"] = mtText(r[col("Старий URL постачальника")]);
+    if (mtText(card["Код товару Prom"]) === mtText(r[col("Новий Код товару Prom")])) card["Код товару Prom"] = mtText(r[col("Старий Код товару Prom")]);
+    card[SEAL_COLUMN] = rowSeal(card);
+    out.changedMain.add(ti);
+    out.undone.push({ offerId: mtText(r[col("Offer ID")]), newSupplierId: mtText(r[col("Новий ID постачальника")]) });
+    out.cells.push({ row: rowNo, state: `СКАСОВАНА ${stamp}` });
+  });
+  return out;
+}
 
 /**
  * Фаза 1: план без контенту нових позицій.
- *  book — { назва: values2D } (основний, черга, відкладені, заморожені, групи, паспорт);
- *  parsed — операційний розбір фіду (Map offers); previousOffers — обсяг фіду останнього успішного оновлення.
+ *  book — { назва: values2D } (основний, черга, відкладені, заморожені, групи, паспорт, історія прив'язок);
+ *  parsed — операційний розбір фіду (Map offers).
  */
 export function planSheetSync({ book, parsed, stamp, config, now, groupsRows }) {
   const out = { abort: null, warnings: [], stats: {} };
@@ -140,87 +242,110 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows }) 
   const deferred = book[SHEET.deferred] ? readSheet(book[SHEET.deferred], SHEET.deferred).rows : [];
   const frozenIds = new Set((book[SHEET.frozen] || []).slice(1).map((r) => mtText(r[0])).filter(Boolean));
 
-  // 0. Паспорт: основний каталог не змінювали поза затвердженням.
+  // 0. Паспорт: основний каталог не змінювали поза затвердженням/прив'язкою.
   const passport = readPassport(book[SHEET.passport]);
-  const current = approvalManifest(main.rows, groupsRows);
   if (!passport) { out.abort = "немає «Паспорта каталогу» — запис заборонено"; return out; }
-  if (!samePassport(passport, current)) {
+  if (!samePassport(passport, approvalManifest(main.rows, groupsRows))) {
     const badSeals = main.rows.filter((r) => rowSeal(r) !== mtText(r[SEAL_COLUMN])).length;
     out.abort = `основний каталог не відповідає паспорту (рядків ${main.rows.length}/${passport.count}, змінених печаток ${badSeals}) — зміни поза затвердженням; нічого не записано`;
     return out;
   }
+  const ids = main.rows.map((r) => mtText(r["Offer ID"]));
+  out.stats.before = { mainRows: main.rows.length, uniqueIds: new Set(ids).size, queueRows: queue.rows.length, passportCount: passport.count };
 
-  // 1. Ціни й наявність (точний порт mtPlan) — основний каталог і черга.
-  const mainPlan = planRows(main.rows, parsed.offers, stamp, config.pricing);
+  // 1. Рішення власника, що змінюють картки: скасування прив'язок, потім нові прив'язки (на копіях рядків).
+  const mainRows = main.rows.map((r) => ({ ...r }));
+  const undo = planUndos({ historyValues: book[BINDINGS_SHEET], mainRows, stamp });
+  const bind = planBindings({ queueRows: queue.rows, mainRows, deferredRows: deferred, offers: parsed.offers, stamp });
+
+  // 2. Ціни й наявність (точний порт mtPlan) — на картках уже з урахуванням прив'язок.
+  const mainPlan = planRows(mainRows, parsed.offers, stamp, config.pricing);
   const queuePlan = planRows(queue.rows, parsed.offers, stamp, config.pricing);
   const missing = mainPlan.filter((p) => p.match === MATCH.MISSING).length;
   const an = config.policy?.anomaly || { maxNewlyMissing: 50, maxNewlyMissingRatio: 0.02 };
-  const limit = Math.max(an.maxNewlyMissing, Math.ceil(main.rows.length * an.maxNewlyMissingRatio));
-  if (missing > limit) { out.abort = `зникло ${missing} товарів основного каталогу (поріг ${limit}) — схоже на збій постачальника; нічого не записано`; return out; }
-  // Стан до запуску й окремі лічильники змін (лише кількості — без ID).
-  const ids = main.rows.map((r) => mtText(r["Offer ID"]));
+  const limit = Math.max(an.maxNewlyMissing, Math.ceil(mainRows.length * an.maxNewlyMissingRatio));
   const diff = (k) => mainPlan.filter((p) => mtText(p.before[LIVE_COLUMNS.indexOf(k)]) !== mtText(p.next[LIVE_COLUMNS.indexOf(k)])).length;
-  out.stats.before = { mainRows: main.rows.length, uniqueIds: new Set(ids).size, queueRows: queue.rows.length, passportCount: passport.count };
+  const becameAvailable = mainPlan.filter((p) => p.before[4] !== "+" && p.next[4] === "+").length;
+  const becameUnavailable = mainPlan.filter((p) => p.before[4] === "+" && p.next[4] !== "+").length;
   out.stats.main = {
-    rows: main.rows.length, match: tally(mainPlan.map((p) => p.match)), changedCells: changeEntries(stamp, SHEET.main, mainPlan).filter((e) => e[3] !== "ПОМИЛКА").length,
+    rows: mainRows.length, match: tally(mainPlan.map((p) => p.match)), changedCells: changeEntries(stamp, SHEET.main, mainPlan).filter((e) => e[3] !== "ПОМИЛКА").length,
     supplierPriceChanged: diff("Ціна постачальника"), salePriceChanged: diff("Ціна кінцева"), availabilityChanged: diff("Наявність"),
-    becameAvailable: mainPlan.filter((p) => p.before[4] !== "+" && p.next[4] === "+").length, becameUnavailable: mainPlan.filter((p) => p.before[4] === "+" && p.next[4] !== "+").length,
-    quantityChanged: diff("Кількість постачальника"), missingInFeed: missing,
+    becameAvailable, becameUnavailable, quantityChanged: diff("Кількість постачальника"), missingInFeed: missing,
   };
+  // Захист від пошкодженого/помилкового фіду: масове зникнення або масова зміна наявності — нічого не пишемо.
+  if (missing > limit) { out.abort = `зникло ${missing} товарів основного каталогу (поріг ${limit}) — схоже на збій постачальника; нічого не записано`; return out; }
+  if (becameUnavailable > limit) { out.abort = `«немає в наявності» стало ${becameUnavailable} товарів (поріг ${limit}) — схоже на помилку у фіді постачальника; нічого не записано`; return out; }
+  if (becameAvailable > limit) { out.abort = `«в наявності» стало ${becameAvailable} товарів (поріг ${limit}) — схоже на помилку у фіді постачальника; нічого не записано`; return out; }
 
-  // 2. Нові позиції без дублікатів (D1: перевипуск ID — не новий товар; автоматичних перев'язок у таблиці немає).
-  const known = [...main.rows, ...queue.rows, ...deferred];
-  const id = resolveIdentity({ syncRows: [...main.rows, ...queue.rows], knownRows: known, offers: parsed.offers, links: null, autoRelink: false, now, frozenIds });
-  const dupOf = new Map();
-  for (const d of id.manual) {
-    if (d.frozen) continue; // заморожений (свідомо виключений) — у чергу не додаємо
-    dupOf.set(d.offerId, mtText(d.target || d.candidates?.[0]?.offerId || ""));
+  // 3. Нові позиції: ID постачальника, якого немає в жодній картці/черзі/відкладених і не заморожений.
+  const knownSupplierIds = new Set([...mainRows, ...queue.rows, ...deferred].map((r) => mtText(r["ID постачальника"])));
+  // Також за Offer ID: позиція, чий ID уже є як Offer ID у будь-якому аркуші (напр. після ручної правки «ID постачальника»), не дублюється.
+  const knownOfferIds = new Set([...mainRows, ...queue.rows, ...deferred].map((r) => mtText(r["Offer ID"])));
+  const unknown = [...parsed.offers.values()].filter((o) => !knownSupplierIds.has(o.id) && !knownOfferIds.has(o.id) && !frozenIds.has(o.id));
+  // Заморожені — ОБЕРЕЖНО: лише сильний збіг (артикул + обидві назви) з карткою, чий ID зник із фіду.
+  const orphanIds = new Set(mainRows.filter((r) => !parsed.offers.has(mtText(r["ID постачальника"]))).map((r) => mtText(r["Offer ID"])));
+  const frozenFlag = new Set();
+  if (orphanIds.size) {
+    const frozenOffers = [...parsed.offers.values()].filter((o) => frozenIds.has(o.id) && !knownSupplierIds.has(o.id));
+    const cards = mainRows.map((r) => cardKeys(r));
+    for (const d of resolveUnknownOffers({ offers: frozenOffers, cards, orphanIds })) if (d.candidates.some((c) => c.orphan && c.level === "STRONG")) frozenFlag.add(d.offerId);
   }
   const maxNew = config.queue?.maxNewPerRun ?? 300;
-  const newIds = [...new Set([...id.newOfferIds, ...dupOf.keys()])].filter((x) => !frozenIds.has(x));
+  const newIds = [...unknown.map((o) => o.id), ...frozenFlag];
   if (newIds.length > maxNew) out.warnings.push(`нових позицій ${newIds.length} > ${maxNew} за запуск — додано перші ${maxNew}, решта наступного разу`);
   out.newIds = newIds.slice(0, maxNew);
-  out.dupOf = dupOf;
-  out.frozenSimilar = id.frozen;
+  out.frozenFlag = frozenFlag;
+  out.frozenSimilar = { inFeed: [...parsed.offers.keys()].filter((id) => frozenIds.has(id) && !knownSupplierIds.has(id)).length, flagged: frozenFlag.size };
 
-  // 3. Рішення власника в черзі (на рядках з уже оновленими цінами/наявністю).
+  // 4. Рішення власника в черзі (на рядках з уже оновленими цінами/наявністю); схожість перераховується щоразу.
   const groupsById = new Map(groupsRows.map((g) => [mtText(g["Ідентифікатор_групи"]), { ua: mtText(g["Назва_групи_укр"]), ru: mtText(g["Назва_групи"]) }]));
   const groupIds = new Set(groupsById.keys());
-  const mainIds = new Set(main.rows.map((r) => mtText(r["Offer ID"])));
-  const approve = [], reject = [], keep = [];
+  const mainIds = new Set(ids);
+  const index = dupIndexFor({ mainRows, queueRows: queue.rows, deferredRows: deferred, offers: parsed.offers });
+  const approve = [], reject = [], keep = [], bound = [];
   queue.rows.forEach((r, i) => {
     const updated = { ...r };
     LIVE_COLUMNS.forEach((k, j) => { updated[k] = queuePlan[i].next[j]; });
     const decision = norm(r["Рішення"]);
-    const dupNote = dupNoteOf(r);
+    const cands = findDuplicates(index, queueEntry(r));
+    const dup = dupNote(cands, { frozen: frozenIds.has(mtText(r["ID постачальника"])) });
+    if (bind.done.some((b) => b.qi === i)) { bound.push(updated); return; }
     if (decision === DECISION.REJECT) { reject.push(updated); return; }
-    if (decision === DECISION.APPROVE || decision === DECISION.APPROVE_NOT_DUP) {
-      const problems = approvalProblems(updated, { groupIds, mainIds, dupFlag: Boolean(dupNote) });
+    if (bind.refused.has(i)) updated["Перевірка"] = [dup, bind.refused.get(i)].filter(Boolean).join(" ");
+    else if (decision === DECISION.APPROVE || decision === DECISION.APPROVE_NOT_DUP) {
+      // «(НЕ ДУБЛЬ)» обов'язкове лише при схожості з товаром основного каталогу або оцінці «ймовірно той самий».
+      const blocking = cands.some((c) => c.sheet === SHEET.main || c.level === "ЙМОВІРНО ТОЙ САМИЙ");
+      const problems = approvalProblems(updated, { groupIds, mainIds, dupFlag: blocking });
       if (!problems.length) { approve.push(toMainRow(updated, groupsById)); mainIds.add(mtText(r["Offer ID"])); return; }
-      updated["Перевірка"] = [dupNote, "НЕ ПЕРЕНЕСЕНО: " + problems.join("; ")].filter(Boolean).join("; ");
+      updated["Перевірка"] = [dup, "НЕ ПЕРЕНЕСЕНО: " + problems.join("; ")].filter(Boolean).join(" ");
     } else if (decision) {
-      updated["Перевірка"] = [dupNote, `невідоме «Рішення»: «${mtText(r["Рішення"])}» (можна: ${DECISION.APPROVE}, ${DECISION.APPROVE_NOT_DUP}, ${DECISION.REJECT})`].filter(Boolean).join("; ");
+      updated["Перевірка"] = [dup, `невідоме «Рішення»: «${mtText(r["Рішення"])}» (можна: ${DECISION.APPROVE}, ${DECISION.APPROVE_NOT_DUP}, ${DECISION.REJECT}, ПРИВ'ЯЗАТИ ДО <Offer ID>)`].filter(Boolean).join(" ");
     } else if (queuePlan[i].match !== MATCH.OK) {
-      updated["Перевірка"] = [dupNote, "зараз не зіставлено з постачальником: " + queuePlan[i].match].filter(Boolean).join("; ");
-    } else updated["Перевірка"] = dupNote || (/^НЕ ПЕРЕНЕСЕНО|^невідоме|^зараз не зіставлено/.test(mtText(r["Перевірка"])) ? "" : mtText(r["Перевірка"]));
+      updated["Перевірка"] = [dup, "зараз не зіставлено з постачальником: " + queuePlan[i].match].filter(Boolean).join(" ");
+    } else updated["Перевірка"] = dup;
     keep.push(updated);
   });
-  out.main = { start: main.start, plan: mainPlan, rows: main.rows };
-  out.queue = { header: queueHeader, keep, approve, reject, planRowsByIndex: queuePlan };
+  out.main = { start: main.start, plan: mainPlan, rows: mainRows, changedRows: new Set([...undo.changedMain, ...bind.changedMain]) };
+  out.queue = { header: queueHeader, keep, approve, reject, bound, planRowsByIndex: queuePlan };
+  out.bindings = { history: bind.history, done: bind.done.length, refused: bind.refused.size, undoCells: undo.cells, undone: undo.undone.length };
+  out.deferredRows = deferred;
   out.journal = [...changeEntries(stamp, SHEET.main, mainPlan), ...changeEntries(stamp, SHEET.queue, queuePlan)];
   out.passportBefore = passport;
-  out.stats.queue = { rows: queue.rows.length, approve: approve.length, reject: reject.length, keep: keep.length, newIds: out.newIds.length, possibleDuplicates: [...dupOf.keys()].filter((k) => out.newIds.includes(k)).length };
+  out.stats.queue = { rows: queue.rows.length, approve: approve.length, reject: reject.length, keep: keep.length, bound: bound.length, newIds: out.newIds.length };
   return out;
 }
 
-/** Фаза 2: підсумкова черга (лишені + нові з оригінальним контентом) і новий паспорт. */
+/** Фаза 2: підсумкова черга (лишені + нові з оригінальним контентом, з перевіркою схожості) і новий паспорт. */
 export function finalizeSheetSync(plan, { parsed, fullById, stamp, config, groupsRows, journalSummary }) {
-  const newRows = plan.newIds.map((id) => {
-    const row = candidateRow(parsed.offers.get(id), fullById.get(id), stamp, config.pricing);
-    const target = plan.dupOf.get(id);
-    if (plan.dupOf.has(id)) row["Перевірка"] = [`${DUP_PREFIX}: схожий на товар ${target || "у каталозі"} (можливий новий ID того самого товару)`, row["Перевірка"]].filter(Boolean).join("; ");
-    return row;
-  });
+  const newRows = plan.newIds.map((id) => candidateRow(parsed.offers.get(id), fullById.get(id), stamp, config.pricing));
+  // Схожість нових — проти карток, черги (включно з іншими новими) і відкладених, з фото й характеристиками постачальника.
+  const index = dupIndexFor({ mainRows: plan.main.rows, queueRows: [...plan.queue.keep, ...newRows], deferredRows: plan.deferredRows, offers: parsed.offers });
+  let possibleDuplicates = 0;
+  for (const r of newRows) {
+    const note = dupNote(findDuplicates(index, queueEntry(r)), { frozen: plan.frozenFlag.has(mtText(r["Offer ID"])) });
+    if (note) possibleDuplicates++;
+    r["Перевірка"] = [note, r["Перевірка"]].filter(Boolean).join(" ");
+  }
   const queueRows = [...plan.queue.keep, ...newRows];
   const queueValues = queueRows.map((r) => plan.queue.header.map((k) => (r[k] == null ? "" : r[k])));
   const mainRowsAfter = [...plan.main.rows.map((r, i) => { const x = { ...r }; LIVE_COLUMNS.forEach((k, j) => { x[k] = plan.main.plan[i].next[j]; }); return x; }), ...plan.queue.approve];
@@ -228,7 +353,8 @@ export function finalizeSheetSync(plan, { parsed, fullById, stamp, config, group
   const entries = plan.journal.slice();
   for (const r of plan.queue.approve) entries.push([stamp, SHEET.main, mtText(r["Offer ID"]), "ЗАТВЕРДЖЕНО", SHEET.queue, SHEET.main, "ДОЗВОЛЕНО"]);
   for (const r of plan.queue.reject) entries.push([stamp, SHEET.queue, mtText(r["Offer ID"]), "ВІДХИЛЕНО", "", SHEET.frozen, "ВІДХИЛЕНО"]);
-  for (const r of newRows) entries.push([stamp, SHEET.queue, mtText(r["Offer ID"]), "НОВИЙ", "", "", plan.dupOf.has(mtText(r["Offer ID"])) ? DUP_PREFIX : STATUS_NEW]);
+  for (const h of plan.bindings.history) entries.push([stamp, SHEET.main, h[1], "ПРИВ'ЯЗАНО", h[2], h[3], "РІШЕННЯ ВЛАСНИКА"]);
+  for (const r of newRows) entries.push([stamp, SHEET.queue, mtText(r["Offer ID"]), "НОВИЙ", "", "", /МОЖЛИВИЙ ДУБЛЬ/.test(r["Перевірка"]) ? "МОЖЛИВИЙ ДУБЛЬ" : STATUS_NEW]);
   entries.push([stamp, "СИСТЕМА", "", "ЗАВЕРШЕНО", "", parsed.count, JSON.stringify({ mode: "ОНОВЛЕННЯ", system: "НОВА СИСТЕМА (S1, тестова копія)", feedDate: parsed.date, offers: parsed.count, changes: entries.length, ...journalSummary })]);
-  return { queueValues, newRows, passportAfter, journal: entries, mainCountAfter: mainRowsAfter.length };
+  return { queueValues, newRows, passportAfter, journal: entries, mainCountAfter: mainRowsAfter.length, possibleDuplicates };
 }
