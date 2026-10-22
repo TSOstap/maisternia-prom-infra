@@ -158,3 +158,78 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
     return { state: "ROLLED_BACK", error: e.message, verify: e.verify, restore };
   }
 }
+
+/** Обрізає порожні хвости рядків/колонок і зводить значення до тексту — для порівняння копії з живою таблицею. */
+function canon(values) {
+  const rows = (values || []).map((r) => r.map((v) => mtText(v)));
+  let w = 0;
+  for (const r of rows) for (let j = r.length - 1; j >= 0; j--) if (r[j] !== "") { w = Math.max(w, j + 1); break; }
+  let last = rows.length;
+  while (last > 0 && !rows[last - 1].some((v) => v !== "")) last--;
+  return rows.slice(0, last).map((r) => Array.from({ length: w }, (_, j) => r[j] ?? ""));
+}
+const sameSheet = (a, b) => JSON.stringify(canon(a)) === JSON.stringify(canon(b));
+export const REFRESH_SHEETS = [SHEET.main, SHEET.queue, SHEET.deferred, SHEET.frozen, SHEET.groups];
+
+/**
+ * Освіжити ТЕСТОВУ КОПІЮ з ЖИВОЇ таблиці (жива — лише читання). Погоджено власником 22.10.2026:
+ * виконується після завершення робіт Claude1 над NEW92 і перевірки нового YML.
+ *  Передумови (жива): печатки основного каталогу й NEW92 цілі; NEW92 у форматі 40 колонок; у всіх рядках NEW92 заповнено
+ *  «Код товару Prom»; одна мітка останнього оновлення. Будь-що не так — нічого не пишемо в копію.
+ *  Після запису копію перечитано й звірено з живою таблицею аркуш за аркушем.
+ */
+export async function refreshCopyFromLive({ sheets, readCopy, readLive, expectNew92 = 92 }) {
+  // Спершу копія (лише читання): доступ до неї перевіряється навіть тоді, коли передумови живої не виконані й запису не буде.
+  const copy = await readCopy(REFRESH_SHEETS);
+  const live = await readLive(REFRESH_SHEETS);
+  const checks = [];
+  const check = (name, ok, detail) => checks.push({ name, ok: Boolean(ok), ...(detail === undefined ? {} : { detail }) });
+  const main = readSheet(live[SHEET.main], SHEET.main);
+  const q = live[SHEET.queue];
+  const qHeader = (q[0] || []).map(mtText);
+  check("жива: «Нові товари» у форматі NEW92 (40 колонок)", qHeader.join("|") === YML_HEADERS.join("|"));
+  if (!checks.every((c) => c.ok)) return { state: "PRECONDITION_FAILED", checks };
+  const new92 = readSheet(q, SHEET.queue);
+  check(`жива: у «Нових товарах» ${expectNew92} рядків`, new92.rows.length === expectNew92, new92.rows.length);
+  check("жива: печатки основного каталогу цілі", main.rows.every((r) => rowSeal(r) === mtText(r[SEAL_COLUMN])), main.rows.filter((r) => rowSeal(r) !== mtText(r[SEAL_COLUMN])).length);
+  check("жива: печатки всіх рядків NEW92 цілі (після правок Claude1)", new92.rows.every((r) => rowSeal(r) === mtText(r[SEAL_COLUMN])), new92.rows.filter((r) => rowSeal(r) !== mtText(r[SEAL_COLUMN])).length);
+  const noCode = new92.rows.filter((r) => !mtText(r["Код товару Prom"]).trim()).length;
+  check("жива: «Код товару Prom» заповнено в усіх рядках NEW92", noCode === 0, noCode);
+  const stamps = new Set([...main.rows, ...new92.rows].map((r) => mtText(r["Оновлено"])));
+  check("жива: одна мітка останнього оновлення цін (дані узгоджені)", stamps.size === 1, stamps.size);
+  const codes = [...main.rows, ...new92.rows].map((r) => mtText(r["Код товару Prom"]).trim()).filter(Boolean);
+  const dupCodes = codes.length - new Set(codes).size;
+  const warnings = dupCodes ? [`повторюваних «Код товару Prom» у каталозі: ${dupCodes} (Prom може об'єднати такі товари) — перевірити`] : [];
+  if (!checks.every((c) => c.ok)) return { state: "PRECONDITION_FAILED", checks, warnings };
+
+  const actions = {};
+  for (const title of REFRESH_SHEETS) {
+    const src = live[title] || [];
+    const dst = copy[title] || [];
+    if (sameSheet(src, dst)) { actions[title] = "без змін"; continue; }
+    const width = Math.max(...src.map((r) => r.length), ...dst.map((r) => r.length), 1);
+    if (title === SHEET.main) {
+      // Якщо ID, порядок і печатки однакові — відрізняються лише операційні колонки: пишемо тільки їх.
+      const c = readSheet(dst, title);
+      const sameContent = c.rows.length === main.rows.length && c.rows.every((r, i) => mtText(r["Offer ID"]) === mtText(main.rows[i]["Offer ID"]) && mtText(r[SEAL_COLUMN]) === mtText(main.rows[i][SEAL_COLUMN]))
+        && c.header.join("|") === main.header.join("|");
+      if (sameContent) {
+        await sheets.updateRanges([{ title, row: 2, col: main.start + 1, values: main.rows.map((r) => LIVE_COLUMNS.map((k) => r[k] ?? "")) }]);
+        actions[title] = "лише ціни/наявність";
+        continue;
+      }
+    }
+    await sheets.ensureColumns(title, width);
+    await sheets.updateRanges([{ title, row: 1, col: 1, values: [pad(src[0] || [], width)] }]);
+    await rewriteData(sheets, title, Math.max(0, dst.length - 1), src.slice(1).map((r) => pad(r, width)));
+    actions[title] = "переписано повністю";
+  }
+
+  const after = await readCopy(REFRESH_SHEETS);
+  const verify = Object.fromEntries(REFRESH_SHEETS.map((t) => [t, sameSheet(live[t], after[t])]));
+  const n2 = readSheet(after[SHEET.queue], SHEET.queue).rows;
+  verify.new92Codes = n2.filter((r) => mtText(r["Код товару Prom"]).trim()).length;
+  verify.new92SealsIntact = n2.every((r) => rowSeal(r) === mtText(r[SEAL_COLUMN]));
+  const ok = REFRESH_SHEETS.every((t) => verify[t]) && verify.new92Codes === expectNew92 && verify.new92SealsIntact;
+  return { state: ok ? "REFRESHED" : "VERIFY_FAILED", checks, warnings, actions, verify };
+}

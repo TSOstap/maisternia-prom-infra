@@ -19,7 +19,7 @@ export const rangeA1 = (title, row, col, rows, cols) =>
   `'${title.replace(/'/g, "''")}'!${columnLetter(col)}${row}:${columnLetter(col + Math.max(1, cols) - 1)}${row + Math.max(1, rows) - 1}`;
 
 export class GoogleSheetsWriter {
-  constructor({ spreadsheetId, liveSpreadsheetId, getAccessToken, fetchImpl, sleep, maxRequests = 40, maxAttempts = 4 }) {
+  constructor({ spreadsheetId, liveSpreadsheetId, getAccessToken, fetchImpl, sleep, now, maxRequests = 40, maxAttempts = 4, maxRequestsPerMinute = 50, maxChunkChars = 2_000_000 }) {
     if (!spreadsheetId || !/^[A-Za-z0-9_-]{20,}$/.test(spreadsheetId)) throw new Error("Невалідний ID тестової таблиці");
     if (!liveSpreadsheetId) throw new Error("Для захисту потрібен ID живої таблиці (запис у неї заборонено)");
     if (spreadsheetId === liveSpreadsheetId) throw new Error("ЗАБОРОНЕНО: цільова таблиця — ЖИВА. Запис дозволено лише в тестову копію");
@@ -31,6 +31,30 @@ export class GoogleSheetsWriter {
     this.maxAttempts = maxAttempts;
     this.metrics = { requests: 0, retries: 0, writes: 0 };
     this.metaCache = null;
+    this.now = now || (() => Date.now());
+    this.maxRequestsPerMinute = maxRequestsPerMinute; // квота Sheets API: 60 запитів запису/хв на користувача
+    this.maxChunkChars = maxChunkChars;               // великі блоки (напр. 5121 рядок із описами) — порціями ~2 МБ
+    this.window = [];
+  }
+
+  async #pace() {
+    const t = this.now();
+    this.window = this.window.filter((x) => t - x < 60000);
+    if (this.window.length >= this.maxRequestsPerMinute) { await this.sleep(60000 - (t - this.window[0]) + 50); return this.#pace(); }
+    this.window.push(this.now());
+  }
+
+  /** Ділить рядки на порції за розміром JSON. */
+  #chunks(rows) {
+    const out = [];
+    let cur = [], size = 0;
+    for (const r of rows) {
+      const s = JSON.stringify(r).length;
+      if (cur.length && size + s > this.maxChunkChars) { out.push(cur); cur = []; size = 0; }
+      cur.push(r); size += s;
+    }
+    if (cur.length) out.push(cur);
+    return out;
   }
 
   async #call(method, path, body, params = []) {
@@ -39,6 +63,7 @@ export class GoogleSheetsWriter {
     for (let attempt = 1; ; attempt++) {
       if (this.metrics.requests >= this.maxRequests) throw new Error(`Перевищено межу ${this.maxRequests} запитів запису на запуск (захист квоти)`);
       this.metrics.requests++;
+      await this.#pace();
       const token = await this.getAccessToken();
       let res, text;
       try {
@@ -73,19 +98,38 @@ export class GoogleSheetsWriter {
 
   async updateRanges(list) {
     if (!list.length) return;
-    this.metrics.writes++;
-    await this.#call("POST", "/values:batchUpdate", {
-      valueInputOption: "RAW",
-      data: list.map((b) => ({ range: rangeA1(b.title, b.row, b.col, b.values.length, Math.max(...b.values.map((r) => r.length))), majorDimension: "ROWS", values: b.values })),
-    });
+    // Кожен блок — порціями рядків; кілька дрібних порцій можуть іти одним запитом.
+    const parts = [];
+    for (const b of list) {
+      let row = b.row;
+      for (const values of this.#chunks(b.values)) { parts.push({ title: b.title, row, col: b.col, values }); row += values.length; }
+    }
+    let batch = [], size = 0;
+    const flush = async () => {
+      if (!batch.length) return;
+      this.metrics.writes++;
+      await this.#call("POST", "/values:batchUpdate", {
+        valueInputOption: "RAW",
+        data: batch.map((b) => ({ range: rangeA1(b.title, b.row, b.col, b.values.length, Math.max(...b.values.map((r) => r.length))), majorDimension: "ROWS", values: b.values })),
+      });
+      batch = []; size = 0;
+    };
+    for (const p of parts) {
+      const s = JSON.stringify(p.values).length;
+      if (batch.length && size + s > this.maxChunkChars) await flush();
+      batch.push(p); size += s;
+    }
+    await flush();
   }
 
   async appendRows(title, rows) {
     if (!rows.length) return;
     this.metrics.writes++;
     const width = Math.max(...rows.map((r) => r.length));
-    await this.#call("POST", "/values/" + encodeURIComponent(rangeA1(title, 1, 1, 1, width)) + ":append", { majorDimension: "ROWS", values: rows },
-      [["valueInputOption", "RAW"], ["insertDataOption", "INSERT_ROWS"]]);
+    for (const part of this.#chunks(rows)) {
+      await this.#call("POST", "/values/" + encodeURIComponent(rangeA1(title, 1, 1, 1, width)) + ":append", { majorDimension: "ROWS", values: part },
+        [["valueInputOption", "RAW"], ["insertDataOption", "INSERT_ROWS"]]);
+    }
     this.metaCache = null;
   }
 

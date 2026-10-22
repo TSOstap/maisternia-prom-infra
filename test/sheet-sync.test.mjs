@@ -7,7 +7,7 @@ import { readSheet } from "../src/core/sync-plan.mjs";
 import { rowSeal, SEAL_COLUMN, YML_HEADERS } from "../src/core/seal.mjs";
 import { mtText } from "../src/core/text.mjs";
 import { SHEET, QUEUE_HEADERS, DECISION, extractFullOffers, readPassport } from "../src/core/sheet-sync.mjs";
-import { mergeNew92, syncSheet } from "../src/pipeline/sheet-sync-run.mjs";
+import { mergeNew92, syncSheet, refreshCopyFromLive } from "../src/pipeline/sheet-sync-run.mjs";
 import { MemorySheets, GoogleSheetsWriter, rangeA1 } from "../src/pipeline/sheets-writer.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
 import baseConfig from "../config/default.json" with { type: "json" };
@@ -203,4 +203,58 @@ test("повний XML постачальника: CDATA, фото, характ
   assert.deepEqual(m.pictures, ["https://x/1.jpg", "https://x/2.jpg"]);
   assert.deepEqual(m.params, [{ name: "Потужність", value: "800", unit: "Вт" }, { name: "Колір", value: "Червоний & чорний", unit: "" }]);
   assert.equal(m.country, "Китай");
+});
+
+/** «Жива» книга після правок Claude1: «Код товару Prom» заповнено в усіх рядках NEW92, печатки перераховано. */
+function liveAfterClaude1(book) {
+  const live = structuredClone(book);
+  const h = live[SHEET.queue][0];
+  for (const r of live[SHEET.queue].slice(1)) {
+    r[h.indexOf("Код товару Prom")] = "MT-NEW-" + r[0].slice(-4);
+    const o = Object.fromEntries(h.map((k, i) => [k, r[i]]));
+    r[h.indexOf(SEAL_COLUMN)] = rowSeal(o);
+  }
+  // mtUpdate у живій таблиці тим часом оновив ціни
+  const mh = live[SHEET.main][0];
+  live[SHEET.main][1][mh.indexOf("Ціна постачальника")] = 12345.67;
+  return live;
+}
+
+test("освіжити копію: після Claude1 — копія = жива; лише ціни в основному каталозі, NEW92 повністю; усі коди й печатки на місці", async () => {
+  const w = world({ queue: 12 });
+  const live = liveAfterClaude1(w.book);
+  const r = await refreshCopyFromLive({ sheets: w.sheets, readCopy: w.readBook, readLive: async () => structuredClone(live), expectNew92: 12 });
+  assert.equal(r.state, "REFRESHED", JSON.stringify(r));
+  assert.equal(r.actions[SHEET.main], "лише ціни/наявність");
+  assert.equal(r.actions[SHEET.queue], "переписано повністю");
+  assert.equal(r.verify.new92Codes, 12);
+  assert.deepEqual(w.book[SHEET.queue].map((x) => x.map(mtText)), live[SHEET.queue].map((x) => x.map(mtText)));
+  // далі перенесення бере вже оновлені коди
+  const m = await mergeNew92({ sheets: w.sheets, readBook: w.readBook, stamp: STAMP });
+  assert.equal(m.state, "MERGED");
+  assert.ok(rows(w.book, SHEET.main).slice(-12).every((x) => /^MT-NEW-/.test(x["Код товару Prom"])));
+});
+
+test("освіжити копію: Claude1 ще не закінчив (порожній код) або печатку не перераховано — у копію нічого не пишеться", async () => {
+  for (const spoil of ["code", "seal"]) {
+    const w = world({ queue: 12 });
+    const live = liveAfterClaude1(w.book);
+    const h = live[SHEET.queue][0];
+    if (spoil === "code") live[SHEET.queue][3][h.indexOf("Код товару Prom")] = "";
+    else live[SHEET.queue][3][h.indexOf("Код товару Prom")] = "MT-БЕЗ-ПЕЧАТКИ";
+    const before = structuredClone(w.book);
+    const r = await refreshCopyFromLive({ sheets: w.sheets, readCopy: w.readBook, readLive: async () => structuredClone(live), expectNew92: 12 });
+    assert.equal(r.state, "PRECONDITION_FAILED", spoil);
+    assert.deepEqual(w.book, before, spoil + ": копія не змінена");
+  }
+});
+
+test("освіжити копію після тестового перенесення: копія повністю повертається до стану живої (5029 + NEW92 окремо)", async () => {
+  const w = world({ queue: 12 });
+  const live = liveAfterClaude1(w.book);
+  await mergeNew92({ sheets: w.sheets, readBook: w.readBook, stamp: STAMP });
+  const r = await refreshCopyFromLive({ sheets: w.sheets, readCopy: w.readBook, readLive: async () => structuredClone(live), expectNew92: 12 });
+  assert.equal(r.state, "REFRESHED", JSON.stringify(r.verify));
+  assert.equal(rows(w.book, SHEET.main).length, 120);
+  assert.equal(rows(w.book, SHEET.queue).length, 12);
 });

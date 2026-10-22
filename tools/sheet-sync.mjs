@@ -3,6 +3,7 @@
  *  Режими (--mode):
  *    merge     — одноразово: NEW92 («Нові товари») → «Основний каталог»; «Нові товари» → черга; «Паспорт каталогу»
  *    sync      — ціни/наявність, нові позиції в черзі, рішення власника, паспорт, журнал (майбутній запуск кожні 4 год)
+ *    refresh   — освіжити ТЕСТОВУ КОПІЮ з ЖИВОЇ таблиці (жива — лише читання; перевірка печаток, «Код товару Prom» NEW92)
  *    scenario  — як sync, але XML навмисно змінено: ціна одного товару, наявність другого, зникнення третього (лише копія)
  *  Джерела:
  *    --source=api  : MM_TEST_SHEET_ID (копія, «Редактор»), MM_SHEET_ID (жива — лише для заборони), GOOGLE_OAUTH_ACCESS_TOKEN,
@@ -20,7 +21,7 @@ import { operationalUrl, parseSupplierText, validateFeed } from "../src/core/sup
 import { readSheet } from "../src/core/sync-plan.mjs";
 import { sanitize, mtText, sha256 } from "../src/core/text.mjs";
 import { SHEET, extractFullOffers } from "../src/core/sheet-sync.mjs";
-import { mergeNew92, syncSheet, SYNC_SHEETS } from "../src/pipeline/sheet-sync-run.mjs";
+import { mergeNew92, syncSheet, refreshCopyFromLive, SYNC_SHEETS, REFRESH_SHEETS } from "../src/pipeline/sheet-sync-run.mjs";
 import { findLastSync } from "../src/verify/supplier-shadow.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
 import { readXlsx } from "./lib/xlsx-read.mjs";
@@ -46,7 +47,7 @@ function emit(text) {
 const fail = (prefix, e) => { process.stderr.write(prefix + scrub(e) + "\n"); process.exit(2); };
 
 // ---------- таблиця ----------
-let sheets, readBook, journalTail = null;
+let sheets, readBook, readLive, journalTail = null;
 try {
   if (source === "api") {
     if (!process.env.MM_TEST_SHEET_ID) throw new Error("немає MM_TEST_SHEET_ID");
@@ -57,7 +58,13 @@ try {
       const loaded = await src.load(names);
       return { ...loaded.sheets, [SHEET.groups]: loaded.groups };
     };
-    if (mode !== "merge") {
+    // Жива таблиця — ЛИШЕ читання (службовий акаунт там «Читач»); потрібна тільки для режиму refresh.
+    readLive = async (names) => {
+      const src = new GoogleSheetsCatalogSource({ spreadsheetId: process.env.MM_SHEET_ID || "", getAccessToken });
+      const loaded = await src.load(names);
+      return { ...loaded.sheets, [SHEET.groups]: loaded.groups };
+    };
+    if (mode !== "merge" && mode !== "refresh") {
       const src = new GoogleSheetsCatalogSource({ spreadsheetId: process.env.MM_TEST_SHEET_ID, getAccessToken });
       journalTail = await src.loadTail(SHEET.journal, { until: (rows) => findLastSync(rows) !== null });
     }
@@ -66,6 +73,8 @@ try {
     const book = Object.fromEntries(readXlsx(arg("xlsx"), { only: all }).sheets.filter((s) => s.values).map((s) => [s.name, s.values]));
     journalTail = book[SHEET.journal];
     book[SHEET.journal] = [book[SHEET.journal]?.[0] || ["Дата / час", "Аркуш", "Offer ID", "Поле", "Було", "Стало", "Статус"]];
+    const liveBook = structuredClone(book); // локально «жива» таблиця = книга xlsx
+    readLive = async () => structuredClone(liveBook);
     if (arg("state")) Object.assign(book, JSON.parse(fs.readFileSync(arg("state"), "utf8"))); // стан після попереднього локального прогону
     sheets = new MemorySheets(book);
     readBook = async () => structuredClone(book);
@@ -78,6 +87,9 @@ const report = { mode, source, at: stamp, result: null, metrics: {} };
 try {
   if (mode === "merge") {
     report.result = await mergeNew92({ sheets, readBook, stamp });
+  } else if (mode === "refresh") {
+    if (source === "api") sheets.maxRequests = 150; // основний каталог (~50 МБ) пишеться порціями ~2 МБ
+    report.result = await refreshCopyFromLive({ sheets, readCopy: readBook, readLive, expectNew92: Number(arg("expect-new92", 92)) });
   } else {
     // Фід постачальника: операційний (ціни/наявність — як LIVE) і, лише за потреби, повний (контент нових позицій).
     let xml, fullXml = null;
@@ -139,6 +151,9 @@ if (arg("summary")) {
     r.error ? `Помилка: ${r.error}` : "",
     r.stats ? `Основний каталог: ${r.stats.mainCountAfter} товарів; змінено клітинок цін/наявності: ${r.stats.main?.changedCells}; черга: додано ${r.stats.added}, затверджено ${r.stats.approved}, відхилено ${r.stats.rejected}, можливих дублів ${r.stats.queue?.possibleDuplicates}` : "",
     r.count ? `Перенесено NEW92: ${r.moved}; основний каталог: ${r.count}` : "",
+    r.actions ? `Освіження копії: ${Object.entries(r.actions).map(([k, v]) => `${k} — ${v}`).join("; ")}` : "",
+    r.checks ? `Перевірки: ${r.checks.map((c) => `${c.ok ? "PASS" : "FAIL"} ${c.name}`).join("; ")}` : "",
+    r.warnings?.length ? `Попередження: ${r.warnings.join("; ")}` : "",
     r.verify ? `Перевірка після запису: ${Object.entries(r.verify).map(([k, v]) => `${k}=${v}`).join(", ")}` : "",
     r.restore ? `Відновлено: ${r.restore.join(", ")}` : "",
     `Час: ${report.metrics.totalMs} мс; запитів запису Sheets: ${report.metrics.sheetsRequests ?? "—"}`,
@@ -146,4 +161,4 @@ if (arg("summary")) {
   if ([...secrets].some((x) => lines.includes(x)) || /\d{10,}/.test(lines)) { process.stderr.write("ЗАХИСТ ВІД ВИТОКУ: summary не записано\n"); process.exit(3); }
   fs.appendFileSync(arg("summary"), lines);
 }
-process.exitCode = ["MERGED", "SYNCED"].includes(report.result?.state) ? 0 : 1;
+process.exitCode = ["MERGED", "SYNCED", "REFRESHED"].includes(report.result?.state) ? 0 : 1;
