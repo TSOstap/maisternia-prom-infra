@@ -36,6 +36,7 @@ import { loadLiveAppsScript } from "../src/verify/live-vm.mjs";
 import { LocalObjectStore } from "../src/storage/local.mjs";
 import { runUpdate } from "../src/pipeline/update.mjs";
 import { buildVersion, publishVersion, sha256 } from "../src/publish/cf-assets.mjs";
+import { liveLimitStatus } from "../src/verify/size-watch.mjs";
 import { readXlsx } from "./lib/xlsx-read.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -146,7 +147,7 @@ try {
 } catch (e) { fail("ПОМИЛКА ОТРИМАННЯ ФІДУ ПОСТАЧАЛЬНИКА: ", e); }
 const tFetch = Date.now() - tf;
 
-const report = { ok: false, checks: [], time: {}, generator: {}, full: {}, yml: {}, prices: {}, pipeline: {}, publish: null, metrics: {} };
+const report = { ok: false, checks: [], warnings: [], time: {}, generator: {}, full: {}, yml: {}, prices: {}, pipeline: {}, publish: null, metrics: {} };
 const check = (name, ok, detail) => report.checks.push({ name, ok: Boolean(ok), ...(detail === undefined ? {} : { detail }) });
 const tmp = await fsp.mkdtemp(path.join(arg("tmp") || os.tmpdir(), "mm-c3-2-"));
 let oursFull = null;
@@ -219,6 +220,9 @@ try {
     report.yml = { offers: v.count, bytes: v.bytes, sha256: v.sha256.slice(0, 12) + "…", sourceDigest: digestNoDate(oursText).slice(0, 16), liveLimitBytes: 50_000_000 };
     check(`C. структура XML, ${expected.main.count} унікальних ID = погодженому набору`, v.count === expected.main.count);
     check("C. розмір ≤ 50 000 000 Б (ліміт LIVE) і ≤ 180 МБ (Prom)", v.bytes <= 50_000_000, v.bytes);
+    // Моніторинг: попередження про наближення до ліміту чинної системи (сам ліміт не змінюється).
+    report.liveLimit = liveLimitStatus(v.bytes);
+    if (report.liveLimit.level !== "OK") report.warnings.push(report.liveLimit.message);
     report.prices = priceChecks(oursText);
     const p = report.prices;
     check("C. ціни: усі > 0 і з двома знаками", p.badPrice === 0, p.badPrice);
@@ -293,6 +297,7 @@ if (arg("summary")) {
     ...report.checks.map((c) => `| ${c.name} | ${c.ok ? "PASS" : "FAIL"} |`),
     "",
     `YML: ${report.yml.offers ?? "—"} offer, ${report.yml.bytes ?? "—"} Б; наявних ${report.prices.available ?? "—"}, відсутніх ${report.prices.unavailable ?? "—"}`,
+    ...(report.warnings.length ? ["", ...report.warnings.map((w) => "> " + w)] : []),
     p ? `Публікація: ${p.state}${p.upload ? `, upload ${p.upload.ms} мс` : ""}${p.switch ? `, перемикання ${p.switch.ms} мс` : ""}${p.readback ? `, readback ${p.readback.filter((r) => r.match).length}/${p.readback.length}` : ""}` : "Публікація: не запитувалась",
     `Час: таблиця ${report.metrics.sheetsReadMs} мс, постачальник ${report.metrics.supplierFetchMs} мс, обробка ${report.metrics.processMs} мс, разом ${report.metrics.totalMs} мс; пам'ять ${report.metrics.maxRssMb} МБ`,
   ].join("\n") + "\n";

@@ -9,6 +9,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { liveLimitStatus } from "../src/verify/size-watch.mjs";
 
 if (process.env.GITHUB_ACTIONS === "true") { console.error("Лише локально"); process.exit(2); }
 const arg = (n, d) => process.argv.find((a) => a.startsWith(`--${n}=`))?.slice(n.length + 3) ?? d;
@@ -67,6 +68,7 @@ const summary = {
   live: { bytes: live.bytes, ms: live.ms, offers: L.size, date: liveDate, sourceDigest: digestNoDate(live.text).slice(0, 16) },
   shadow: { bytes: shadow.bytes, ms: shadow.ms, offers: S.size, date: shadowDate, sourceDigest: digestNoDate(shadow.text).slice(0, 16), version: st.version ?? null, shaMatchesManifest: sha(shadow.text) === st.sha256 },
   byteIdenticalExceptDate: digestNoDate(live.text) === digestNoDate(shadow.text),
+  liveLimit: liveLimitStatus(live.bytes).message,
   diffCounts: Object.fromEntries(Object.entries(d).map(([k, v]) => [k, v.length])),
 };
 if (arg("details")) {
