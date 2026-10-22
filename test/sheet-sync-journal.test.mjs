@@ -8,6 +8,7 @@ import { SHEET, extractFullOffers } from "../src/core/sheet-sync.mjs";
 import { mergeNew92, syncSheet, blockedEntry, feedBlock, recordBlocked } from "../src/pipeline/sheet-sync-run.mjs";
 import { MemorySheets, GoogleSheetsWriter, VALUE_INPUT_OPTION } from "../src/pipeline/sheets-writer.mjs";
 import baseConfig from "../config/default.json" with { type: "json" };
+import { syncAndIntake } from "./helpers/intake.mjs";
 
 const NOW = Date.parse("2026-10-22T10:00:00Z");
 const STAMP = new Date(NOW).toISOString();
@@ -24,8 +25,7 @@ async function world() {
   return w;
 }
 async function sync(w, xml) {
-  const parsed = await parseSupplierText(xml, { maximumChars: 45_000_000, identityFields: true });
-  return syncSheet({ sheets: w.sheets, readBook: w.readBook, parsed, fetchFull: async (ids) => extractFullOffers(xml, ids), stamp: STAMP, config, now: NOW });
+  return syncAndIntake(w, xml, { stamp: STAMP, now: NOW, config });
 }
 
 test("формат «Журналу» = mtUpdate: наявність «+» і «-» без апострофів; рядок постачальника з «=» зберігається як є", async () => {

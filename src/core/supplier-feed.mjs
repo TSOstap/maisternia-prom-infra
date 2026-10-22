@@ -25,6 +25,9 @@ function offerFrom(attrs, body) {
   };
 }
 
+/** Поля offer для «Сторожа новинок» (той самий розбір, що й тут). */
+export { offerFrom as offerFields };
+
 /** Позиція `<offer` (не `<offers`) або -1. На самому кінці буфера — «ще невідомо» (-2): чекаємо наступний шматок. */
 function findOfferOpen(buffer, final) {
   OFFER_OPEN.lastIndex = 0;

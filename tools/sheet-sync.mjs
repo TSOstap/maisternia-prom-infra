@@ -7,6 +7,11 @@
  *    scenario  — як sync, але XML навмисно змінено: ціна одного товару, наявність другого, зникнення третього,
  *                четвертий — «той самий товар під новим (тестовим) ID» (лише копія, лише в пам'яті запуску)
  *    scenario-mass — помилковий фід «усе немає в наявності»: очікується ABORTED, нічого не записано
+ *    intake    — лише черга: додати кандидатів, стабільність яких підтвердив «Сторож новинок» (Worker), і оновити сирі дані
+ *                позицій черги (варіант А). Список кандидатів — з Worker (MM_WATCH_URL + MM_WATCH_KEY, GET /intake) або
+ *                локально --ready-file. ID кандидатів у вивід / журнали GitHub НЕ потрапляють — лише кількості.
+ *  Після sync / intake звіт (база відомих ID, відбитки черги, результати) надсилається у Worker (POST /ack), якщо його
+ *  налаштовано; локально — --ack-file=<шлях поза репозиторієм>.
  *  Джерела:
  *    --source=api  : MM_TEST_SHEET_ID (копія, «Редактор»), MM_SHEET_ID (жива — лише для заборони), GOOGLE_OAUTH_ACCESS_TOKEN,
  *                    MM_SUPPLIER_FEED_URL (повний фід; операційний — з тими самими параметрами, що в LIVE)
@@ -23,7 +28,7 @@ import { operationalUrl, parseSupplierText, validateFeed } from "../src/core/sup
 import { readSheet } from "../src/core/sync-plan.mjs";
 import { sanitize, mtText, sha256 } from "../src/core/text.mjs";
 import { SHEET, extractFullOffers } from "../src/core/sheet-sync.mjs";
-import { mergeNew92, syncSheet, refreshCopyFromLive, recordBlocked, feedBlock, SYNC_SHEETS, REFRESH_SHEETS } from "../src/pipeline/sheet-sync-run.mjs";
+import { intakeSheet, mergeNew92, syncSheet, refreshCopyFromLive, recordBlocked, feedBlock, SYNC_SHEETS, REFRESH_SHEETS } from "../src/pipeline/sheet-sync-run.mjs";
 import { findLastSync } from "../src/verify/supplier-shadow.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
 import { readXlsx } from "./lib/xlsx-read.mjs";
@@ -38,9 +43,31 @@ const started = Date.now();
 // ---------- захист від витоку ----------
 const secrets = new Set();
 const addSecret = (v) => { const s = v == null ? "" : String(v); if (s.length >= 8) secrets.add(s); };
-for (const k of ["MM_SHEET_ID", "MM_TEST_SHEET_ID", "GOOGLE_OAUTH_ACCESS_TOKEN"]) addSecret(process.env[k]);
+for (const k of ["MM_SHEET_ID", "MM_TEST_SHEET_ID", "GOOGLE_OAUTH_ACCESS_TOKEN", "MM_WATCH_KEY"]) addSecret(process.env[k]);
 const addUrlSecrets = (raw) => { addSecret(raw); try { const u = new URL(raw); addSecret(u.search.slice(1)); addSecret(u.host + u.pathname + u.search); for (const [, v] of u.searchParams) { addSecret(v); addSecret(encodeURIComponent(v)); } } catch { /* */ } };
 if (process.env.MM_SUPPLIER_FEED_URL) addUrlSecrets(process.env.MM_SUPPLIER_FEED_URL);
+if (process.env.MM_WATCH_URL) addUrlSecrets(process.env.MM_WATCH_URL);
+
+// ---------- «Сторож новинок» (Worker) ----------
+const watchConfigured = () => Boolean(process.env.MM_WATCH_URL && process.env.MM_WATCH_KEY);
+async function watchCall(pathname, init = {}) {
+  const res = await fetch(new URL(pathname, process.env.MM_WATCH_URL), { ...init, redirect: "error", headers: { authorization: "Bearer " + process.env.MM_WATCH_KEY, "content-type": "application/json", ...(init.headers || {}) } });
+  if (!res.ok) throw new Error("Worker HTTP " + res.status);
+  return res.json();
+}
+async function readyList() {
+  if (arg("ready-file")) return JSON.parse(fs.readFileSync(arg("ready-file"), "utf8"));
+  if (!watchConfigured()) return null;
+  return watchCall("/intake");
+}
+/** Звіт у Worker: лише туди (за ключем); у вивід — тільки «так / ні». */
+async function sendAck(ack) {
+  if (!ack) return "немає звіту";
+  if (arg("ack-file")) { fs.writeFileSync(arg("ack-file"), JSON.stringify(ack)); return "у файл"; }
+  if (!watchConfigured()) return "не налаштовано (MM_WATCH_URL / MM_WATCH_KEY)";
+  try { await watchCall("/ack", { method: "POST", body: JSON.stringify(ack) }); return "так"; }
+  catch (e) { return "ні: " + scrub(e); }
+}
 const scrub = (e) => sanitize(e?.message || e).replace(/\d{6,}/g, "***");
 function emit(text) {
   if ([...secrets].some((s) => text.includes(s)) || /\d{10,}/.test(text)) { process.stderr.write("ЗАХИСТ ВІД ВИТОКУ: вивід заблоковано\n"); process.exit(3); }
@@ -150,7 +177,13 @@ try {
     }
     if (!report.result) {
       const fetchFull = report.fetchFull;
-      report.result = await syncSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now: NOW });
+      if (mode === "intake") {
+        const list = await readyList();
+        if (!list) report.result = { state: "SKIPPED", reason: "немає списку кандидатів (Worker не налаштовано) — новинки лишаються кандидатами" };
+        else report.result = await intakeSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now: NOW, ready: list.ready || [], profile: list.profile || config.intake?.profile || "medium" });
+      } else report.result = await syncSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now: NOW, profile: config.intake?.profile || "medium" });
+      // Звіт для Worker містить ID — у вивід не потрапляє.
+      if (report.result?.ack !== undefined) { report.ackSent = await sendAck(report.result.ack); delete report.result.ack; }
     }
     delete report.fetchFull;
     report.feed = { offers: parsed.count };
@@ -177,7 +210,10 @@ if (arg("summary")) {
     r.block ? `Блокування: ${r.block.type}; зачеплено ${r.block.affected ?? "—"}; поріг ${r.block.limit ?? "—"}; запис у «Журнал»: ${r.journalWritten ? "так" : "НІ — причина лише тут"}` : "",
     r.error ? `Помилка: ${r.error}` : "",
     r.stats?.before ? `До запуску: основний каталог ${r.stats.before.mainRows} (унікальних ID ${r.stats.before.uniqueIds}, паспорт ${r.stats.before.passportCount}); у черзі ${r.stats.before.queueRows}` : "",
-    r.stats ? `Основний каталог: ${r.stats.mainCountAfter} товарів; змінено клітинок цін/наявності: ${r.stats.main?.changedCells}; черга: додано ${r.stats.added}, затверджено ${r.stats.approved}, відхилено ${r.stats.rejected}, можливих дублів ${r.stats.queue?.possibleDuplicates}` : "",
+    r.stats?.results ? `Intake: кандидатів ${r.stats.ready}; ${Object.entries(r.stats.results).map(([k, v]) => `${k} — ${v}`).join(", ") || "—"}; додано в чергу ${r.stats.added}; можливих дублів ${r.stats.possibleDuplicates}` : "",
+    r.stats?.queueRaw ? `Сирі дані черги: оновлено ${r.stats.queueRaw.changed}, потребують повторної перевірки ${r.stats.queueRaw.recheck}, «ПЕРЕВІРЕНО» ${r.stats.queueRaw.verified}, нових колонок ${r.stats.queueRaw.migratedColumns}` : "",
+    report.ackSent ? `Звіт «Сторожу новинок»: ${report.ackSent}` : "",
+    r.stats?.mainCountAfter !== undefined ? `Основний каталог: ${r.stats.mainCountAfter} товарів; змінено клітинок цін/наявності: ${r.stats.main?.changedCells}; черга: додано ${r.stats.added}, затверджено ${r.stats.approved}, відхилено ${r.stats.rejected}, можливих дублів ${r.stats.queue?.possibleDuplicates}` : "",
     r.stats?.main?.supplierPriceChanged !== undefined ? `Змінено: ціна постачальника — ${r.stats.main.supplierPriceChanged}, ціна продажу — ${r.stats.main.salePriceChanged}, наявність — ${r.stats.main.availabilityChanged} (стали в наявності ${r.stats.main.becameAvailable}, зникли з наявності ${r.stats.main.becameUnavailable}), кількість — ${r.stats.main.quantityChanged}; відсутніх у фіді ${r.stats.main.missingInFeed}` : "",
     r.count ? `Перенесено NEW92: ${r.moved}; основний каталог: ${r.count}` : "",
     r.actions ? `Освіження копії: ${Object.entries(r.actions).map(([k, v]) => `${k} — ${v}`).join("; ")}` : "",
@@ -190,4 +226,4 @@ if (arg("summary")) {
   if ([...secrets].some((x) => lines.includes(x)) || /\d{10,}/.test(lines)) { process.stderr.write("ЗАХИСТ ВІД ВИТОКУ: summary не записано\n"); process.exit(3); }
   fs.appendFileSync(arg("summary"), lines);
 }
-process.exitCode = mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "SYNCED", "REFRESHED"].includes(report.result?.state) ? 0 : 1;
+process.exitCode = mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "SYNCED", "REFRESHED", "INTAKE_DONE", "NOTHING_TO_WRITE", "SKIPPED"].includes(report.result?.state) ? 0 : 1;

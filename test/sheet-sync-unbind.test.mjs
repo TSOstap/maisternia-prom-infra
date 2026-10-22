@@ -11,6 +11,7 @@ import { mergeNew92, syncSheet } from "../src/pipeline/sheet-sync-run.mjs";
 import { MemorySheets } from "../src/pipeline/sheets-writer.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
 import baseConfig from "../config/default.json" with { type: "json" };
+import { syncAndIntake } from "./helpers/intake.mjs";
 
 const NOW = Date.parse("2026-10-22T10:00:00Z");
 const STAMP = new Date(NOW).toISOString();
@@ -31,12 +32,12 @@ async function world() {
 }
 const rows = (book, name) => readSheet(book[name], name).rows;
 async function sync(w, xml) {
-  const parsed = await parseSupplierText(xml, { maximumChars: 45_000_000, identityFields: true });
-  return syncSheet({ sheets: w.sheets, readBook: w.readBook, parsed, fetchFull: async (ids) => extractFullOffers(xml, ids), stamp: STAMP, config, now: NOW });
+  return syncAndIntake(w, xml, { stamp: STAMP, now: NOW, config });
 }
 function offerLine(o) {
-  const pics = (o.pictures || []).map((u) => `<picture>${esc(u)}</picture>`).join("");
-  return `<offer id="${o.id}" available="${o.available ?? true}"><url>${esc(o.url)}</url><price>${o.price ?? 500}</price><currencyId>UAH</currencyId><categoryId>1</categoryId><name>${esc(o.nameRu)}</name><name_ua>${esc(o.nameUa)}</name_ua><vendorCode>${esc(o.sku)}</vendorCode><description><![CDATA[<p>опис</p>]]></description><description_ua><![CDATA[<p>опис</p>]]></description_ua>${pics}<quantity_in_stock></quantity_in_stock></offer>`;
+  const pics = (o.pictures ?? [`https://images.prom.ua/39${String(o.id).slice(-8)}_t.jpg`]).map((u) => `<picture>${esc(u)}</picture>`).join("");
+  const params = (o.params ?? [{ name: "Потужність", value: "1000", unit: "Вт" }]).map((p) => `<param name="${esc(p.name)}"${p.unit ? ` unit="${esc(p.unit)}"` : ""}>${esc(p.value)}</param>`).join("");
+  return `<offer id="${o.id}" available="${o.available ?? true}"><url>${esc(o.url)}</url><price>${o.price ?? 500}</price><currencyId>UAH</currencyId><categoryId>1</categoryId><name>${esc(o.nameRu)}</name><name_ua>${esc(o.nameUa)}</name_ua><vendorCode>${esc(o.sku)}</vendorCode><description><![CDATA[<p>опис</p>]]></description><description_ua><![CDATA[<p>опис</p>]]></description_ua>${pics}${params}<quantity_in_stock></quantity_in_stock></offer>`;
 }
 const addOffer = (xml, o) => xml.replace("\n</offers>", "\n" + offerLine(o) + "\n</offers>");
 const card = (w, k) => rows(w.book, SHEET.main)[k];

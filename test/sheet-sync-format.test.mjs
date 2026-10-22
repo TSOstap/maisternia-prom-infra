@@ -8,11 +8,12 @@ import { mtPrices } from "../src/core/pricing.mjs";
 import { offerXml } from "../src/core/yml.mjs";
 import { rowSeal, SEAL_COLUMN } from "../src/core/seal.mjs";
 import { mtText } from "../src/core/text.mjs";
-import { SHEET, extractFullOffers, nonProductReason } from "../src/core/sheet-sync.mjs";
+import { SHEET, candidateRow, extractFullOffers, nonProductReason } from "../src/core/sheet-sync.mjs";
 import { mergeNew92, syncSheet, sheetDiscount } from "../src/pipeline/sheet-sync-run.mjs";
 import { MemorySheets, GoogleSheetsWriter } from "../src/pipeline/sheets-writer.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
 import baseConfig from "../config/default.json" with { type: "json" };
+import { syncAndIntake } from "./helpers/intake.mjs";
 
 const NOW = Date.parse("2026-10-22T10:00:00Z");
 const STAMP = new Date(NOW).toISOString();
@@ -31,12 +32,12 @@ async function world({ newOffers = 1 } = {}) {
 }
 const rows = (book, name) => readSheet(book[name], name).rows;
 async function sync(w, xml, stamp = STAMP) {
-  const parsed = await parseSupplierText(xml, { maximumChars: 45_000_000, identityFields: true });
-  return syncSheet({ sheets: w.sheets, readBook: w.readBook, parsed, fetchFull: async (ids) => extractFullOffers(xml, ids), stamp, config, now: NOW });
+  return syncAndIntake(w, xml, { stamp, now: NOW, config });
 }
 function addOffer(xml, o) {
-  const pics = (o.pictures || []).map((u) => `<picture>${esc(u)}</picture>`).join("");
-  const line = `<offer id="${o.id}" available="${o.available ?? true}"><url>${esc(o.url)}</url><price>${o.price ?? 500}</price><currencyId>UAH</currencyId><categoryId>1</categoryId><name>${esc(o.nameRu)}</name><name_ua>${esc(o.nameUa)}</name_ua>${o.sku ? `<vendorCode>${esc(o.sku)}</vendorCode>` : ""}<description><![CDATA[<p>опис</p>]]></description><description_ua><![CDATA[<p>опис</p>]]></description_ua>${pics}<quantity_in_stock></quantity_in_stock></offer>`;
+  const pics = (o.pictures ?? [`https://images.prom.ua/39${String(o.id).slice(-8)}_t.jpg`]).map((u) => `<picture>${esc(u)}</picture>`).join("");
+  const params = (o.params ?? [{ name: "Потужність", value: "1000", unit: "Вт" }]).map((p) => `<param name="${esc(p.name)}"${p.unit ? ` unit="${esc(p.unit)}"` : ""}>${esc(p.value)}</param>`).join("");
+  const line = `<offer id="${o.id}" available="${o.available ?? true}"><url>${esc(o.url)}</url><price>${o.price ?? 500}</price><currencyId>UAH</currencyId><categoryId>1</categoryId><name>${esc(o.nameRu)}</name><name_ua>${esc(o.nameUa)}</name_ua>${o.sku ? `<vendorCode>${esc(o.sku)}</vendorCode>` : ""}<description><![CDATA[<p>опис</p>]]></description><description_ua><![CDATA[<p>опис</p>]]></description_ua>${pics}${params}<quantity_in_stock></quantity_in_stock></offer>`;
   return xml.replace("\n</offers>", "\n" + line + "\n</offers>");
 }
 const queueRow = (w, id) => rows(w.book, SHEET.queue).find((r) => mtText(r["Offer ID"]) === id);
@@ -174,16 +175,24 @@ test("стара картка повернулася у фід: «ПРИВ'ЯЗ�
 
 // ---------- 3. Нетоварні записи ----------
 
-test("нетоварний запис («Співпраця по дропшипінгу», без артикулу): позначка «НЕТОВАРНИЙ ЗАПИС», без видалення й рішення", async () => {
+test("нетоварний запис («Співпраця по дропшипінгу», без артикулу): нова — лишається кандидатом (бракує артикулу); уже в черзі — позначка «НЕТОВАРНИЙ ЗАПИС», без видалення й рішення", async () => {
   const w = await world({ newOffers: 0 });
   await sync(w, w.xml);
-  const xml = addOffer(w.xml, { id: "2950000500", nameUa: "Співпраця по дропшипінгу", nameRu: "Сотрудничество по дропшиппингу", url: "https://market-tools.com.ua/p2950000500-drop.html", price: 1 });
+  const drop = { id: "2950000500", nameUa: "Співпраця по дропшипінгу", nameRu: "Сотрудничество по дропшиппингу", url: "https://market-tools.com.ua/p2950000500-drop.html", price: 1 };
+  const xml = addOffer(w.xml, drop);
   let r = await sync(w, xml, "2026-10-22T14:00:00.000Z");
   assert.equal(r.state, "SYNCED", JSON.stringify(r));
+  assert.ok(!queueRow(w, "2950000500"), "без артикулу дані неповні — intake не додає");
+  assert.equal(r.intake.stats.results["ВІДМОВА"] >= 1, true);
+  // Такий запис уже в черзі (як два реальні записи «Співпраця…», додані до запуску контролю)
+  const offer = (await parseSupplierText(xml, { maximumChars: 45_000_000, identityFields: true })).offers.get("2950000500");
+  const legacy = candidateRow(offer, extractFullOffers(xml, ["2950000500"]).get("2950000500"), STAMP, config.pricing);
+  w.book[SHEET.queue].push(w.book[SHEET.queue][0].map((k) => legacy[k] ?? ""));
+  r = await sync(w, xml, "2026-10-22T18:00:00.000Z");
   let q = queueRow(w, "2950000500");
   assert.match(q["Перевірка"], /^НЕТОВАРНИЙ ЗАПИС/);
   // Наступний запуск: позначка лишається, не дублюється; запис не видалено й не затверджено
-  r = await sync(w, xml, "2026-10-22T18:00:00.000Z");
+  r = await sync(w, xml, "2026-10-22T22:00:00.000Z");
   q = queueRow(w, "2950000500");
   assert.ok(q);
   assert.equal(q["Перевірка"].match(/НЕТОВАРНИЙ ЗАПИС/g).length, 1);

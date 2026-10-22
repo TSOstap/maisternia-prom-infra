@@ -1,0 +1,23 @@
+// «Сторож новинок» — Cloudflare Workers Free. НЕ РОЗГОРНУТО. Розгортання й розклад — лише з окремого погодження власника.
+{
+  "name": "mm-new-items-watch",
+  "main": "src/index.mjs",
+  "compatibility_date": "2026-10-01",
+  // node:crypto (SHA-256 для відбитків) — через сумісність Node.js у Workers.
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  // Розклад ВИМКНЕНО. Після погодження: ["*/5 * * * *"] (або "*/10 * * * *" — обережніший старт).
+  "triggers": { "crons": [] },
+  "kv_namespaces": [
+    // Простір KV створює власник (Free: 1 ГБ, 1000 записів/добу); сюди — його ID.
+    { "binding": "WATCH_KV", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }
+  ],
+  "vars": {
+    "GITHUB_REPO": "TSOstap/maisternia-prom-infra",
+    "GITHUB_WORKFLOW": "sheets-verify.yml",
+    "GITHUB_REF": "main",
+    "GITHUB_MODE": "copy-intake",
+    "FEED_PROFILE": "medium"
+  }
+  // Секрети (додає власник через `wrangler secret put`, не в репозиторій): SUPPLIER_FEED_URL, WATCH_KEY, GITHUB_TOKEN.
+}

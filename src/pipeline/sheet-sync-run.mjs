@@ -6,7 +6,7 @@ import { LIVE_COLUMNS, readSheet } from "../core/sync-plan.mjs";
 import { YML_HEADERS, SEAL_COLUMN, approvalManifest, rowSeal } from "../core/seal.mjs";
 import { objectsFromValues } from "../core/yml.mjs";
 import { GROUP_HEADERS } from "../core/seal.mjs";
-import { SHEET, QUEUE_HEADERS, PASSPORT_HEADER, BINDINGS_SHEET, BINDINGS_HEADERS, finalizeSheetSync, passportValues, planSheetSync, readPassport, samePassport } from "../core/sheet-sync.mjs";
+import { SHEET, QUEUE_HEADERS, PASSPORT_HEADER, BINDINGS_SHEET, BINDINGS_HEADERS, ackFor, finalizeSheetSync, passportValues, planIntake, planSheetSync, readPassport, samePassport } from "../core/sheet-sync.mjs";
 
 export const SYNC_SHEETS = [SHEET.main, SHEET.queue, SHEET.deferred, SHEET.frozen, SHEET.passport, BINDINGS_SHEET, "Аудит"];
 const rowsEqual = (a, b) => a.length === b.length && a.every((r, i) => r.length === b[i].length && r.every((v, j) => mtText(v) === mtText(b[i][j])));
@@ -130,17 +130,19 @@ export async function mergeNew92({ sheets, readBook, stamp }) {
 }
 
 /** Синхронізація (як майбутній запуск кожні 4 год): ціни/наявність, черга нових, рішення власника, паспорт, журнал. */
-export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now }) {
+export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now, profile = "medium" }) {
   const book = await readBook(SYNC_SHEETS);
   const groupsRows = groupsOf(book);
-  const plan = planSheetSync({ book, parsed, stamp, config, now, groupsRows });
+  const warnings = [];
+  const fullById = await fullForQueue(book, fetchFull, warnings);
+  const plan = planSheetSync({ book, parsed, stamp, config, now, groupsRows, fullById });
+  plan.warnings.push(...warnings);
   if (plan.abort) {
     // Заблоковано: товарні дані не змінюються; лише подія в «Журналі».
     const rec = await recordBlocked(sheets, stamp, plan.block || { type: "ЗАБЛОКОВАНО", reason: plan.abort, affected: "", limit: "" });
     return { state: "ABORTED", reason: plan.abort, block: plan.block, ...rec };
   }
-  const full = plan.newIds.length ? await fetchFull(plan.newIds) : new Map();
-  const fin = finalizeSheetSync(plan, { parsed, fullById: full, stamp, config, groupsRows, journalSummary: {} });
+  const fin = finalizeSheetSync(plan, { parsed, fullById: new Map(), stamp, config, groupsRows, journalSummary: {} });
 
   // Таблицю редагували під час запуску? Тоді черга не чіпається (лише ціни основного каталогу).
   const fresh = await readBook([SHEET.queue]);
@@ -176,6 +178,7 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
       if (undoCells.length) { await sheets.updateRanges(undoCells.map((c) => ({ title: BINDINGS_SHEET, row: c.row, col: stateCol, values: [[c.state]] }))); done.add("undoCells"); }
     }
     if (approve.length) { await sheets.appendRows(SHEET.main, approve.map((r) => forSheet(mainHeader, mainHeader.map((k) => r[k] ?? "")))); done.add("approve"); }
+    if (!queueChanged && plan.queue.migrated.length) { await writeQueueHeader(sheets, plan.queue.header); done.add("queueHeader"); }
     if (!queueChanged) { await rewriteData(sheets, SHEET.queue, before.queue.length - 1, queueValues); done.add("queue"); }
     // Формат «0%» для колонки «Знижка» (як у mtUpdate): без нього число 0.2 показувалося б як «0,2».
     await sheets.setPercentFormat(SHEET.main, mainHeader.indexOf(DISCOUNT) + 1, 2, plan.main.rows.length + approve.length + 1);
@@ -199,8 +202,9 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
     };
     if (!(verify.mainCount === verify.expectedCount && verify.opsWritten && verify.sealsIntact && verify.passportOk && verify.queueOk && verify.bindingsOk)) throw Object.assign(new Error("перевірка після запису не пройдена"), { verify });
     await appendJournal(sheets, journal);
+    const ack = queueChanged ? null : ackFor({ ...plan.ackInput, queueRows: rowsOf(plan.queue.header, fin.queueValues), profile });
     return {
-      state: "SYNCED", queueChanged, verify, stats: { ...plan.stats, approved: approve.length, rejected: reject.length, added: queueChanged ? 0 : fin.newRows.length, possibleDuplicates: queueChanged ? 0 : fin.possibleDuplicates, bound: queueChanged ? 0 : plan.bindings.done, bindRefused: plan.bindings.refused, unbound: queueChanged ? 0 : plan.bindings.undone, mainCountAfter: verify.mainCount },
+      state: "SYNCED", queueChanged, verify, ack, stats: { ...plan.stats, approved: approve.length, rejected: reject.length, added: 0, possibleDuplicates: queueChanged ? 0 : fin.possibleDuplicates, bound: queueChanged ? 0 : plan.bindings.done, bindRefused: plan.bindings.refused, unbound: queueChanged ? 0 : plan.bindings.undone, mainCountAfter: verify.mainCount },
       warnings: plan.warnings, frozenSimilar: plan.frozenSimilar, journalEntries: journal.length,
     };
   } catch (e) {
@@ -216,11 +220,77 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
         await rewriteData(sheets, SHEET.queue, now2[SHEET.queue].length - 1, before.queue.slice(1).map((r) => pad(r, QUEUE_HEADERS.length)));
         restore.push("черга");
       }
+      if (done.has("queueHeader")) { await sheets.updateRanges([{ title: SHEET.queue, row: 1, col: 1, values: [pad(before.queue[0], plan.queue.header.length)] }]); restore.push("заголовок черги"); }
       if (done.has("frozen")) { await sheets.deleteRows(SHEET.frozen, reject.map((_, i) => before.frozenLen + 1 + i)); restore.push("заморожені"); }
       if (done.has("passport")) { await sheets.updateRanges([{ title: SHEET.passport, row: 1, col: 1, values: before.passport }]); restore.push("паспорт"); }
       await appendJournal(sheets, [[stamp, "СИСТЕМА", "", "ПОМИЛКА", "", "", "нова система (S1): " + e.message + "; відновлено: " + restore.join(", ")]]);
     } catch (re) { restore.push("ПОМИЛКА ВІДНОВЛЕННЯ: " + re.message); }
     return { state: "ROLLED_BACK", error: e.message, verify: e.verify, restore };
+  }
+}
+
+const rowsOf = (header, values) => values.map((v) => Object.fromEntries(header.map((k, j) => [k, v[j] ?? ""])));
+/** Повні дані (фото, характеристики, опис) для позицій черги — варіант А. Збій завантаження не зупиняє оновлення цін. */
+async function fullForQueue(book, fetchFull, warnings, extra = []) {
+  const v = book[SHEET.queue] || [];
+  const col = (v[0] || []).map(mtText).indexOf("ID постачальника");
+  const ids = [...new Set([...(col < 0 ? [] : v.slice(1).map((r) => mtText(r[col])).filter(Boolean)), ...extra])];
+  if (!ids.length || !fetchFull) return new Map();
+  try { return await fetchFull(ids); }
+  catch (e) { warnings.push("повний XML недоступний — фото/характеристики черги не оновлено: " + String(e?.message || e).slice(0, 120)); return new Map(); }
+}
+/** Нові колонки стану черги (додаються один раз): ширина аркуша + заголовок. */
+async function writeQueueHeader(sheets, header) {
+  await sheets.ensureColumns(SHEET.queue, header.length);
+  await sheets.updateRanges([{ title: SHEET.queue, row: 1, col: 1, values: [header] }]);
+}
+export const INTAKE_SHEETS = [SHEET.main, SHEET.queue, SHEET.deferred, SHEET.frozen, "Аудит"];
+
+/**
+ * GitHub intake: лише черга «Нові товари» (+ «Журнал»). Основний каталог і паспорт не читаються на запис і не змінюються.
+ *  ready — від «Сторожа новинок»; кожен кандидат повторно перевіряється за повним XML (planIntake → verifyReady).
+ *  Повертає ack для Worker (база відомих ID, відбитки черги, результати) — навіть якщо записувати нічого.
+ */
+export async function intakeSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now, ready = [], profile = "medium" }) {
+  const book = await readBook(INTAKE_SHEETS);
+  const warnings = [];
+  const fullById = await fullForQueue(book, fetchFull, warnings, ready.map((e) => mtText(e?.id)).filter(Boolean));
+  const plan = planIntake({ book, parsed, fullById, stamp, config, now, ready, profile });
+  if (plan.abort) {
+    const rec = await recordBlocked(sheets, stamp, plan.block);
+    return { state: "ABORTED", reason: plan.abort, block: plan.block, ...rec };
+  }
+  const base = { stats: plan.stats, warnings: [...warnings, ...plan.warnings] };
+  if (!plan.changed) return { state: "NOTHING_TO_WRITE", ack: plan.ack, ...base };
+  // Чергу змінили під час запуску (власник редагує) — нічого не пишемо; Worker повторить після тайм-ауту підтвердження.
+  const fresh = await readBook([SHEET.queue]);
+  if (!rowsEqual(fresh[SHEET.queue], book[SHEET.queue])) return { state: "SKIPPED_CONCURRENT_EDIT", reason: "чергу змінено під час intake — повтор пізніше", ...base };
+  const before = book[SHEET.queue].map((r) => r.slice());
+  const values = plan.queue.values.map((r) => forSheet(plan.queue.header, r));
+  const done = new Set();
+  try {
+    if (plan.queue.migrated.length) { await writeQueueHeader(sheets, plan.queue.header); done.add("header"); }
+    await rewriteData(sheets, SHEET.queue, before.length - 1, values); done.add("queue");
+    if (values.length) await sheets.setPercentFormat(SHEET.queue, plan.queue.header.indexOf(DISCOUNT) + 1, 2, values.length + 1);
+    const after = await readBook([SHEET.queue]);
+    const got = after[SHEET.queue];
+    const queueOk = rowsEqual([got[0].slice(0, plan.queue.header.length)], [plan.queue.header])
+      && rowsEqual(got.slice(1).filter((r) => r.some((v) => v !== "" && v != null)).map((r) => pad(r, plan.queue.header.length)), values);
+    if (!queueOk) throw Object.assign(new Error("перевірка черги після запису не пройдена"), { verify: { queueOk } });
+    await appendJournal(sheets, plan.journal);
+    return { state: "INTAKE_DONE", ack: plan.ack, verify: { queueOk }, journalEntries: plan.journal.length, ...base };
+  } catch (e) {
+    const restore = [];
+    try {
+      if (done.has("queue")) {
+        const now2 = await readBook([SHEET.queue]);
+        await rewriteData(sheets, SHEET.queue, now2[SHEET.queue].length - 1, before.slice(1).map((r) => pad(r, plan.queue.header.length)));
+        restore.push("черга");
+      }
+      if (done.has("header")) { await sheets.updateRanges([{ title: SHEET.queue, row: 1, col: 1, values: [pad(before[0], plan.queue.header.length)] }]); restore.push("заголовок черги"); }
+      await appendJournal(sheets, [[stamp, "СИСТЕМА", "", "ПОМИЛКА", "", "", "нова система (intake): " + e.message + "; відновлено: " + restore.join(", ")]]);
+    } catch (re) { restore.push("ПОМИЛКА ВІДНОВЛЕННЯ: " + re.message); }
+    return { state: "ROLLED_BACK", error: e.message, verify: e.verify, restore, ...base };
   }
 }
 

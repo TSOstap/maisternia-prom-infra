@@ -11,6 +11,7 @@ import { mergeNew92, syncSheet, refreshCopyFromLive } from "../src/pipeline/shee
 import { MemorySheets, GoogleSheetsWriter, rangeA1 } from "../src/pipeline/sheets-writer.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
 import baseConfig from "../config/default.json" with { type: "json" };
+import { syncAndIntake } from "./helpers/intake.mjs";
 
 const NOW = Date.parse("2026-10-22T10:00:00Z");
 const STAMP = new Date(NOW).toISOString();
@@ -29,8 +30,7 @@ function world({ products = 120, queue = 12, newOffers = 3, seed = 5 } = {}) {
 const parse = (xml) => parseSupplierText(xml, { maximumChars: 45_000_000, identityFields: true });
 const rows = (book, name) => readSheet(book[name], name).rows;
 async function sync(w, xml = w.xml, extra = {}) {
-  const parsed = await parse(xml);
-  return syncSheet({ sheets: w.sheets, readBook: extra.readBook || w.readBook, parsed, fetchFull: async (ids) => extractFullOffers(xml, ids), stamp: STAMP, config, now: NOW });
+  return syncAndIntake(w, xml, { stamp: STAMP, now: NOW, config, readBook: extra.readBook });
 }
 const sealsIntact = (book) => rows(book, SHEET.main).every((r) => rowSeal(r) === mtText(r[SEAL_COLUMN]));
 
@@ -81,7 +81,7 @@ test("синхронізація: ціни й наявність оновлен�
   assert.equal(changed.length, main.length, "ціна постачальника = поточна з фіду");
   const q = rows(w.book, SHEET.queue);
   assert.equal(q.length, 3);
-  assert.ok(q.every((x) => x["Статус імпорту"] === "НОВИЙ_ВІД_ПОСТАЧАЛЬНИКА" && x["Назва постачальника UA"] && x["Виявлено"] === STAMP));
+  assert.ok(q.every((x) => x["Статус імпорту"] === "НОВИЙ_ВІД_ПОСТАЧАЛЬНИКА" && x["Назва постачальника UA"] && x["Виявлено"] === new Date(NOW - 11 * 60000).toISOString()), "«Виявлено» = перше виявлення «Сторожем новинок»");
   assert.ok(w.book[SHEET.journal].some((e) => e[1] === "СИСТЕМА" && e[3] === "ЗАВЕРШЕНО"));
   const r2 = await sync(w);
   assert.equal(r2.stats.added, 0, "повторний запуск не дублює");

@@ -99,17 +99,18 @@ export function generateSynthetic(o) {
       // Постачальник трохи змінює ціни/наявність між запусками.
       const nextPrice = rand() < 0.1 ? Math.round(price * (0.95 + rand() * 0.1) * 100) / 100 : price;
       const nameRu = conflicts.has(id) ? supplierRu + " NEW" : supplierRu;
-      offers.push({ id, available: rand() < 0.1 ? !available : available, price: nextPrice, sku, nameUa: supplierUa, nameRu, url: row["URL постачальника"] });
+      offers.push({ id, available: rand() < 0.1 ? !available : available, price: nextPrice, sku, nameUa: supplierUa, nameRu, url: row["URL постачальника"], pictures: photos, params });
     }
   }
   for (let k = 0; k < (o.newOffers || 0); k++) {
     const id = String(2900000000 + k * 13);
-    offers.push({ id, available: true, price: 999 + k, sku: "NEW-" + k, nameUa: "Новий товар " + k, nameRu: "Новый товар " + k, url: `https://market-tools.com.ua/p${id}-new.html` });
+    offers.push({ id, available: true, price: 999 + k, sku: "NEW-" + k, nameUa: "Новий товар " + k, nameRu: "Новый товар " + k, url: `https://market-tools.com.ua/p${id}-new.html`,
+      pictures: [`https://images.prom.ua/${3990000000 + k}_new-${k}.jpg`], params: [{ name: "Потужність", value: String(500 + k), unit: "Вт" }] });
   }
 
   const supplierXml = () => {
     const head = `<?xml version="1.0" encoding="UTF-8"?>\n<yml_catalog date="${formatYmlDate(o.now - 15 * 60000, "Europe/Kyiv")}"><shop><name>Supplier</name><currencies><currency id="UAH" rate="1"/></currencies><categories><category id="1">Інструменти</category></categories><offers>`;
-    const body = offers.map((x) => `<offer id="${x.id}" available="${x.available}"><url>${xmlEscape(x.url)}</url><price>${x.price}</price><currencyId>UAH</currencyId><categoryId>1</categoryId><name>${xmlEscape(x.nameRu)}</name><name_ua>${xmlEscape(x.nameUa)}</name_ua><vendorCode>${xmlEscape(x.sku)}</vendorCode><quantity_in_stock></quantity_in_stock></offer>`);
+    const body = offers.map((x) => `<offer id="${x.id}" available="${x.available}"><url>${xmlEscape(x.url)}</url><price>${x.price}</price><currencyId>UAH</currencyId><categoryId>1</categoryId><name>${xmlEscape(x.nameRu)}</name><name_ua>${xmlEscape(x.nameUa)}</name_ua><vendorCode>${xmlEscape(x.sku)}</vendorCode>${(x.pictures || []).map((u) => `<picture>${xmlEscape(u)}</picture>`).join("")}${(x.params || []).map((p) => `<param name="${xmlEscape(p.name)}"${p.unit ? ` unit="${xmlEscape(p.unit)}"` : ""}>${xmlEscape(p.value)}</param>`).join("")}<quantity_in_stock></quantity_in_stock></offer>`);
     return head + "\n" + body.join("\n") + "\n</offers></shop></yml_catalog>\n";
   };
 

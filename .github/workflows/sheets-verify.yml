@@ -19,13 +19,14 @@ on:
       mode:
         description: "sheets — перевірка таблиці (C2-B); supplier-shadow — звірка з постачальником (C2-C); shadow-publish — тіньовий реальний YML у Cloudflare (C3-2)"
         type: choice
-        options: [sheets, supplier-shadow, shadow-publish, copy-refresh, copy-merge, copy-sync, copy-scenario, copy-scenario-mass]
+        options: [sheets, supplier-shadow, shadow-publish, copy-refresh, copy-merge, copy-sync, copy-scenario, copy-scenario-mass, copy-intake]
         default: sheets
 permissions:
   contents: read
   id-token: write          # лише запит OIDC-токена GitHub; права запису в репозиторій не дає
 concurrency:
   group: sheets-read       # не більше одного читання таблиці одночасно (квота 60 read/хв)
+  # Одна група для всіх режимів (зокрема copy-sync і copy-intake): запис у таблицю ніколи не йде паралельно.
   cancel-in-progress: false
 jobs:
   verify:
@@ -118,4 +119,7 @@ jobs:
           GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.authw.outputs.access_token }}
           MM_SUPPLIER_FEED_URL: ${{ secrets.MM_SUPPLIER_FEED_URL }}
           MODE: ${{ inputs.mode }}
+          # «Сторож новинок» (Worker): список кандидатів і звіт. Поки секретів немає — intake SKIPPED, звіт «не налаштовано».
+          MM_WATCH_URL: ${{ secrets.MM_WATCH_URL }}
+          MM_WATCH_KEY: ${{ secrets.MM_WATCH_KEY }}
         run: node tools/sheet-sync.mjs --mode="${MODE#copy-}" --source=api --summary="$GITHUB_STEP_SUMMARY"

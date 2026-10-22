@@ -12,6 +12,7 @@ import { mergeNew92, syncSheet } from "../src/pipeline/sheet-sync-run.mjs";
 import { MemorySheets } from "../src/pipeline/sheets-writer.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
 import baseConfig from "../config/default.json" with { type: "json" };
+import { syncAndIntake } from "./helpers/intake.mjs";
 
 const NOW = Date.parse("2026-10-22T10:00:00Z");
 const STAMP = new Date(NOW).toISOString();
@@ -30,13 +31,12 @@ async function world() {
 }
 const rows = (book, name) => readSheet(book[name], name).rows;
 async function sync(w, xml) {
-  const parsed = await parseSupplierText(xml, { maximumChars: 45_000_000, identityFields: true });
-  return syncSheet({ sheets: w.sheets, readBook: w.readBook, parsed, fetchFull: async (ids) => extractFullOffers(xml, ids), stamp: STAMP, config, now: NOW });
+  return syncAndIntake(w, xml, { stamp: STAMP, now: NOW, config });
 }
 /** Додати offer у кінець фіду (з фото й характеристиками — як у повному XML). */
 function addOffer(xml, o) {
-  const pics = (o.pictures || []).map((u) => `<picture>${esc(u)}</picture>`).join("");
-  const params = (o.params || []).map((p) => `<param name="${esc(p.name)}"${p.unit ? ` unit="${esc(p.unit)}"` : ""}>${esc(p.value)}</param>`).join("");
+  const pics = (o.pictures ?? [`https://images.prom.ua/39${String(o.id).slice(-8)}_t.jpg`]).map((u) => `<picture>${esc(u)}</picture>`).join("");
+  const params = (o.params ?? [{ name: "Потужність", value: "1000", unit: "Вт" }]).map((p) => `<param name="${esc(p.name)}"${p.unit ? ` unit="${esc(p.unit)}"` : ""}>${esc(p.value)}</param>`).join("");
   const line = `<offer id="${o.id}" available="${o.available ?? true}"><url>${esc(o.url)}</url><price>${o.price ?? 500}</price><currencyId>UAH</currencyId><categoryId>1</categoryId><name>${esc(o.nameRu)}</name><name_ua>${esc(o.nameUa)}</name_ua><vendorCode>${esc(o.sku)}</vendorCode>${o.vendor ? `<vendor>${esc(o.vendor)}</vendor>` : ""}<description><![CDATA[<p>опис</p>]]></description><description_ua><![CDATA[<p>опис</p>]]></description_ua>${pics}${params}<quantity_in_stock></quantity_in_stock></offer>`;
   return xml.replace("\n</offers>", "\n" + line + "\n</offers>");
 }
