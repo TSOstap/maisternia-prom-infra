@@ -144,6 +144,19 @@ function dupIndexFor({ mainRows, queueRows, deferredRows, offers }) {
 }
 const queueEntry = (r) => rowEntry(r, SHEET.queue);
 
+/** Сумніви щодо «той самий товар» між карткою й позицією: комплектація, бренд, назви, фото. Порожньо — сумнівів немає. */
+function bindingDoubts(cmp) {
+  const d = [];
+  if (cmp.kit.length) d.push("різна комплектація: " + cmp.kit.join(", "));
+  if (cmp.brandConflict) d.push("різний бренд");
+  if (!cmp.evidence.includes("назва UA") && !cmp.evidence.includes("назва RU")) d.push("назви постачальника відрізняються");
+  if (cmp.photo.card && cmp.photo.offer) {
+    if (!cmp.photo.shared) d.push(`фото різні (у картки ${cmp.photo.cardSample}, у нової ${cmp.photo.offerSample})`);
+    else if (cmp.photo.shared < Math.max(cmp.photo.card, cmp.photo.offer)) d.push(`фото частково різні (спільних ${cmp.photo.shared}; у картки ${cmp.photo.card}, у нової ${cmp.photo.offer}) — можлива інша комплектація`);
+  } else d.push("немає фото для порівняння");
+  return d;
+}
+
 /** Перевірка й застосування «ПРИВ'ЯЗАТИ ДО» (лише рішення власника; автоматичних прив'язок немає). */
 function planBindings({ queueRows, mainRows, deferredRows, offers, stamp }) {
   const mainById = new Map(mainRows.map((r, i) => [mtText(r["Offer ID"]), i]));
@@ -153,7 +166,6 @@ function planBindings({ queueRows, mainRows, deferredRows, offers, stamp }) {
     if (m) wanted.push({ qi, row: r, target: m[1], confirmed: Boolean(m[2]) });
   });
   const perTarget = wanted.reduce((a, w) => ((a[w.target] = (a[w.target] || 0) + 1), a), {});
-  const usedSupplierIds = new Map([...mainRows, ...deferredRows].map((r) => [mtText(r["ID постачальника"]), mtText(r["Offer ID"])]));
   const done = [], refused = new Map();
   for (const w of wanted) {
     const problems = [];
@@ -163,66 +175,95 @@ function planBindings({ queueRows, mainRows, deferredRows, offers, stamp }) {
     if (ti === undefined) problems.push(`товару ${w.target} немає в основному каталозі`);
     if (!offer) problems.push("цієї позиції зараз немає у фіді постачальника");
     if (perTarget[w.target] > 1) problems.push(`до товару ${w.target} прив'язують кілька позицій — залиште одну`);
-    const owner = usedSupplierIds.get(offerId);
-    if (owner && owner !== w.target) problems.push(`ID постачальника вже використовує товар ${owner}`);
+    // Один ID постачальника — лише в однієї активної картки (основний каталог і відкладені, з урахуванням скасувань і прив'язок цього запуску).
+    const owner = [...mainRows, ...deferredRows].find((r) => mtText(r["ID постачальника"]) === offerId && mtText(r["Offer ID"]) !== w.target);
+    if (owner) problems.push(`ID постачальника вже використовує товар ${mtText(owner["Offer ID"])}`);
+    const newSku = mtText(offer?.sku).trim();
+    if (offer && !newSku) problems.push("у нової позиції немає артикулу — «Код товару Prom» не можна оновити");
+    const skuOwner = newSku && mainRows.find((r) => mtText(r["Offer ID"]) !== w.target && (mtText(r["Код товару Prom"]).trim() === newSku || mtText(r["Артикул постачальника"]).trim() === newSku));
+    if (skuOwner) problems.push(`артикул «${newSku}» уже використовує товар ${mtText(skuOwner["Offer ID"])}`);
     if (ti !== undefined) {
       const card = mainRows[ti];
       const oldId = mtText(card["ID постачальника"]);
       if (offers.has(oldId) && oldId !== offerId) problems.push(`стара позиція постачальника товару ${w.target} досі є у фіді — ймовірно, це різні товари`);
       const cmp = compareEntries(rowEntry(card, SHEET.main), queueEntry(w.row));
-      const doubts = [];
-      if (cmp.kit.length) doubts.push("різниця комплектації: " + cmp.kit.join(", "));
-      if (cmp.brandConflict) doubts.push("різний бренд");
-      if (cmp.photo.card && cmp.photo.offer && !cmp.photo.shared) doubts.push(`фото різні (у картки ${cmp.photo.cardSample}, у нової ${cmp.photo.offerSample})`);
-      if (doubts.length && !w.confirmed) problems.push(`є сумніви (${doubts.join("; ")}) — якщо впевнені, напишіть «ПРИВ'ЯЗАТИ ДО ${w.target} (ПІДТВЕРДЖУЮ)»`);
-      if (!problems.length) done.push({ ...w, ti, offer, evidence: cmp.evidence.join(", ") + (doubts.length ? "; підтверджено попри: " + doubts.join("; ") : "") });
+      const doubts = bindingDoubts(cmp);
+      if (doubts.length && !w.confirmed) problems.push(`потрібна додаткова ручна перевірка (${doubts.join("; ")}) — якщо це точно той самий товар, напишіть «ПРИВ'ЯЗАТИ ДО ${w.target} (ПІДТВЕРДЖУЮ)»`);
+      if (!problems.length) {
+        done.push({ ...w, ti, offer, evidence: cmp.evidence.join(", ") + (doubts.length ? "; підтверджено власником попри: " + doubts.join("; ") : "") });
+        // Одразу резервуємо ID і артикул, щоб наступна прив'язка цього ж запуску їх не взяла.
+        const t = mainRows[ti];
+        t["ID постачальника"] = offer.id; t["Артикул постачальника"] = newSku; t["Код товару Prom"] = newSku;
+      }
     }
     if (problems.length) refused.set(w.qi, "НЕ ПРИВ'ЯЗАНО: " + problems.join("; "));
   }
-  // Застосування до копій рядків основного каталогу
-  const history = [];
-  for (const b of done) {
-    const card = mainRows[b.ti];
-    const before = Object.fromEntries(SUPPLIER_FIELDS.map(([k]) => [k, card[k]]));
-    const oldCode = mtText(card["Код товару Prom"]);
-    const codeWasSupplierSku = oldCode && oldCode === mtText(card["Артикул постачальника"]);
-    for (const [k, f] of SUPPLIER_FIELDS) card[k] = b.offer[f] ?? "";
-    if (codeWasSupplierSku) card["Код товару Prom"] = b.offer.sku;
-    card[SEAL_COLUMN] = rowSeal(card);
-    history.push([stamp, b.target, mtText(before["ID постачальника"]), b.offer.id, mtText(before["Артикул постачальника"]), b.offer.sku,
-      oldCode, mtText(card["Код товару Prom"]), mtText(before["Назва постачальника UA"]), mtText(before["Назва постачальника RU"]), mtText(before["URL постачальника"]),
-      b.offer.nameUa, b.offer.nameRu, b.offer.url,
-      `рішення власника; збіг: ${b.evidence || "—"}${codeWasSupplierSku ? "" : "; «Код товару Prom» не змінено (не збігався зі старим артикулом)"}`, "АКТИВНА", ""]);
-  }
-  return { done, refused, history, changedMain: new Set(done.map((b) => b.ti)) };
+  return { done, refused };
 }
 
-/** Скасування помилкових прив'язок: «СКАСУВАТИ» в колонці «Рішення» аркуша «Історія прив'язок». */
-function planUndos({ historyValues, mainRows, stamp }) {
-  const out = { undone: [], cells: [], changedMain: new Set() };
+/** Застосування прив'язок до копій рядків + записи історії (старі значення — для відновлення). */
+function applyBindings(bind, { mainRows, originals, stamp }) {
+  const history = [];
+  for (const b of bind.done) {
+    const card = mainRows[b.ti];
+    const before = originals[b.ti];
+    for (const [k, f] of SUPPLIER_FIELDS) card[k] = k === "Артикул постачальника" ? mtText(b.offer.sku).trim() : b.offer[f] ?? "";
+    card["Код товару Prom"] = mtText(b.offer.sku).trim(); // рішення власника: Код товару Prom = новий артикул постачальника
+    card[SEAL_COLUMN] = rowSeal(card);
+    history.push([stamp, b.target, mtText(before["ID постачальника"]), b.offer.id, mtText(before["Артикул постачальника"]), mtText(b.offer.sku).trim(),
+      mtText(before["Код товару Prom"]), mtText(card["Код товару Prom"]), mtText(before["Назва постачальника UA"]), mtText(before["Назва постачальника RU"]), mtText(before["URL постачальника"]),
+      b.offer.nameUa, b.offer.nameRu, b.offer.url, `рішення власника; збіг: ${b.evidence || "—"}`, "АКТИВНА", ""]);
+  }
+  return { history, changedMain: new Set(bind.done.map((b) => b.ti)) };
+}
+
+/**
+ * Скасування прив'язки в будь-який момент: «СКАСУВАТИ» в колонці «Рішення» аркуша «Історія прив'язок».
+ * Картка зберігає Offer ID і SEO; повертаються старі ID постачальника, артикул, «Код товару Prom», назви/URL постачальника.
+ * Ціни й наявність НЕ відновлюються з історії — їх перераховує поточний XML за старим ID (немає — «немає в наявності»).
+ */
+function planUndos({ historyValues, mainRows, deferredRows, queueRows, offers, stamp }) {
+  const out = { undone: [], cells: [], changedMain: new Set(), reclaimedQueueIds: new Set() };
   if (!historyValues || historyValues.length < 2) return out;
   const h = historyValues[0].map(mtText);
   const col = (k) => h.indexOf(k);
   const mainById = new Map(mainRows.map((r, i) => [mtText(r["Offer ID"]), i]));
   historyValues.slice(1).forEach((r, k) => {
-    if (norm(r[col("Рішення")]) !== UNDO || !/^АКТИВНА/.test(mtText(r[col("Стан")]))) return;
-    const ti = mainById.get(mtText(r[col("Offer ID")]));
     const rowNo = k + 2;
-    if (ti === undefined || mtText(mainRows[ti]["ID постачальника"]) !== mtText(r[col("Новий ID постачальника")])) {
-      out.cells.push({ row: rowNo, state: "АКТИВНА (скасувати неможливо: товар змінено після прив'язки)" });
+    const state = mtText(r[col("Стан")]);
+    // Активна прив'язка, а стара позиція постачальника знову у фіді — у чергу її не додаємо (той самий Offer ID), але попереджаємо тут.
+    if (/^АКТИВНА/.test(state) && norm(r[col("Рішення")]) !== UNDO) {
+      const warn = offers.has(mtText(r[col("Старий ID постачальника")]));
+      const next = warn ? "АКТИВНА — УВАГА: стара позиція постачальника знову у фіді, перевірте прив'язку (за потреби — «СКАСУВАТИ»)" : "АКТИВНА";
+      if (next !== state && (warn || /УВАГА/.test(state))) out.cells.push({ row: rowNo, state: next });
       return;
     }
+    if (norm(r[col("Рішення")]) !== UNDO || !/^АКТИВНА/.test(state)) return;
+    const offerId = mtText(r[col("Offer ID")]);
+    const oldId = mtText(r[col("Старий ID постачальника")]);
+    const ti = mainById.get(offerId);
+    const problems = [];
+    if (ti === undefined) problems.push("товару немає в основному каталозі");
+    else if (mtText(mainRows[ti]["ID постачальника"]) !== mtText(r[col("Новий ID постачальника")])) problems.push("товар уже прив'язано до іншої позиції — спершу скасуйте новішу прив'язку");
+    const owner = [...mainRows, ...deferredRows].find((x) => mtText(x["ID постачальника"]) === oldId && mtText(x["Offer ID"]) !== offerId);
+    if (owner) problems.push(`старий ID постачальника тепер використовує товар ${mtText(owner["Offer ID"])}`);
+    const oldSku = mtText(r[col("Старий артикул")]).trim(), oldCode = mtText(r[col("Старий Код товару Prom")]).trim();
+    const codeOwner = oldCode && mainRows.find((x) => mtText(x["Offer ID"]) !== offerId && mtText(x["Код товару Prom"]).trim() === oldCode);
+    if (codeOwner) problems.push(`старий «Код товару Prom» тепер використовує товар ${mtText(codeOwner["Offer ID"])}`);
+    if (problems.length) { out.cells.push({ row: rowNo, state: "АКТИВНА — скасувати неможливо: " + problems.join("; ") }); return; }
     const card = mainRows[ti];
-    card["ID постачальника"] = mtText(r[col("Старий ID постачальника")]);
-    card["Артикул постачальника"] = mtText(r[col("Старий артикул")]);
+    card["ID постачальника"] = oldId;
+    card["Артикул постачальника"] = oldSku;
+    card["Код товару Prom"] = oldCode;
     card["Назва постачальника UA"] = mtText(r[col("Стара назва постачальника UA")]);
     card["Назва постачальника RU"] = mtText(r[col("Стара назва постачальника RU")]);
     card["URL постачальника"] = mtText(r[col("Старий URL постачальника")]);
-    if (mtText(card["Код товару Prom"]) === mtText(r[col("Новий Код товару Prom")])) card["Код товару Prom"] = mtText(r[col("Старий Код товару Prom")]);
     card[SEAL_COLUMN] = rowSeal(card);
     out.changedMain.add(ti);
-    out.undone.push({ offerId: mtText(r[col("Offer ID")]), newSupplierId: mtText(r[col("Новий ID постачальника")]) });
-    out.cells.push({ row: rowNo, state: `СКАСОВАНА ${stamp}` });
+    // Стара позиція могла тим часом потрапити в чергу як «нова» — картка її повертає, тож із черги її прибираємо.
+    for (const q of queueRows) if (mtText(q["ID постачальника"]) === oldId) out.reclaimedQueueIds.add(mtText(q["Offer ID"]));
+    out.undone.push({ offerId, oldId, newId: mtText(r[col("Новий ID постачальника")]) });
+    out.cells.push({ row: rowNo, state: `СКАСОВАНА ${stamp}: повернуто ID постачальника ${oldId}; позицію ${mtText(r[col("Новий ID постачальника")])} повернуто в чергу` });
   });
   return out;
 }
@@ -255,8 +296,13 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows }) 
 
   // 1. Рішення власника, що змінюють картки: скасування прив'язок, потім нові прив'язки (на копіях рядків).
   const mainRows = main.rows.map((r) => ({ ...r }));
-  const undo = planUndos({ historyValues: book[BINDINGS_SHEET], mainRows, stamp });
+  const undo = planUndos({ historyValues: book[BINDINGS_SHEET], mainRows, deferredRows: deferred, queueRows: queue.rows, offers: parsed.offers, stamp });
+  const originals = mainRows.map((r) => ({ ...r })); // після скасувань, до прив'язок — «старі» значення для історії
   const bind = planBindings({ queueRows: queue.rows, mainRows, deferredRows: deferred, offers: parsed.offers, stamp });
+  Object.assign(bind, applyBindings(bind, { mainRows, originals, stamp }));
+  // Остаточний запобіжник: жоден ID постачальника не належить двом карткам.
+  const supplierIds = [...mainRows, ...deferred].map((r) => mtText(r["ID постачальника"])).filter(Boolean);
+  if (new Set(supplierIds).size !== supplierIds.length) { out.abort = "після рішень один ID постачальника належав би двом карткам — нічого не записано"; return out; }
 
   // 2. Ціни й наявність (точний порт mtPlan) — на картках уже з урахуванням прив'язок.
   const mainPlan = planRows(mainRows, parsed.offers, stamp, config.pricing);
@@ -302,7 +348,7 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows }) 
   const groupIds = new Set(groupsById.keys());
   const mainIds = new Set(ids);
   const index = dupIndexFor({ mainRows, queueRows: queue.rows, deferredRows: deferred, offers: parsed.offers });
-  const approve = [], reject = [], keep = [], bound = [];
+  const approve = [], reject = [], keep = [], bound = [], reclaimed = [];
   queue.rows.forEach((r, i) => {
     const updated = { ...r };
     LIVE_COLUMNS.forEach((k, j) => { updated[k] = queuePlan[i].next[j]; });
@@ -310,6 +356,7 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows }) 
     const cands = findDuplicates(index, queueEntry(r));
     const dup = dupNote(cands, { frozen: frozenIds.has(mtText(r["ID постачальника"])) });
     if (bind.done.some((b) => b.qi === i)) { bound.push(updated); return; }
+    if (undo.reclaimedQueueIds.has(mtText(r["Offer ID"]))) { reclaimed.push(updated); return; } // картка повернула собі цей ID постачальника
     if (decision === DECISION.REJECT) { reject.push(updated); return; }
     if (bind.refused.has(i)) updated["Перевірка"] = [dup, bind.refused.get(i)].filter(Boolean).join(" ");
     else if (decision === DECISION.APPROVE || decision === DECISION.APPROVE_NOT_DUP) {
@@ -326,8 +373,8 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows }) 
     keep.push(updated);
   });
   out.main = { start: main.start, plan: mainPlan, rows: mainRows, changedRows: new Set([...undo.changedMain, ...bind.changedMain]) };
-  out.queue = { header: queueHeader, keep, approve, reject, bound, planRowsByIndex: queuePlan };
-  out.bindings = { history: bind.history, done: bind.done.length, refused: bind.refused.size, undoCells: undo.cells, undone: undo.undone.length };
+  out.queue = { header: queueHeader, keep, approve, reject, bound, reclaimed, planRowsByIndex: queuePlan };
+  out.bindings = { history: bind.history, done: bind.done.length, refused: bind.refused.size, undoCells: undo.cells, undone: undo.undone.length, undoneList: undo.undone };
   out.deferredRows = deferred;
   out.journal = [...changeEntries(stamp, SHEET.main, mainPlan), ...changeEntries(stamp, SHEET.queue, queuePlan)];
   out.passportBefore = passport;
@@ -343,7 +390,7 @@ export function finalizeSheetSync(plan, { parsed, fullById, stamp, config, group
   let possibleDuplicates = 0;
   for (const r of newRows) {
     const note = dupNote(findDuplicates(index, queueEntry(r)), { frozen: plan.frozenFlag.has(mtText(r["Offer ID"])) });
-    if (note) possibleDuplicates++;
+    if (/^МОЖЛИВИЙ ДУБЛЬ/.test(note)) possibleDuplicates++;
     r["Перевірка"] = [note, r["Перевірка"]].filter(Boolean).join(" ");
   }
   const queueRows = [...plan.queue.keep, ...newRows];
@@ -354,6 +401,8 @@ export function finalizeSheetSync(plan, { parsed, fullById, stamp, config, group
   for (const r of plan.queue.approve) entries.push([stamp, SHEET.main, mtText(r["Offer ID"]), "ЗАТВЕРДЖЕНО", SHEET.queue, SHEET.main, "ДОЗВОЛЕНО"]);
   for (const r of plan.queue.reject) entries.push([stamp, SHEET.queue, mtText(r["Offer ID"]), "ВІДХИЛЕНО", "", SHEET.frozen, "ВІДХИЛЕНО"]);
   for (const h of plan.bindings.history) entries.push([stamp, SHEET.main, h[1], "ПРИВ'ЯЗАНО", h[2], h[3], "РІШЕННЯ ВЛАСНИКА"]);
+  for (const u of plan.bindings.undoneList || []) entries.push([stamp, SHEET.main, u.offerId, "ВІДВ'ЯЗАНО", u.newId, u.oldId, "РІШЕННЯ ВЛАСНИКА"]);
+  for (const r of plan.queue.reclaimed || []) entries.push([stamp, SHEET.queue, mtText(r["Offer ID"]), "ПОВЕРНУТО КАРТЦІ", "", SHEET.main, "СКАСУВАННЯ ПРИВ'ЯЗКИ"]);
   for (const r of newRows) entries.push([stamp, SHEET.queue, mtText(r["Offer ID"]), "НОВИЙ", "", "", /МОЖЛИВИЙ ДУБЛЬ/.test(r["Перевірка"]) ? "МОЖЛИВИЙ ДУБЛЬ" : STATUS_NEW]);
   entries.push([stamp, "СИСТЕМА", "", "ЗАВЕРШЕНО", "", parsed.count, JSON.stringify({ mode: "ОНОВЛЕННЯ", system: "НОВА СИСТЕМА (S1, тестова копія)", feedDate: parsed.date, offers: parsed.count, changes: entries.length, ...journalSummary })]);
   return { queueValues, newRows, passportAfter, journal: entries, mainCountAfter: mainRowsAfter.length, possibleDuplicates };

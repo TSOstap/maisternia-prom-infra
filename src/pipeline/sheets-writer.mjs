@@ -166,9 +166,16 @@ export class MemorySheets {
   constructor(book) {
     this.book = book;
     this.metrics = { requests: 0, writes: 0 };
-    this.failOn = null; // назва методу, що має впасти (для тестів відкату)
+    this.failOn = null; // «метод» або «метод#N» — N-й виклик методу має впасти (для тестів відкату)
+    this.calls = {};
   }
-  #check(op) { if (this.failOn === op) { this.failOn = null; throw new Error("імітований збій " + op); } }
+  #check(op) {
+    this.calls[op] = (this.calls[op] || 0) + 1;
+    if (!this.failOn) return;
+    const [name, nth] = this.failOn.split("#");
+    if (name === op && (!nth || Number(nth) === this.calls[op])) { this.failOn = null; throw new Error("імітований збій " + op); }
+  }
+  armFailure(spec) { this.failOn = spec; this.calls = {}; }
   async meta() {
     return Object.entries(this.book).map(([title, v], i) => ({ title, sheetId: i, rows: v.length, columns: Math.max(0, ...v.map((r) => r.length)) }));
   }

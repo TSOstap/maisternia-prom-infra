@@ -101,7 +101,8 @@ export function findDuplicates(index, offer, { max = 3 } = {}) {
   const pool = new Map();
   const keys = ["sku:" + offer.sku, "skul:" + offer.skuLoose, offer.brand && offer.model ? "bm:" + offer.brand + "|" + offer.model : "", "slug:" + offer.slug, "nu:" + offer.nameKeyUa, "nr:" + offer.nameKeyRu, ...[...offer.photos].map((p) => "ph:" + p)];
   for (const k of keys) for (const c of (k && !/:$/.test(k) ? index.get(k) : null) || []) if (c.id !== offer.id) pool.set(c.id + "|" + c.sheet, c);
-  return [...pool.values()].map((c) => compareEntries(c, offer)).filter((r) => r.evidence.length).sort((a, b) => b.score - a.score).slice(0, max);
+  // Збіг лише за сторінкою постачальника — занадто слабкий (на реальних даних це спільні slug різних моделей лінійки).
+  return [...pool.values()].map((c) => compareEntries(c, offer)).filter((r) => r.evidence.some((e) => e !== "сторінка постачальника")).sort((a, b) => b.score - a.score).slice(0, max);
 }
 
 /** Текст для колонки «Перевірка». */
@@ -115,6 +116,8 @@ export function dupNote(cands, { frozen = false } = {}) {
   });
   const best = cands[0];
   const hint = best.sheet === "Основний каталог" && best.level === "ЙМОВІРНО ТОЙ САМИЙ" ? ` Якщо це той самий товар — «ПРИВ'ЯЗАТИ ДО ${best.id}».` : "";
-  return `МОЖЛИВИЙ ДУБЛЬ${frozen ? " (ID у «Заморожених ID»)" : ""}: ${parts.join(" | ")}.${hint}`;
+  // Лише інші позиції черги — м'якша позначка: дубля в Prom ще немає.
+  const label = cands.some((c) => c.sheet !== "Нові товари") ? "МОЖЛИВИЙ ДУБЛЬ" : "СХОЖІ ПОЗИЦІЇ В ЧЕРЗІ";
+  return `${label}${frozen ? " (ID у «Заморожених ID»)" : ""}: ${parts.join(" | ")}.${hint}`;
 }
 export { shortPhoto };
