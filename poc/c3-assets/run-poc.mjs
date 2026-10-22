@@ -28,7 +28,7 @@ function creds() {
 }
 const C = creds();
 const scrub = (s) => String(s).split(C.CLOUDFLARE_API_TOKEN).join("***").split(C.CLOUDFLARE_ACCOUNT_ID).join("<account>")
-  .replace(/\b[0-9a-f]{32}\b/g, "<hex32>").replace(/[?&]key=[^\s&"]+/g, "?key=***");
+  .replace(/\b[0-9a-f]{32}\b/g, "<hex32>").replace(/[?&]key=[^\s&"]+/g, "?key=***").replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, "<email>");
 const state = () => (fs.existsSync(STATE) ? JSON.parse(fs.readFileSync(STATE, "utf8")) : { versions: {}, log: [] });
 const save = (s) => fs.writeFileSync(STATE, JSON.stringify(s, null, 1));
 
@@ -140,7 +140,7 @@ if (phase === "auth") {
     noKey: await probe("/feeds/main.xml", ""), wrongKey: await probe("/feeds/main.xml", "wrong-key-zzzzzzzzzzzzzzzzzzzzzzzzzzzz"),
     partDirect: await probe(`/_feed/main/${m.parts[0].file}`, feedKey()), manifestDirect: await probe("/_feed/main/manifest.json", feedKey()),
     otherFeed: await probe("/feeds/other.xml", feedKey()), root: await probe("/", ""),
-    httpRedirect: await fetch(s.url.replace("https://", "http://") + "/", { redirect: "manual" }).then((r) => r.status).catch((e) => String(e.cause?.code || e)),
+    httpWithKey: await fetch(s.url.replace("https://", "http://") + "/feeds/main.xml?key=" + encodeURIComponent(feedKey()), { redirect: "manual" }).then((r) => { r.body?.cancel(); return r.status; }).catch((e) => String(e.cause?.code || e)),
   });
 } else if (phase === "atomic") {
   // Версію B завантажено, але не активовано → живою лишається попередня. Повільне завантаження старої версії

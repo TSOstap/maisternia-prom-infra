@@ -79,6 +79,8 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     if (request.method !== "GET" && request.method !== "HEAD") return plain(405, "Метод не підтримується");
+    // workers.dev відповідає і по HTTP: ключ не повинен іти відкритим каналом (localhost — лише для wrangler dev).
+    if (url.protocol !== "https:" && !/^(127\.0\.0\.1|localhost)$/.test(url.hostname)) return plain(403, "Лише HTTPS");
 
     const feedMatch = /^\/feeds\/([^/]+)\.xml$/.exec(url.pathname);
     const statusMatch = /^\/feeds\/([^/]+)\/status$/.exec(url.pathname);

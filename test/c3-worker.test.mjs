@@ -71,6 +71,8 @@ test("доступ: без ключа, з хибним ключем, до час
     assert.equal((await get(env, p)).status, 404, p);
   }
   assert.equal((await get(env, `/feeds/main.xml?key=${KEY}`, "POST")).status, 405);
+  const http = await worker.fetch(new Request(`http://poc.example/feeds/main.xml?key=${KEY}`), env, { waitUntil() {} });
+  assert.equal(http.status, 403, "по HTTP фід не віддається навіть з правильним ключем");
   assert.equal((await get({ ...env, FEED_KEY_SHA256: "" }, `/feeds/main.xml?key=${KEY}`)).status, 404, "без налаштованого ключа фід закритий");
 });
 
