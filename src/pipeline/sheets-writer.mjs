@@ -155,6 +155,17 @@ export class GoogleSheetsWriter {
     return true;
   }
 
+  /** Числовий формат «0%» для колонки (рядки fromRow..toRow, з 1) — як у колонці «Знижка» чинної таблиці. */
+  async setPercentFormat(title, col, fromRow, toRow) {
+    if (col < 1 || toRow < fromRow) return;
+    const s = await this.#sheet(title);
+    this.metrics.writes++;
+    await this.#call("POST", ":batchUpdate", { requests: [{ repeatCell: {
+      range: { sheetId: s.sheetId, startRowIndex: fromRow - 1, endRowIndex: toRow, startColumnIndex: col - 1, endColumnIndex: col },
+      cell: { userEnteredFormat: { numberFormat: { type: "PERCENT", pattern: "0%" } } }, fields: "userEnteredFormat.numberFormat",
+    } }] });
+  }
+
   async ensureColumns(title, n) {
     const s = await this.#sheet(title);
     if (s.columns >= n) return;
@@ -215,4 +226,8 @@ export class MemorySheets {
     return true;
   }
   async ensureColumns() {}
+  async setPercentFormat(title, col, fromRow, toRow) {
+    this.#check("setPercentFormat");
+    (this.formats ||= {})[title + "!" + col] = { type: "PERCENT", pattern: "0%", fromRow, toRow };
+  }
 }

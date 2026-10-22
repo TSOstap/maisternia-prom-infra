@@ -20,6 +20,30 @@ export const QUEUE_HEADERS = Object.freeze([...YML_HEADERS, ...QUEUE_EXTRA]);
 export const PASSPORT_HEADER = Object.freeze(["Поле", "Значення"]);
 export const DECISION = Object.freeze({ APPROVE: "ЗАТВЕРДЖЕНО", APPROVE_NOT_DUP: "ЗАТВЕРДЖЕНО (НЕ ДУБЛЬ)", REJECT: "ВІДХИЛЕНО" });
 export const STATUS_NEW = "НОВИЙ_ВІД_ПОСТАЧАЛЬНИКА";
+export const AUDIT_SHEET = "Аудит";
+const NON_PRODUCT_NAME = /співпрац|сотрудничеств|дропшип|dropship|послуг|услуг|партнерств/i;
+/** Нетоварні записи у фіді постачальника (напр. «Співпраця по дропшипінгу»): за «Аудитом» або за ознаками. Лише позначка. */
+export function nonProductReason(row, auditTypes) {
+  const t = auditTypes?.get(mtText(row["Offer ID"]));
+  if (t && /НЕТОВАРН/.test(t)) return "за «Аудитом»";
+  const names = [row["Назва постачальника UA"], row["Назва постачальника RU"], row["Назва UA"], row["Назва RU"]].map(mtText).join(" ");
+  if (!mtText(row["Артикул постачальника"]).trim() && NON_PRODUCT_NAME.test(names)) return "без артикулу, назва — послуга/співпраця";
+  return "";
+}
+/** «Аудит» (лише читання): Offer ID → «Тип» + «Причина» (колонки за заголовком; аркуша може не бути). */
+function auditMarks(values) {
+  if (!values || !values.length) return new Map();
+  const h = values[0].map(mtText);
+  const id = h.indexOf("Offer ID"), cols = ["Тип", "Причина"].map((k) => h.indexOf(k)).filter((i) => i >= 0);
+  if (id < 0) return new Map();
+  const out = new Map();
+  for (const r of values.slice(1)) {
+    const k = mtText(r[id]);
+    if (k) out.set(k, [out.get(k), ...cols.map((i) => mtText(r[i]))].filter(Boolean).join(" "));
+  }
+  return out;
+}
+const withNonProduct = (note, reason) => (reason ? ["НЕТОВАРНИЙ ЗАПИС (" + reason + ") — не товар; рішення за вами", note].filter(Boolean).join(" ") : note);
 const CELL_LIMIT = 49000; // ліміт Google — 50 000 символів у клітинці
 
 const norm = (v) => mtText(v).trim().toUpperCase().replace(/\s+/g, " ");
@@ -349,6 +373,8 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows }) 
   const groupIds = new Set(groupsById.keys());
   const mainIds = new Set(ids);
   const index = dupIndexFor({ mainRows, queueRows: queue.rows, deferredRows: deferred, offers: parsed.offers });
+  const auditTypes = auditMarks(book[AUDIT_SHEET]);
+  out.auditTypes = auditTypes;
   const approve = [], reject = [], keep = [], bound = [], reclaimed = [];
   queue.rows.forEach((r, i) => {
     const updated = { ...r };
@@ -371,6 +397,7 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows }) 
     } else if (queuePlan[i].match !== MATCH.OK) {
       updated["Перевірка"] = [dup, "зараз не зіставлено з постачальником: " + queuePlan[i].match].filter(Boolean).join(" ");
     } else updated["Перевірка"] = dup;
+    updated["Перевірка"] = withNonProduct(updated["Перевірка"], nonProductReason(updated, auditTypes));
     keep.push(updated);
   });
   out.main = { start: main.start, plan: mainPlan, rows: mainRows, changedRows: new Set([...undo.changedMain, ...bind.changedMain]) };
@@ -392,7 +419,7 @@ export function finalizeSheetSync(plan, { parsed, fullById, stamp, config, group
   for (const r of newRows) {
     const note = dupNote(findDuplicates(index, queueEntry(r)), { frozen: plan.frozenFlag.has(mtText(r["Offer ID"])) });
     if (/^МОЖЛИВИЙ ДУБЛЬ/.test(note)) possibleDuplicates++;
-    r["Перевірка"] = [note, r["Перевірка"]].filter(Boolean).join(" ");
+    r["Перевірка"] = withNonProduct([note, r["Перевірка"]].filter(Boolean).join(" "), nonProductReason(r, plan.auditTypes));
   }
   const queueRows = [...plan.queue.keep, ...newRows];
   const queueValues = queueRows.map((r) => plan.queue.header.map((k) => (r[k] == null ? "" : r[k])));

@@ -8,17 +8,31 @@ import { objectsFromValues } from "../core/yml.mjs";
 import { GROUP_HEADERS } from "../core/seal.mjs";
 import { SHEET, QUEUE_HEADERS, PASSPORT_HEADER, BINDINGS_SHEET, BINDINGS_HEADERS, finalizeSheetSync, passportValues, planSheetSync, readPassport, samePassport } from "../core/sheet-sync.mjs";
 
-export const SYNC_SHEETS = [SHEET.main, SHEET.queue, SHEET.deferred, SHEET.frozen, SHEET.passport, BINDINGS_SHEET];
+export const SYNC_SHEETS = [SHEET.main, SHEET.queue, SHEET.deferred, SHEET.frozen, SHEET.passport, BINDINGS_SHEET, "Аудит"];
 const rowsEqual = (a, b) => a.length === b.length && a.every((r, i) => r.length === b[i].length && r.every((v, j) => mtText(v) === mtText(b[i][j])));
 const pad = (r, n) => Array.from({ length: n }, (_, i) => (r[i] == null ? "" : r[i]));
 const groupsOf = (book) => objectsFromValues(book[SHEET.groups], GROUP_HEADERS);
 const JOURNAL_CHUNK = 2000;
+const DISCOUNT = "Знижка";
+
+/** Знижка в таблиці — як у mtUpdate: ЧИСЛО (0.2) з форматом «0%» (Google показує «20%»).
+ *  План (порт mtPlan) повертає «20%» — це рядок, який Apps Script при setValues сам перетворює на число 0.2;
+ *  запис RAW цього не робить, тож перетворюємо тут. Формули цін і план не змінюються. */
+export function sheetDiscount(v) {
+  if (typeof v !== "string") return v;
+  const m = /^\s*(\d+(?:[.,]\d+)?)\s*%\s*$/.exec(v);
+  return m ? Math.round(Number(m[1].replace(",", ".")) * 10000) / 1000000 : v;
+}
+/** Рядок значень під заголовок: колонка «Знижка» — числом. */
+const forSheet = (header, values) => values.map((v, j) => (header[j] === DISCOUNT ? sheetDiscount(v) : v));
+/** Запис «Журналу»: для поля «Знижка» «було/стало» — числа, як у mtUpdate. */
+const journalRow = (e) => (e[3] === DISCOUNT ? [e[0], e[1], e[2], e[3], sheetDiscount(e[4]), sheetDiscount(e[5]), e[6]] : e);
 
 /** Запис у «Журнал» у форматі mtUpdate: значення як є («+», «-» — текст). Формули не виконуються, бо запис іде лише в режимі
  *  RAW (GoogleSheetsWriter.VALUE_INPUT_OPTION): Google зберігає рядок буквально — і «=…» від постачальника лишається текстом.
  *  Апостроф НЕ додається: у RAW він зберігся б як частина тексту («'+» замість «+»). */
 async function appendJournal(sheets, entries) {
-  for (let i = 0; i < entries.length; i += JOURNAL_CHUNK) await sheets.appendRows(SHEET.journal, entries.slice(i, i + JOURNAL_CHUNK));
+  for (let i = 0; i < entries.length; i += JOURNAL_CHUNK) await sheets.appendRows(SHEET.journal, entries.slice(i, i + JOURNAL_CHUNK).map(journalRow));
 }
 
 /** Рядок «Журналу» про заблоковане оновлення: [час, СИСТЕМА, —, ОНОВЛЕННЯ ЗАБЛОКОВАНО, тип, зачеплено/поріг, причина]. */
@@ -145,12 +159,13 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
     mainRowsFull: book[SHEET.main].map((r) => r.slice()), historyLen: (book[BINDINGS_SHEET] || [[]]).length, history: (book[BINDINGS_SHEET] || []).map((r) => r.slice()),
   };
   const changedRows = queueChanged ? [] : [...plan.main.changedRows];
-  const fullRows = changedRows.map((i) => ({ title: SHEET.main, row: i + 2, col: 1, values: [mainHeader.map((k, j) => (LIVE_COLUMNS.includes(k) ? plan.main.plan[i].next[LIVE_COLUMNS.indexOf(k)] : plan.main.rows[i][k] ?? ""))] }));
+  const fullRows = changedRows.map((i) => ({ title: SHEET.main, row: i + 2, col: 1, values: [forSheet(mainHeader, mainHeader.map((k) => (LIVE_COLUMNS.includes(k) ? plan.main.plan[i].next[LIVE_COLUMNS.indexOf(k)] : plan.main.rows[i][k] ?? "")))] }));
   const history = queueChanged ? [] : plan.bindings.history;
   const undoCells = queueChanged ? [] : plan.bindings.undoCells;
   const stateCol = BINDINGS_HEADERS.indexOf("Стан") + 1;
   const done = new Set();
-  const opsBlock = { title: SHEET.main, row: 2, col: plan.main.start + 1, values: plan.main.plan.map((p) => p.next) };
+  const opsBlock = { title: SHEET.main, row: 2, col: plan.main.start + 1, values: plan.main.plan.map((p) => forSheet(LIVE_COLUMNS, p.next)) };
+  const queueValues = fin.queueValues.map((r) => forSheet(plan.queue.header, r));
   try {
     await sheets.updateRanges([opsBlock]); done.add("mainOps");
     // Прив'язки/скасування змінюють і незмінні колонки картки — повний рядок (печатку перераховано).
@@ -160,8 +175,11 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
       if (history.length) { await sheets.appendRows(BINDINGS_SHEET, history); done.add("history"); }
       if (undoCells.length) { await sheets.updateRanges(undoCells.map((c) => ({ title: BINDINGS_SHEET, row: c.row, col: stateCol, values: [[c.state]] }))); done.add("undoCells"); }
     }
-    if (approve.length) { await sheets.appendRows(SHEET.main, approve.map((r) => mainHeader.map((k) => r[k] ?? ""))); done.add("approve"); }
-    if (!queueChanged) { await rewriteData(sheets, SHEET.queue, before.queue.length - 1, fin.queueValues); done.add("queue"); }
+    if (approve.length) { await sheets.appendRows(SHEET.main, approve.map((r) => forSheet(mainHeader, mainHeader.map((k) => r[k] ?? "")))); done.add("approve"); }
+    if (!queueChanged) { await rewriteData(sheets, SHEET.queue, before.queue.length - 1, queueValues); done.add("queue"); }
+    // Формат «0%» для колонки «Знижка» (як у mtUpdate): без нього число 0.2 показувалося б як «0,2».
+    await sheets.setPercentFormat(SHEET.main, mainHeader.indexOf(DISCOUNT) + 1, 2, plan.main.rows.length + approve.length + 1);
+    if (!queueChanged && queueValues.length) await sheets.setPercentFormat(SHEET.queue, plan.queue.header.indexOf(DISCOUNT) + 1, 2, queueValues.length + 1);
     if (reject.length) { await sheets.appendRows(SHEET.frozen, reject.map((r) => [mtText(r["Offer ID"])])); done.add("frozen"); }
     if (!samePassport(passportAfter, plan.passportBefore)) {
       await sheets.updateRanges([{ title: SHEET.passport, row: 1, col: 1, values: passportValues(passportAfter, `затверджено ${approve.length}`, stamp) }]);
@@ -171,13 +189,13 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
     // Перевірка після запису
     const after = await readBook(SYNC_SHEETS);
     const m2 = readSheet(after[SHEET.main], SHEET.main);
-    const opsOk = plan.main.plan.every((p, i) => LIVE_COLUMNS.every((k, j) => mtText(m2.rows[i][k]) === mtText(p.next[j])));
+    const opsOk = plan.main.plan.every((p, i) => { const next = forSheet(LIVE_COLUMNS, p.next); return LIVE_COLUMNS.every((k, j) => mtText(m2.rows[i][k]) === mtText(next[j])); });
     const verify = {
       mainCount: m2.rows.length, expectedCount: passportAfter.count, opsWritten: opsOk,
       sealsIntact: m2.rows.every((r) => rowSeal(r) === mtText(r[SEAL_COLUMN])),
       passportOk: samePassport(approvalManifest(m2.rows, groupsRows), passportAfter) && samePassport(readPassport(after[SHEET.passport]), passportAfter),
       bindingsOk: changedRows.every((i) => mtText(m2.rows[i]["ID постачальника"]) === mtText(plan.main.rows[i]["ID постачальника"])),
-      queueOk: queueChanged || rowsEqual(after[SHEET.queue].slice(1).filter((r) => r.some((v) => v !== "" && v != null)).map((r) => pad(r, fin.queueValues[0]?.length || QUEUE_HEADERS.length)), fin.queueValues),
+      queueOk: queueChanged || rowsEqual(after[SHEET.queue].slice(1).filter((r) => r.some((v) => v !== "" && v != null)).map((r) => pad(r, queueValues[0]?.length || QUEUE_HEADERS.length)), queueValues),
     };
     if (!(verify.mainCount === verify.expectedCount && verify.opsWritten && verify.sealsIntact && verify.passportOk && verify.queueOk && verify.bindingsOk)) throw Object.assign(new Error("перевірка після запису не пройдена"), { verify });
     await appendJournal(sheets, journal);
