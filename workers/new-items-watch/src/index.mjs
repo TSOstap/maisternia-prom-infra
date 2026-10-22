@@ -65,14 +65,16 @@ export async function runWatch(env, now = Date.now(), fetchImpl = fetch) {
   if (state.backoffUntil > now) return finish({ skipped: "ПАУЗА: постачальник обмежив частоту", until: new Date(state.backoffUntil).toISOString() });
   if (!env.SUPPLIER_FEED_URL) return finish({ skipped: "немає адреси фіду (секрет SUPPLIER_FEED_URL)" });
 
-  let text;
+  let text, httpStatus = 0;
   try {
-    const res = await fetchImpl(watchFeedUrl(env.SUPPLIER_FEED_URL, profile), { redirect: "error", headers: { "accept-encoding": "gzip" } });
+    const res = await fetchImpl(watchFeedUrl(env.SUPPLIER_FEED_URL, profile), { redirect: "manual", headers: { "accept-encoding": "gzip" } });
+    httpStatus = res.status;
     if (res.status === 429 || res.status === 503) {
       state.backoffUntil = now + rules.backoffMinutes * MIN; dirty = true;
       return finish({ skipped: "ПАУЗА: HTTP " + res.status + " від постачальника" });
     }
-    if (res.status !== 200) return finish({ error: "фід: HTTP " + res.status });
+    // Workers не підтримують redirect: "error" (перевірено в Cloudflare 22.10.2026): «manual» + будь-яка переадресація — помилка.
+    if (res.status !== 200) return finish({ error: (res.status >= 300 && res.status < 400 ? "фід: переадресація заборонена, HTTP " : "фід: HTTP ") + res.status });
     if (Number(res.headers.get("content-length") || 0) > MAX_FEED_BYTES) return finish({ error: "фід завеликий" });
     text = await res.text();
   } catch (e) { return finish({ error: "фід недоступний: " + String(e?.message || e).slice(0, 100) }); }
@@ -81,8 +83,10 @@ export async function runWatch(env, now = Date.now(), fetchImpl = fetch) {
   let scan;
   try { scan = scanFeed(text, wantedIds(state)); }
   catch (e) { return finish({ error: "фід пошкоджений: " + String(e?.message || e).slice(0, 100) }); }
+  const feedChars = text.length;
   text = null;
   const plan = planWatch({ state, scan, now, rules, profile });
+  Object.assign(plan.report, { feedChars, httpStatus, profile });
   let next = plan.state;
   if (plan.dispatch) {
     next.lastDispatch = { ...plan.dispatch, issuedAt: now };

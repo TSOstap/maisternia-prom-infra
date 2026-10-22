@@ -1,0 +1,12 @@
+// ТЕСТОВИЙ вимір CPU (погоджено 22.10.2026: один ручний запуск). Окремий Worker — НЕ робочий «Сторож новинок».
+// Без розкладу, без KV, без секретів, без GitHub і Google Sheets. Чинний mm-feed-poc не зачіпається.
+{
+  "name": "mm-new-items-watch-test",
+  "main": "src/measure.mjs",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "triggers": { "crons": [] },
+  // KEY_SHA256 (SHA-256 ключа доступу) і minOffers додає скрипт розгортання через --var; сам ключ — лише локально поза репозиторієм.
+  "observability": { "enabled": false }
+}

@@ -231,3 +231,12 @@ test("intake не довіряє Worker на слово: < 10 хв від ост
   assert.match(verifyReady({ id: "6", fp: watchFingerprint(raw({ id: "6", pictures: [] })), lastChange: at(30) }, raw({ id: "6", pictures: [] }), T0).reason, /бракує фото/);
   assert.match(verifyReady({ id: "6", fp, lastChange: at(30) }, null, T0).reason, /немає у фіді/);
 });
+
+test("Worker: fetch фіду сумісний із Cloudflare (redirect «manual», не «error»); переадресація — помилка без розбору", async () => {
+  const sim = new WatchSim();
+  await sim.start();
+  const seen = [];
+  const rep = await runWatch(sim.env, sim.now + 5 * MIN, async (url, init) => { seen.push(init?.redirect); return new Response("", { status: 302, headers: { location: "https://example.invalid/" } }); });
+  assert.deepEqual(seen, ["manual"]);
+  assert.match(rep.error, /переадресація заборонена, HTTP 302/);
+});
