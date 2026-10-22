@@ -34,6 +34,18 @@ async function sync(w, xml = w.xml, extra = {}) {
 }
 const sealsIntact = (book) => rows(book, SHEET.main).every((r) => rowSeal(r) === mtText(r[SEAL_COLUMN]));
 
+/** Заблокований запуск: змінено лише «Журнал» — рівно один рядок «ОНОВЛЕННЯ ЗАБЛОКОВАНО» потрібного типу. */
+function assertOnlyBlockedJournal(before, after, type) {
+  for (const k of Object.keys(before)) if (k !== SHEET.journal) assert.deepEqual(after[k], before[k], "аркуш «" + k + "» не змінено");
+  assert.deepEqual(Object.keys(after).sort(), Object.keys(before).sort(), "нових аркушів немає");
+  const added = after[SHEET.journal].slice(before[SHEET.journal].length);
+  assert.equal(added.length, 1, "у «Журналі» рівно один новий рядок");
+  assert.equal(added[0][1], "СИСТЕМА");
+  assert.equal(added[0][3], "ОНОВЛЕННЯ ЗАБЛОКОВАНО");
+  assert.equal(added[0][4], type);
+  assert.ok(String(added[0][6]).length > 10, "є зрозуміла причина");
+}
+
 test("NEW92 → основний каталог: усі рядки байт-у-байт, ті самі ID, черга порожня з колонками черги, паспорт створено", async () => {
   const w = world();
   const queueBefore = rows(w.book, SHEET.queue);
@@ -103,7 +115,8 @@ test("зміна ціни, зміна наявності і зникнення �
   const r2 = await sync(w, mass);
   assert.equal(r2.state, "ABORTED");
   assert.match(r2.reason, /збій постачальника/);
-  assert.deepEqual(w.book, snapshot, "жодного запису");
+  assertOnlyBlockedJournal(snapshot, w.book, "МАСОВЕ ЗНИКНЕННЯ");
+  assert.match(w.book[SHEET.journal].at(-1)[5], /зачеплено 60; поріг 50/);
 });
 
 test("затвердження: без SEO — лишається з поясненням; з SEO — переноситься з тим самим ID і зникає з черги; паспорт оновлено", async () => {
@@ -165,7 +178,7 @@ test("захисти: зміна SEO поза затвердженням → н�
   const r1 = await sync(w);
   assert.equal(r1.state, "ABORTED");
   assert.match(r1.reason, /паспорту/);
-  assert.deepEqual(w.book, snap);
+  assertOnlyBlockedJournal(snap, w.book, "ЗМІНИ ПОЗА ЗАТВЕРДЖЕННЯМ");
   w.book[SHEET.main][1][hdr.indexOf("Назва UA")] = saved;
   // 2. Черга змінилась між читанням і записом
   let calls = 0;

@@ -14,8 +14,32 @@ const pad = (r, n) => Array.from({ length: n }, (_, i) => (r[i] == null ? "" : r
 const groupsOf = (book) => objectsFromValues(book[SHEET.groups], GROUP_HEADERS);
 const JOURNAL_CHUNK = 2000;
 
+/** Запис у «Журнал» у форматі mtUpdate: значення як є («+», «-» — текст). Формули не виконуються, бо запис іде лише в режимі
+ *  RAW (GoogleSheetsWriter.VALUE_INPUT_OPTION): Google зберігає рядок буквально — і «=…» від постачальника лишається текстом.
+ *  Апостроф НЕ додається: у RAW він зберігся б як частина тексту («'+» замість «+»). */
 async function appendJournal(sheets, entries) {
-  for (let i = 0; i < entries.length; i += JOURNAL_CHUNK) await sheets.appendRows(SHEET.journal, entries.slice(i, i + JOURNAL_CHUNK).map((e) => e.map((v) => (typeof v === "string" && /^[=+\-@]/.test(v) ? "'" + v : v))));
+  for (let i = 0; i < entries.length; i += JOURNAL_CHUNK) await sheets.appendRows(SHEET.journal, entries.slice(i, i + JOURNAL_CHUNK));
+}
+
+/** Рядок «Журналу» про заблоковане оновлення: [час, СИСТЕМА, —, ОНОВЛЕННЯ ЗАБЛОКОВАНО, тип, зачеплено/поріг, причина]. */
+export function blockedEntry(stamp, block) {
+  const scope = [block.affected !== "" && block.affected != null ? `зачеплено ${block.affected}` : "", block.limit !== "" && block.limit != null ? `поріг ${block.limit}` : ""].filter(Boolean).join("; ");
+  return [stamp, "СИСТЕМА", "", "ОНОВЛЕННЯ ЗАБЛОКОВАНО", block.type, scope, block.reason];
+}
+
+/** Заблокований запуск: дозволено ЛИШЕ записати подію в «Журнал». Збій цього запису не приховує причину (вона в результаті). */
+export async function recordBlocked(sheets, stamp, block) {
+  try { await appendJournal(sheets, [blockedEntry(stamp, block)]); return { journalWritten: true }; }
+  catch (e) { return { journalWritten: false, journalError: String(e?.message || e).slice(0, 200) }; }
+}
+
+/** Причина відмови перевірки фіду (validateFeed / розбір) → блокування для «Журналу». */
+export function feedBlock(message, { count = "", minimum = "", maxAgeHours = "" } = {}) {
+  const m = String(message || "");
+  if (/Неповний фід/.test(m)) return { type: "НЕПОВНИЙ XML", reason: "фід постачальника неповний: різке зменшення кількості позицій", affected: count, limit: minimum };
+  if (/Застарілий або майбутній/.test(m)) return { type: "ЗАСТАРІЛИЙ XML", reason: `фід постачальника застарілий або з датою в майбутньому (допустимо до ${maxAgeHours} год)`, affected: "", limit: maxAgeHours };
+  if (/Немає дати/.test(m)) return { type: "ПОШКОДЖЕНИЙ XML", reason: "у фіді постачальника немає коректної дати", affected: "", limit: "" };
+  return { type: "ПОШКОДЖЕНИЙ XML", reason: "фід постачальника не вдалося розібрати", affected: "", limit: "" };
 }
 
 /** Переписує дані аркуша (рядки 2..) на `values`: оновлення наявних рядків, дописування нових, видалення зайвих. */
@@ -96,7 +120,11 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
   const book = await readBook(SYNC_SHEETS);
   const groupsRows = groupsOf(book);
   const plan = planSheetSync({ book, parsed, stamp, config, now, groupsRows });
-  if (plan.abort) return { state: "ABORTED", reason: plan.abort };
+  if (plan.abort) {
+    // Заблоковано: товарні дані не змінюються; лише подія в «Журналі».
+    const rec = await recordBlocked(sheets, stamp, plan.block || { type: "ЗАБЛОКОВАНО", reason: plan.abort, affected: "", limit: "" });
+    return { state: "ABORTED", reason: plan.abort, block: plan.block, ...rec };
+  }
   const full = plan.newIds.length ? await fetchFull(plan.newIds) : new Map();
   const fin = finalizeSheetSync(plan, { parsed, fullById: full, stamp, config, groupsRows, journalSummary: {} });
 

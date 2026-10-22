@@ -41,6 +41,18 @@ function addOffer(xml, o) {
   return xml.replace("\n</offers>", "\n" + line + "\n</offers>");
 }
 const card = (w, k) => rows(w.book, SHEET.main)[k];
+
+/** Заблокований запуск: змінено лише «Журнал» — рівно один рядок «ОНОВЛЕННЯ ЗАБЛОКОВАНО» потрібного типу. */
+function assertOnlyBlockedJournal(before, after, type) {
+  for (const k of Object.keys(before)) if (k !== SHEET.journal) assert.deepEqual(after[k], before[k], "аркуш «" + k + "» не змінено");
+  assert.deepEqual(Object.keys(after).sort(), Object.keys(before).sort(), "нових аркушів немає");
+  const added = after[SHEET.journal].slice(before[SHEET.journal].length);
+  assert.equal(added.length, 1, "у «Журналі» рівно один новий рядок");
+  assert.equal(added[0][1], "СИСТЕМА");
+  assert.equal(added[0][3], "ОНОВЛЕННЯ ЗАБЛОКОВАНО");
+  assert.equal(added[0][4], type);
+  assert.ok(String(added[0][6]).length > 10, "є зрозуміла причина");
+}
 const queueRow = (w, id) => rows(w.book, SHEET.queue).find((r) => mtText(r["Offer ID"]) === id);
 function setDecision(w, id, value, sheet = SHEET.queue, keyCol = "Offer ID") {
   const v = w.book[sheet];
@@ -196,7 +208,7 @@ test("повернення товару з тим самим ID оновлює �
   const r = await sync(w, allOff);
   assert.equal(r.state, "ABORTED");
   assert.match(r.reason, /«немає в наявності» стало \d+ товарів/);
-  assert.deepEqual(w.book, snap, "жодного запису");
+  assertOnlyBlockedJournal(snap, w.book, "МАСОВА ЗМІНА НАЯВНОСТІ");
 });
 
 test("конфлікти прив'язки: ID постачальника вже має інший товар; дві позиції на один товар; черга змінена під час запуску — нічого не прив'язано", async () => {

@@ -23,7 +23,7 @@ import { operationalUrl, parseSupplierText, validateFeed } from "../src/core/sup
 import { readSheet } from "../src/core/sync-plan.mjs";
 import { sanitize, mtText, sha256 } from "../src/core/text.mjs";
 import { SHEET, extractFullOffers } from "../src/core/sheet-sync.mjs";
-import { mergeNew92, syncSheet, refreshCopyFromLive, SYNC_SHEETS, REFRESH_SHEETS } from "../src/pipeline/sheet-sync-run.mjs";
+import { mergeNew92, syncSheet, refreshCopyFromLive, recordBlocked, feedBlock, SYNC_SHEETS, REFRESH_SHEETS } from "../src/pipeline/sheet-sync-run.mjs";
 import { findLastSync } from "../src/verify/supplier-shadow.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
 import { readXlsx } from "./lib/xlsx-read.mjs";
@@ -133,11 +133,21 @@ try {
       xml = xml.replace(/(<offer\b[^>]*\bavailable=")true"/g, '$1false"');
       report.scenario = { allUnavailable: true, expected: "ABORTED" };
     }
-    const parsed = await parseSupplierText(xml, { maximumChars: config.supplier.maximumChars, identityFields: true });
+    let parsed;
+    try { parsed = await parseSupplierText(xml, { maximumChars: config.supplier.maximumChars, identityFields: true }); }
+    catch (e) {
+      // Пошкоджений XML: нічого не оновлюємо; лише подія в «Журналі» (причина лишається і в журналі GitHub).
+      const block = feedBlock("розбір: " + e.message);
+      report.result = { state: "ABORTED", reason: block.reason, block, ...(await recordBlocked(sheets, stamp, block)) };
+      throw Object.assign(new Error("BLOCKED"), { blocked: true });
+    }
     const last = findLastSync(journalTail);
     // Повнота/свіжість фіду — як LIVE mtValidateFeed: несправний фід → нічого не пишемо.
     try { validateFeed(parsed, last?.offers, NOW, config.supplier); }
-    catch (e) { report.result = { state: "ABORTED", reason: "фід постачальника не пройшов перевірку повноти/свіжості: " + scrub(e) }; }
+    catch (e) {
+      const block = feedBlock(e.message, { count: parsed.count, minimum: Math.max(config.supplier.minimumOffers, Math.round(Number(last?.offers || 0) * config.supplier.dropRatio)), maxAgeHours: config.supplier.maximumAgeHours });
+      report.result = { state: "ABORTED", reason: block.reason, block, ...(await recordBlocked(sheets, stamp, block)) };
+    }
     if (!report.result) {
       const fetchFull = report.fetchFull;
       report.result = await syncSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now: NOW });
@@ -146,7 +156,7 @@ try {
     report.feed = { offers: parsed.count };
   }
 } catch (e) {
-  report.result = { state: "ERROR", error: scrub(e) };
+  if (!e?.blocked) report.result = { state: "ERROR", error: scrub(e) };
 }
 delete report.fetchFull;
 if (source === "xlsx" && arg("save-state")) fs.writeFileSync(arg("save-state"), JSON.stringify(sheets.book)); // лише локальний файл поза репозиторієм
@@ -164,6 +174,7 @@ if (arg("summary")) {
     `### S1 (тестова копія таблиці): ${mode} — ${r.state}`,
     "",
     r.reason ? `Причина: ${r.reason}` : "",
+    r.block ? `Блокування: ${r.block.type}; зачеплено ${r.block.affected ?? "—"}; поріг ${r.block.limit ?? "—"}; запис у «Журнал»: ${r.journalWritten ? "так" : "НІ — причина лише тут"}` : "",
     r.error ? `Помилка: ${r.error}` : "",
     r.stats?.before ? `До запуску: основний каталог ${r.stats.before.mainRows} (унікальних ID ${r.stats.before.uniqueIds}, паспорт ${r.stats.before.passportCount}); у черзі ${r.stats.before.queueRows}` : "",
     r.stats ? `Основний каталог: ${r.stats.mainCountAfter} товарів; змінено клітинок цін/наявності: ${r.stats.main?.changedCells}; черга: додано ${r.stats.added}, затверджено ${r.stats.approved}, відхилено ${r.stats.rejected}, можливих дублів ${r.stats.queue?.possibleDuplicates}` : "",

@@ -274,22 +274,23 @@ function planUndos({ historyValues, mainRows, deferredRows, queueRows, offers, s
  *  parsed — операційний розбір фіду (Map offers).
  */
 export function planSheetSync({ book, parsed, stamp, config, now, groupsRows }) {
-  const out = { abort: null, warnings: [], stats: {} };
+  const out = { abort: null, block: null, warnings: [], stats: {} };
+  // Зупинка: зрозуміла причина + тип, кількість зачеплених товарів і поріг (для «Журналу»).
+  const stop = (type, reason, affected = "", limit = "") => { out.abort = reason; out.block = { type, reason, affected, limit }; return out; };
   const main = readSheet(book[SHEET.main], SHEET.main);
   const queueValues = book[SHEET.queue];
   const queueHeader = (queueValues?.[0] || []).map(mtText);
-  if (QUEUE_EXTRA.some((k) => !queueHeader.includes(k))) { out.abort = "аркуш «Нові товари» ще не переведено в режим черги (немає колонок «Рішення/Перевірка/Виявлено») — спершу перенесення NEW92"; return out; }
+  if (QUEUE_EXTRA.some((k) => !queueHeader.includes(k))) return stop("ЧЕРГА НЕ ГОТОВА", "аркуш «Нові товари» ще не переведено в режим черги (немає колонок «Рішення/Перевірка/Виявлено») — спершу перенесення NEW92");
   const queue = readSheet(queueValues, SHEET.queue);
   const deferred = book[SHEET.deferred] ? readSheet(book[SHEET.deferred], SHEET.deferred).rows : [];
   const frozenIds = new Set((book[SHEET.frozen] || []).slice(1).map((r) => mtText(r[0])).filter(Boolean));
 
   // 0. Паспорт: основний каталог не змінювали поза затвердженням/прив'язкою.
   const passport = readPassport(book[SHEET.passport]);
-  if (!passport) { out.abort = "немає «Паспорта каталогу» — запис заборонено"; return out; }
+  if (!passport) return stop("НЕМАЄ ПАСПОРТА", "немає «Паспорта каталогу» — запис заборонено");
   if (!samePassport(passport, approvalManifest(main.rows, groupsRows))) {
     const badSeals = main.rows.filter((r) => rowSeal(r) !== mtText(r[SEAL_COLUMN])).length;
-    out.abort = `основний каталог не відповідає паспорту (рядків ${main.rows.length}/${passport.count}, змінених печаток ${badSeals}) — зміни поза затвердженням; нічого не записано`;
-    return out;
+    return stop("ЗМІНИ ПОЗА ЗАТВЕРДЖЕННЯМ", `основний каталог не відповідає паспорту (рядків ${main.rows.length}/${passport.count}, змінених печаток ${badSeals}) — зміни поза затвердженням; нічого не записано`, badSeals || Math.abs(main.rows.length - passport.count), 0);
   }
   const ids = main.rows.map((r) => mtText(r["Offer ID"]));
   out.stats.before = { mainRows: main.rows.length, uniqueIds: new Set(ids).size, queueRows: queue.rows.length, passportCount: passport.count };
@@ -302,7 +303,7 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows }) 
   Object.assign(bind, applyBindings(bind, { mainRows, originals, stamp }));
   // Остаточний запобіжник: жоден ID постачальника не належить двом карткам.
   const supplierIds = [...mainRows, ...deferred].map((r) => mtText(r["ID постачальника"])).filter(Boolean);
-  if (new Set(supplierIds).size !== supplierIds.length) { out.abort = "після рішень один ID постачальника належав би двом карткам — нічого не записано"; return out; }
+  if (new Set(supplierIds).size !== supplierIds.length) return stop("КОНФЛІКТ ID ПОСТАЧАЛЬНИКА", "після рішень один ID постачальника належав би двом карткам — нічого не записано", supplierIds.length - new Set(supplierIds).size, 0);
 
   // 2. Ціни й наявність (точний порт mtPlan) — на картках уже з урахуванням прив'язок.
   const mainPlan = planRows(mainRows, parsed.offers, stamp, config.pricing);
@@ -319,9 +320,9 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows }) 
     becameAvailable, becameUnavailable, quantityChanged: diff("Кількість постачальника"), missingInFeed: missing,
   };
   // Захист від пошкодженого/помилкового фіду: масове зникнення або масова зміна наявності — нічого не пишемо.
-  if (missing > limit) { out.abort = `зникло ${missing} товарів основного каталогу (поріг ${limit}) — схоже на збій постачальника; нічого не записано`; return out; }
-  if (becameUnavailable > limit) { out.abort = `«немає в наявності» стало ${becameUnavailable} товарів (поріг ${limit}) — схоже на помилку у фіді постачальника; нічого не записано`; return out; }
-  if (becameAvailable > limit) { out.abort = `«в наявності» стало ${becameAvailable} товарів (поріг ${limit}) — схоже на помилку у фіді постачальника; нічого не записано`; return out; }
+  if (missing > limit) return stop("МАСОВЕ ЗНИКНЕННЯ", `зникло ${missing} товарів основного каталогу (поріг ${limit}) — схоже на збій постачальника; нічого не записано`, missing, limit);
+  if (becameUnavailable > limit) return stop("МАСОВА ЗМІНА НАЯВНОСТІ", `«немає в наявності» стало ${becameUnavailable} товарів (поріг ${limit}) — схоже на помилку у фіді постачальника; нічого не записано`, becameUnavailable, limit);
+  if (becameAvailable > limit) return stop("МАСОВА ЗМІНА НАЯВНОСТІ", `«в наявності» стало ${becameAvailable} товарів (поріг ${limit}) — схоже на помилку у фіді постачальника; нічого не записано`, becameAvailable, limit);
 
   // 3. Нові позиції: ID постачальника, якого немає в жодній картці/черзі/відкладених і не заморожений.
   const knownSupplierIds = new Set([...mainRows, ...queue.rows, ...deferred].map((r) => mtText(r["ID постачальника"])));

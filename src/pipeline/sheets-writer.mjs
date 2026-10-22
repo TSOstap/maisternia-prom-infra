@@ -18,6 +18,9 @@ const RETRY = new Set([429, 500, 502, 503, 504]);
 export const rangeA1 = (title, row, col, rows, cols) =>
   `'${title.replace(/'/g, "''")}'!${columnLetter(col)}${row}:${columnLetter(col + Math.max(1, cols) - 1)}${row + Math.max(1, rows) - 1}`;
 
+/** Режим запису значень: лише RAW — Google не розбирає формули й дати, «=…», «+», «-» зберігаються як текст. */
+export const VALUE_INPUT_OPTION = "RAW";
+
 export class GoogleSheetsWriter {
   constructor({ spreadsheetId, liveSpreadsheetId, getAccessToken, fetchImpl, sleep, now, maxRequests = 40, maxAttempts = 4, maxRequestsPerMinute = 50, maxChunkChars = 2_000_000 }) {
     if (!spreadsheetId || !/^[A-Za-z0-9_-]{20,}$/.test(spreadsheetId)) throw new Error("Невалідний ID тестової таблиці");
@@ -109,7 +112,7 @@ export class GoogleSheetsWriter {
       if (!batch.length) return;
       this.metrics.writes++;
       await this.#call("POST", "/values:batchUpdate", {
-        valueInputOption: "RAW",
+        valueInputOption: VALUE_INPUT_OPTION,
         data: batch.map((b) => ({ range: rangeA1(b.title, b.row, b.col, b.values.length, Math.max(...b.values.map((r) => r.length))), majorDimension: "ROWS", values: b.values })),
       });
       batch = []; size = 0;
@@ -128,7 +131,7 @@ export class GoogleSheetsWriter {
     const width = Math.max(...rows.map((r) => r.length));
     for (const part of this.#chunks(rows)) {
       await this.#call("POST", "/values/" + encodeURIComponent(rangeA1(title, 1, 1, 1, width)) + ":append", { majorDimension: "ROWS", values: part },
-        [["valueInputOption", "RAW"], ["insertDataOption", "INSERT_ROWS"]]);
+        [["valueInputOption", VALUE_INPUT_OPTION], ["insertDataOption", "INSERT_ROWS"]]);
     }
     this.metaCache = null;
   }
