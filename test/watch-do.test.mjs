@@ -224,3 +224,32 @@ test("звіт GitHub під час завантаження фіду онови
   for (let k = 0; k < 3; k++) await sim.tick();
   assert.equal(sim.calls.dispatch, d, "зайвого запуску оновлення немає");
 });
+
+test("тестовий режим: вхід за SHA-256 ключа (без секрету); адреса фіду в тілі /run — лише з прапорцем, лише Market Tools, не зберігається; звіт містить фактичні рядки SQLite", async () => {
+  const crypto = await import("node:crypto");
+  const { route } = await import("../workers/new-items-watch/src/router.mjs");
+  const { doNamespace } = await import("./helpers/do-sqlite.mjs");
+  const key = "test-key-" + "x".repeat(30);
+  const xml = generateSynthetic({ products: 300, queue: 0, deferred: 0, newOffers: 0, seed: 3, now: T0 }).supplierXml();
+  const d = doContext();
+  const env = { KEY_SHA256: crypto.createHash("sha256").update(key).digest("hex"), TEST_FEED_URL_IN_REQUEST: "yes", minOffers: "50" };
+  const seen = [];
+  const core = new WatchCore(d.ctx, env, { now: () => T0, fetch: async (u) => { seen.push(String(u)); return new Response(xml, { status: 200 }); }, log: () => {} });
+  env.WATCH_DO = doNamespace(() => core);
+  const call = (path, body, k = key) => route(new Request("https://w.example" + path, { method: path === "/status" ? "GET" : "POST", headers: { authorization: "Bearer " + k }, body: body ? JSON.stringify(body) : undefined }), env);
+  assert.equal((await call("/status", null, "wrong-key-xxxxxxxxxxxxxxxxxx")).status, 401);
+  const ids = [...xml.matchAll(/<offer id="(\d+)"/g)].map((m) => m[1]);
+  assert.equal((await call("/ack", { known: ids.slice(10), queue: {} })).status, 200);
+  let rep = await (await call("/run", { feedUrl: "https://evil.example/x" })).json();
+  assert.match(rep.error, /не Market Tools/);
+  assert.equal(seen.length, 0);
+  rep = await (await call("/run", { feedUrl: FEED })).json();
+  assert.equal(rep.offers, ids.length);
+  assert.equal(rep.candidates, 10);
+  assert.ok(rep.sql.rowsRead > 0 && rep.sql.rowsWritten > 0, JSON.stringify(rep.sql));
+  assert.ok(!JSON.stringify(d.db.prepare("SELECT * FROM meta").all()).includes("hash_tag"), "адреса фіду не збережена");
+  // Без прапорця адреса з тіла ігнорується
+  delete env.TEST_FEED_URL_IN_REQUEST;
+  rep = await (await call("/run", { feedUrl: FEED })).json();
+  assert.match(rep.skipped, /немає адреси фіду/);
+});

@@ -18,6 +18,15 @@ export function sameKey(a, b) {
   return d === 0 && x.length > 0;
 }
 export const authorized = (req, env) => Boolean(env.WATCH_KEY) && sameKey((req.headers.get("authorization") || "").replace(/^Bearer\s+/i, ""), env.WATCH_KEY);
+/** Ключ — секрет WATCH_KEY або (без секретів) SHA-256 ключа в змінній KEY_SHA256. */
+export async function isAuthorized(req, env) {
+  if (env.WATCH_KEY) return authorized(req, env);
+  if (!/^[0-9a-f]{64}$/.test(env.KEY_SHA256 || "")) return false;
+  const key = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
+  if (key.length < 20) return false;
+  const d = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(key)));
+  return sameKey([...d].map((x) => x.toString(16).padStart(2, "0")).join(""), env.KEY_SHA256);
+}
 export const profileOf = (env) => (env.FEED_PROFILE === "operational" ? "operational" : "medium");
 export function rulesOf(env) {
   const r = { ...INTAKE_RULES, githubBackoffMinutes: 15, leaseMinutes: 5, alarmMinutes: 5, alarmDedupeMinutes: 4 };

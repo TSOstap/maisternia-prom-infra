@@ -8,17 +8,17 @@ export function doContext() {
   const counters = { rowsRead: 0, rowsWritten: 0, statements: 0 };
   let alarm = null;
   let failNext = null; // імітація збою сховища: назва таблиці або "*"
-  const cursor = (rows) => ({ toArray: () => rows, one: () => rows[0], [Symbol.iterator]: () => rows[Symbol.iterator]() });
+  const cursor = (rows, read = 0, written = 0) => ({ toArray: () => rows, one: () => rows[0], rowsRead: read, rowsWritten: written, [Symbol.iterator]: () => rows[Symbol.iterator]() });
   const sql = {
     exec(q, ...b) {
       counters.statements++;
       if (failNext && (failNext === "*" || q.includes(failNext)) && !/^\s*SELECT/i.test(q)) { const f = failNext; failNext = null; throw new Error("імітований збій сховища: " + f); }
       const st = db.prepare(q);
-      if (/^\s*(SELECT|WITH)/i.test(q)) { const rows = st.all(...b); counters.rowsRead += Math.max(rows.length, 1); return cursor(rows); }
+      if (/^\s*(SELECT|WITH)/i.test(q)) { const rows = st.all(...b); const n = Math.max(rows.length, 1); counters.rowsRead += n; return cursor(rows, n, 0); }
       if (/^\s*CREATE/i.test(q)) { st.run(...b); return cursor([]); }
       const r = st.run(...b);
       counters.rowsWritten += Number(r.changes || 0);
-      return cursor([]);
+      return cursor([], 0, Number(r.changes || 0));
     },
   };
   const storage = {

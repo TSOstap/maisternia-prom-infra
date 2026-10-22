@@ -20,7 +20,10 @@ const EVENTS_DAYS = 30;
 export class SqlStateStore {
   constructor(storage) {
     this.storage = storage;
-    this.sql = storage.sql;
+    // Лічильник фактичних рядків (cursor.rowsRead / rowsWritten — за ними Cloudflare рахує квоту). Курсор споживаємо одразу.
+    const raw = storage.sql;
+    this.stats = { rowsRead: 0, rowsWritten: 0 };
+    this.sql = { exec: (q, ...b) => { const c = raw.exec(q, ...b); const rows = c.toArray(); this.stats.rowsRead += c.rowsRead ?? 0; this.stats.rowsWritten += c.rowsWritten ?? 0; return { toArray: () => rows }; } };
     for (const q of SCHEMA) this.sql.exec(q);
   }
   rows(q, ...b) { return this.sql.exec(q, ...b).toArray(); }

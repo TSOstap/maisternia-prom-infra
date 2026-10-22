@@ -33,7 +33,13 @@ export class WatchCore {
   }
 
   /** Один цикл спостереження. reason — «alarm» | «manual». */
-  async cycle(reason = "manual") {
+  async cycle(reason = "manual", opts = {}) {
+    const sql0 = { ...this.store.stats };
+    const withSql = (r) => ({ ...r, sql: { rowsRead: this.store.stats.rowsRead - sql0.rowsRead, rowsWritten: this.store.stats.rowsWritten - sql0.rowsWritten } });
+    return withSql(await this.cycleInner(reason, opts));
+  }
+
+  async cycleInner(reason, opts) {
     const env = this.env, rules = rulesOf(env), profile = profileOf(env);
     const now = this.now();
     // Оренда: не більше одного циклу одночасно (і після перезапуску DO — до спливання оренди).
@@ -46,7 +52,8 @@ export class WatchCore {
       if (pre.backoffUntil > now) return { skipped: "ПАУЗА: постачальник обмежив частоту", until: new Date(pre.backoffUntil).toISOString() };
       if (!pre.known) return { blocked: "НЕМАЄ БАЗИ ВІДОМИХ ID (чекаємо перший звіт GitHub)" };
 
-      const feed = await fetchFeed(env, profile, this.fetchImpl);
+      // Тестовий запуск: адреса фіду з тіла запиту (лише з прапорцем розгортання; ніде не зберігається).
+      const feed = await fetchFeed(opts.feedUrl ? { ...env, SUPPLIER_FEED_URL: opts.feedUrl } : env, profile, this.fetchImpl);
       const t = this.now();
       // --- від цього місця до запису — синхронно ---
       let state = this.store.load();
@@ -118,7 +125,11 @@ export class WatchCore {
       this.store.save(s, { ...applyAck(s, ack, now, rules), ackAppliedAt: now }, now);
       return json({ ok: true });
     }
-    if (req.method === "POST" && url.pathname === "/run") return json(await this.cycle("manual")); // ручний цикл (тест)
+    if (req.method === "POST" && url.pathname === "/run") { // ручний цикл (тест)
+      const body = await req.json().catch(() => ({}));
+      const feedUrl = this.env.TEST_FEED_URL_IN_REQUEST === "yes" && !this.env.SUPPLIER_FEED_URL && typeof body?.feedUrl === "string" ? body.feedUrl : undefined;
+      return json(await this.cycle("manual", { feedUrl }));
+    }
     if (req.method === "POST" && url.pathname === "/schedule") {
       const body = await req.json().catch(() => ({}));
       if (body.on === true) {
