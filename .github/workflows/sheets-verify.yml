@@ -2,6 +2,9 @@
 #   mode=sheets          — перевірка 5121 товарів двох фідів (C2-B);
 #   mode=supplier-shadow — shadow-звірка з живим фідом постачальника (C2-C): паритет LIVE↔нова система на тому
 #                          самому XML, порівняння з таблицею з урахуванням часу mtUpdate, сценарії D1/D1b. Без запису.
+#   mode=shadow-publish  — C3-2: реальний ОСНОВНИЙ YML новим конвеєром, байт-у-байт проти LIVE (VM) на тому самому
+#                          знімку, перевірка цін/знижок/наявності; лише після PASS — тіньова публікація в Cloudflare
+#                          Workers Free (окремий ключ MM_SHADOW_FEED_KEY, без Prom). Таблицю й чинні YML не змінює.
 # Обидва режими в ОДНОМУ файлі: умова WIF у Google прив'язана саме до цього workflow (див. C2B-PLAN.md).
 # Авторизація: Workload Identity Federation (OIDC) → імперсонація service account (роль «Читач» лише на цю таблицю).
 # JSON-ключів немає. Токен живе 10 хв, маскується action-ом. Товарні дані не потрапляють у логи/summary/artifacts.
@@ -12,9 +15,9 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "sheets — перевірка таблиці (C2-B); supplier-shadow — звірка з живим фідом постачальника (C2-C)"
+        description: "sheets — перевірка таблиці (C2-B); supplier-shadow — звірка з постачальником (C2-C); shadow-publish — тіньовий реальний YML у Cloudflare (C3-2)"
         type: choice
-        options: [sheets, supplier-shadow]
+        options: [sheets, supplier-shadow, shadow-publish]
         default: sheets
 permissions:
   contents: read
@@ -26,7 +29,7 @@ jobs:
   verify:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15   # shadow-publish: + npm ci wrangler, завантаження ~50 МБ і readback
     steps:
       - name: Перевірка налаштувань (без звернень до Google)
         env:
@@ -34,12 +37,14 @@ jobs:
           SA: ${{ vars.GCP_SA_EMAIL }}
           SHEET: ${{ secrets.MM_SHEET_ID }}
           SUPPLIER_SET: ${{ secrets.MM_SUPPLIER_FEED_URL != '' }}
+          SHADOW_SET: ${{ secrets.MM_SHADOW_FEED_KEY != '' && secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.MM_FEED_KEY != '' }}
           MODE: ${{ inputs.mode }}
         run: |
           test -n "$WIF" || { echo "Не задано змінну репозиторію GCP_WIF_PROVIDER"; exit 2; }
           test -n "$SA" || { echo "Не задано змінну репозиторію GCP_SA_EMAIL"; exit 2; }
           test -n "$SHEET" || { echo "Не задано секрет MM_SHEET_ID"; exit 2; }
-          if [ "$MODE" = "supplier-shadow" ] && [ "$SUPPLIER_SET" != "true" ]; then echo "Не задано секрет MM_SUPPLIER_FEED_URL"; exit 2; fi
+          if [ "$MODE" != "sheets" ] && [ "$SUPPLIER_SET" != "true" ]; then echo "Не задано секрет MM_SUPPLIER_FEED_URL"; exit 2; fi
+          if [ "$MODE" = "shadow-publish" ] && [ "$SHADOW_SET" != "true" ]; then echo "Не задано секрети Cloudflare / MM_SHADOW_FEED_KEY"; exit 2; fi
           echo "Режим: $MODE"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -71,3 +76,21 @@ jobs:
           GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
           MM_SUPPLIER_FEED_URL: ${{ secrets.MM_SUPPLIER_FEED_URL }}
         run: node tools/supplier-shadow.mjs --source=api --supplier=env --scenarios --summary="$GITHUB_STEP_SUMMARY" --tmp="$RUNNER_TEMP"
+      - name: wrangler для тіньової публікації (версія закріплена lockfile)
+        if: inputs.mode == 'shadow-publish'
+        working-directory: poc/c3-assets
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: npm ci --no-audit --no-fund
+      - name: Тіньовий реальний YML → перевірки → Cloudflare (лише агрегати в лог; захист від витоку)
+        if: inputs.mode == 'shadow-publish'
+        env:
+          MM_SHEET_ID: ${{ secrets.MM_SHEET_ID }}
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          MM_SUPPLIER_FEED_URL: ${{ secrets.MM_SUPPLIER_FEED_URL }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          MM_SHADOW_FEED_KEY: ${{ secrets.MM_SHADOW_FEED_KEY }}
+          MM_FEED_KEY: ${{ secrets.MM_FEED_KEY }}
+          WRANGLER_SEND_METRICS: "false"
+        run: node tools/shadow-publish.mjs --source=api --supplier=env --publish --summary="$GITHUB_STEP_SUMMARY" --tmp="$RUNNER_TEMP"

@@ -21,9 +21,9 @@ function yml(dir, n, tag) {
   fs.writeFileSync(f, `<?xml version="1.0" encoding="UTF-8"?>\n<yml_catalog date="2026-10-22"><shop><offers>${offers}</offers></shop></yml_catalog>\n`);
   return f;
 }
-function version(dir, label, n = 40) {
+function version(dir, label, n = 40, key = KEY) {
   const out = path.join(dir, "b-" + label);
-  buildVersion({ src: yml(dir, n, label), out, version: label, partBytes: 700, keySha256: sha(KEY), workerMain: WORKER_MAIN, workerName: "mm-feed-poc", offers: n });
+  buildVersion({ src: yml(dir, n, label), out, version: label, partBytes: 700, keySha256: sha(key), workerMain: WORKER_MAIN, workerName: "mm-feed-poc", offers: n });
   return out;
 }
 
@@ -151,4 +151,22 @@ test("помилка деплою — відкат на попередню і п
   assert.equal(r.state, "ROLLED_BACK");
   assert.equal(r.failure, "DEPLOY_FAILED");
   assert.equal(cloud.active, prev);
+});
+
+test("тіньова версія з НОВИМ ключем поверх синтетичної: відкат перевіряється ключем попередньої версії", async () => {
+  const OLD = "synthetic-key-NOT-REAL-zzzzzzzzzzzzzzzzzzz";
+  const d = tmp();
+  const cloud = fakeCloud();
+  const prev = cloud.seed(version(d, "synthetic", 40, OLD));
+  const bad = version(d, "shadow1");
+  corruptBuild(bad, "byte");
+  const r = await run(cloud, bad, "shadow1", { bypassGate: true, previousKeys: [OLD] });
+  assert.equal(r.previous.version, "synthetic");
+  assert.equal(r.state, "ROLLED_BACK");
+  assert.equal(r.steps.rollback.readback.match, true);
+  assert.equal(cloud.active, prev);
+  const ok = await run(cloud, version(d, "shadow2"), "shadow2", { previousKeys: [OLD] });
+  assert.equal(ok.state, "PUBLISHED");
+  const old = await cloud.fetch(BASE + "/feeds/main.xml?key=" + OLD);
+  assert.equal(old.status, 404, "старий (синтетичний) ключ більше не відкриває фід");
 });

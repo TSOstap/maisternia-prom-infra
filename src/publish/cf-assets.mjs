@@ -117,12 +117,13 @@ export async function waitForVersion(fetchImpl, base, key, version, { limitMs = 
 /**
  * Повний цикл публікації вже зібраної версії.
  *  deps: { wrangler(args) → {code,out}, fetch, log(event) }
- *  opts: { buildDir, label, base, key, workerName, parallel=3, bypassGate=false (лише синтетичні тести) }
+ *  opts: { buildDir, label, base, key, workerName, parallel=3, bypassGate=false (лише синтетичні тести),
+ *          previousKeys=[] — ключі, якими може читатися попередня версія (напр. синтетична з іншим ключем) }
  * Повертає { state, ... }: PUBLISHED | GATE_FAILED | UPLOAD_FAILED | DEPLOY_FAILED+ROLLED_BACK | READBACK_FAILED+ROLLED_BACK | CRITICAL
  */
 export async function publishVersion(deps, opts) {
   const { wrangler, fetch: fetchImpl, log = () => {} } = deps;
-  const { buildDir, label, base, key, workerName, parallel = 3, bypassGate = false, waitOpts = {} } = opts;
+  const { buildDir, label, base, key, workerName, parallel = 3, bypassGate = false, waitOpts = {}, previousKeys = [] } = opts;
   const cfg = path.join(buildDir, "wrangler.json");
   const res = { label, steps: {} };
 
@@ -133,7 +134,12 @@ export async function publishVersion(deps, opts) {
   const manifest = JSON.parse(fs.readFileSync(path.join(buildDir, "public", "_feed", "main", "manifest.json"), "utf8"));
 
   // Що зараз активне — щоб знати, куди відкочуватись.
-  const before = await feedStatus(fetchImpl, base, key);
+  // Попередня версія могла мати інший ключ доступу (напр. синтетична перед тіньовою) — шукаємо, яким вона читається.
+  let before = { status: 0 }, prevKey = key;
+  for (const k of [key, ...previousKeys]) {
+    before = await feedStatus(fetchImpl, base, k).catch(() => ({ status: 0 }));
+    if (before.status === 200) { prevKey = k; break; }
+  }
   const dep = await wrangler(["deployments", "status", "--name", workerName, "--json"]);
   let previousId = null;
   try { previousId = JSON.parse(dep.out.slice(dep.out.indexOf("{"))).versions?.[0]?.version_id || null; } catch { /* немає попереднього деплою */ }
@@ -171,10 +177,10 @@ export async function publishVersion(deps, opts) {
   // Відкат на версію, що була активна до запуску.
   if (!previousId) return { ...res, state: "CRITICAL", failure, reason: "немає попередньої версії для відкату" };
   const rb = await wrangler(["rollback", previousId, "--name", workerName, "--yes", "--message", `авто-відкат: ${failure} ${label}`]);
-  const back = rb.code === 0 ? await waitForVersion(fetchImpl, base, key, res.previous.version, waitOpts) : { ok: false };
+  const back = rb.code === 0 ? await waitForVersion(fetchImpl, base, prevKey, res.previous.version, waitOpts) : { ok: false };
   let check = null;
   if (back.ok) {
-    const r = await readbackFeed(fetchImpl, base, key);
+    const r = await readbackFeed(fetchImpl, base, prevKey);
     check = { status: r.status, match: r.status === 200 && r.sha256 === res.previous.sha256, version: r.version, ms: r.ms };
   }
   res.steps.rollback = { code: rb.code, ms: rb.ms, switch: back, readback: check };

@@ -51,7 +51,7 @@ function wrangler(args) {
   const t = Date.now();
   const r = spawnSync(process.execPath, [WRANGLER, ...args], {
     cwd: POC, encoding: "utf8", maxBuffer: 1 << 26,
-    env: { ...process.env, CLOUDFLARE_API_TOKEN: C.CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID: C.CLOUDFLARE_ACCOUNT_ID, WRANGLER_SEND_METRICS: "false", CI: "1", NO_COLOR: "1", FORCE_COLOR: "0" },
+    env: { ...Object.fromEntries(Object.entries(process.env).filter(([k]) => !/^(MM_|GOOGLE_|GITHUB_TOKEN)/.test(k))), CLOUDFLARE_API_TOKEN: C.CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID: C.CLOUDFLARE_ACCOUNT_ID, WRANGLER_SEND_METRICS: "false", CI: "1", NO_COLOR: "1", FORCE_COLOR: "0" },
   });
   const out = (r.stdout || "") + (r.stderr || "");
   if (r.status !== 0) {
@@ -132,6 +132,8 @@ try {
 
   // Захист від масового зникнення: нова кількість offer не менша за 50% активної версії.
   const live = await feedStatus(fetch, base, C.MM_FEED_KEY).catch(() => ({}));
+  // Синтетика не перезаписує тіньовий (реальний) фід: активна версія має читатися синтетичним ключем.
+  if (live.status === 404) throw new Error("активна версія Worker не синтетична (інший ключ доступу) — синтетичну публікацію зупинено, щоб не замінити тіньовий фід");
   if (live.offers && yml.count < live.offers * 0.5) throw new Error(`offer ${yml.count} < 50% активної версії (${live.offers}) — підозра на збій, публікацію зупинено`);
 
   const out = path.join(work, "build");
