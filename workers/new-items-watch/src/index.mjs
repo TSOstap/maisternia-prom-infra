@@ -17,6 +17,8 @@ export const ACK_KEY = "ack:latest";
 const MAX_FEED_BYTES = 40_000_000;
 const MAX_ACK_BYTES = 2_000_000;
 const MIN = 60_000;
+/** Адреса фіду — лише HTTPS Market Tools (як config.supplier.allowedUrlPattern): секретне посилання не піде на сторонній хост. */
+export const FEED_URL_RE = /^https:\/\/market-tools\.com\.ua\//i;
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 
@@ -45,6 +47,7 @@ async function dispatchGithub(env, fetchImpl) {
     method: "POST",
     headers: { authorization: `Bearer ${env.GITHUB_TOKEN}`, accept: "application/vnd.github+json", "x-github-api-version": "2022-11-28", "user-agent": "mm-new-items-watch", "content-type": "application/json" },
     body: JSON.stringify({ ref: env.GITHUB_REF || "main", inputs: { mode: env.GITHUB_MODE || "copy-intake" } }),
+    redirect: "manual", // переадресація — невдача: токен GitHub не піде на іншу адресу
   });
   return res.ok ? { ok: true } : { ok: false, reason: "GitHub HTTP " + res.status };
 }
@@ -64,6 +67,7 @@ export async function runWatch(env, now = Date.now(), fetchImpl = fetch) {
   const finish = async (report) => { if (dirty) await save(state); return report; };
   if (state.backoffUntil > now) return finish({ skipped: "ПАУЗА: постачальник обмежив частоту", until: new Date(state.backoffUntil).toISOString() });
   if (!env.SUPPLIER_FEED_URL) return finish({ skipped: "немає адреси фіду (секрет SUPPLIER_FEED_URL)" });
+  if (!FEED_URL_RE.test(env.SUPPLIER_FEED_URL)) return finish({ error: "адреса фіду не Market Tools (HTTPS) — запит не надіслано" });
 
   let text, httpStatus = 0;
   try {

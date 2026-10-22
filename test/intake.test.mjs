@@ -240,3 +240,46 @@ test("Worker: fetch фіду сумісний із Cloudflare (redirect «manual
   assert.deepEqual(seen, ["manual"]);
   assert.match(rep.error, /переадресація заборонена, HTTP 302/);
 });
+
+test("перенаправлення: 301/302/307/308 від фіду — помилка, за Location НЕ переходимо (один запит); сторонній хост фіду — запит не надсилається; GitHub API — redirect «manual», 3xx = невдача", async () => {
+  for (const status of [301, 302, 307, 308]) {
+    const sim = new WatchSim();
+    await sim.start();
+    const calls = [];
+    const rep = await runWatch(sim.env, sim.now + 5 * MIN, async (url, init) => { calls.push({ url: String(url), redirect: init?.redirect }); return new Response("", { status, headers: { location: "https://attacker.example/steal" } }); });
+    assert.equal(calls.length, 1, "лише один запит — без переходу за Location");
+    assert.equal(calls[0].redirect, "manual");
+    assert.match(rep.error, new RegExp("переадресація заборонена, HTTP " + status));
+  }
+  const sim = new WatchSim();
+  await sim.start();
+  let calls = 0;
+  for (const bad of ["http://market-tools.com.ua/products_feed.xml?x=1", "https://market-tools.com.ua.evil.example/x", "https://evil.example/?u=https://market-tools.com.ua/"]) {
+    const rep = await runWatch({ ...sim.env, SUPPLIER_FEED_URL: bad }, sim.now + 5 * MIN, async () => { calls++; return new Response(""); });
+    assert.match(rep.error, /не Market Tools/);
+  }
+  assert.equal(calls, 0, "на сторонні адреси нічого не надсилається");
+  // GitHub: 3xx — запуск не зараховано, повтор пізніше; redirect «manual»
+  const g = new WatchSim();
+  await g.start();
+  g.setOffer(fullOffer("2970000099"));
+  const seen = [];
+  const real = g.fetchImpl;
+  g.fetchImpl = async (url, init) => { if (String(url).startsWith("https://api.github.com/")) { seen.push(init.redirect); return new Response("", { status: 302, headers: { location: "https://attacker.example/" } }); } return real(url, init); };
+  let rep;
+  for (let k = 0; k < 3; k++) rep = await g.tick();
+  assert.deepEqual([...new Set(seen)], ["manual"]);
+  assert.match(rep.blocked, /GitHub HTTP 302/);
+  assert.equal((await g.status()).dispatch.count, 0, "невдалий запуск не зараховано");
+});
+
+test("вимірювальний Worker: лише за ключем, лише адреса Market Tools", async () => {
+  const { default: m } = await import("../workers/new-items-watch/src/measure.mjs");
+  const crypto = await import("node:crypto");
+  const key = "k".repeat(30);
+  const env = { KEY_SHA256: crypto.createHash("sha256").update(key).digest("hex") };
+  const post = (body, k = key) => m.fetch(new Request("https://x/measure", { method: "POST", headers: { authorization: "Bearer " + k }, body: JSON.stringify(body) }), env);
+  assert.equal((await post({ feedUrl: "https://market-tools.com.ua/x", known: ["1"] }, "wrong")).status, 401);
+  assert.equal((await post({ feedUrl: "https://evil.example/x", known: ["1"] })).status, 400);
+  assert.equal((await m.fetch(new Request("https://x/other"), env)).status, 404);
+});
