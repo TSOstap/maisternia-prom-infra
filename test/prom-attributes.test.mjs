@@ -114,16 +114,13 @@ test("назва атрибута з одиницею: «Мощность дви
   assert.equal(mapParam(brush, P("Мощность двигателя", "680", "В")).ok, false, "напруга — не потужність");
 });
 
-test("текстове поле: число з одиницею (реальний випадок «Марка двигуна: 19.0 HP») не підставляється; справжня марка — так", () => {
+test("достовірність не оцінюється (власник): «Марка двигуна: 19.0 HP» передається з тим значенням, яке надав постачальник", () => {
   const brand = attrOf(GEN, "Марка двигуна"); // free
-  assert.match(validateValue(brand, "19.0 HP", "").reason, /число з одиницею в текстовому полі/);
-  assert.match(validateValue(brand, "7 к.с.", "").reason, /число з одиницею/);
-  assert.deepEqual(validateValue(brand, "168F", ""), { value: "168F", unit: "" }, "модель двигуна з літерою — не одиниця");
-  assert.deepEqual(validateValue(brand, "Loncin G200F", ""), { value: "Loncin G200F", unit: "" });
-  // Значення лишається в сирих даних / описі, у поле Prom не потрапляє
+  assert.deepEqual(validateValue(brand, "19.0 HP", ""), { value: "19.0 HP", unit: "" });
+  assert.deepEqual(validateValue(brand, "168F", ""), { value: "168F", unit: "" });
   const r = buildCharacteristics({ schema: S(GEN), categoryId: GEN, rawParams: [P("Марка двигателя", "19.0 HP")], current: [], mode: "queue" });
-  assert.deepEqual(r.params, []);
-  assert.match(r.rawOnly[0].reason, /число з одиницею.*назва збігається з атрибутом категорії «Марка двигуна» — користувацькою не передається/);
+  assert.deepEqual(r.params, [P("Марка двигуна", "19.0 HP")], "офіційна назва поля, значення постачальника без змін");
+  assert.equal(r.provenance.items[0].a, "1079");
 });
 
 test("потужність бензинового двигуна НЕ потрапляє в «Споживана потужність»: лише точна назва атрибута цієї категорії й одиниця", () => {
@@ -139,24 +136,29 @@ test("потужність бензинового двигуна НЕ потра
   assert.equal(mapParam(S(GRIND), P("Потужність двигуна", "3", "к. с.")).ok, false, "атрибута іншої категорії не підставляємо");
 });
 
-test("основний каталог, перше застосування схеми: перекладені вручну назви підтверджено як XML; невизначене збережено й позначено; нове підтверджене поле додано", () => {
+test("основний каталог, перше застосування схеми: перекладені вручну назви підтверджено як XML; невизначене збережено; нове поле й користувацькі (оригінальні значення) додано", () => {
   const raw = [P("Питание", "Сеть 220В"), P("Гарантия", "36 мес."), P("Вес", "2,2", "кг"), P("Состояние", "Новый"), P("Колір", "синій")];
   const current = [P("Гарантия", "36 мес."), P("Живлення", "Мережа 220В"), P("Тип шліфмашини", "Болгарка")]; // підготовлено раніше (CODEX/CLAUDE)
   const r = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: raw, current, mode: "main" });
-  assert.deepEqual(r.params, [P("Гарантия", "36 мес."), P("Живлення", "Мережа 220В"), P("Тип шліфмашини", "Болгарка"), P("Вага", "2.2", "кг")],
-    "незіставлені сирі («Состояние», «Колір») не додаються, поки є запис невизначеного походження — щоб не задублювати підготовлене");
-  const by = Object.fromEntries(r.provenance.items.map((i) => [i.k.split("\u0001")[0], i.s]));
-  assert.equal(by["Живлення"], SRC.XML);
-  assert.equal(by["Гарантия"], SRC.RAW);
-  assert.equal(by["Тип шліфмашини"], SRC.UNKNOWN, "походження не визначено — збережено");
-  assert.equal(by["Вага"], SRC.XML);
+  assert.deepEqual(r.params, [P("Гарантия", "36 мес."), P("Живлення", "Мережа 220В"), P("Тип шліфмашини", "Болгарка"), P("Вага", "2.2", "кг"), P("Стан", "Новый"), P("Колір", "синій")],
+    "«Новый» не варіант схеми → користувацька з офіційною назвою «Стан» і оригінальним значенням; «Колір» — атрибута немає → користувацька");
+  const by = Object.fromEntries(r.provenance.items.map((i) => [i.k.split("\u0001")[0], i]));
+  assert.equal(by["Живлення"].s, SRC.XML);
+  assert.equal(by["Гарантия"].s, SRC.RAW);
+  assert.equal(by["Тип шліфмашини"].s, SRC.UNKNOWN, "походження не визначено — збережено");
+  assert.equal(by["Вага"].s, SRC.XML);
+  assert.equal(by["Стан"].a, "", "користувацька, не поле категорії");
   assert.match(r.notes.join(" "), /походження 1 характеристик не визначено/);
   // Постачальник змінив живлення → підтверджене поле оновлено автоматично; невизначене — без змін
-  const r2 = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [P("Питание", "Аккумулятор"), P("Гарантия", "24 мес."), P("Вес", "2,2", "кг"), P("Состояние", "Новый"), P("Колір", "синій")], current: r.params, provenance: r.provenance, mode: "main" });
-  assert.deepEqual(r2.params, [P("Гарантия", "24 мес."), P("Живлення", "Акумулятор"), P("Тип шліфмашини", "Болгарка"), P("Вага", "2.2", "кг")]);
+  const raw2 = [P("Питание", "Аккумулятор"), P("Гарантия", "24 мес."), P("Вес", "2,2", "кг"), P("Состояние", "Новый"), P("Колір", "синій")];
+  const r2 = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: raw2, current: r.params, provenance: r.provenance, mode: "main" });
+  assert.deepEqual(r2.params, [P("Гарантия", "24 мес."), P("Живлення", "Акумулятор"), P("Тип шліфмашини", "Болгарка"), P("Вага", "2.2", "кг"), P("Стан", "Новый"), P("Колір", "синій")]);
   // Ідемпотентність
-  const r3 = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [P("Питание", "Аккумулятор"), P("Гарантия", "24 мес."), P("Вес", "2,2", "кг"), P("Состояние", "Новый"), P("Колір", "синій")], current: r2.params, provenance: r2.provenance, mode: "main" });
+  const r3 = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: raw2, current: r2.params, provenance: r2.provenance, mode: "main" });
   assert.equal(r3.changed, false);
+  // Власник прибрав користувацьку — не повертається
+  const r4 = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: raw2, current: r2.params.filter((p) => p.name !== "Колір"), provenance: r2.provenance, mode: "main" });
+  assert.ok(!r4.params.some((p) => p.name === "Колір"));
 });
 
 test("ручні виправлення мають перевагу: правку власника не перезаписано (конфлікт — у примітці); видалене власником поле не повертається", () => {
@@ -190,28 +192,32 @@ test("без схеми: основний каталог — підготовл�
   assert.deepEqual(q3.params, [P("Живлення", "Акумулятор")], "ручну правку збережено, сире не додано поверх");
 });
 
-test("опис постачальника (приклад власника): переноситься лише підтверджене схемою; решта лишається в описі; конфлікт з XML — береться XML", () => {
+test("опис постачальника (приклад власника): поле категорії — за схемою; решта — користувацькі з оригінальними значеннями; конфлікт з XML — XML; очищення лише полів", () => {
   const desc = "<p>Виробник: Zegor<br>Напруга: 220 В<br>Розмір: 56 × 60 см<br>Має тепло нагрів: так</p><p>Опис товару.</p>";
   assert.deepEqual(descriptionPairs(desc).map((p) => p.key), ["Виробник", "Напруга", "Розмір", "Має тепло нагрів"]);
   const r = buildCharacteristics({ schema: S(GEN), categoryId: GEN, rawParams: [], descUa: desc, current: [], mode: "queue" });
-  assert.deepEqual(r.params, [P("Напруга", "220", "В")]);
-  assert.equal(r.provenance.items[0].s, SRC.DESC);
+  assert.deepEqual(r.params, [P("Напруга", "220", "В"), P("Виробник", "Zegor"), P("Розмір", "56 × 60 см"), P("Має тепло нагрів", "так")]);
+  assert.ok(r.provenance.items.every((i) => i.s === SRC.DESC));
+  assert.deepEqual(r.provenance.items.map((i) => Boolean(i.a)), [true, false, false, false]);
   const cleaned = cleanDescription(desc, r.descRanges.ua);
-  assert.equal(cleaned, "<p>Виробник: Zegor<br>Розмір: 56 × 60 см<br>Має тепло нагрів: так</p><p>Опис товару.</p>", "прибрано лише перенесений фрагмент");
-  // Таблиця з двома клітинками
-  const table = "<table><tr><td>Напруга</td><td>230 В</td></tr><tr><td>Має тепло нагрів</td><td>так</td></tr></table><p>Текст</p>";
+  assert.equal(cleaned, "<p>Виробник: Zegor<br>Розмір: 56 × 60 см<br>Має тепло нагрів: так</p><p>Опис товару.</p>", "прибрано лише перенесене в поле категорії; користувацькі лишаються в описі");
+  // Таблиця з двома клітинками; рядок-заголовок «Характеристика | Значення» — не характеристика
+  const table = "<table><tr><th>Характеристика</th><th>Значення</th></tr><tr><td>Напруга</td><td>230 В</td></tr><tr><td>Має тепло нагрів</td><td>так</td></tr></table><p>Текст</p>";
   const t = buildCharacteristics({ schema: S(GEN), categoryId: GEN, rawParams: [], descUa: table, current: [], mode: "queue" });
-  assert.deepEqual(t.params, [P("Напруга", "230", "В")]);
-  assert.equal(cleanDescription(table, t.descRanges.ua), "<table><tr><td>Має тепло нагрів</td><td>так</td></tr></table><p>Текст</p>");
+  assert.deepEqual(t.params, [P("Напруга", "230", "В"), P("Має тепло нагрів", "так")]);
   // XML і опис суперечать — XML; фрагмент опису не прибирається
   const c = buildCharacteristics({ schema: S(GEN), categoryId: GEN, rawParams: [P("Напряжение", "230", "В")], descUa: desc, current: [], mode: "queue" });
-  assert.deepEqual(c.params, [P("Напруга", "230", "В")]);
+  assert.deepEqual(c.params[0], P("Напруга", "230", "В"));
   assert.match(c.conflicts.join(" "), /опис суперечить XML для «Напруга» — взято XML/);
   assert.deepEqual(c.descRanges.ua, []);
-  // Два різні значення в описі — неоднозначно, поле не заповнюється
+  // Два різні значення в описі — поле не заповнюється, ПОТРЕБУЄ ПЕРЕВІРКИ з обома оригіналами
   const d = buildCharacteristics({ schema: S(GEN), categoryId: GEN, rawParams: [], descUa: "<p>Напруга: 220 В</p><p>Напруга: 380 В</p>", current: [], mode: "queue" });
   assert.deepEqual(d.params, []);
   assert.deepEqual(d.ambiguous, ["2474"]);
+  assert.deepEqual(d.needsReview[0].values.map((v) => v.value), ["Напруга: 220 В", "Напруга: 380 В"]);
+  // HTML-сутності — як їх бачить покупець («20&ndash;60 мм» → «20–60 мм»), без інших змін значення
+  const e = buildCharacteristics({ schema: S(GEN), categoryId: GEN, rawParams: [], descUa: "<p>Діапазон: 20&ndash;60 мм</p><p>Об&rsquo;єм бака для води: 5 л</p>", current: [], mode: "queue" });
+  assert.deepEqual(e.params, [P("Діапазон", "20–60 мм"), P("Об’єм бака для води", "5 л")]);
 });
 
 test("зміна категорії: автоматичні поля перебудовано за схемою НОВОЇ категорії; невідповідні прибрано; ручні збережено з позначкою", () => {
@@ -316,24 +322,63 @@ test("«Гарантия» → «Гарантійний термін» (пого
   for (const [id, s] of catalog.schemas) if (!s.attributes.some((a) => a.nameUK === "Гарантійний термін")) assert.equal(catalog.mappings.get(id)?.synonyms?.["гарантия"], undefined, id);
 });
 
-test("користувацькі характеристики: без атрибута категорії — дослівно; назва атрибута категорії з неприйнятним значенням — лише в сирих даних і звіті; ліміт 100", () => {
+test("користувацькі характеристики: без поля категорії — дослівно; значення, що не проходить поле, — користувацькою з офіційною назвою (без змін); без дублів; ліміти 100 / 70", () => {
   const raw = [P("Тип запуску", "Електростартер, Ручний"), P("Ступені висоти стрижки", "5"), P("Вес", "2", "кг")];
   const mower = S("1250308");
   const r = buildCharacteristics({ schema: mower, categoryId: "1250308", rawParams: raw, current: [], mode: "queue" });
-  assert.deepEqual(r.params, [P("Вага", "2", "кг"), P("Ступені висоти стрижки", "5")]);
-  assert.equal(r.provenance.items[1].a, "", "користувацька — без атрибута Prom");
-  assert.equal(r.rawOnly.length, 1);
-  assert.match(r.rawOnly[0].reason, /назва збігається з атрибутом категорії «Тип запуску» — користувацькою не передається/);
-  // Наявний підготовлений запис із такою назвою не прибирається — лише позначається
-  const kept = buildCharacteristics({ schema: mower, categoryId: "1250308", rawParams: raw, current: [P("Тип запуску", "Електростартер, Ручний")], mode: "main" });
-  assert.ok(kept.params.some((p) => p.name === "Тип запуску"));
-  assert.deepEqual(kept.customAttrNames, ["Тип запуску: Електростартер, Ручний"]);
-  // Понад 100 — не додається, перелік в overflow
-  const many = Array.from({ length: 105 }, (_, i) => P(`Параметр ${i}`, String(i)));
+  assert.deepEqual(r.params, [P("Вага", "2", "кг"), P("Тип запуску", "Електростартер, Ручний"), P("Ступені висоти стрижки", "5")]);
+  assert.deepEqual(r.provenance.items.map((i) => i.a), ["5", "", ""]);
+  assert.deepEqual(r.rawOnly, []);
+  assert.deepEqual(r.customAttrNames, ["Тип запуску: Електростартер, Ручний"], "позначено: за документацією Prom імпортується як користувацька");
+  // Поле категорії вже заповнене (з іншого джерела) — користувацька з тим самим атрибутом не дублюється
+  const f = buildCharacteristics({ schema: mower, categoryId: "1250308", rawParams: [P("Вес", "2", "кг"), P("Вага", "2 кг.")], current: [], mode: "queue" });
+  assert.deepEqual(f.params, [P("Вага", "2", "кг")]);
+  // Понад 70 користувацьких — не додається, причина в overflow / rawOnly; загальний ліміт 100
+  const many = Array.from({ length: 75 }, (_, i) => P(`Параметр ${i}`, String(i)));
   const o = buildCharacteristics({ schema: mower, categoryId: "1250308", rawParams: many, current: [], mode: "queue" });
-  assert.equal(o.params.length, 100);
+  assert.equal(o.params.length, 70);
   assert.equal(o.overflow.length, 5);
-  assert.equal(o.rawOnly.length, 5);
+  assert.match(o.rawOnly[0].reason, /ліміт Prom 70 користувацьких/);
+  const many2 = Array.from({ length: 105 }, (_, i) => P(`Параметр ${i}`, String(i)));
+  const prepared = buildCharacteristics({ schema: mower, categoryId: "1250308", rawParams: [], current: many2, mode: "main" });
+  assert.equal(prepared.params.length, 100, "понад 100 — не передається");
+});
+
+test("UA/RU (власник): та сама характеристика за підтвердженою відповідністю назв — одна з українською назвою; різні значення — ПОТРЕБУЄ ПЕРЕВІРКИ з обома оригіналами", () => {
+  const names = catalog.names;
+  // Підтверджені пари назв — зі схем Prom (nameUK / nameRU)
+  assert.equal(names.name.get("тип двигателя"), "Тип двигуна");
+  // Однакові значення: одна характеристика, українська назва
+  const same = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [], descUa: "<p>Тип двигуна: безщітковий</p><p>Діаметр: 125 мм</p>", descRu: "<p>Тип двигателя: бесщеточный</p><p>Диаметр: 125 мм</p>", current: [], names, mode: "queue" });
+  assert.deepEqual(same.params, [P("Тип двигуна", "Безщітковий"), P("Діаметр", "125 мм")]);
+  assert.equal(same.uaRuMerged, 2, "поле категорії і користувацька — кожна по одній з UA і RU");
+  // Різні значення — нічого не вибираємо: не передано, обидва оригінали для порівняння
+  const diff = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [], descUa: "<p>Тип запуску: ручний</p><p>Режим: 2</p>", descRu: "<p>Тип запуска: ручной</p><p>Режим: 3</p>", current: [], names, mode: "queue" });
+  assert.ok(!diff.params.some((p) => p.name === "Режим"));
+  const rv = diff.needsReview.find((x) => x.name === "Режим");
+  assert.deepEqual(rv.values.map((v) => v.value), ["Режим: 2", "Режим: 3"]);
+  assert.match(rv.reason, /UA і RU значення відрізняються/);
+  // RU-пара без UA-відповідника при наявному UA-описі — окремо не додається (ruDup, якщо в UA те саме значення)
+  const ru = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [], descUa: "<p>Країна виробництва: Китай</p><p>Акумулятор у комплекті: немає</p>", descRu: "<p>Страна производства: Китай</p><p>Аккумулятор в комплекте: нет</p><p>Длина реза: 700 мм</p>", current: [], names, mode: "queue" });
+  assert.deepEqual(ru.params, [P("Країна виробництва", "Китай"), P("Акумулятор у комплекті", "немає")]);
+  assert.equal(ru.ruDup.length, 2);
+  assert.match(ru.needsReview.find((x) => x.name === "Длина реза").reason, /є лише в RU-описі/);
+  // UA-опису немає — RU-пара єдине джерело: передається (назва — підтверджена українська, значення без перекладу)
+  const only = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [P("Режимы запуска", "Ручной")], descRu: "<p>Аккумулятор в комплекте: нет</p><p>Цвет корпуса: синий</p><p>Длина реза: 700 мм</p>", current: [], names, mode: "queue" });
+  assert.deepEqual(only.params, [P("Режими запуску", "Ручной"), P("Акумулятор в комплекті", "нет"), P("Колір корпусу", "синий"), P("Длина реза", "700 мм")],
+    "підтверджена UA-назва (схеми Prom) — українська; непідтверджена — як у постачальника");
+});
+
+test("без дублікатів: пара з опису з тим самим значенням, що й поле / XML під іншою назвою, — ПОТРЕБУЄ ПЕРЕВІРКИ, не додано; пари одного опису між собою — ні", () => {
+  const names = catalog.names, mapping = catalog.mappings.get(GRIND);
+  const r = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [P("Гарантия", "36 мес.")], descUa: "<p>Гарантія: 36 місяців</p><p>Матеріал корпусу двигуна: сталь нержавіюча</p><p>Матеріал валу: сталь нержавіюча</p><p>Важливо: гарантія виробника 36 місяців діє лише за умови реєстрації товару на сайті</p>", current: [], names, mapping, mode: "queue" });
+  assert.deepEqual(r.params.map((p) => p.name), ["Гарантійний термін", "Матеріал корпусу двигуна", "Матеріал валу", "Важливо"], "матеріали різних деталей — обидва; число в довгому тексті — не ознака");
+  const rv = r.needsReview.find((x) => x.name === "Гарантія");
+  assert.match(rv.reason, /можливий дубль/);
+  assert.deepEqual(rv.values.map((v) => v.value), ["Гарантійний термін: 36 міс", "Гарантія: 36 місяців"]);
+  // Однакове число з несумісними одиницями — не дубль
+  const u = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [P("Довжина кабелю", "35", "м")], descUa: "<p>Максимальна температура: 35 °C</p>", current: [], names, mode: "queue" });
+  assert.equal(u.params.length, 2);
 });
 
 test("опис: однаковий конфлікт з UA- і RU-опису — один раз; очищення сирої копії лише від фрагментів, перенесених у поля категорії", () => {

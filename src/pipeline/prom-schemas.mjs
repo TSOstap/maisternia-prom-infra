@@ -3,6 +3,7 @@
  *   schemas/prom/MANIFEST.json    — перелік: id, назви, файл, SHA256, кількість атрибутів, дата отримання;
  *   schemas/prom/units.json       — погоджені перерахунки одиниць;
  *   schemas/prom/synonyms.json    — погоджені синоніми назв для всіх категорій: { toAttribute: { "назва": "nameUK атрибута" } };
+ *   schemas/prom/names-ua-ru.json — погоджений власником словник UA/RU назв користувацьких характеристик: { names: { "назва": "українська назва" } };
  *   schemas/prom/mapping/<categoryId>.json — погоджені синоніми: { synonyms: { "назва постачальника": "<id атрибута>" },
  *                                            values: { "<id атрибута>": { "значення постачальника": "<id варіанта>" } } }.
  *  Файл, SHA якого не збігається з MANIFEST, або схема з помилками структури — не використовується (лише попередження). */
@@ -11,7 +12,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { sha256 } from "../core/text.mjs";
 import { parseCategory, parseSchemaText } from "../core/prom-schema.mjs";
-import { normName } from "../core/prom-attributes.mjs";
+import { buildNames, normName } from "../core/prom-attributes.mjs";
 
 export const SCHEMAS_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../schemas/prom");
 const readJson = (f, d) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : d);
@@ -48,6 +49,8 @@ export function loadPromCatalog(dir = SCHEMAS_DIR) {
     }
     if (m || Object.keys(mapping.synonyms).length) out.mappings.set(String(e.id), mapping);
   }
+  // Підтверджені UA/RU відповідності: офіційні пари назв зі схем Prom + погоджений власником словник.
+  out.names = buildNames([...out.schemas.values()], readJson(path.join(dir, "names-ua-ru.json"), {}).names || {});
   return out;
 }
 

@@ -42,7 +42,10 @@ test("основний каталог (як 2437 підготовлених ка
   for (const p of prepared) assert.ok(params.some((x) => x.name === p.name && x.value === p.value), "підготовлене збережено: " + p.name);
   assert.ok(params.some((x) => x.name === "Живлення" && x.value === "Мережа 220В"), "поле Prom «Живлення»");
   assert.ok(params.some((x) => x.name === "Вага" && x.value === "2.2" && x.unit === "кг"), "поле Prom «Вага»");
-  assert.ok(!params.some((x) => x.name === "Стан"), "«Состояние: Новый» ≠ варіанту схеми «Новое» — без погодженого синоніма поле не заповнюється");
+  // «Новый» ≠ варіанту схеми «Новое»: поле категорії не заповнюється, але характеристика передається користувацькою —
+  // офіційна назва атрибута, ОРИГІНАЛЬНЕ значення (правило власника 23.10.2026: максимально всі характеристики)
+  assert.ok(params.some((x) => x.name === "Стан" && x.value === "Новый" && x.unit === ""), "користувацька «Стан: Новый»");
+  assert.equal(JSON.parse(a[PARAMS_ORIGIN]).items.find((i) => i.k.startsWith("Стан")).a, "", "не поле категорії");
   assert.equal(JSON.parse(a[PARAMS_ORIGIN]).cat, "500");
   assert.ok(JSON.parse(a[PARAMS_ORIGIN]).items.filter((i) => i.s === "НЕВІДОМО").length === prepared.length, "походження підготовленого не визначено — збережено як є");
   assert.equal(mtText(a["Категорія Prom ID"]), "500", "синхронізація не змінює категорію Prom");
@@ -129,7 +132,8 @@ test("опис: очищення СИРОЇ копії вмикається ли
   sim.setCell(QID, "Категорія Prom ID", "500");
   await sim.sync();
   let q = sim.queueRow(QID);
-  assert.deepEqual(JSON.parse(q["Характеристики JSON"]), [...g, P("Напруга", "220", "В")]);
+  assert.deepEqual(JSON.parse(q["Характеристики JSON"]), [...g, P("Напруга", "220", "В"), P("Виробник", "Zegor"), P("Має тепло нагрів", "так")],
+    "поле категорії з опису + користувацькі з опису (атрибута немає) з оригінальними значеннями");
   assert.match(q["Опис UA"], /Напруга: 220 В/);
   // (б) увімкнено — з сирої копії прибрано лише перенесене; оригінал — у «Опис постачальника UA»
   sim = await queued(catalogWith({ 500: "410402" }), { descUa: desc, params: g });
