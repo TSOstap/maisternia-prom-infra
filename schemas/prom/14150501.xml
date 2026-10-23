@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14150501" nameRU="Тепловые пушки" nameUK="Теплові гармати">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="кВт" min="0" max="20000" measureUnitUK="кВт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5000" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="149" nameRU="Глубина" type="real" nameUK="Глибина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+<attribute_value id="7068" nameRU="Белый" nameUK="Білий"/>
+<attribute_value id="7069" nameRU="Желтый" nameUK="Жовтий"/>
+<attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+<attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+<attribute_value id="7076" nameRU="Серебристый" nameUK="Сріблястий"/>
+</attribute>
+<attribute id="319" nameRU="Таймер" type="bool" nameUK="Таймер"/>
+<attribute id="349" nameRU="Емкость топливного бака" type="real" nameUK="Ємність паливного бака" measureUnitRU="л" min="0" max="2000" measureUnitUK="л"/>
+<attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="10000" measureUnitUK="л/год"/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="382" nameRU="Термостат" type="bool" nameUK="Термостат"/>
+<attribute id="394" nameRU="Защита от перегрева" type="bool" nameUK="Захист від перегріву"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="124104" nameRU="Газовая" nameUK="Газова"/>
+<attribute_value id="124105" nameRU="Электрическая" nameUK="Електрична"/>
+<attribute_value id="143294" nameRU="Дизельная" nameUK="Дизельна"/>
+</attribute>
+<attribute id="1277" nameRU="Время автономной работы" type="integer" nameUK="Час автономної роботи" measureUnitRU="час" min="0" max="100" measureUnitUK="годин"/>
+<attribute id="1906" nameRU="Потребляемый ток" type="real" nameUK="Споживаний струм" measureUnitRU="А" min="0" max="100" measureUnitUK="А"/>
+<attribute id="2392" nameRU="Тип установки" type="multiselect" nameUK="Тип встановлення">
+<attribute_value id="36482" nameRU="Напольный" nameUK="Підлоговий"/>
+</attribute>
+<attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+<attribute id="3991" nameRU="Расход газа" type="real" nameUK="Витрата газу" measureUnitRU="литр/мин" min="0" max="5000" measureUnitUK="літр/хв"/>
+<attribute id="4057" nameRU="Минимальная рабочая температура окружающей среды" type="real" nameUK="Мінімальна робоча температура навколишнього середовища" measureUnitRU="град." min="-50" max="0" measureUnitUK="град."/>
+<attribute id="4210" nameRU="Тепловая мощность" type="real" nameUK="Теплова потужність" measureUnitRU="кВт" min="0" max="10000" measureUnitUK="кВт"/>
+<attribute id="4777" nameRU="Рабочее давление газа" type="real" nameUK="Робочий тиск газу" measureUnitRU="бар" min="0" max="100" measureUnitUK="бар"/>
+<attribute id="5073" nameRU="Производительность" type="real" nameUK="Продуктивність" measureUnitRU="куб. м/час" min="0" max="100000" measureUnitUK="куб.м/год"/>
+<attribute id="5125" nameRU="Розжиг горелки" type="singleselect" nameUK="Розпал пальника">
+<attribute_value id="33243" nameRU="Пьезорозжиг" nameUK="П'єзорозпалювання"/>
+<attribute_value id="33244" nameRU="Электронный" nameUK="Електронний"/>
+<attribute_value id="33245" nameRU="Ручной" nameUK="Ручний"/>
+</attribute>
+<attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+<attribute id="5507" nameRU="Рекомендуемая площадь обогрева" type="real" nameUK="Рекомендована площа обігріву" measureUnitRU="кв.м" min="0" max="1000" measureUnitUK="кв.м"/>
+<attribute id="6212" nameRU="Напряжение питания" type="multiselect" nameUK="Напруга живлення">
+<attribute_value id="42681" nameRU="220 В" nameUK="220 В"/>
+<attribute_value id="42682" nameRU="380 В" nameUK="380 В"/>
+</attribute>
+<attribute id="6695" nameRU="Режим вентиляции" type="bool" nameUK="Режим вентиляції"/>
+<attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+<attribute id="9127" nameRU="Тип тепловых пушек по форме" type="singleselect" nameUK="Тип теплових гармат за формою">
+<attribute_value id="71947" nameRU="Прямоугольный" nameUK="Прямокутний"/>
+<attribute_value id="71948" nameRU="Цилиндрический" nameUK="Циліндричний"/>
+</attribute>
+<attribute id="9128" nameRU="Тип тепловых пушек по портативности" type="singleselect" nameUK="Тип теплових гармат за портативністю">
+<attribute_value id="71949" nameRU="Мобильный" nameUK="Мобільний"/>
+<attribute_value id="71950" nameRU="Стационарный" nameUK="Стаціонарний"/>
+</attribute>
+<attribute id="9130" nameRU="Нагревательный элемент тепловой пушки" type="singleselect" nameUK="Нагрівальний елемент теплової гармати">
+<attribute_value id="71954" nameRU="Керамическая пластина" nameUK="Керамічна пластина"/>
+<attribute_value id="71955" nameRU="Спираль" nameUK="Спіраль"/>
+<attribute_value id="71956" nameRU="ТЭН" nameUK="ТЕН"/>
+<attribute_value id="295401" nameRU="Инфракрасная пластина" nameUK="Інфрачервона пластина"/>
+<attribute_value id="360280" nameRU="Камера сгорания" nameUK="Камера згоряння"/>
+</attribute>
+<attribute id="9136" nameRU="Количество нагревательных элементов" type="integer" nameUK="Кількість нагрівальних елементів" measureUnitRU="шт" min="0" max="50" measureUnitUK="шт."/>
+<attribute id="9138" nameRU="Способ нагрева тепловой пушки" type="singleselect" nameUK="Спосіб нагріву теплової гармати">
+<attribute_value id="71970" nameRU="Прямого нагрева" nameUK="Прямого нагріву"/>
+<attribute_value id="71971" nameRU="Непрямого нагрева" nameUK="Непрямого нагріву"/>
+</attribute>
+<attribute id="9146" nameRU="Ступенчатое регулирование мощности" type="bool" nameUK="Ступінчасте регулювання потужності"/>
+<attribute id="9147" nameRU="Безступенчатое регулирование мощности" type="bool" nameUK="Безсхідчасте регулювання потужності"/>
+<attribute id="9186" nameRU="Фотоэлемент" type="bool" nameUK="Фотоелемент"/>
+<attribute id="18886" nameRU="Страна регистрации бренда" type="singleselect" nameUK="Країна реєстрації бренда">
+<attribute_value id="309627" nameRU="Австралия" nameUK="Австралія"/>
+<attribute_value id="309628" nameRU="Австрия" nameUK="Австрія"/>
+<attribute_value id="309629" nameRU="Азербайджан" nameUK="Азербайджан"/>
+<attribute_value id="309630" nameRU="Албания" nameUK="Албанія"/>
+<attribute_value id="309631" nameRU="Алжир" nameUK="Алжир"/>
+<attribute_value id="309632" nameRU="Ангола" nameUK="Ангола"/>
+<attribute_value id="309633" nameRU="Андорра" nameUK="Андора"/>
+<attribute_value id="309634" nameRU="Антигуа и Барбуда" nameUK="Антигуа та Барбуда"/>
+<attribute_value id="309635" nameRU="Аргентина" nameUK="Аргентина"/>
+<attribute_value id="309636" nameRU="Армения" nameUK="Арменія"/>
+<attribute_value id="309637" nameRU="Афганистан" nameUK="Афганістан"/>
+<attribute_value id="309638" nameRU="Багамские острова" nameUK="Багамські острови"/>
+<attribute_value id="309639" nameRU="Бангладеш" nameUK="Бангладеш"/>
+<attribute_value id="309640" nameRU="Барбадос" nameUK="Барбадос"/>
+<attribute_value id="309641" nameRU="Бахрейн" nameUK="Бахрейн"/>
+<attribute_value id="309642" nameRU="Беларусь" nameUK="Білорусь"/>
+<attribute_value id="309643" nameRU="Белиз" nameUK="Беліз"/>
+<attribute_value id="309644" nameRU="Бельгия" nameUK="Бельгія"/>
+<attribute_value id="309645" nameRU="Бенин" nameUK="Бенін"/>
+<attribute_value id="309646" nameRU="Болгария" nameUK="Болгарія"/>
+<attribute_value id="309647" nameRU="Боливия" nameUK=""/>
+<attribute_value id="309648" nameRU="Босния и Герцеговина" nameUK="Боснія і Герцеговина"/>
+<attribute_value id="309649" nameRU="Ботсвана" nameUK="Ботсвана"/>
+<attribute_value id="309650" nameRU="Бразилия" nameUK="Бразилія"/>
+<attribute_value id="309651" nameRU="Бруней-Даруссалам" nameUK="Бруней-Даруссалам"/>
+<attribute_value id="309652" nameRU="Буркина-Фасо" nameUK="Буркина-Фасо"/>
+<attribute_value id="309653" nameRU="Бурунди" nameUK="Бурунди"/>
+<attribute_value id="309654" nameRU="Бутан" nameUK="Бутан"/>
+<attribute_value id="309655" nameRU="Вануату" nameUK="Вануату"/>
+<attribute_value id="309656" nameRU="Венгрия" nameUK="Угорщина"/>
+<attribute_value id="309657" nameRU="Венесуэла" nameUK="Венесуела"/>
+<attribute_value id="309658" nameRU="Вьетнам" nameUK="В'єтнам"/>
+<attribute_value id="309659" nameRU="Габон" nameUK="Габон"/>
+<attribute_value id="309660" nameRU="Гаити" nameUK="Гаїті"/>
+<attribute_value id="309661" nameRU="Гайана" nameUK="Гайана"/>
+<attribute_value id="309662" nameRU="Гамбия" nameUK="Гамбія"/>
+<attribute_value id="309663" nameRU="Гана" nameUK="Гана"/>
+<attribute_value id="309664" nameRU="Гватемала" nameUK="Гватемала"/>
+<attribute_value id="309665" nameRU="Гвинея" nameUK="Гвінея"/>
+<attribute_value id="309666" nameRU="Гвинея-Бисау" nameUK="Гвінея-Бісау"/>
+<attribute_value id="309667" nameRU="Германия" nameUK="Німеччина"/>
+<attribute_value id="309668" nameRU="Гондурас" nameUK="Гондурас"/>
+<attribute_value id="309669" nameRU="Гренада" nameUK="Гренада"/>
+<attribute_value id="309670" nameRU="Греция" nameUK="Греція"/>
+<attribute_value id="309671" nameRU="Грузия" nameUK="Грузія"/>
+<attribute_value id="309672" nameRU="Дания" nameUK="Данія"/>
+<attribute_value id="309673" nameRU="Демократическая Республика Конго" nameUK="Демократична Республіка Конго"/>
+<attribute_value id="309674" nameRU="Джибути" nameUK="Джібуті"/>
+<attribute_value id="309675" nameRU="Доминика" nameUK="Домініка"/>
+<attribute_value id="309676" nameRU="Доминиканская Республика" nameUK="Домініканська республіка"/>
+<attribute_value id="309677" nameRU="Египет" nameUK="Єгипет"/>
+<attribute_value id="309678" nameRU="Замбия" nameUK="Замбія"/>
+<attribute_value id="309679" nameRU="Зимбабве" nameUK="Зімбабве"/>
+<attribute_value id="309680" nameRU="Израиль" nameUK="Ізраїль"/>
+<attribute_value id="309681" nameRU="Индия" nameUK="Індія"/>
+<attribute_value id="309682" nameRU="Индонезия" nameUK="Індонезія"/>
+<attribute_value id="309683" nameRU="Иордания" nameUK="Йорданія"/>
+<attribute_value id="309684" nameRU="Ирак" nameUK="Ірак"/>
+<attribute_value id="309685" nameRU="Иран" nameUK="Іран"/>
+<attribute_value id="309686" nameRU="Ирландия" nameUK="Ірландія"/>
+<attribute_value id="309687" nameRU="Исландия" nameUK=""/>
+<attribute_value id="309688" nameRU="Испания" nameUK="Іспанія"/>
+<attribute_value id="309689" nameRU="Италия" nameUK="Італія"/>
+<attribute_value id="309690" nameRU="Йемен" nameUK="Йемен"/>
+<attribute_value id="309691" nameRU="Кабо-Верде" nameUK="Кабо-Верде"/>
+<attribute_value id="309692" nameRU="Казахстан" nameUK="Казахстан"/>
+<attribute_value id="309693" nameRU="Камбоджа" nameUK="Камбоджа"/>
+<attribute_value id="309694" nameRU="Камерун" nameUK="Камерун"/>
+<attribute_value id="309695" nameRU="Канада" nameUK="Канада"/>
+<attribute_value id="309696" nameRU="Катар" nameUK="Катар"/>
+<attribute_value id="309697" nameRU="Кения" nameUK="Кенія"/>
+<attribute_value id="309698" nameRU="Кипр" nameUK="Кіпр"/>
+<attribute_value id="309699" nameRU="Кирибати" nameUK="Кірібаті"/>
+<attribute_value id="309700" nameRU="Китай" nameUK="Китай"/>
+<attribute_value id="309701" nameRU="Колумбия" nameUK="Колумбія"/>
+<attribute_value id="309702" nameRU="Коморские Острова" nameUK="Коморські острови"/>
+<attribute_value id="309703" nameRU="Конго" nameUK="Конго"/>
+<attribute_value id="309704" nameRU="Корейская Народно-Демократическая Республика" nameUK="Корейська Народно-Демократична Республіка"/>
+<attribute_value id="309705" nameRU="Коста-Рика" nameUK="Коста-Ріка"/>
+<attribute_value id="309706" nameRU="Кот-д’Ивуар" nameUK="Кот-д’Івуар"/>
+<attribute_value id="309707" nameRU="Куба" nameUK="Куба"/>
+<attribute_value id="309708" nameRU="Кувейт" nameUK="Кувейт"/>
+<attribute_value id="309709" nameRU="Кыргызстан" nameUK="Киргизстан"/>
+<attribute_value id="309710" nameRU="Лаосская Народно-Демократическая Республика" nameUK="Лаоська Народно-Демократична Республіка"/>
+<attribute_value id="309711" nameRU="Латвия" nameUK="Латвія"/>
+<attribute_value id="309712" nameRU="Лесото" nameUK="Лесото"/>
+<attribute_value id="309713" nameRU="Либерия" nameUK="Ліберія"/>
+<attribute_value id="309714" nameRU="Ливан" nameUK="Ліван"/>
+<attribute_value id="309715" nameRU="Ливия" nameUK="Лівія"/>
+<attribute_value id="309716" nameRU="Литва" nameUK="Литва"/>
+<attribute_value id="309717" nameRU="Лихтенштейн" nameUK="Ліхтенштейн"/>
+<attribute_value id="309718" nameRU="Люксембург" nameUK="Люксембург"/>
+<attribute_value id="309719" nameRU="Маврикий" nameUK="Маврікій"/>
+<attribute_value id="309720" nameRU="Мавритания" nameUK="Мавританія"/>
+<attribute_value id="309721" nameRU="Мадагаскар" nameUK="Мадагаскар"/>
+<attribute_value id="309722" nameRU="Малави" nameUK="Малаві"/>
+<attribute_value id="309723" nameRU="Малайзия" nameUK="Малайзія"/>
+<attribute_value id="309724" nameRU="Мали" nameUK="Малі"/>
+<attribute_value id="309725" nameRU="Мальдивы" nameUK="Мальдиви"/>
+<attribute_value id="309726" nameRU="Мальта" nameUK="Мальта"/>
+<attribute_value id="309727" nameRU="Марокко" nameUK="Марокко"/>
+<attribute_value id="309728" nameRU="Маршалловы Острова" nameUK="Маршаллові острови"/>
+<attribute_value id="309729" nameRU="Мексика" nameUK="Мексика"/>
+<attribute_value id="309730" nameRU="Мозамбик" nameUK="Мозамбік"/>
+<attribute_value id="309731" nameRU="Монако" nameUK="Монако"/>
+<attribute_value id="309732" nameRU="Монголия" nameUK="Монголія"/>
+<attribute_value id="309733" nameRU="Мьянма" nameUK="Мьянма"/>
+<attribute_value id="309734" nameRU="Намибия" nameUK="Намібія"/>
+<attribute_value id="309735" nameRU="Науру" nameUK="Науру"/>
+<attribute_value id="309736" nameRU="Непал" nameUK="Непал"/>
+<attribute_value id="309737" nameRU="Нигер" nameUK="Республіка Нігер"/>
+<attribute_value id="309738" nameRU="Нигерия" nameUK="Нігерія"/>
+<attribute_value id="309739" nameRU="Нидерланды" nameUK="Нідерланди"/>
+<attribute_value id="309740" nameRU="Никарагуа" nameUK="Нікарагуа"/>
+<attribute_value id="309741" nameRU="Ниуэ" nameUK="Ніуе"/>
+<attribute_value id="309742" nameRU="Новая Зеландия" nameUK="Нова Зеландія"/>
+<attribute_value id="309743" nameRU="Норвегия" nameUK="Норвегія"/>
+<attribute_value id="309744" nameRU="Объединенная Республика Танзания" nameUK="Об'єднана Республіка Танзанія"/>
+<attribute_value id="309745" nameRU="Объединенные Арабские Эмираты" nameUK="Об'єднані Арабські Емірати"/>
+<attribute_value id="309746" nameRU="Оман" nameUK="Оман"/>
+<attribute_value id="309747" nameRU="Острова Кука" nameUK="Острови Кука"/>
+<attribute_value id="309748" nameRU="Пакистан" nameUK="Пакистан"/>
+<attribute_value id="309749" nameRU="Панама" nameUK="Панама"/>
+<attribute_value id="309750" nameRU="Папуа — Новая Гвинея" nameUK="Папуа Нова Гвінея"/>
+<attribute_value id="309751" nameRU="Парагвай" nameUK="Парагвай"/>
+<attribute_value id="309752" nameRU="Перу" nameUK="Перу"/>
+<attribute_value id="309753" nameRU="Польша" nameUK="Польща"/>
+<attribute_value id="309754" nameRU="Португалия" nameUK="Португалія"/>
+<attribute_value id="309755" nameRU="Республика Корея" nameUK="Республіка Корея"/>
+<attribute_value id="309756" nameRU="Республика Молдова" nameUK="Республіка Молдова"/>
+<attribute_value id="309757" nameRU="Руанда" nameUK="Руанда"/>
+<attribute_value id="309758" nameRU="Румыния" nameUK="Румунія"/>
+<attribute_value id="309759" nameRU="Сальвадор" nameUK="Сальвадор"/>
+<attribute_value id="309760" nameRU="Самоа" nameUK="Самоа"/>
+<attribute_value id="309761" nameRU="Сан-Марино" nameUK="Сан-Маріно"/>
+<attribute_value id="309762" nameRU="Сан-Томе и Принсипи" nameUK="Сан-Томе та Прінсіпі"/>
+<attribute_value id="309763" nameRU="Саудовская Аравия" nameUK="Саудівська Аравія"/>
+<attribute_value id="309764" nameRU="Святой Престол" nameUK="Святий Престол"/>
+<attribute_value id="309765" nameRU="Северная Македония" nameUK="Північна Македонія"/>
+<attribute_value id="309766" nameRU="Сейшельские Острова" nameUK="Сейшельські острови"/>
+<attribute_value id="309767" nameRU="Сенегал" nameUK="Сенегал"/>
+<attribute_value id="309768" nameRU="Сент-Винсент и Гренадины" nameUK="Сент-Вінсент та Гренадини"/>
+<attribute_value id="309769" nameRU="Сент-Китс и Невис" nameUK="Сент-Кітс і Невіс"/>
+<attribute_value id="309770" nameRU="Сент-Люсия" nameUK="Сент-Люсія"/>
+<attribute_value id="309771" nameRU="Сербия" nameUK="Сербія"/>
+<attribute_value id="309772" nameRU="Сингапур" nameUK="Сингапур"/>
+<attribute_value id="309773" nameRU="Сирийская Арабская Республика" nameUK="Сирійська Арабська Республіка"/>
+<attribute_value id="309774" nameRU="Словакия" nameUK="Словакія"/>
+<attribute_value id="309775" nameRU="Словения" nameUK="Словенія"/>
+<attribute_value id="309776" nameRU="Соединенные Штаты Америки" nameUK="Сполучені Штати Америки"/>
+<attribute_value id="309777" nameRU="Соломоновы Острова" nameUK="Соломонові острови"/>
+<attribute_value id="309778" nameRU="Сомали" nameUK="Сомалі"/>
+<attribute_value id="309779" nameRU="Судан" nameUK="Судан"/>
+<attribute_value id="309780" nameRU="Суринам" nameUK="Сурінам"/>
+<attribute_value id="309781" nameRU="Сьерра-Леоне" nameUK="Сьєрра-Леоне"/>
+<attribute_value id="309782" nameRU="Таджикистан" nameUK="Таджикістан"/>
+<attribute_value id="309783" nameRU="Таиланд" nameUK="Таїланд"/>
+<attribute_value id="309784" nameRU="Тимор-Лешти" nameUK="Тимор-Лешті"/>
+<attribute_value id="309785" nameRU="Того" nameUK="Того"/>
+<attribute_value id="309786" nameRU="Тонга" nameUK="Тонга"/>
+<attribute_value id="309787" nameRU="Тринидад и Тобаго" nameUK="Трінідад і Тобаго"/>
+<attribute_value id="309788" nameRU="Тувалу" nameUK="Тувалу"/>
+<attribute_value id="309789" nameRU="Тунис" nameUK="Туніс"/>
+<attribute_value id="309790" nameRU="Туркменистан" nameUK="Туркменістан"/>
+<attribute_value id="309791" nameRU="Турция" nameUK="Туреччина"/>
+<attribute_value id="309792" nameRU="Уганда" nameUK="Уганда"/>
+<attribute_value id="309793" nameRU="Узбекистан" nameUK="Узбекистан"/>
+<attribute_value id="309794" nameRU="Украина" nameUK="Україна"/>
+<attribute_value id="309795" nameRU="Уругвай" nameUK="Уругвай"/>
+<attribute_value id="309796" nameRU="Фиджи" nameUK="Фіджи"/>
+<attribute_value id="309797" nameRU="Филиппины" nameUK="Філіппіни"/>
+<attribute_value id="309798" nameRU="Финляндия" nameUK="Фінляндія"/>
+<attribute_value id="309799" nameRU="Франция" nameUK="Франція"/>
+<attribute_value id="309800" nameRU="Хорватия" nameUK="Хорватія"/>
+<attribute_value id="309801" nameRU="Центральноафриканская Республика" nameUK="Центральноафриканська Республіка"/>
+<attribute_value id="309802" nameRU="Чад" nameUK="Чад"/>
+<attribute_value id="309803" nameRU="Черногория" nameUK="Черногорія"/>
+<attribute_value id="309804" nameRU="Чешская Республика" nameUK="Чеська Республіка"/>
+<attribute_value id="309805" nameRU="Чили" nameUK="Чілі"/>
+<attribute_value id="309806" nameRU="Швейцария" nameUK="Швейцарія"/>
+<attribute_value id="309807" nameRU="Швеция" nameUK="Швеція"/>
+<attribute_value id="309808" nameRU="Шри-Ланка" nameUK="Шрі-Ланка"/>
+<attribute_value id="309809" nameRU="Эквадор" nameUK="Еквадор"/>
+<attribute_value id="309810" nameRU="Экваториальная Гвинея" nameUK="Екваторіальна Гвінея"/>
+<attribute_value id="309811" nameRU="Эритрея" nameUK="Еритрея"/>
+<attribute_value id="309812" nameRU="Эсватини" nameUK="Есватині"/>
+<attribute_value id="309813" nameRU="Эстония" nameUK="Естонія"/>
+<attribute_value id="309814" nameRU="Эфиопия" nameUK="Ефіопія"/>
+<attribute_value id="309815" nameRU="Южная Африка" nameUK="Південна Африка"/>
+<attribute_value id="309816" nameRU="Ямайка" nameUK="Ямайка"/>
+<attribute_value id="309817" nameRU="Япония" nameUK="Японія"/>
+</attribute>
+</category>
+</categories>

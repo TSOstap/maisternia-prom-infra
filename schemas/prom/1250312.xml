@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1250312" nameRU="Садовые ножницы, секаторы, ножи" nameUK="Садові ножиці, секатори, ножі">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="3" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+<attribute id="435" nameRU="Длина лезвия" type="real" nameUK="Довжина леза" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+<attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+<attribute_value id="91254" nameRU="Садовые ножницы" nameUK="Садові ножиці"/>
+<attribute_value id="91255" nameRU="Садовые секаторы" nameUK="Садові секатори"/>
+<attribute_value id="91364" nameRU="Телескопическая ручка" nameUK="Телескопічна ручка"/>
+<attribute_value id="182002" nameRU="Нож садовый" nameUK="Ніж садовий"/>
+<attribute_value id="282162" nameRU="Сучкорез" nameUK="Гілкоріз"/>
+<attribute_value id="283171" nameRU="Секатор прививочный" nameUK="Секатор щеплювальний"/>
+<attribute_value id="296195" nameRU="Мачете" nameUK=""/>
+<attribute_value id="344552" nameRU="Аккумуляторный секатор" nameUK="Акумуляторний секатор"/>
+</attribute>
+<attribute id="1237" nameRU="Конструкция" type="singleselect" nameUK="Конструкція">
+<attribute_value id="345966" nameRU="Плоскостные (обводные)" nameUK="Площинні (обвідні)"/>
+<attribute_value id="345967" nameRU="С наковальней" nameUK="З ковадлом"/>
+<attribute_value id="345968" nameRU="С храповым механизмом" nameUK="З храповим механізмом"/>
+<attribute_value id="345969" nameRU="Штанговые" nameUK="Штангові"/>
+</attribute>
+<attribute id="1559" nameRU="Упаковка" type="singleselect" nameUK="Упаковка">
+<attribute_value id="70885" nameRU="Коробка" nameUK="Коробка"/>
+<attribute_value id="70886" nameRU="Кейс" nameUK="Кейс"/>
+<attribute_value id="123569" nameRU="Без упаковки" nameUK="Без упаковки"/>
+</attribute>
+<attribute id="2861" nameRU="Порода дерева" type="singleselect" nameUK="Порода дерева">
+<attribute_value id="18433" nameRU="Амарант" nameUK="Амарант"/>
+<attribute_value id="18434" nameRU="Ангелим светлый" nameUK="Ангелим світлий"/>
+<attribute_value id="18435" nameRU="Ангелим темный" nameUK="Ангелим темний"/>
+<attribute_value id="18436" nameRU="Андироба саман" nameUK="Андироба саман"/>
+<attribute_value id="18437" nameRU="Бакаут" nameUK="Бакаут"/>
+<attribute_value id="18438" nameRU="Бальза" nameUK="Бальза"/>
+<attribute_value id="18439" nameRU="Береза" nameUK="Береза"/>
+<attribute_value id="18440" nameRU="Билинга" nameUK="Білінгу"/>
+<attribute_value id="18441" nameRU="Бокоте" nameUK="Бокоте"/>
+<attribute_value id="18442" nameRU="Бонгосси" nameUK="Бонгосси"/>
+<attribute_value id="18443" nameRU="Бриар" nameUK="Бріар"/>
+<attribute_value id="18444" nameRU="Бубинга" nameUK="Бубінга"/>
+<attribute_value id="18445" nameRU="Бук" nameUK="Бук"/>
+<attribute_value id="18446" nameRU="Венге" nameUK="Венге"/>
+<attribute_value id="18447" nameRU="Вишня" nameUK="Вишня"/>
+<attribute_value id="18448" nameRU="Вяз" nameUK="В'яз"/>
+<attribute_value id="18449" nameRU="Гонсало альвес" nameUK="Гонсало альвес"/>
+<attribute_value id="18450" nameRU="Граб" nameUK="Граб"/>
+<attribute_value id="18451" nameRU="Гренадил" nameUK="Гренаділ"/>
+<attribute_value id="18452" nameRU="Грецкий орех" nameUK="Волоський горіх"/>
+<attribute_value id="18453" nameRU="Груша" nameUK="Груша"/>
+<attribute_value id="18454" nameRU="Дуб" nameUK="Дуб"/>
+<attribute_value id="18455" nameRU="Дугласия" nameUK="Дугласія"/>
+<attribute_value id="18456" nameRU="Ель" nameUK="Ялина"/>
+<attribute_value id="18457" nameRU="Зебрано" nameUK="Зебрано"/>
+<attribute_value id="18458" nameRU="Индийский палисандр" nameUK="Індійський палісандр"/>
+<attribute_value id="18459" nameRU="Ипе" nameUK="Іпе"/>
+<attribute_value id="18460" nameRU="Ироко" nameUK="Іроко"/>
+<attribute_value id="18461" nameRU="Карельская берёза" nameUK="Карельська береза"/>
+<attribute_value id="18462" nameRU="Каталокс" nameUK="Каталокс"/>
+<attribute_value id="18463" nameRU="Квебрахо белое" nameUK="Квебрахо біле"/>
+<attribute_value id="18464" nameRU="Квебрахо красное" nameUK="Квебрахо червоне"/>
+<attribute_value id="18465" nameRU="Кедр" nameUK="Кедр"/>
+<attribute_value id="18466" nameRU="Кедр испанский" nameUK="Кедр іспанський"/>
+<attribute_value id="18467" nameRU="Клён" nameUK="Клен"/>
+<attribute_value id="18468" nameRU="Кокоболо" nameUK="Кокоболо"/>
+<attribute_value id="18469" nameRU="Кумару" nameUK="Кумару"/>
+<attribute_value id="18470" nameRU="Кумару красный" nameUK="Кумару червоний"/>
+<attribute_value id="18471" nameRU="Лимба" nameUK="Лімба"/>
+<attribute_value id="18472" nameRU="Липа" nameUK="Липа"/>
+<attribute_value id="18473" nameRU="Лиственница" nameUK="Модрина"/>
+<attribute_value id="18474" nameRU="Масасауба" nameUK="Масасауба"/>
+<attribute_value id="18475" nameRU="Маскарей" nameUK="Маскарей"/>
+<attribute_value id="18476" nameRU="Махагони настоящее" nameUK="Махагони даний"/>
+<attribute_value id="18477" nameRU="Махагони сипо" nameUK="Махагони сіпо"/>
+<attribute_value id="18478" nameRU="Махагони хая" nameUK="Махагони хая"/>
+<attribute_value id="18479" nameRU="Мербау" nameUK="Мербау"/>
+<attribute_value id="18480" nameRU="Морадо" nameUK="Морадо"/>
+<attribute_value id="18481" nameRU="Ольха" nameUK="Вільха"/>
+<attribute_value id="18482" nameRU="Осина" nameUK="Осика"/>
+<attribute_value id="18483" nameRU="Падук" nameUK="Падук"/>
+<attribute_value id="18484" nameRU="Палисандр" nameUK="Палісандр"/>
+<attribute_value id="18485" nameRU="Пало санто" nameUK="Пало санто"/>
+<attribute_value id="18486" nameRU="Пау аммарело" nameUK="Пау аммарело"/>
+<attribute_value id="18487" nameRU="Пихта" nameUK="Ялиця"/>
+<attribute_value id="18488" nameRU="Платан" nameUK="Платан"/>
+<attribute_value id="18489" nameRU="Робиния" nameUK="Робінія"/>
+<attribute_value id="18490" nameRU="Розовое дерево" nameUK="Рожеве дерево"/>
+<attribute_value id="18491" nameRU="Рябина" nameUK="Горобина"/>
+<attribute_value id="18492" nameRU="Самран" nameUK="Самран"/>
+<attribute_value id="18493" nameRU="Самшит" nameUK="Самшит"/>
+<attribute_value id="18494" nameRU="Сандал" nameUK="Сандал"/>
+<attribute_value id="18495" nameRU="Сандал бразильский" nameUK="Сандал бразильський"/>
+<attribute_value id="18496" nameRU="Сапо" nameUK="Сапо"/>
+<attribute_value id="18497" nameRU="Сосна" nameUK="Сосна"/>
+<attribute_value id="18498" nameRU="Тик" nameUK="Тік"/>
+<attribute_value id="18499" nameRU="Тис" nameUK="Тіс"/>
+<attribute_value id="18500" nameRU="Тигровое дерево" nameUK="Тигровое дерево"/>
+<attribute_value id="18501" nameRU="Умнини" nameUK="Умнини"/>
+<attribute_value id="18502" nameRU="Цирикоте" nameUK="Цирикоте"/>
+<attribute_value id="18503" nameRU="Чечем" nameUK="Чечем"/>
+<attribute_value id="18504" nameRU="Чорная пальма" nameUK="Чорна пальма"/>
+<attribute_value id="18505" nameRU="Эбеновое дерево" nameUK="Ебенове дерево"/>
+<attribute_value id="18506" nameRU="Ясень" nameUK="Ясень"/>
+<attribute_value id="18507" nameRU="Ятоба" nameUK="Ятоба"/>
+<attribute_value id="81906" nameRU="Массарандуба" nameUK="Массарандуба"/>
+<attribute_value id="89476" nameRU="Яблоня" nameUK="Яблуня"/>
+<attribute_value id="89477" nameRU="Черешня" nameUK="Черешня"/>
+<attribute_value id="89478" nameRU="Слива" nameUK="Зливу"/>
+<attribute_value id="89479" nameRU="Абрикос" nameUK="Абрикос"/>
+<attribute_value id="89480" nameRU="Гикори" nameUK="Гікорі"/>
+</attribute>
+<attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+<attribute_value id="76756" nameRU="Для винограда" nameUK="Для винограду"/>
+<attribute_value id="184197" nameRU="Обрезка" nameUK="Обрізка"/>
+<attribute_value id="282394" nameRU="Для цветов" nameUK="Для квітів"/>
+<attribute_value id="345960" nameRU="Для подвязки" nameUK="Для підв'язки"/>
+<attribute_value id="345961" nameRU="Для стрижки кустарников" nameUK="Для стриження чагарників"/>
+<attribute_value id="345962" nameRU="Для стрижения травы" nameUK="Для стриження трави"/>
+<attribute_value id="345963" nameRU="Для фигурного стрижения" nameUK="Для фігурного стриження"/>
+<attribute_value id="345964" nameRU="Прививочные" nameUK="Прищепні"/>
+</attribute>
+<attribute id="6633" nameRU="Общая длина" type="real" nameUK="Загальна довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="8234" nameRU="Твердость режущего лезвия" type="real" nameUK="Твердість ріжучого леза" measureUnitRU="HRC" min="0" max="100" measureUnitUK="HRC"/>
+<attribute id="8758" nameRU="Материал лезвия" type="singleselect" nameUK="Матеріал леза">
+<attribute_value id="70686" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+<attribute_value id="70688" nameRU="Углеродистая сталь" nameUK="Вуглецева сталь"/>
+<attribute_value id="70689" nameRU="Титан" nameUK="Титан"/>
+<attribute_value id="110134" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="179357" nameRU="Закаленная сталь" nameUK="Загартована сталь"/>
+<attribute_value id="311510" nameRU="Хромомолибденовая сталь" nameUK="Хромомолібденова сталь"/>
+<attribute_value id="344553" nameRU="Кованая сталь" nameUK=""/>
+<attribute_value id="344554" nameRU="Кованый металл" nameUK="Кований метал"/>
+</attribute>
+<attribute id="9049" nameRU="Максимальный диаметр реза" type="real" nameUK="Максимальний діаметр реза" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+<attribute id="9734" nameRU="Форма лезвия" type="singleselect" nameUK="Форма леза">
+<attribute_value id="91350" nameRU="Прямая" nameUK="Пряма"/>
+<attribute_value id="91351" nameRU="Изогнутая" nameUK="Вигнута"/>
+<attribute_value id="273793" nameRU="Волнистая" nameUK="Хвиляста"/>
+<attribute_value id="290015" nameRU="Зубчатая" nameUK="Зубчаста"/>
+</attribute>
+<attribute id="9973" nameRU="Материал рукоятки" type="singleselect" nameUK="Матеріал рукоятки">
+<attribute_value id="82648" nameRU="Дерево" nameUK="Дерево"/>
+<attribute_value id="82650" nameRU="Пластик" nameUK="Пластик"/>
+<attribute_value id="82653" nameRU="Нейлон" nameUK="Нейлон"/>
+<attribute_value id="86809" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="86812" nameRU="Пластмасса" nameUK="Пластмаса"/>
+<attribute_value id="111026" nameRU="Резина" nameUK="Гума"/>
+<attribute_value id="140012" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="140014" nameRU="Оцинкованная сталь" nameUK="Оцинкована сталь"/>
+<attribute_value id="140015" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="140017" nameRU="Луженая медь" nameUK="Луджена мідь"/>
+<attribute_value id="179365" nameRU="ABS-пластик" nameUK="ABS-пластик"/>
+<attribute_value id="281459" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+<attribute_value id="297693" nameRU="Полиамид" nameUK="Поліамід"/>
+<attribute_value id="306589" nameRU="Комбинированный" nameUK="Комбінований"/>
+<attribute_value id="328877" nameRU=" Резина/каучук" nameUK="Гума/каучук"/>
+<attribute_value id="344626" nameRU="Алюминий с резиновым покрытием" nameUK="Алюміній із гумовим покриттям"/>
+<attribute_value id="344627" nameRU="Поролон" nameUK=""/>
+<attribute_value id="344629" nameRU="Кованый алюминий" nameUK="Кований алюміній"/>
+<attribute_value id="344630" nameRU="Металл с TPR-покрытием" nameUK="Метал із TPR-покриттям"/>
+<attribute_value id="344631" nameRU="Металл с резиновым покрытием" nameUK="Метал із гумовим покриттям"/>
+<attribute_value id="344632" nameRU="Пластик с резиновым покрытием" nameUK="Пластик із гумовим покриттям"/>
+<attribute_value id="344633" nameRU="Стекловолокно" nameUK="Скловолокно"/>
+<attribute_value id="345619" nameRU="Металл с пластиковым покрытием" nameUK="Метал з пластиковим покриттям"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="10347" nameRU="Телескопическая ручка" type="bool" nameUK="Телескопічна ручка"/>
+<attribute id="10349" nameRU="Мешок насадка" type="bool" nameUK="Мішок насадка"/>
+<attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+<attribute_value id="209323" nameRU="Дополнительный аккумулятор" nameUK="Додатковий акумулятор"/>
+<attribute_value id="329335" nameRU="Складные" nameUK="Складані"/>
+<attribute_value id="332849" nameRU="Телескопические" nameUK="Телескопічні"/>
+<attribute_value id="345970" nameRU="Поворотные" nameUK="Поворотні"/>
+<attribute_value id="345971" nameRU="Профессиональные" nameUK="Професійні"/>
+<attribute_value id="345972" nameRU="Удлиненные" nameUK="Подовжені"/>
+<attribute_value id="345973" nameRU="Усиленные" nameUK="Посилені"/>
+<attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+</attribute>
+<attribute id="18856" nameRU="Лента для прививки" type="bool" nameUK="Стрічка для щеплення"/>
+</category>
+</categories>

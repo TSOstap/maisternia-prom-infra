@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="608" nameRU="Пылесосы" nameUK="Пилососи">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="4600" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+<attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+<attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+<attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+<attribute_value id="8807" nameRU="Батарейки" nameUK="Батарейки"/>
+<attribute_value id="11634" nameRU="Сеть 12В" nameUK="Мережа 12В"/>
+<attribute_value id="40713" nameRU="Специальный аккумулятор" nameUK="Спеціальний акумулятор"/>
+</attribute>
+<attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+<attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+<attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+<attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+<attribute_value id="10614" nameRU="Li-Pol" nameUK="Li-Pol"/>
+</attribute>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="50" measureUnitUK="А. г"/>
+<attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="60" measureUnitUK="В"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="149" nameRU="Глубина" type="real" nameUK="Глибина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+<attribute_value id="7068" nameRU="Белый" nameUK="Білий"/>
+<attribute_value id="7069" nameRU="Желтый" nameUK="Жовтий"/>
+<attribute_value id="7070" nameRU="Красный" nameUK="Червоний"/>
+<attribute_value id="7071" nameRU="Зеленый" nameUK="Зелений"/>
+<attribute_value id="7072" nameRU="Синий" nameUK="Синій"/>
+<attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+<attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+<attribute_value id="7075" nameRU="Коричневый" nameUK="Коричневий"/>
+<attribute_value id="7076" nameRU="Серебристый" nameUK="Сріблястий"/>
+<attribute_value id="7077" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+<attribute_value id="7078" nameRU="Антрацит" nameUK="Антрацит"/>
+<attribute_value id="7079" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+<attribute_value id="7080" nameRU="Салатовый" nameUK="Салатовий"/>
+<attribute_value id="7081" nameRU="Бежевый" nameUK="Бежевий"/>
+<attribute_value id="7082" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+<attribute_value id="7083" nameRU="Медный" nameUK="Мідний"/>
+<attribute_value id="7084" nameRU="Слоновая кость" nameUK="Слонова кістка"/>
+<attribute_value id="7085" nameRU="Фисташковый" nameUK="Фісташковий"/>
+<attribute_value id="7086" nameRU="Кремовый" nameUK="Кремовий"/>
+<attribute_value id="7087" nameRU="Оливковый" nameUK="Оливковий"/>
+<attribute_value id="7088" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+<attribute_value id="7089" nameRU="Розовый" nameUK="Рожевий"/>
+<attribute_value id="7090" nameRU="Малиновый" nameUK="Малиновий"/>
+<attribute_value id="7091" nameRU="Сиреневый" nameUK="Бузковий"/>
+<attribute_value id="7092" nameRU="Персиковый" nameUK="Персиковий"/>
+<attribute_value id="7093" nameRU="Серебряный" nameUK="Срібний"/>
+<attribute_value id="7094" nameRU="Другой" nameUK="Інший"/>
+</attribute>
+<attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+<attribute_value id="7132" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+<attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="7867" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+<attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+<attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+<attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+</attribute>
+<attribute id="190" nameRU="Длина сетевого шнура" type="real" nameUK="Довжина мережевого шнура" measureUnitRU="м" min="0" max="20" measureUnitUK="м"/>
+<attribute id="319" nameRU="Таймер" type="bool" nameUK="Таймер"/>
+<attribute id="335" nameRU="Дисплей" type="bool" nameUK="Дисплей"/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="85553" nameRU="Вертикальный" nameUK="Вертикальний"/>
+<attribute_value id="146408" nameRU="Обычный" nameUK="Звичайний"/>
+<attribute_value id="158129" nameRU="Робот" nameUK="Робот"/>
+<attribute_value id="215996" nameRU="Ручной (автомобильный)" nameUK="Ручний (автомобільний)"/>
+<attribute_value id="215997" nameRU="Вертикальный+портативный" nameUK="Вертикальний+портативний"/>
+<attribute_value id="236033" nameRU="Пароочиститель" nameUK="Пароочисник"/>
+<attribute_value id="345213" nameRU="Сепараторный" nameUK="Сепараторний"/>
+</attribute>
+<attribute id="1335" nameRU="Мощность всасывания" type="integer" nameUK="Потужність всмоктування" measureUnitRU="Вт" min="0" max="1500" measureUnitUK="Вт"/>
+<attribute id="1337" nameRU="Тип пылесборника" type="multiselect" nameUK="Тип пилозбірника">
+<attribute_value id="9684" nameRU="Мешок" nameUK="Мішок"/>
+<attribute_value id="9685" nameRU="Контейнер" nameUK="Контейнер"/>
+<attribute_value id="9686" nameRU="Аквафильтр" nameUK="Аквафільтр"/>
+<attribute_value id="11134" nameRU="Циклонный фильтр" nameUK="Циклонний фільтр"/>
+<attribute_value id="12003" nameRU="Бак" nameUK="Бак"/>
+</attribute>
+<attribute id="1346" nameRU="Объем пылесборника" type="real" nameUK="Об'єм пилозбірника" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+<attribute id="1355" nameRU="Тип выходного фильтра" type="multiselect" nameUK="Тип вихідного фільтра">
+<attribute_value id="9700" nameRU="HEPA (фильтр тонкой очистки)" nameUK="HEPA фільтр тонкої очистки)"/>
+<attribute_value id="9706" nameRU="Микрофильтр" nameUK="Мікрофільтр"/>
+<attribute_value id="9707" nameRU="Бумажный" nameUK="Паперовий"/>
+<attribute_value id="9709" nameRU="Угольный" nameUK="Вугільний"/>
+<attribute_value id="9710" nameRU="Другой" nameUK="Інший"/>
+<attribute_value id="10651" nameRU="Антибактериальный" nameUK="Антибактеріальний"/>
+<attribute_value id="10653" nameRU="Сетчатый" nameUK="Сітчастий"/>
+</attribute>
+<attribute id="1362" nameRU="Тип трубы всасывания" type="singleselect" nameUK="Тип труби всмоктування">
+<attribute_value id="9716" nameRU="Телескопическая" nameUK="Телескопічна"/>
+<attribute_value id="9717" nameRU="Составная" nameUK="Складова"/>
+<attribute_value id="9718" nameRU="Цельная" nameUK="Цілісна"/>
+</attribute>
+<attribute id="1368" nameRU="Положение регулятора мощности всасывания" type="singleselect" nameUK="Положення регулятора потужності всмоктування">
+<attribute_value id="9805" nameRU="корпус" nameUK="корпус"/>
+<attribute_value id="9806" nameRU="рукоятка" nameUK="рукоятка"/>
+<attribute_value id="9807" nameRU="пульт ДУ" nameUK="пульт ДУ"/>
+</attribute>
+<attribute id="1394" nameRU="Длина всасывающего шланга" type="real" nameUK="Довжина всмоктуючого шланга" measureUnitRU="м" min="0" max="20" measureUnitUK="м"/>
+<attribute id="1397" nameRU="Радиус действия" type="real" nameUK="Радіус дії" measureUnitRU="м" min="0" max="20" measureUnitUK="м"/>
+<attribute id="1505" nameRU="Объем котла (бака для воды)" type="real" nameUK="Об'єм котла (бака для води)" measureUnitRU="л" min="0" max="5" measureUnitUK="л"/>
+<attribute id="1507" nameRU="Максимальное давление пара" type="real" nameUK="Максимальний тиск пари" measureUnitRU="бар" min="0" max="5" measureUnitUK="бар"/>
+<attribute id="1509" nameRU="Время нагрева до образования пара" type="real" nameUK="Час нагріву до утворення пари" measureUnitRU="мин" min="0" max="60" measureUnitUK="хв"/>
+<attribute id="1510" nameRU="Температура пара" type="integer" nameUK="Температура пара" measureUnitRU="град." min="0" max="300" measureUnitUK="град."/>
+<attribute id="1602" nameRU="Рабочая ширина" type="real" nameUK="Робоча ширина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="1687" nameRU="Время заряда аккумулятора" type="real" nameUK="Час заряду акумулятора" measureUnitRU="час" min="0" max="48" measureUnitUK="годин"/>
+<attribute id="1688" nameRU="Время работы от аккумулятора" type="real" nameUK="Час роботи від акумулятора" measureUnitRU="мин" min="0" max="360" measureUnitUK="хв"/>
+<attribute id="1689" nameRU="Тип уборки" type="multiselect" nameUK="Тип прибирання">
+<attribute_value id="10625" nameRU="Сухая " nameUK="Суха "/>
+<attribute_value id="10626" nameRU="Влажная" nameUK="Волога"/>
+<attribute_value id="10627" nameRU="Паром" nameUK="Парою"/>
+<attribute_value id="360305" nameRU="Сухое/Влажное" nameUK="Сухе/Вологе"/>
+</attribute>
+<attribute id="1690" nameRU="Режимы движения" type="multiselect" nameUK="Режими руху">
+<attribute_value id="10631" nameRU="загзагом" nameUK="загзагом"/>
+<attribute_value id="10632" nameRU="вдоль стен" nameUK="уздовж стін"/>
+<attribute_value id="10633" nameRU="по спирали" nameUK="по спіралі"/>
+<attribute_value id="10634" nameRU="хаотично" nameUK="хаотично"/>
+<attribute_value id="10635" nameRU="автоматически" nameUK="автоматично"/>
+<attribute_value id="10636" nameRU="назад-вперед" nameUK="назад-вперед"/>
+</attribute>
+<attribute id="1700" nameRU="Система обнаружения препятствий" type="bool" nameUK="Система виявлення перешкод"/>
+<attribute id="1701" nameRU="Определение степени загрязнения" type="bool" nameUK="Визначення ступеня забруднення"/>
+<attribute id="1702" nameRU="Функция памяти" type="bool" nameUK="Функція пам'яті"/>
+<attribute id="1703" nameRU="Программирование по дням недели" type="bool" nameUK="Програмування по днях тижня"/>
+<attribute id="1704" nameRU="Количество программ уборки" type="integer" nameUK="Кількість програм прибирання"/>
+<attribute id="1705" nameRU="Количество щеток в комплекте" type="integer" nameUK="Кількість щіток в комплекті"/>
+<attribute id="1706" nameRU="Боковая щетка" type="bool" nameUK="Бічна щітка"/>
+<attribute id="1708" nameRU="Сигнал разряда аккумулятора" type="bool" nameUK="Сигнал розряду акумулятора"/>
+<attribute id="1709" nameRU="Сигнал при застревании" type="bool" nameUK="Сигнал при застряванні"/>
+<attribute id="1710" nameRU="Защита от падения со ступеней" type="bool" nameUK="Захист від падіння зі сходів"/>
+<attribute id="1713" nameRU="Высота робота-пылесоса" type="integer" nameUK="Висота робота-пилососа" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="1714" nameRU="Ширина робота-пылесоса" type="integer" nameUK="Ширина робота-пилососа" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="1715" nameRU="Глубина робота-пылесоса" type="integer" nameUK="Глибина робота-пилососа" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="1753" nameRU="Вес робота-пылесоса" type="real" nameUK="Вага робота-пилососа" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+<attribute id="2094" nameRU="Фильтр тонкой очистки" type="bool" nameUK="Фільтр тонкої очистки"/>
+<attribute id="2180" nameRU="Объем аквафильтра" type="real" nameUK="Об'єм аквафільтра" measureUnitRU="л" min="0" max="20" measureUnitUK="л"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+<attribute_value id="172249" nameRU="Терморегулятор" nameUK="Терморегулятор"/>
+<attribute_value id="185947" nameRU="Защита от перегрева" nameUK="Захист від перегріву"/>
+<attribute_value id="187049" nameRU="Возможность долива воды" nameUK="Можливість доливання води"/>
+<attribute_value id="187050" nameRU="Регулировка силы пара" nameUK="Регулювання сили пари"/>
+<attribute_value id="187051" nameRU="Резервуар для моющих средств" nameUK="Резервуар для миючих засобів"/>
+<attribute_value id="187052" nameRU="Фильтр для защиты мотора" nameUK="Фільтр для захисту мотора"/>
+<attribute_value id="187053" nameRU="Возможность сбора жидкости" nameUK="Можливість збору рідини"/>
+<attribute_value id="187054" nameRU="Функция выдува" nameUK="Функція видування"/>
+<attribute_value id="187055" nameRU="Индикатор заполнения пылесборника" nameUK="Індикатор заповнення пилозбірника"/>
+<attribute_value id="187056" nameRU="Функция плавного старта" nameUK="Функція плавного старту"/>
+<attribute_value id="187057" nameRU="Автоматическая смотка шнура" nameUK="Автоматичне намотування шнура"/>
+<attribute_value id="187058" nameRU="Съемный бак для воды" nameUK="Знімний бак для води"/>
+<attribute_value id="187061" nameRU="Регулировка мощности всасывания" nameUK="Регулювання потужності всмоктування"/>
+<attribute_value id="187068" nameRU="Вертикальная парковка" nameUK="Вертикальна парковка"/>
+<attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+</attribute>
+<attribute id="14250" nameRU="Дополнительная комплектация" type="multiselect" nameUK="Додаткова комплектація">
+<attribute_value id="187026" nameRU="Насадка "Ковер/Пол"" nameUK="Насадка "Килим/Підлога""/>
+<attribute_value id="187027" nameRU="Щелевая насадка" nameUK="Щілинна насадка"/>
+<attribute_value id="187028" nameRU="Насадка-щетка для мебели" nameUK="Насадка-щітка для меблів"/>
+<attribute_value id="187029" nameRU="Турбощетка для пола" nameUK="Турбощітка для підлоги"/>
+<attribute_value id="187030" nameRU="Насадка для паркета" nameUK="Насадка для паркету"/>
+<attribute_value id="187031" nameRU="Паровая насадка для пола" nameUK="Парова насадка для підлоги"/>
+<attribute_value id="187032" nameRU="Щетка для уборки шерсти животных" nameUK="Щітка для прибирання шерсті тварин"/>
+<attribute_value id="187033" nameRU="Удлинительные трубки" nameUK="Подовжувальні трубки"/>
+<attribute_value id="187034" nameRU="Насадка для одежды" nameUK="Насадка для одягу"/>
+<attribute_value id="187035" nameRU="Насадка для мойки окон" nameUK="Насадка для миття вікон"/>
+</attribute>
+</category>
+</categories>

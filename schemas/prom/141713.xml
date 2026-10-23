@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141713" nameRU="Электролобзики" nameUK="Електролобзики">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="1500" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="4" measureUnitUK="кг"/>
+<attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+<attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+<attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+</attribute>
+<attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+<attribute id="10" nameRU="Ограничение пускового тока" type="bool" nameUK="Обмеження пускового струму"/>
+<attribute id="11" nameRU="Подсветка рабочей зоны" type="bool" nameUK="Підсвічування робочої зони"/>
+<attribute id="12" nameRU="Поддержка постоянного количества оборотов под нагрузкой" type="bool" nameUK="Підтримка постійного числа обертів під навантаженням"/>
+<attribute id="15" nameRU="Лазерный маркер" type="bool" nameUK="Лазерний маркер"/>
+<attribute id="16" nameRU="Маятниковый ход" type="bool" nameUK="Маятниковий хід"/>
+<attribute id="17" nameRU="Быстрозажимное крепление пилки" type="bool" nameUK="Швидкозатискне кріплення пилки"/>
+<attribute id="19" nameRU="Сдув опилок" type="bool" nameUK="Здув тирси"/>
+<attribute id="20" nameRU="Подключение пылесборника / пылесоса" type="bool" nameUK="Підключення пилозбірника/пилососа"/>
+<attribute id="21" nameRU="Защита от скалывания стружки, осколков" type="bool" nameUK="Захист від сколювання стружки, осколків"/>
+<attribute id="23" nameRU="Длина хода пилки" type="real" nameUK="Довжина ходу пилки" measureUnitRU="мм" min="0" max="30" measureUnitUK="мм"/>
+<attribute id="24" nameRU="Блокировка кнопки включения" type="bool" nameUK="Блокування кнопки включення"/>
+<attribute id="28" nameRU="Максимальная частота движения режущего инструмента" type="real" nameUK="Максимальна частота руху ріжучого інструменту" measureUnitRU="ход/мин" min="0" max="5000" measureUnitUK="хід/хв"/>
+<attribute id="38" nameRU="Система гашения вибрации" type="bool" nameUK="Система погашення вібрації"/>
+<attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+<attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+<attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+<attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+</attribute>
+<attribute id="63" nameRU="Дополнительный аккумулятор" type="bool" nameUK="Додатковий акумулятор"/>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="5" measureUnitUK="А. г"/>
+<attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="36" measureUnitUK="В"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+<attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+<attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+<attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+<attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+</attribute>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+<attribute id="4972" nameRU="Материал подошвы" type="singleselect" nameUK="Матеріал підошви">
+<attribute_value id="95566" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="95567" nameRU="Сталь" nameUK="Сталь"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="10647" nameRU="Регулировка маятникового хода" type="singleselect" nameUK="Регулювання маятникового ходу">
+<attribute_value id="95485" nameRU="1" nameUK="1"/>
+<attribute_value id="95486" nameRU="2" nameUK="2"/>
+<attribute_value id="95487" nameRU="3" nameUK="3"/>
+<attribute_value id="95488" nameRU="4" nameUK="4"/>
+<attribute_value id="95489" nameRU="5" nameUK="5"/>
+</attribute>
+<attribute id="10650" nameRU="Максимальная глубина пропила (дерево)" type="real" nameUK="Максимальна глибина пропілу (дерево)" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+<attribute id="10651" nameRU="Максимальная глубина пропила (алюминия)" type="real" nameUK="Максимальна глибина пропілу (алюмінію)" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+<attribute id="10652" nameRU="Максимальная глубина пропила (цветного металла)" type="real" nameUK="Максимальна глибина пропілу (кольорового металу)" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+<attribute id="10653" nameRU="Максимальная глубина пропила (меди)" type="real" nameUK="Максимальна глибина пропілу (міді)" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+<attribute id="10654" nameRU="Максимальная глубина пропила (стали)" type="real" nameUK="Максимальна глибина пропілу (сталі)" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+<attribute id="10655" nameRU="Максимальная глубина пропила (пластика)" type="real" nameUK="Максимальна глибина пропілу (пластику)" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+<attribute id="10656" nameRU="Максимальная глубина пропила (керамики)" type="real" nameUK="Максимальна глибина пропілу (кераміки)" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+<attribute id="10668" nameRU="Наклон подошвы" type="real" nameUK="Нахил підошви" measureUnitRU="град." min="0" max="90" measureUnitUK="град."/>
+<attribute id="10670" nameRU="Отсек для хранения пилок" type="bool" nameUK="Відсік для зберігання пилок"/>
+</category>
+</categories>

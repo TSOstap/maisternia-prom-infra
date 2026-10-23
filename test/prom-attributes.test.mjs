@@ -10,14 +10,16 @@ import { SRC, buildCharacteristics, cleanDescription, descriptionPairs, mapParam
 import { SCHEMAS_DIR, importSchemaFiles, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
 
 const catalog = loadPromCatalog();
-const S = (id) => { const s = catalog.schemas.get(id); assert.ok(s, "схема " + id); return s; };
+const S = (id, maybe = false) => { const s = catalog.schemas.get(id); if (!maybe) assert.ok(s, "схема " + id); return s; };
 const GRIND = "141717", SAW = "1250302", GEN = "410402"; // Шліфувальні машини; Бензопили і електропили; Електрогенератори
 const attrOf = (id, name) => S(id).attributes.find((a) => a.nameUK === name);
 const P = (name, value, unit = "") => ({ name, value, unit });
 
-test("схеми: 18 категорій із MANIFEST завантажено без помилок; порожні «…, загальне» — коректні, без атрибутів", () => {
+test("схеми: 45 категорій із MANIFEST завантажено без помилок; порожні «…, загальне» — коректні, без атрибутів", () => {
   assert.deepEqual(catalog.problems, []);
-  assert.equal(catalog.schemas.size, 18);
+  assert.equal(catalog.schemas.size, 45);
+  assert.equal(S("141714").nameUK, "Електричні гайковерти");
+  assert.equal(S("12110201", true), undefined, "обірвана схема не імпортована");
   assert.equal(S("410499").empty, true);
   assert.equal(S("52807").empty, true);
   assert.equal(S(GEN).attributes.length, 66);
@@ -191,4 +193,35 @@ test("неоднозначність назви: якщо в категорії 
   assert.equal(m.ok, false);
   assert.match(m.reason, /кілька атрибутів категорії з такою назвою/);
   assert.equal(mapParam(schema, P("Мощность двигателя", "3", "л.с.")).attr.id, "2", "однозначна назва — так");
+});
+
+test("розбір фрагментів власника: неекрановані лапки (копія з браузера), атрибут із min > max виключається окремо, обірваний фрагмент не приймається", () => {
+  const quoted = '<category id="9" nameRU="Т" nameUK="Т"><attribute id="6" nameRU="Тип патрона" type="singleselect" nameUK="Тип патрона">'
+    + '<attribute_value id="8" nameRU="Квадрат 1"" nameUK="Квадрат 1""/><attribute_value id="39711" nameRU=""Мокрый"" nameUK="Мокрий"/></attribute>'
+    + '<attribute id="11856" nameRU="Минимальное отклонения напряжения" type="integer" nameUK="Мінімальне відхилення напруги" measureUnitRU="%" min="0" max="-40" measureUnitUK="%"/>'
+    + '<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="15" measureUnitUK="кг"/></category>';
+  const [q] = parseSchemaText(quoted);
+  assert.deepEqual(q.problems, []);
+  assert.deepEqual(q.schema.attributes.find((a) => a.id === "6").values.map((v) => [v.nameRU, v.nameUK]), [['Квадрат 1"', 'Квадрат 1"'], ['"Мокрый"', "Мокрий"]]);
+  assert.equal(q.schema.attributes.some((a) => a.id === "11856"), false, "атрибут з min > max не використовується");
+  assert.deepEqual(q.schema.excluded.map((x) => x.id), ["11856"]);
+  assert.ok(q.schema.attributes.some((a) => a.id === "5"), "решта схеми придатна");
+  assert.ok(q.warnings.some((w) => /неекрановані лапки/.test(w)));
+  const cut = parseSchemaText(' <categories>\n  <category id="12110201" nameRU="А" nameUK="Б">\n  <attribute id="100" nameRU="Г" type="integer" nameUK="Г"/>\n');
+  assert.equal(cut.length, 1);
+  assert.equal(cut[0].schema.id, "12110201");
+  assert.match(cut[0].problems[0], /неповна категорія/);
+  // Повторений id атрибута в категорії — блокує всю схему (не вибираємо версію)
+  const dup = parseSchemaText('<category id="3" nameUK="Х"><attribute id="5" nameUK="Вага" type="real"/><attribute id="5" nameUK="Маса" type="real"/></category>');
+  assert.match(dup[0].problems.join(" "), /повторений id атрибута/);
+});
+
+test("дослівне значення постачальника не підмінюється полем з ІНШОГО його параметра (реальний випадок: «Біметал HSS» → «Біметал»)", () => {
+  const raw = [P("Матеріал", "Біметал HSS"), P("Материал", "Биметалл")];
+  const r = buildCharacteristics({ schema: S("14201508"), categoryId: "14201508", rawParams: raw, current: [P("Матеріал", "Біметал HSS")], mode: "main" });
+  assert.deepEqual(r.params, [P("Матеріал", "Біметал HSS")], "дані не втрачено, поле не задубльовано");
+  assert.match(r.conflicts.join(" "), /наявне значення «Біметал HSS» залишено/);
+  // Якщо ж поле Prom виведене з самого запису — заміна дозволена (RU-варіант → UA-варіант того самого поля)
+  const r2 = buildCharacteristics({ schema: S("14201508"), categoryId: "14201508", rawParams: [P("Материал", "Биметалл")], current: [P("Материал", "Биметалл")], mode: "main" });
+  assert.deepEqual(r2.params, [P("Матеріал", "Біметал")]);
 });

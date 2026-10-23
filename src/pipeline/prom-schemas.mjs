@@ -70,8 +70,8 @@ export function importSchemaFiles(files, { dir = SCHEMAS_DIR, received = new Dat
       const sha = textSha(text);
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(path.join(dir, name), text);
-      byId.set(schema.id, { id: schema.id, nameUK: schema.nameUK, nameRU: schema.nameRU, file: name, sha256: sha, attributes: schema.attributes.length, received: prev?.sha256 === sha ? prev.received : received, source: path.basename(f) });
-      report.push({ file: path.basename(f), id: schema.id, status: prev ? (prev.sha256 === sha ? "БЕЗ ЗМІН" : "ОНОВЛЕНО") : "ДОДАНО", attributes: schema.attributes.length, ...(schema.empty ? { note: "категорія без атрибутів" } : {}) });
+      byId.set(schema.id, { id: schema.id, nameUK: schema.nameUK, nameRU: schema.nameRU, file: name, sha256: sha, attributes: schema.attributes.length, excluded: schema.excluded.length, received: prev?.sha256 === sha ? prev.received : received, source: path.basename(f) });
+      report.push({ file: path.basename(f), id: schema.id, status: prev ? (prev.sha256 === sha ? "БЕЗ ЗМІН" : "ОНОВЛЕНО") : "ДОДАНО", nameUK: schema.nameUK, attributes: schema.attributes.length, excluded: schema.excluded.length, warnings: it.warnings || [], ...(schema.empty ? { note: "категорія без атрибутів" } : {}) });
     }
   }
   fs.mkdirSync(dir, { recursive: true });

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1250301" nameRU="Кусторезы" nameUK="Кущорізи">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+<attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+<attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+<attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+<attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+<attribute_value id="11634" nameRU="Сеть 12В" nameUK="Мережа 12В"/>
+<attribute_value id="53227" nameRU="Сеть 110В" nameUK="Мережа 110В"/>
+<attribute_value id="106692" nameRU="Бензиновый двигатель" nameUK="Бензиновий двигун"/>
+<attribute_value id="122325" nameRU="Сеть 24В" nameUK="Мережа 24В"/>
+</attribute>
+<attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+<attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+</attribute>
+<attribute id="80" nameRU="Длина шины" type="real" nameUK="Довжина шини" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="5" measureUnitUK="А. г"/>
+<attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="54" measureUnitUK="В"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+<attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="150" measureUnitUK="куб. см"/>
+<attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="10" measureUnitUK="л/год"/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="175058" nameRU="Бензиновый кусторез" nameUK="Бензиновий кущоріз"/>
+<attribute_value id="175059" nameRU="Сетевой кусторез" nameUK="Мережевий кущоріз"/>
+<attribute_value id="175060" nameRU="Аккумуляторный кусторез" nameUK="Акумуляторний кущоріз"/>
+</attribute>
+<attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+<attribute_value id="338835" nameRU="Бесщеточный" nameUK="Безщітковий"/>
+</attribute>
+<attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+<attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+<attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+</attribute>
+<attribute id="1266" nameRU="Класс" type="singleselect" nameUK="Клас">
+<attribute_value id="204573" nameRU="Профессиональный" nameUK="Професійний"/>
+</attribute>
+<attribute id="1493" nameRU="Частота" type="real" nameUK="Частота" measureUnitRU="Гц" min="0" max="1000" measureUnitUK="Гц"/>
+<attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="10" measureUnitUK="л"/>
+<attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="1000" measureUnitUK="В"/>
+<attribute id="3137" nameRU="Количество оборотов двигателя" type="real" nameUK="Кількість обертів двигуна" measureUnitRU="об/мин" min="0" max="30000" measureUnitUK="об/хв"/>
+<attribute id="6234" nameRU="Форма ручки" type="singleselect" nameUK="Форма ручки">
+<attribute_value id="350109" nameRU="U-образная" nameUK="U-подібна"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="10365" nameRU="Максимальный диаметр веток" type="real" nameUK="Максимальний діаметр гілок" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+<attribute id="10424" nameRU="Количество аккумуляторов" type="real" nameUK="Кількість акумуляторів" measureUnitRU="шт" min="0" max="5" measureUnitUK="шт."/>
+<attribute id="11566" nameRU="Индикатор заряда батареи" type="bool" nameUK="Індикатор заряду батареї"/>
+<attribute id="12061" nameRU="Дополнительный источник питания" type="multiselect" nameUK="Додаткове джерело живлення">
+<attribute_value id="117151" nameRU="Сеть 12В" nameUK="Мережа 12В"/>
+<attribute_value id="117152" nameRU="Сеть 110В" nameUK="Мережа 110В"/>
+<attribute_value id="117153" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+<attribute_value id="117155" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+<attribute_value id="117160" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+<attribute_value id="122327" nameRU="Сеть 24В" nameUK="Мережа 24В"/>
+</attribute>
+<attribute id="12507" nameRU="Диаметр ножа" type="real" nameUK="Діаметр ножа" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+<attribute id="15960" nameRU="Мощность двигателя, л.с." type="real" nameUK="Потужність двигуна, л. с."/>
+<attribute id="15961" nameRU="Мощность двигателя, Вт" type="real" nameUK="Потужність двигуна, Вт"/>
+<attribute id="15985" nameRU="Расстояние между ножами" type="real" nameUK="Відстань між ножами" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+</category>
+</categories>

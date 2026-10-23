@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="121111" nameRU="Комплектующие для аппаратов высокого давления" nameUK="Комплектуючі для апаратів високого тиску">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+<attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="210" measureUnitUK="бар"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="м" min="0" max="100" measureUnitUK="м"/>
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="106957" nameRU="Щетка" nameUK="Щітка"/>
+<attribute_value id="170767" nameRU="Пантографы" nameUK="Пантографи"/>
+<attribute_value id="170768" nameRU="Копья для пистолетов" nameUK="Списи для пістолетів"/>
+<attribute_value id="170769" nameRU="Насадки" nameUK="Насадки"/>
+<attribute_value id="170770" nameRU="Пенопистолеты" nameUK="Пінопістолети"/>
+<attribute_value id="170771" nameRU="Наконечники для форсунок" nameUK="Накінечники для форсунок"/>
+<attribute_value id="170772" nameRU="Уплотнительные кольца" nameUK="Ущільнювальні кільця"/>
+<attribute_value id="170773" nameRU="Сетки" nameUK="Сітки"/>
+<attribute_value id="170774" nameRU="Форсунки" nameUK="Форсунки"/>
+<attribute_value id="170775" nameRU="Штекеры" nameUK="Штекери"/>
+<attribute_value id="170776" nameRU="Разъемы" nameUK="Роз'єми"/>
+<attribute_value id="170777" nameRU="Пистолеты" nameUK="Пістолети"/>
+<attribute_value id="170802" nameRU="Фильтры" nameUK="Фільтри"/>
+<attribute_value id="170803" nameRU="Шланги" nameUK="Шланги"/>
+<attribute_value id="171002" nameRU="Пружина" nameUK="Пружина"/>
+<attribute_value id="179503" nameRU="Сопло" nameUK="Сопло"/>
+</attribute>
+<attribute id="845" nameRU="Внутренний диаметр" type="real" nameUK="Внутрішній діаметр" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+</category>
+</categories>

@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="410201" nameRU="Зарядные устройства для аккумуляторов" nameUK="Зарядні пристрої для акумуляторів">
+<attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+<attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+<attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+<attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+<attribute_value id="10614" nameRU="Li-Pol" nameUK="Li-Pol"/>
+<attribute_value id="89958" nameRU="LSD NiMH" nameUK="LSD NiMH"/>
+<attribute_value id="89959" nameRU="Alkaline" nameUK="Alkaline"/>
+<attribute_value id="89960" nameRU="Carbon-Zinc" nameUK="Carbon-Zinc"/>
+<attribute_value id="89962" nameRU="Silver Oxide" nameUK="Silver Oxide"/>
+<attribute_value id="89963" nameRU="Zinc Air" nameUK="Zinc Air"/>
+<attribute_value id="89965" nameRU="Свинцово-кислотные (SLA)" nameUK="Свинцево-кислотні (SLA)"/>
+<attribute_value id="179273" nameRU="LiFePO4" nameUK="LiFePO4"/>
+</attribute>
+<attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="1000" measureUnitUK="град."/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="700" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="700" measureUnitUK="мм"/>
+<attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+<attribute_value id="7132" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+<attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="7867" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="19913" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="67250" nameRU="Латунь" nameUK="Латунь"/>
+<attribute_value id="67251" nameRU="Медь" nameUK="Мідь"/>
+<attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+<attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+<attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+<attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+</attribute>
+<attribute id="426" nameRU="Номинальная мощность" type="real" nameUK="Номінальна потужність" measureUnitRU="Вт" min="0" max="3000" measureUnitUK="Вт"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="700" measureUnitUK="мм"/>
+<attribute id="972" nameRU="Индикатор заряда элементов питания" type="bool" nameUK="Індикатор заряду елементів живлення"/>
+<attribute id="1185" nameRU="Ручка для переноса" type="bool" nameUK="Ручка для перенесення"/>
+<attribute id="1322" nameRU="Время зарядки" type="real" nameUK="Час зарядки" measureUnitRU="час" min="0" max="20" measureUnitUK="годин"/>
+<attribute id="1403" nameRU="Масса" type="real" nameUK="Маса" measureUnitRU="кг" min="0" max="600" measureUnitUK="кг"/>
+<attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="-50" max="0" measureUnitUK="град."/>
+<attribute id="4137" nameRU="Напряжение питающей сети" type="multiselect" nameUK="Напруга живильної мережі">
+<attribute_value id="26795" nameRU="380 В" nameUK="380 В"/>
+<attribute_value id="26796" nameRU="660 В" nameUK="660 В"/>
+<attribute_value id="26797" nameRU="800 В" nameUK="800 В"/>
+<attribute_value id="26798" nameRU="1 кВ" nameUK="1 кВ"/>
+<attribute_value id="26799" nameRU="2 кВ" nameUK="2 кВ"/>
+<attribute_value id="26800" nameRU="3 кВ" nameUK="3 кВ"/>
+<attribute_value id="34425" nameRU="12 В" nameUK="12 В"/>
+<attribute_value id="34426" nameRU="24 В" nameUK="24 В"/>
+<attribute_value id="34427" nameRU="48 В" nameUK="48 В"/>
+<attribute_value id="34428" nameRU="110 В" nameUK="110 В"/>
+<attribute_value id="34430" nameRU="220 В" nameUK="220 В"/>
+<attribute_value id="93399" nameRU="230 В" nameUK="230 В"/>
+<attribute_value id="293966" nameRU="18 В" nameUK=""/>
+<attribute_value id="303624" nameRU="5 В" nameUK=""/>
+<attribute_value id="315130" nameRU="240 В" nameUK="240 В"/>
+</attribute>
+<attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+<attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+<attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+<attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+<attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+<attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+<attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+<attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+<attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+<attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+<attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+<attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+</attribute>
+<attribute id="9715" nameRU="Дополнительные функции" type="multiselect" nameUK="Додаткові функції">
+<attribute_value id="234024" nameRU="Защита от переполюсовки" nameUK="Захист від переполюсовки"/>
+<attribute_value id="234025" nameRU="Защита от перегрева" nameUK="Захист від перегріву"/>
+<attribute_value id="234026" nameRU="Защита от перезаряда" nameUK="Захист від перезаряду"/>
+<attribute_value id="234027" nameRU="Функция разряда" nameUK="Функція розряду"/>
+<attribute_value id="234028" nameRU="Отключение по таймеру" nameUK="Відключення по таймеру"/>
+<attribute_value id="234029" nameRU="Автоматическое отключение" nameUK="Автоматичне відключення"/>
+<attribute_value id="234031" nameRU="Защита от перепадов напряжения" nameUK="Захист від перепадів напруги"/>
+<attribute_value id="292515" nameRU="Защита от перегрузки" nameUK="Захист від перевантаження"/>
+<attribute_value id="292516" nameRU="Защита от короткого замыкания" nameUK="Захист від короткого замикання"/>
+<attribute_value id="315131" nameRU="Защита от обратной полярности" nameUK="Захист від зворотної полярності"/>
+</attribute>
+<attribute id="9770" nameRU="Типоразмер аккумулятора" type="multiselect" nameUK="Типорозмір акумулятора">
+<attribute_value id="79501" nameRU="14500" nameUK="14500"/>
+<attribute_value id="79502" nameRU="17500" nameUK="17500"/>
+<attribute_value id="79503" nameRU="18500" nameUK="18500"/>
+<attribute_value id="79504" nameRU="17670" nameUK="17670"/>
+<attribute_value id="79505" nameRU="18650" nameUK="18650"/>
+<attribute_value id="79506" nameRU="18700" nameUK="18700"/>
+<attribute_value id="79540" nameRU="18350" nameUK="18350"/>
+<attribute_value id="79542" nameRU="18450" nameUK="18450"/>
+<attribute_value id="79544" nameRU="16340" nameUK="16340"/>
+<attribute_value id="79546" nameRU="14650" nameUK="14650"/>
+<attribute_value id="79548" nameRU="10440" nameUK="10440"/>
+<attribute_value id="79550" nameRU="10430" nameUK="10430"/>
+<attribute_value id="79552" nameRU="Другой" nameUK="Інший"/>
+<attribute_value id="79565" nameRU="18490" nameUK="18490"/>
+<attribute_value id="79567" nameRU="17335" nameUK="17335"/>
+<attribute_value id="79570" nameRU="14430" nameUK="14430"/>
+<attribute_value id="234005" nameRU="AA" nameUK="AA"/>
+<attribute_value id="234008" nameRU="AAA" nameUK="AAA"/>
+<attribute_value id="234009" nameRU="D" nameUK="D"/>
+<attribute_value id="234010" nameRU="C" nameUK="C"/>
+<attribute_value id="234012" nameRU="Крона" nameUK="Крона"/>
+<attribute_value id="234013" nameRU="32600" nameUK="32600"/>
+<attribute_value id="234014" nameRU="26650" nameUK="26650"/>
+<attribute_value id="234015" nameRU="15270" nameUK="15270"/>
+<attribute_value id="234016" nameRU="14250" nameUK="14250"/>
+<attribute_value id="262758" nameRU="EFB " nameUK="EFB"/>
+<attribute_value id="318838" nameRU="10500" nameUK=""/>
+<attribute_value id="318839" nameRU="21700" nameUK=""/>
+<attribute_value id="318840" nameRU="12500" nameUK=""/>
+<attribute_value id="318841" nameRU="13500" nameUK=""/>
+<attribute_value id="318842" nameRU="16650" nameUK=""/>
+<attribute_value id="318843" nameRU="17650" nameUK=""/>
+<attribute_value id="318844" nameRU="20650" nameUK=""/>
+<attribute_value id="318845" nameRU="20700" nameUK=""/>
+<attribute_value id="318846" nameRU="22650" nameUK=""/>
+<attribute_value id="318847" nameRU="26700" nameUK=""/>
+</attribute>
+<attribute id="9771" nameRU="Ток заряда" type="real" nameUK="Струм заряду" measureUnitRU="А" min="0" max="500" measureUnitUK="А"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="10438" nameRU="Напряжение зарядки" type="real" nameUK="Напруга зарядки" measureUnitRU="В" min="0" max="1000" measureUnitUK="В"/>
+<attribute id="10447" nameRU="Количество режимов заряда" type="singleselect" nameUK="Кількість режимів заряду">
+<attribute_value id="93583" nameRU="1" nameUK="1"/>
+<attribute_value id="93584" nameRU="2" nameUK="2"/>
+<attribute_value id="93585" nameRU="3" nameUK="3"/>
+<attribute_value id="93586" nameRU="4" nameUK="4"/>
+<attribute_value id="93587" nameRU="5" nameUK="5"/>
+<attribute_value id="93588" nameRU="6" nameUK="6"/>
+<attribute_value id="93589" nameRU="7" nameUK="7"/>
+<attribute_value id="93590" nameRU="8" nameUK="8"/>
+<attribute_value id="347560" nameRU="9" nameUK=""/>
+</attribute>
+<attribute id="10448" nameRU="Наличие амперметра" type="bool" nameUK="Наявність амперметра"/>
+<attribute id="10449" nameRU="Наличие вольтметра" type="bool" nameUK="Наявність вольтметра"/>
+<attribute id="10451" nameRU="КПД, не менее" type="real" nameUK="ККД, не менше" measureUnitRU="%" min="1" max="100" measureUnitUK="%"/>
+<attribute id="10456" nameRU="Тип зарядного устройства" type="singleselect" nameUK="Тип зарядного пристрою">
+<attribute_value id="93605" nameRU="Импульсные" nameUK="Імпульсні"/>
+<attribute_value id="93606" nameRU="Трансформаторные" nameUK="Трансформаторні"/>
+</attribute>
+<attribute id="16981" nameRU="Тип индикатора" type="singleselect" nameUK="Тип індикатора">
+<attribute_value id="234017" nameRU="Дисплей" nameUK="Дисплей"/>
+<attribute_value id="234018" nameRU="Светодиод" nameUK="Світлодіод"/>
+</attribute>
+<attribute id="17917" nameRU="Количество заряжаемых аккумуляторов" type="integer" nameUK="Кількість акумуляторів, що заряджаються" measureUnitRU="шт" min="1" max="30" measureUnitUK="шт."/>
+<attribute id="19492" nameRU="Модель внешнего аккумулятора" type="singleselect" nameUK="Модель зовнішнього акумулятора">
+<attribute_value id="356670" nameRU="ACEFAST M28" nameUK=""/>
+<attribute_value id="356671" nameRU="ACEFAST M14" nameUK=""/>
+<attribute_value id="356672" nameRU="ACEFAST M4" nameUK=""/>
+<attribute_value id="356673" nameRU="ACEFAST M7" nameUK=""/>
+<attribute_value id="356674" nameRU="ACEFAST M13" nameUK=""/>
+<attribute_value id="356675" nameRU="ACEFAST M16" nameUK=""/>
+<attribute_value id="356676" nameRU="ACEFAST M32" nameUK=""/>
+<attribute_value id="356677" nameRU="ACEFAST M31" nameUK=""/>
+<attribute_value id="356678" nameRU="ACEFAST M10" nameUK=""/>
+<attribute_value id="356679" nameRU="ACEFAST M26" nameUK=""/>
+<attribute_value id="356680" nameRU="ACL PW-117" nameUK=""/>
+<attribute_value id="356681" nameRU="ACL PW-99" nameUK=""/>
+<attribute_value id="356682" nameRU="ACL PW-43" nameUK=""/>
+<attribute_value id="356683" nameRU="Amaya FD39" nameUK=""/>
+<attribute_value id="356684" nameRU="Amaya WF54" nameUK=""/>
+<attribute_value id="356685" nameRU="Amaya W17" nameUK=""/>
+<attribute_value id="356686" nameRU="Amaya APB-40" nameUK=""/>
+<attribute_value id="356687" nameRU="Amaya FD50" nameUK=""/>
+<attribute_value id="356688" nameRU="Amaya XN-T181" nameUK=""/>
+<attribute_value id="356689" nameRU="Amaya APB-80" nameUK=""/>
+<attribute_value id="356690" nameRU="Anker MagGo" nameUK=""/>
+<attribute_value id="356691" nameRU="Anker Zolo" nameUK=""/>
+<attribute_value id="356692" nameRU="Anker Powerbank 633" nameUK=""/>
+<attribute_value id="356693" nameRU="Anker MagGo Slim" nameUK=""/>
+<attribute_value id="356694" nameRU="Anker Prime 735" nameUK=""/>
+<attribute_value id="356695" nameRU="Anker PowerCore III Elite" nameUK=""/>
+<attribute_value id="356696" nameRU="Apple MagSafe Battery Pack" nameUK=""/>
+<attribute_value id="356697" nameRU="Apple A1331" nameUK=""/>
+<attribute_value id="356698" nameRU="Apple D8" nameUK=""/>
+<attribute_value id="356699" nameRU="Aspiring Light 40" nameUK=""/>
+<attribute_value id="356700" nameRU="Aspiring Vigor 40" nameUK=""/>
+<attribute_value id="356701" nameRU="Aspiring Light 30" nameUK=""/>
+<attribute_value id="356702" nameRU="Aspiring Hit 20" nameUK=""/>
+<attribute_value id="356703" nameRU="Aspiring Light 50" nameUK=""/>
+<attribute_value id="356704" nameRU="Aspor A306" nameUK=""/>
+<attribute_value id="356705" nameRU="Aspor A386" nameUK=""/>
+<attribute_value id="356706" nameRU="Aspor A318" nameUK=""/>
+<attribute_value id="356707" nameRU="Aspor A336" nameUK=""/>
+<attribute_value id="356708" nameRU="Aspor A327" nameUK=""/>
+<attribute_value id="356709" nameRU="Aspor A316" nameUK=""/>
+<attribute_value id="356710" nameRU="Aspor A300" nameUK=""/>
+<attribute_value id="356711" nameRU="Aspor A325" nameUK=""/>
+<attribute_value id="356712" nameRU="Aspor A381" nameUK=""/>
+<attribute_value id="356713" nameRU="Aukey PB-N73C" nameUK=""/>
+<attribute_value id="356714" nameRU="Aukey PB-N73" nameUK=""/>
+<attribute_value id="356715" nameRU="Aukey Spark Mega PB-Y63" nameUK=""/>
+<attribute_value id="356716" nameRU="AWEI P101K" nameUK=""/>
+<attribute_value id="356717" nameRU="AWEI J86A" nameUK=""/>
+<attribute_value id="356718" nameRU="AWEI J111B" nameUK=""/>
+<attribute_value id="356719" nameRU="AWEI P5K" nameUK=""/>
+<attribute_value id="356720" nameRU="Baseus Magnetic Mini Air" nameUK=""/>
+<attribute_value id="356721" nameRU="Baseus Blade" nameUK=""/>
+<attribute_value id="356722" nameRU="Baseus EnerFill FC41" nameUK=""/>
+<attribute_value id="356723" nameRU="Baseus Magnetic Mini" nameUK=""/>
+<attribute_value id="356724" nameRU="Baseus Adaman" nameUK=""/>
+<attribute_value id="356725" nameRU="Baseus EnerFill FC21" nameUK=""/>
+<attribute_value id="356726" nameRU="Baseus EnerFill FM11" nameUK=""/>
+<attribute_value id="356727" nameRU="Baseus Compact" nameUK=""/>
+<attribute_value id="356728" nameRU="Baseus EnerFill FP11" nameUK=""/>
+<attribute_value id="356729" nameRU="Baseus EnerFill FM41" nameUK=""/>
+<attribute_value id="356730" nameRU="Baseus QPow2" nameUK=""/>
+<attribute_value id="356731" nameRU="Baseus EnerFill FC51" nameUK=""/>
+<attribute_value id="356732" nameRU="Baseus Comet" nameUK=""/>
+<attribute_value id="356733" nameRU="Baseus Magnetic Bracket Mini" nameUK=""/>
+<attribute_value id="356734" nameRU="Baseus Airpow Lite" nameUK=""/>
+<attribute_value id="356735" nameRU="Baseus EnerFill FP21" nameUK=""/>
+<attribute_value id="356736" nameRU="Baseus PicoGo" nameUK=""/>
+<attribute_value id="356737" nameRU="Baseus High Power Quick" nameUK=""/>
+<attribute_value id="356738" nameRU="Baseus EnerFill FW11" nameUK=""/>
+<attribute_value id="356739" nameRU="Baseus Airpow" nameUK=""/>
+<attribute_value id="356740" nameRU="Baseus EnerFill Ultra-Mini" nameUK=""/>
+<attribute_value id="356741" nameRU="Baseus Lipow" nameUK=""/>
+<attribute_value id="356742" nameRU="Baseus Bipow" nameUK=""/>
+<attribute_value id="356743" nameRU="Baseus EnerFill FT11" nameUK=""/>
+<attribute_value id="356744" nameRU="Baseus EnerGeek" nameUK=""/>
+<attribute_value id="356745" nameRU="Baseus H1" nameUK=""/>
+<attribute_value id="356746" nameRU="Baseus Power Bank Amblight" nameUK=""/>
+<attribute_value id="356747" nameRU="Baseus Blade2 Ultra" nameUK=""/>
+<attribute_value id="356748" nameRU="Baseus Star-Lord" nameUK=""/>
+<attribute_value id="356749" nameRU="Baseus EnerFill FC11" nameUK=""/>
+<attribute_value id="356750" nameRU="Baseus EnerFill FP41" nameUK=""/>
+<attribute_value id="356751" nameRU="Belkin Boost Up Charge" nameUK=""/>
+<attribute_value id="356752" nameRU="Belkin BoostCharge Pro Magnetic 5K" nameUK=""/>
+<attribute_value id="356753" nameRU="Belkin Slim Magnetic" nameUK=""/>
+<attribute_value id="356754" nameRU="Borofone BJ80B" nameUK=""/>
+<attribute_value id="356755" nameRU="Borofone BJ57" nameUK=""/>
+<attribute_value id="356756" nameRU="Borofone BJ56A" nameUK=""/>
+<attribute_value id="356757" nameRU="Borofone BJ80C" nameUK=""/>
+<attribute_value id="356758" nameRU="Borofone BJ65" nameUK=""/>
+<attribute_value id="356759" nameRU="Borofone BJ66B" nameUK=""/>
+<attribute_value id="356760" nameRU="Borofone Feel Happy" nameUK=""/>
+<attribute_value id="356761" nameRU="Borofone BJ65B" nameUK=""/>
+<attribute_value id="356762" nameRU="Borofone BJ66" nameUK=""/>
+<attribute_value id="356763" nameRU="Borofone BJ56" nameUK=""/>
+<attribute_value id="356764" nameRU="Borofone BJ84" nameUK=""/>
+<attribute_value id="356765" nameRU="Borofone BJ80" nameUK=""/>
+<attribute_value id="356766" nameRU="Borofone BJ30A" nameUK=""/>
+<attribute_value id="356767" nameRU="Borofone BJ56B" nameUK=""/>
+<attribute_value id="356768" nameRU="Borofone BJ87" nameUK=""/>
+<attribute_value id="356769" nameRU="Borofone BJ65A" nameUK=""/>
+<attribute_value id="356770" nameRU="Borofone BJ76" nameUK=""/>
+<attribute_value id="356771" nameRU="Borofone BJ82" nameUK=""/>
+<attribute_value id="356772" nameRU="Borofone BJ66A" nameUK=""/>
+<attribute_value id="356773" nameRU="Borofone BJ78B" nameUK=""/>
+<attribute_value id="356774" nameRU="Borofone BJ80A" nameUK=""/>
+<attribute_value id="356775" nameRU="Borofone BJ33A" nameUK=""/>
+<attribute_value id="356776" nameRU="Borofone BJ84A" nameUK=""/>
+<attribute_value id="356777" nameRU="Borofone BJ88B" nameUK=""/>
+<attribute_value id="356778" nameRU="Borofone J56A" nameUK=""/>
+<attribute_value id="356779" nameRU="Canyon OnPower 500" nameUK=""/>
+<attribute_value id="356780" nameRU="Canyon OnPower 101" nameUK=""/>
+<attribute_value id="356781" nameRU="Canyon OnPower 600" nameUK=""/>
+<attribute_value id="356782" nameRU="Canyon OnPower 505 Slim" nameUK=""/>
+<attribute_value id="356783" nameRU="Canyon OnPower 130 TFT" nameUK=""/>
+<attribute_value id="356784" nameRU="ColorWay Slim PD" nameUK=""/>
+<attribute_value id="356785" nameRU="ColorWay MagSafe & Watch Wireless" nameUK=""/>
+<attribute_value id="356786" nameRU="ColorWay EnergyPlus" nameUK=""/>
+<attribute_value id="356787" nameRU="Dudao K12" nameUK=""/>
+<attribute_value id="356788" nameRU="Dudao K14" nameUK=""/>
+<attribute_value id="356789" nameRU="Dudao K15 Pro" nameUK=""/>
+<attribute_value id="356790" nameRU="Dudao K10" nameUK=""/>
+<attribute_value id="356791" nameRU="Dudao K13 Pro" nameUK=""/>
+<attribute_value id="356792" nameRU="Dudao K6 Pro" nameUK=""/>
+<attribute_value id="356793" nameRU="Dudao K11" nameUK=""/>
+<attribute_value id="356794" nameRU="EcoFlow RAPID Mag" nameUK=""/>
+<attribute_value id="356795" nameRU="EcoFlow DELTA 2 Max" nameUK=""/>
+<attribute_value id="356796" nameRU="EcoFlow RAPID" nameUK=""/>
+<attribute_value id="356797" nameRU="Energizer UE20050С" nameUK=""/>
+<attribute_value id="356798" nameRU="Energizer UE30055PQ" nameUK=""/>
+<attribute_value id="356799" nameRU="Energizer QM10001AC" nameUK=""/>
+<attribute_value id="356800" nameRU="Gelius Pro Torrent 2" nameUK=""/>
+<attribute_value id="356801" nameRU="Gelius MiniBoost GP-PB310" nameUK=""/>
+<attribute_value id="356802" nameRU="Gelius HOLDIX GP-PBW302" nameUK=""/>
+<attribute_value id="356803" nameRU="Gelius GP-PB302" nameUK=""/>
+<attribute_value id="356804" nameRU="Grunhelm GP-40BLT" nameUK=""/>
+<attribute_value id="356805" nameRU="Grunhelm GP 20BQC" nameUK=""/>
+<attribute_value id="356806" nameRU="Grunhelm GP-30BQC" nameUK=""/>
+<attribute_value id="356807" nameRU="Hoco J132B Sabio" nameUK=""/>
+<attribute_value id="356808" nameRU="Hoco J154 Victorious" nameUK=""/>
+<attribute_value id="356809" nameRU="Hoco J128A Powerful" nameUK=""/>
+<attribute_value id="356810" nameRU="Hoco J164" nameUK=""/>
+<attribute_value id="356811" nameRU="Hoco DB33 Plus Rising" nameUK=""/>
+<attribute_value id="356812" nameRU="Hoco J101A Astute" nameUK=""/>
+<attribute_value id="356813" nameRU="Hoco J107" nameUK=""/>
+<attribute_value id="356814" nameRU="Hoco J86 Powermaster" nameUK=""/>
+<attribute_value id="356815" nameRU="Hoco J100A High-ranking" nameUK=""/>
+<attribute_value id="356816" nameRU="Hoco J132 Sabio" nameUK=""/>
+<attribute_value id="356817" nameRU="Hoco J102A Cool figure" nameUK=""/>
+<attribute_value id="356818" nameRU="Hoco J146A" nameUK=""/>
+<attribute_value id="356819" nameRU="Hoco J99A" nameUK=""/>
+<attribute_value id="356820" nameRU="Hoco Q34 Clever" nameUK=""/>
+<attribute_value id="356821" nameRU="Hoco J117A" nameUK=""/>
+<attribute_value id="356822" nameRU="Hoco Q46 Title" nameUK=""/>
+<attribute_value id="356823" nameRU="Hoco J166 Carretera" nameUK=""/>
+<attribute_value id="356824" nameRU="Hoco Q53 Skillful" nameUK=""/>
+<attribute_value id="356825" nameRU="Hoco J154A" nameUK=""/>
+<attribute_value id="356826" nameRU="Hoco Q39" nameUK=""/>
+<attribute_value id="356827" nameRU="Hoco JA88A" nameUK=""/>
+<attribute_value id="356828" nameRU="Hoco J121 Fast" nameUK=""/>
+<attribute_value id="356829" nameRU="Hoco J142" nameUK=""/>
+<attribute_value id="356830" nameRU="Hoco DB49" nameUK=""/>
+<attribute_value id="356831" nameRU="Hoco J159A Essence" nameUK=""/>
+<attribute_value id="356832" nameRU="Hoco J144A Hymn" nameUK=""/>
+<attribute_value id="356833" nameRU="Hoco J94A" nameUK=""/>
+<attribute_value id="356834" nameRU="Hoco J152 Pro Tough" nameUK=""/>
+<attribute_value id="356835" nameRU="Hoco J146" nameUK=""/>
+<attribute_value id="356836" nameRU="Hoco Q3 Pro" nameUK=""/>
+<attribute_value id="356837" nameRU="Hoco J138" nameUK=""/>
+<attribute_value id="356838" nameRU="Hoco Q43" nameUK=""/>
+<attribute_value id="356839" nameRU="Hoco J159B Essence" nameUK=""/>
+<attribute_value id="356840" nameRU="Hoco J-146B" nameUK=""/>
+<attribute_value id="356841" nameRU="Hoco J150 Stream" nameUK=""/>
+<attribute_value id="356842" nameRU="Hoco Q3 Mayflower" nameUK=""/>
+<attribute_value id="356843" nameRU="Hoco J165 Honey" nameUK=""/>
+<attribute_value id="356844" nameRU="Hoco J72A Easy travel" nameUK=""/>
+<attribute_value id="356845" nameRU="Hoco J160A Original" nameUK=""/>
+<attribute_value id="356846" nameRU="Hoco J121A Fast" nameUK=""/>
+<attribute_value id="356847" nameRU="Hoco J151A Spirit" nameUK=""/>
+<attribute_value id="356848" nameRU="Hoco J123C Element" nameUK=""/>
+<attribute_value id="356849" nameRU="Hoco J104A Discovery" nameUK=""/>
+<attribute_value id="356850" nameRU="Hoco J123B" nameUK=""/>
+<attribute_value id="356851" nameRU="Hoco J160B" nameUK=""/>
+<attribute_value id="356852" nameRU="Hoco J101 Astute" nameUK=""/>
+<attribute_value id="356853" nameRU="Hoco MagSafe Powerbank" nameUK=""/>
+<attribute_value id="356854" nameRU="Hoco DB58B Plentiful" nameUK=""/>
+<attribute_value id="356855" nameRU="Hoco J52A NewJoy" nameUK=""/>
+<attribute_value id="356856" nameRU="Hoco J163A Wonderful" nameUK=""/>
+<attribute_value id="356857" nameRU="Hoco Q26 Joy" nameUK=""/>
+<attribute_value id="356858" nameRU="Hoco J165B Honey" nameUK=""/>
+<attribute_value id="356859" nameRU="Hoco DB81 Apollo" nameUK=""/>
+<attribute_value id="356860" nameRU="Hoco QS7" nameUK=""/>
+<attribute_value id="356861" nameRU="Hoco J136B" nameUK=""/>
+<attribute_value id="356862" nameRU="Hoco Q26A Joy" nameUK=""/>
+<attribute_value id="356863" nameRU="Hoco J159B" nameUK=""/>
+<attribute_value id="356864" nameRU="Hoco J163A" nameUK=""/>
+<attribute_value id="356865" nameRU="Hoco J141 Grace" nameUK=""/>
+<attribute_value id="356866" nameRU="Hoco J140A Tony" nameUK=""/>
+<attribute_value id="356867" nameRU="Hoco J135 Rico" nameUK=""/>
+<attribute_value id="356868" nameRU="Hoco J94 Overlord" nameUK=""/>
+<attribute_value id="356869" nameRU="Hoco J100 High-ranking" nameUK=""/>
+<attribute_value id="356870" nameRU="Hoco J87A" nameUK=""/>
+<attribute_value id="356871" nameRU="Hoco J102" nameUK=""/>
+<attribute_value id="356872" nameRU="Hoco DB03 Max" nameUK=""/>
+<attribute_value id="356873" nameRU="Hoco Q32 Bird" nameUK=""/>
+<attribute_value id="356874" nameRU="Hoco DB120 Prometheus" nameUK=""/>
+<attribute_value id="356875" nameRU="Hoco Q32 Magnetic" nameUK=""/>
+<attribute_value id="356876" nameRU="Hoco Q36 Sunlight magnetic" nameUK=""/>
+<attribute_value id="356877" nameRU="Hoco J158A Runner" nameUK=""/>
+<attribute_value id="356878" nameRU="Hoco DB89B Element" nameUK=""/>
+<attribute_value id="356879" nameRU="Hoco DB21" nameUK=""/>
+<attribute_value id="356880" nameRU="Hoco J156B Founder" nameUK=""/>
+<attribute_value id="356881" nameRU="Hoco J170 Starlight" nameUK=""/>
+<attribute_value id="356882" nameRU="Hoco J103A Discovery edition" nameUK=""/>
+<attribute_value id="356883" nameRU="Hoco CS42a" nameUK=""/>
+<attribute_value id="356884" nameRU="Hoco J163B Wonderful" nameUK=""/>
+<attribute_value id="356885" nameRU="Hoco J158 Pro Runner" nameUK=""/>
+<attribute_value id="356886" nameRU="Intenso B10000" nameUK=""/>
+<attribute_value id="356887" nameRU="Intenso MW5000" nameUK=""/>
+<attribute_value id="356888" nameRU="Intenso F10000" nameUK=""/>
+<attribute_value id="356889" nameRU="Intenso XC10000" nameUK=""/>
+<attribute_value id="356890" nameRU="Intenso PD10000" nameUK=""/>
+<attribute_value id="356891" nameRU="King Power WPG-207" nameUK=""/>
+<attribute_value id="356892" nameRU="King Power WPG-101" nameUK=""/>
+<attribute_value id="356893" nameRU="King Power WPG-104" nameUK=""/>
+<attribute_value id="356894" nameRU="King Power KP-33" nameUK=""/>
+<attribute_value id="356895" nameRU="King Power KPG-502X" nameUK=""/>
+<attribute_value id="356896" nameRU="King Power KPG-316" nameUK=""/>
+<attribute_value id="356897" nameRU="LP PR522" nameUK=""/>
+<attribute_value id="356898" nameRU="LP PQ18" nameUK=""/>
+<attribute_value id="356899" nameRU="LP PQ17" nameUK=""/>
+<attribute_value id="356900" nameRU="LP PQ24" nameUK=""/>
+<attribute_value id="356901" nameRU="Proove Moon Rock" nameUK=""/>
+<attribute_value id="356902" nameRU="Proove X-Core" nameUK=""/>
+<attribute_value id="356903" nameRU="Proove Illuminator 2" nameUK=""/>
+<attribute_value id="356904" nameRU="Proove Hyperion" nameUK=""/>
+<attribute_value id="356905" nameRU="Proove Guardian" nameUK=""/>
+<attribute_value id="356906" nameRU="Proove Giant Lite" nameUK=""/>
+<attribute_value id="356907" nameRU="Proove Hyper Flux Plus" nameUK=""/>
+<attribute_value id="356908" nameRU="Proove Carbon Slim" nameUK=""/>
+<attribute_value id="356909" nameRU="Proove Powerbox" nameUK=""/>
+<attribute_value id="356910" nameRU="Proove Hoodman Magnetic" nameUK=""/>
+<attribute_value id="356911" nameRU="Proove Illuminator SE" nameUK=""/>
+<attribute_value id="356912" nameRU="Proove Vibe Energy Plus" nameUK=""/>
+<attribute_value id="356913" nameRU="Proove Metalskin" nameUK=""/>
+<attribute_value id="356914" nameRU="Proove Power Stand 2in1 MagSafe" nameUK=""/>
+<attribute_value id="356915" nameRU="Remax FP-33" nameUK=""/>
+<attribute_value id="356916" nameRU="Remax FP-6" nameUK=""/>
+<attribute_value id="356917" nameRU="Remax RPP-123" nameUK=""/>
+<attribute_value id="356918" nameRU="Remax RPP-321" nameUK=""/>
+<attribute_value id="356919" nameRU="Remax RPP-565" nameUK=""/>
+<attribute_value id="356920" nameRU="Remax RPP-59" nameUK=""/>
+<attribute_value id="356921" nameRU="Remax FP-8" nameUK=""/>
+<attribute_value id="356922" nameRU="Remax RPP-161" nameUK=""/>
+<attribute_value id="356923" nameRU="Remax RPP-609 Pro" nameUK=""/>
+<attribute_value id="356924" nameRU="Samsung 40T" nameUK=""/>
+<attribute_value id="356925" nameRU="Samsung EB-P5300" nameUK=""/>
+<attribute_value id="356926" nameRU="Sigma mobile X-Power SI50A6QLX" nameUK=""/>
+<attribute_value id="356927" nameRU="Sigma mobile XPower SI20A4QL" nameUK=""/>
+<attribute_value id="356928" nameRU="Sigma mobile X-Power SI30A6QLX" nameUK=""/>
+<attribute_value id="356929" nameRU="Sigma mobile X-power" nameUK=""/>
+<attribute_value id="356930" nameRU="TITANUM TPB-728-S-B" nameUK=""/>
+<attribute_value id="356931" nameRU="TITANUM MA02" nameUK=""/>
+<attribute_value id="356932" nameRU="TOROUP TB-N13" nameUK=""/>
+<attribute_value id="356933" nameRU="TOROUP TB-F16L" nameUK=""/>
+<attribute_value id="356934" nameRU="TOROUP TB-N13S" nameUK=""/>
+<attribute_value id="356935" nameRU="TOROUP TB-N13L" nameUK=""/>
+<attribute_value id="356936" nameRU="TOROUP TB-N14S" nameUK=""/>
+<attribute_value id="356937" nameRU="TOROUP TB-N03S" nameUK=""/>
+<attribute_value id="356938" nameRU="TUGII Y103" nameUK=""/>
+<attribute_value id="356939" nameRU="TUGII Y05W" nameUK=""/>
+<attribute_value id="356940" nameRU="TUGII Y105" nameUK=""/>
+<attribute_value id="356941" nameRU="TUGII Y108" nameUK=""/>
+<attribute_value id="356942" nameRU="UGREEN PB552 Nexode" nameUK=""/>
+<attribute_value id="356943" nameRU="UGREEN Nexode" nameUK=""/>
+<attribute_value id="356944" nameRU="UGREEN PB536 Nexode" nameUK=""/>
+<attribute_value id="356945" nameRU="UGREEN F10000" nameUK=""/>
+<attribute_value id="356946" nameRU="VEGER VG-W1151-B" nameUK=""/>
+<attribute_value id="356947" nameRU="VEGER C11" nameUK=""/>
+<attribute_value id="356948" nameRU="VEGER K3" nameUK=""/>
+<attribute_value id="356949" nameRU="VEGER MagOn" nameUK=""/>
+<attribute_value id="356950" nameRU="VEGER W5001" nameUK=""/>
+<attribute_value id="356951" nameRU="VEGER W1116" nameUK=""/>
+<attribute_value id="356952" nameRU="VEGER S20" nameUK=""/>
+<attribute_value id="356953" nameRU="VEGER S22" nameUK=""/>
+<attribute_value id="356954" nameRU="WIWU W026" nameUK=""/>
+<attribute_value id="356955" nameRU="WIWU Wi-P018" nameUK=""/>
+<attribute_value id="356956" nameRU="WIWU Wi-P031 Magnetic" nameUK=""/>
+<attribute_value id="356957" nameRU="WIWU Wi-P061" nameUK=""/>
+<attribute_value id="356958" nameRU="WIWU P15" nameUK=""/>
+<attribute_value id="356959" nameRU="WIWU Snap Cube" nameUK=""/>
+<attribute_value id="356960" nameRU="WIWU Essen" nameUK=""/>
+<attribute_value id="356961" nameRU="WIWU Endurance Ultra-Thin" nameUK=""/>
+<attribute_value id="356962" nameRU="WUW Y94" nameUK=""/>
+<attribute_value id="356963" nameRU="WUW Y138" nameUK=""/>
+<attribute_value id="356964" nameRU="WUW Y158" nameUK=""/>
+<attribute_value id="356965" nameRU="WUW Y202" nameUK=""/>
+<attribute_value id="356966" nameRU="WUW Y137" nameUK=""/>
+<attribute_value id="356967" nameRU="WUW Y123 MINI" nameUK=""/>
+<attribute_value id="356968" nameRU="Xiaomi 10W Wireless" nameUK=""/>
+<attribute_value id="356969" nameRU="Xiaomi Mi Power Bank 3 / 2S / 2i" nameUK=""/>
+<attribute_value id="356970" nameRU="Xiaomi MiiiW W310 Air" nameUK=""/>
+<attribute_value id="356971" nameRU="Xiaomi BHR9072GL" nameUK=""/>
+<attribute_value id="356972" nameRU="Xiaomi Power Bank Integrated Cable" nameUK=""/>
+<attribute_value id="356973" nameRU="Xiaomi 33W Power Bank" nameUK=""/>
+<attribute_value id="356974" nameRU="XO PR158" nameUK=""/>
+<attribute_value id="356975" nameRU="XO Power Air Gen" nameUK=""/>
+<attribute_value id="356976" nameRU="XO PR287" nameUK=""/>
+<attribute_value id="356977" nameRU="XO PR238" nameUK=""/>
+<attribute_value id="356978" nameRU="XO PB313" nameUK=""/>
+<attribute_value id="356979" nameRU="XO PR226" nameUK=""/>
+<attribute_value id="356980" nameRU="XO PR159" nameUK=""/>
+<attribute_value id="356981" nameRU="XO PR231" nameUK=""/>
+<attribute_value id="356982" nameRU="XO PR157" nameUK=""/>
+<attribute_value id="356983" nameRU="XO NB-Q199" nameUK=""/>
+<attribute_value id="356984" nameRU="XO PR285" nameUK=""/>
+<attribute_value id="356985" nameRU="XO CC52 Metal" nameUK=""/>
+<attribute_value id="356986" nameRU="XO PR223" nameUK=""/>
+</attribute>
+</category>
+</categories>

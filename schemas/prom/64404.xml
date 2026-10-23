@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="64404" nameRU="Запчасти для пылесосов, пароочистителей" nameUK="Запчастини для пилососів, пароочисників">
+<attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+<attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+<attribute_value id="10614" nameRU="Li-Pol" nameUK="Li-Pol"/>
+</attribute>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="мА/ч" min="1000" max="15000" measureUnitUK="мА/год"/>
+<attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="3" max="20" measureUnitUK="В"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="1536" nameRU="Совместимость с брендом" type="singleselect" nameUK="Сумісність з брендом">
+<attribute_value id="150031" nameRU="Samsung" nameUK="Samsung"/>
+<attribute_value id="151616" nameRU="Acer" nameUK="Acer"/>
+<attribute_value id="151618" nameRU="Asus" nameUK="Asus"/>
+<attribute_value id="151621" nameRU="Lenovo" nameUK="Lenovo"/>
+<attribute_value id="151622" nameRU="LG" nameUK="LG"/>
+<attribute_value id="189228" nameRU="Xiaomi" nameUK="Xiaomi"/>
+<attribute_value id="245907" nameRU="Alcatel" nameUK="Alcatel"/>
+<attribute_value id="346201" nameRU="Philips" nameUK=""/>
+<attribute_value id="346204" nameRU="Bosch" nameUK=""/>
+<attribute_value id="346227" nameRU="Karcher" nameUK=""/>
+<attribute_value id="346228" nameRU="Rowenta" nameUK=""/>
+<attribute_value id="346229" nameRU="Thomas" nameUK=""/>
+<attribute_value id="346230" nameRU="Dreame" nameUK=""/>
+<attribute_value id="346231" nameRU=" Bosch" nameUK=""/>
+<attribute_value id="346232" nameRU=" Whirlpool" nameUK=""/>
+<attribute_value id="346821" nameRU="Miele" nameUK=""/>
+<attribute_value id="348575" nameRU="Adler" nameUK=""/>
+<attribute_value id="348576" nameRU="Mesko" nameUK=""/>
+<attribute_value id="350721" nameRU="Copy" nameUK=""/>
+<attribute_value id="350722" nameRU="High Copy" nameUK=""/>
+<attribute_value id="350723" nameRU="Ainol" nameUK=""/>
+<attribute_value id="350724" nameRU="Amazon" nameUK=""/>
+<attribute_value id="350725" nameRU="Blackview" nameUK=""/>
+<attribute_value id="350726" nameRU="Doogee" nameUK=""/>
+<attribute_value id="350727" nameRU="Google NEXUS" nameUK=""/>
+<attribute_value id="350728" nameRU="HONOR" nameUK=""/>
+<attribute_value id="350729" nameRU="Huawei" nameUK=""/>
+<attribute_value id="350730" nameRU="Nomi" nameUK=""/>
+<attribute_value id="350731" nameRU="Nook" nameUK=""/>
+<attribute_value id="350732" nameRU="Oppo" nameUK=""/>
+<attribute_value id="350733" nameRU="Realme" nameUK=""/>
+<attribute_value id="350734" nameRU="TCL" nameUK=""/>
+<attribute_value id="350735" nameRU="Umidigi" nameUK=""/>
+</attribute>
+<attribute id="2115" nameRU="Тип пылесоса" type="singleselect" nameUK="Тип пилососа">
+<attribute_value id="346240" nameRU="Робот-пылесос" nameUK=""/>
+<attribute_value id="346241" nameRU="Аккумуляторный (беспроводной) пылесос" nameUK=""/>
+<attribute_value id="346242" nameRU="Строительный пылесос" nameUK=""/>
+<attribute_value id="346243" nameRU="Моющий пылесос" nameUK=""/>
+<attribute_value id="346244" nameRU="Пароочиститель" nameUK=""/>
+<attribute_value id="346819" nameRU="Бытовой пылесос" nameUK="Побутовий пилосос"/>
+</attribute>
+<attribute id="4737" nameRU="Мощность" type="real" nameUK="Потужність" measureUnitRU="Вт" min="0" max="2500" measureUnitUK="Вт"/>
+<attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+<attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+<attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+<attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+<attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+<attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+<attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+<attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+<attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+<attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+<attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+<attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+</attribute>
+<attribute id="5139" nameRU="Тип аксессуара" type="singleselect" nameUK="Тип аксесуара">
+<attribute_value id="128073" nameRU="Мешок (многоразовый)" nameUK="Мішок (багаторазовий)"/>
+<attribute_value id="128074" nameRU="Мешок (одноразовый)" nameUK="Мішок (одноразовий)"/>
+<attribute_value id="128075" nameRU="Воздушный фильтр" nameUK="Повітряний фільтр"/>
+<attribute_value id="128076" nameRU="Насадка" nameUK="Насадка"/>
+<attribute_value id="128080" nameRU="Труба" nameUK="Труба"/>
+<attribute_value id="128081" nameRU="Шланг" nameUK="Шланг"/>
+<attribute_value id="179988" nameRU="Рамка мешка" nameUK="Рамка мішка"/>
+<attribute_value id="179991" nameRU="Контейнер для сбора пыли / циклон" nameUK="Контейнер для збору пилу / циклон"/>
+<attribute_value id="236243" nameRU="Аквафильтр" nameUK="Аквафільтр"/>
+<attribute_value id="291874" nameRU="Зарядное устройство" nameUK="Зарядний пристрій"/>
+<attribute_value id="315119" nameRU="Щетка для пылесоса" nameUK="Щітка для пилососу"/>
+</attribute>
+<attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+<attribute_value id="322028" nameRU="Для пылесоса" nameUK="Для пилесосу"/>
+<attribute_value id="322029" nameRU="Для робота-пылесоса" nameUK="Для робота-пилососа"/>
+<attribute_value id="322030" nameRU="Для парогенератора" nameUK="Для парогенератора"/>
+<attribute_value id="322031" nameRU="Для пароочистителя" nameUK="Для пароочисника"/>
+</attribute>
+<attribute id="9826" nameRU="Вид запчасти" type="singleselect" nameUK="Вид запчастини">
+<attribute_value id="127975" nameRU="Воздушный фильтр" nameUK="Повітряний фільтр"/>
+<attribute_value id="127976" nameRU="Корпус" nameUK="Корпус"/>
+<attribute_value id="128066" nameRU="Труба" nameUK="Труба"/>
+<attribute_value id="128069" nameRU="Щетка" nameUK="Щітка"/>
+<attribute_value id="128070" nameRU="Двигатель" nameUK="Двигун"/>
+<attribute_value id="128071" nameRU="Колесо" nameUK="Колесо"/>
+<attribute_value id="128072" nameRU="Крышка" nameUK="Кришка"/>
+<attribute_value id="179824" nameRU="Подшипник" nameUK="Підшипник"/>
+<attribute_value id="179830" nameRU="Плата управления" nameUK="Плата управління"/>
+<attribute_value id="179841" nameRU="Мотор" nameUK="Мотор"/>
+<attribute_value id="179867" nameRU="Ручки, кнопки переключения программ" nameUK="Ручки, кнопки перемикання програм"/>
+<attribute_value id="179980" nameRU="Пульт управления" nameUK="Пульт управління"/>
+<attribute_value id="179987" nameRU="Защелка шланга" nameUK="Клямка шланга"/>
+<attribute_value id="179989" nameRU="Помпа" nameUK="Помпа"/>
+<attribute_value id="179990" nameRU="Кабельная катушка" nameUK="Кабельна котушка"/>
+<attribute_value id="180465" nameRU="Насадка" nameUK="Насадка"/>
+<attribute_value id="180500" nameRU="Насос (помпа)" nameUK="Насос (помпа)"/>
+<attribute_value id="180514" nameRU="Уплотнители" nameUK="Ущільнювачі"/>
+<attribute_value id="180532" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+<attribute_value id="236484" nameRU="Резервуар для воды" nameUK="Резервуар для води"/>
+<attribute_value id="236485" nameRU="Штуцер" nameUK="Штуцер"/>
+<attribute_value id="236486" nameRU="Парогенератор" nameUK="Парогенератор"/>
+<attribute_value id="236491" nameRU="Щетки двигателя" nameUK="Щітки двигуна"/>
+<attribute_value id="236494" nameRU="Уплотнитель" nameUK="Ущільнювач"/>
+<attribute_value id="236501" nameRU="Мелкие детали" nameUK="Дрібні деталі"/>
+<attribute_value id="237264" nameRU="Выключатель" nameUK="Вимикач"/>
+<attribute_value id="285156" nameRU="Кронштейн" nameUK="Кронштейн"/>
+<attribute_value id="321981" nameRU="Корпусные детали" nameUK="Корпусні деталі"/>
+<attribute_value id="321987" nameRU="Платы управления" nameUK="Плати керування"/>
+<attribute_value id="322094" nameRU="Катушки (сматывание)" nameUK="Котушки (змотування)"/>
+<attribute_value id="322095" nameRU="Колеса" nameUK="Колеса"/>
+<attribute_value id="322096" nameRU="Задвижки шланга" nameUK="Засувки шланга"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="19491" nameRU="Модель пылесоса" type="singleselect" nameUK="Модель пилососа">
+<attribute_value id="356298" nameRU="Adler VH-70" nameUK=""/>
+<attribute_value id="356299" nameRU="Adler AD 7049" nameUK=""/>
+<attribute_value id="356300" nameRU="Adler AD 7036" nameUK=""/>
+<attribute_value id="356301" nameRU="Adler IA-83" nameUK=""/>
+<attribute_value id="356302" nameRU="Adler LQ-53" nameUK=""/>
+<attribute_value id="356303" nameRU="Adler AD 7076" nameUK=""/>
+<attribute_value id="356304" nameRU="Adler AD 7044" nameUK=""/>
+<attribute_value id="356305" nameRU="Adler AD 7061" nameUK=""/>
+<attribute_value id="356306" nameRU="Adler JE-29" nameUK=""/>
+<attribute_value id="356307" nameRU="Adler AD 7064" nameUK=""/>
+<attribute_value id="356308" nameRU="AND XL-1051" nameUK=""/>
+<attribute_value id="356309" nameRU="AND 1-39" nameUK=""/>
+<attribute_value id="356310" nameRU="AND LY-803" nameUK=""/>
+<attribute_value id="356311" nameRU="AND XL-1612" nameUK=""/>
+<attribute_value id="356312" nameRU="AND 1-47" nameUK=""/>
+<attribute_value id="356313" nameRU="AND 1-38" nameUK=""/>
+<attribute_value id="356314" nameRU="Ardesto CVC-D02PB" nameUK=""/>
+<attribute_value id="356315" nameRU="Ardesto VC-I-B800" nameUK=""/>
+<attribute_value id="356316" nameRU="Ardesto CVC-X0521WG" nameUK=""/>
+<attribute_value id="356317" nameRU="Astor ZW17060" nameUK=""/>
+<attribute_value id="356318" nameRU="Astor VC 1930 BR" nameUK=""/>
+<attribute_value id="356319" nameRU="Astor VC1932WG" nameUK=""/>
+<attribute_value id="356320" nameRU="Astor VC-20162" nameUK=""/>
+<attribute_value id="356321" nameRU="Bissell PowerWash Pet" nameUK=""/>
+<attribute_value id="356322" nameRU="Bissell ProHeat 2X" nameUK=""/>
+<attribute_value id="356323" nameRU="Bissell Vac&Steam" nameUK=""/>
+<attribute_value id="356324" nameRU="Bissell CrossWave Pet Pro" nameUK=""/>
+<attribute_value id="356325" nameRU="BITEK BT-8662" nameUK=""/>
+<attribute_value id="356326" nameRU="BITEK BT-8663G" nameUK=""/>
+<attribute_value id="356327" nameRU="BITEK BT-1800" nameUK=""/>
+<attribute_value id="356328" nameRU="Black & Decker NVC115WA" nameUK=""/>
+<attribute_value id="356329" nameRU="Black & Decker DVC320B21-QW" nameUK=""/>
+<attribute_value id="356330" nameRU="Black & Decker HLVC315B11" nameUK=""/>
+<attribute_value id="356331" nameRU="Black & Decker BXVMS600E" nameUK=""/>
+<attribute_value id="356332" nameRU="Black & Decker FSMH1351SM" nameUK=""/>
+<attribute_value id="356333" nameRU="Black & Decker BHFEV182B" nameUK=""/>
+<attribute_value id="356334" nameRU="Black & Decker BHFEV362D" nameUK=""/>
+<attribute_value id="356335" nameRU="Black & Decker BXVML701E" nameUK=""/>
+<attribute_value id="356336" nameRU="Bosch BCRC1W Spotless" nameUK=""/>
+<attribute_value id="356337" nameRU="Bosch GlassVAC" nameUK=""/>
+<attribute_value id="356338" nameRU="Bosch BGB41BA1" nameUK=""/>
+<attribute_value id="356339" nameRU="Bosch BGS05A220" nameUK=""/>
+<attribute_value id="356340" nameRU="Bosch GAS 15 PS" nameUK=""/>
+<attribute_value id="356341" nameRU="Bosch EasyVac 12" nameUK=""/>
+<attribute_value id="356342" nameRU="Castle Sp" nameUK=""/>
+<attribute_value id="356343" nameRU="Castle CW-101B" nameUK=""/>
+<attribute_value id="356344" nameRU="Castle CW-110R" nameUK=""/>
+<attribute_value id="356345" nameRU="Castle 750W" nameUK=""/>
+<attribute_value id="356346" nameRU="Castle CW-105B" nameUK=""/>
+<attribute_value id="356347" nameRU="Castle CW-102Y" nameUK=""/>
+<attribute_value id="356348" nameRU="Concept VP4380" nameUK=""/>
+<attribute_value id="356349" nameRU="Concept VP4220" nameUK=""/>
+<attribute_value id="356350" nameRU="Concept CP1010" nameUK=""/>
+<attribute_value id="356351" nameRU="Crownberg CB-672" nameUK=""/>
+<attribute_value id="356352" nameRU="Crownberg LN-65" nameUK=""/>
+<attribute_value id="356353" nameRU="Crownberg CB-0111" nameUK=""/>
+<attribute_value id="356354" nameRU="Crownberg CB-961" nameUK=""/>
+<attribute_value id="356355" nameRU="Crownberg CB-671" nameUK=""/>
+<attribute_value id="356356" nameRU="Crownberg IK-93" nameUK=""/>
+<attribute_value id="356357" nameRU="Crownberg CB-0114" nameUK=""/>
+<attribute_value id="356358" nameRU="Crownberg CB-673" nameUK=""/>
+<attribute_value id="356359" nameRU="Crownberg WG-68" nameUK=""/>
+<attribute_value id="356360" nameRU="Crownberg CB-677" nameUK=""/>
+<attribute_value id="356361" nameRU="Crownberg CB-0112" nameUK=""/>
+<attribute_value id="356362" nameRU="Crownberg CB-674" nameUK=""/>
+<attribute_value id="356363" nameRU="Crownberg CB-0110" nameUK=""/>
+<attribute_value id="356364" nameRU="Crownberg CB-0115" nameUK=""/>
+<attribute_value id="356365" nameRU="Crownberg YQ-15" nameUK=""/>
+<attribute_value id="356366" nameRU="Deerma DX700" nameUK=""/>
+<attribute_value id="356367" nameRU="Deerma Z50 Combo" nameUK=""/>
+<attribute_value id="356368" nameRU="Deerma DX115C" nameUK=""/>
+<attribute_value id="356369" nameRU="Deerma VX100 Ultra S" nameUK=""/>
+<attribute_value id="356370" nameRU="Deerma DEM-VX300 MIX" nameUK=""/>
+<attribute_value id="356371" nameRU="Domotec MS-1372" nameUK=""/>
+<attribute_value id="356372" nameRU="Domotec MS-4401" nameUK=""/>
+<attribute_value id="356373" nameRU="Domotec MS-4408" nameUK=""/>
+<attribute_value id="356374" nameRU="Domotec MS-4405" nameUK=""/>
+<attribute_value id="356375" nameRU="Domotec MS-4409" nameUK=""/>
+<attribute_value id="356376" nameRU="Domotec MS-4403" nameUK=""/>
+<attribute_value id="356377" nameRU="Domotec MS-4404" nameUK=""/>
+<attribute_value id="356378" nameRU="Dreame L40 Ultra CE" nameUK=""/>
+<attribute_value id="356379" nameRU="Dreame H11 Core" nameUK=""/>
+<attribute_value id="356380" nameRU="Dreame H15 Pro" nameUK=""/>
+<attribute_value id="356381" nameRU="Dreame H12" nameUK=""/>
+<attribute_value id="356382" nameRU="Dreame Wet and Dry Vacuum" nameUK=""/>
+<attribute_value id="356383" nameRU="Dreame R20 Aqua" nameUK=""/>
+<attribute_value id="356384" nameRU="Dreame Mova K10" nameUK=""/>
+<attribute_value id="356385" nameRU="Dreame G10 Pro" nameUK=""/>
+<attribute_value id="356386" nameRU="Dreame Cordless Vacuum Cleaner" nameUK=""/>
+<attribute_value id="356387" nameRU="Dyson Gen5detect" nameUK=""/>
+<attribute_value id="356388" nameRU="Dyson V12" nameUK=""/>
+<attribute_value id="356389" nameRU="Dyson V8 Cyclone" nameUK=""/>
+<attribute_value id="356390" nameRU="Dyson Gen5 Outsize" nameUK=""/>
+<attribute_value id="356391" nameRU="Dyson Omni-glide" nameUK=""/>
+<attribute_value id="356392" nameRU="Dyson V15s Detect Submarine" nameUK=""/>
+<attribute_value id="356393" nameRU="Dyson V16 Piston Animal Submarine" nameUK=""/>
+<attribute_value id="356394" nameRU="Ecovacs Deebot U2 Pro" nameUK=""/>
+<attribute_value id="356395" nameRU="Ecovacs Deebot X8" nameUK=""/>
+<attribute_value id="356396" nameRU="Ecovacs YDLX11" nameUK=""/>
+<attribute_value id="356397" nameRU="Einhell TE-VC 18 Li Solo" nameUK=""/>
+<attribute_value id="356398" nameRU="Einhell GC-EL" nameUK=""/>
+<attribute_value id="356399" nameRU="Einhell TE-VC 18/10 Li-Solo" nameUK=""/>
+<attribute_value id="356400" nameRU="Einhell TC-VC 3055 S" nameUK=""/>
+<attribute_value id="356401" nameRU="Einhell TE-SV 18 Li Solo" nameUK=""/>
+<attribute_value id="356402" nameRU="Electrolux PC91" nameUK=""/>
+<attribute_value id="356403" nameRU="Electrolux PI92-4ANM" nameUK=""/>
+<attribute_value id="356404" nameRU="Electrolux EW82U1DB" nameUK=""/>
+<attribute_value id="356405" nameRU="Electrolux 500 Clean" nameUK=""/>
+<attribute_value id="356406" nameRU="Electrolux EL61C3DB" nameUK=""/>
+<attribute_value id="356407" nameRU="Electrolux EP61H21WET" nameUK=""/>
+<attribute_value id="356408" nameRU="Electrolux 600 Clean" nameUK=""/>
+<attribute_value id="356409" nameRU="Electrolux 800 Animal" nameUK=""/>
+<attribute_value id="356410" nameRU="Electrolux EP71UB14DB" nameUK=""/>
+<attribute_value id="356411" nameRU="Electrolux EP72AB21UG" nameUK=""/>
+<attribute_value id="356412" nameRU="Electrolux EP31CB21TG" nameUK=""/>
+<attribute_value id="356413" nameRU="Electrolux EERC75DB" nameUK=""/>
+<attribute_value id="356414" nameRU="Electrolux Scparketto" nameUK=""/>
+<attribute_value id="356415" nameRU="ETA Master 2" nameUK=""/>
+<attribute_value id="356416" nameRU="ETA Roxy" nameUK=""/>
+<attribute_value id="356417" nameRU="ETA Ambito" nameUK=""/>
+<attribute_value id="356418" nameRU="ETA Avanto" nameUK=""/>
+<attribute_value id="356419" nameRU="Goldberg GB-9904" nameUK=""/>
+<attribute_value id="356420" nameRU="Goldberg GB-9902" nameUK=""/>
+<attribute_value id="356421" nameRU="Goldberg GB-9903" nameUK=""/>
+<attribute_value id="356422" nameRU="Goldberg GB-8823" nameUK=""/>
+<attribute_value id="356423" nameRU="Gorenje SVC144FBK" nameUK=""/>
+<attribute_value id="356424" nameRU="Gorenje SVC252GFA" nameUK=""/>
+<attribute_value id="356425" nameRU="Gorenje VCE01G2AW" nameUK=""/>
+<attribute_value id="356426" nameRU="Gorenje VCE21ECBK" nameUK=""/>
+<attribute_value id="356427" nameRU="Gorenje VCEA11CXWII" nameUK=""/>
+<attribute_value id="356428" nameRU="Gorenje VCEB11CXRII" nameUK=""/>
+<attribute_value id="356429" nameRU="Gorenje VCEA-28-GLBK" nameUK=""/>
+<attribute_value id="356430" nameRU="Gorenje VCE21G4EW" nameUK=""/>
+<attribute_value id="356431" nameRU="Gorenje VCE22G4HGR" nameUK=""/>
+<attribute_value id="356432" nameRU="Gorenje VCEA03GAPRACY" nameUK=""/>
+<attribute_value id="356433" nameRU="Gorenje MVC72FW" nameUK=""/>
+<attribute_value id="356434" nameRU="Gorenje SVC 180 FW" nameUK=""/>
+<attribute_value id="356435" nameRU="Gorenje VCE01TABKG" nameUK=""/>
+<attribute_value id="356436" nameRU="Gorenje VCE03SPRCY" nameUK=""/>
+<attribute_value id="356437" nameRU="Gorenje VCE 48 AFBKGO" nameUK=""/>
+<attribute_value id="356438" nameRU="Gorenje VCEA 01" nameUK=""/>
+<attribute_value id="356439" nameRU="Grunhelm GVC8216" nameUK=""/>
+<attribute_value id="356440" nameRU="Grunhelm GVCM244BB" nameUK=""/>
+<attribute_value id="356441" nameRU="Grunhelm GSTC2000" nameUK=""/>
+<attribute_value id="356442" nameRU="Grunhelm GBVC-2202 HR" nameUK=""/>
+<attribute_value id="356443" nameRU="Grunhelm GAVC-150 MW" nameUK=""/>
+<attribute_value id="356444" nameRU="Grunhelm GAVC-2207 HR" nameUK=""/>
+<attribute_value id="356445" nameRU="Grunhelm GVCM244BO" nameUK=""/>
+<attribute_value id="356446" nameRU="Grunhelm GWVC-01" nameUK=""/>
+<attribute_value id="356447" nameRU="Grunhelm GCVC-2001 HB" nameUK=""/>
+<attribute_value id="356448" nameRU="Grunhelm GVC-1703" nameUK=""/>
+<attribute_value id="356449" nameRU="Grunhelm GBVC-2205 HB" nameUK=""/>
+<attribute_value id="356450" nameRU="Grunhelm Eco Power GVC" nameUK=""/>
+<attribute_value id="356451" nameRU="Grunhelm GWVC-05 HBR" nameUK=""/>
+<attribute_value id="356452" nameRU="Grunhelm ZY79G" nameUK=""/>
+<attribute_value id="356453" nameRU="Grunhelm 8208 P" nameUK=""/>
+<attribute_value id="356454" nameRU="Hoco ZP16" nameUK=""/>
+<attribute_value id="356455" nameRU="Hoco ZP6 Speed" nameUK=""/>
+<attribute_value id="356456" nameRU="Hoco ZP1" nameUK=""/>
+<attribute_value id="356457" nameRU="IRobot Roomba 671" nameUK=""/>
+<attribute_value id="356458" nameRU="IRobot Roomba Combo Essential" nameUK=""/>
+<attribute_value id="356459" nameRU="IRobot Roomba 561" nameUK=""/>
+<attribute_value id="356460" nameRU="IRobot Roomba j9" nameUK=""/>
+<attribute_value id="356461" nameRU="IRobot Roomba Combo j5" nameUK=""/>
+<attribute_value id="356462" nameRU="Karcher CVH 3 Plus" nameUK=""/>
+<attribute_value id="356463" nameRU="Karcher KWD 1W V-12/2/18" nameUK=""/>
+<attribute_value id="356464" nameRU="Karcher SC 4" nameUK=""/>
+<attribute_value id="356465" nameRU="Karcher WD 5 V-25/5/22" nameUK=""/>
+<attribute_value id="356466" nameRU="Karcher VC 3" nameUK=""/>
+<attribute_value id="356467" nameRU="Karcher VC 3 Plus" nameUK=""/>
+<attribute_value id="356468" nameRU="Karcher HD 7/17 M Cage" nameUK=""/>
+<attribute_value id="356469" nameRU="Karcher SE 3 Compact Home" nameUK=""/>
+<attribute_value id="356470" nameRU="Karcher FC 8 Smart" nameUK=""/>
+<attribute_value id="356471" nameRU="Karcher RCV 2" nameUK=""/>
+<attribute_value id="356472" nameRU="Karcher WD 4 V-20/5/22" nameUK=""/>
+<attribute_value id="356473" nameRU="Karcher WV 1 Plus" nameUK=""/>
+<attribute_value id="356474" nameRU="Karcher T 7/1 Classic" nameUK=""/>
+<attribute_value id="356475" nameRU="Karcher WD 2 Plus V-12/4/18 C" nameUK=""/>
+<attribute_value id="356476" nameRU="Karcher NT 30/1 Ap L" nameUK=""/>
+<attribute_value id="356477" nameRU="Karcher HDS 5/15 U" nameUK=""/>
+<attribute_value id="356478" nameRU="Karcher Puzzi 9/1 Bp Pack" nameUK=""/>
+<attribute_value id="356479" nameRU="Karcher WD 2 Plus V-15/4/18" nameUK=""/>
+<attribute_value id="356480" nameRU="Karcher Puzzi 8/1 C" nameUK=""/>
+<attribute_value id="356481" nameRU="Karcher FC 2-4" nameUK=""/>
+<attribute_value id="356482" nameRU="Karcher NT 22/1 Ap L" nameUK=""/>
+<attribute_value id="356483" nameRU="Karcher VC 7 Cordless YourMax" nameUK=""/>
+<attribute_value id="356484" nameRU="Karcher SE 4" nameUK=""/>
+<attribute_value id="356485" nameRU="Karcher WD 3 V-17/4/20" nameUK=""/>
+<attribute_value id="356486" nameRU="Karcher WD 3 P V-17/4/20" nameUK=""/>
+<attribute_value id="356487" nameRU="Karcher WD 3 S V-19/4/20" nameUK=""/>
+<attribute_value id="356488" nameRU="Karcher WD 3-18" nameUK=""/>
+<attribute_value id="356489" nameRU="Karcher Puzzi 10/1" nameUK=""/>
+<attribute_value id="356490" nameRU="Karcher AD 4 Premium" nameUK=""/>
+<attribute_value id="356491" nameRU="Karcher PCL 3-18" nameUK=""/>
+<attribute_value id="356492" nameRU="Karcher SE 5" nameUK=""/>
+<attribute_value id="356493" nameRU="Karcher AD 2 Battery" nameUK=""/>
+<attribute_value id="356494" nameRU="Karcher RC 4000" nameUK=""/>
+<attribute_value id="356495" nameRU="Karcher VC 2 Premium" nameUK=""/>
+<attribute_value id="356496" nameRU="Karcher WD 4 P V-20/5/22" nameUK=""/>
+<attribute_value id="356497" nameRU="Karcher SC 1 Multi & Up" nameUK=""/>
+<attribute_value id="356498" nameRU="Karcher T 11/1 Classic" nameUK=""/>
+<attribute_value id="356499" nameRU="Karcher WD 2-18" nameUK=""/>
+<attribute_value id="356500" nameRU="Karcher WV 2 Plus NP" nameUK=""/>
+<attribute_value id="356501" nameRU="Karcher NT 38/1 Me Classic Edition" nameUK=""/>
+<attribute_value id="356502" nameRU="Karcher FCV 3" nameUK=""/>
+<attribute_value id="356503" nameRU="Karcher T 8/1 L" nameUK=""/>
+<attribute_value id="356504" nameRU="Karcher WD 6 P S V-30/6/22/T" nameUK=""/>
+<attribute_value id="356505" nameRU="Karcher WD 1 Classic" nameUK=""/>
+<attribute_value id="356506" nameRU="Karcher NT 70/2 Me Classic" nameUK=""/>
+<attribute_value id="356507" nameRU="Karcher WVP 10 Adv" nameUK=""/>
+<attribute_value id="356508" nameRU="LG Pet Brush" nameUK=""/>
+<attribute_value id="356509" nameRU="LG V-C3B52SD" nameUK=""/>
+<attribute_value id="356510" nameRU="LG VC5506NHTCR" nameUK=""/>
+<attribute_value id="356511" nameRU="LG VK8506NHAC" nameUK=""/>
+<attribute_value id="356512" nameRU="Liberton LVC-4300" nameUK=""/>
+<attribute_value id="356513" nameRU="Liberton LVC-4304" nameUK=""/>
+<attribute_value id="356514" nameRU="Magio MG-893" nameUK=""/>
+<attribute_value id="356515" nameRU="Magio MG-895" nameUK=""/>
+<attribute_value id="356516" nameRU="Magio MG-892" nameUK=""/>
+<attribute_value id="356517" nameRU="Magio MG-910" nameUK=""/>
+<attribute_value id="356518" nameRU="Makita VC3011L" nameUK=""/>
+<attribute_value id="356519" nameRU="Makita CL107FDZ" nameUK=""/>
+<attribute_value id="356520" nameRU="Makita DVC865LZX3" nameUK=""/>
+<attribute_value id="356521" nameRU="Makita DVC261ZX11" nameUK=""/>
+<attribute_value id="356522" nameRU="Monte MT-8191" nameUK=""/>
+<attribute_value id="356523" nameRU="Monte MT-8137" nameUK=""/>
+<attribute_value id="356524" nameRU="Monte MT-8133" nameUK=""/>
+<attribute_value id="356525" nameRU="Monte MT-8192" nameUK=""/>
+<attribute_value id="356526" nameRU="Niceboy ION Charles i3 Plus" nameUK=""/>
+<attribute_value id="356527" nameRU="Niceboy Charles i4 Plus" nameUK=""/>
+<attribute_value id="356528" nameRU="Niceboy ION Hurricane H9" nameUK=""/>
+<attribute_value id="356529" nameRU="Philips XC5141/01" nameUK=""/>
+<attribute_value id="356530" nameRU="Philips Series 1000" nameUK=""/>
+<attribute_value id="356531" nameRU="Philips PowerPro Expert" nameUK=""/>
+<attribute_value id="356532" nameRU="Philips XB1111/10" nameUK=""/>
+<attribute_value id="356533" nameRU="Philips FC9745/09" nameUK=""/>
+<attribute_value id="356534" nameRU="Philips AquaTrio 9000 Series" nameUK=""/>
+<attribute_value id="356535" nameRU="Philips FC9331/09" nameUK=""/>
+<attribute_value id="356536" nameRU="Philips FC9333/09" nameUK=""/>
+<attribute_value id="356537" nameRU="Philips XD8122/10" nameUK=""/>
+<attribute_value id="356538" nameRU="Philips XB9154/09" nameUK=""/>
+<attribute_value id="356539" nameRU="Philips Series 3000" nameUK=""/>
+<attribute_value id="356540" nameRU="Philips FC9729/09" nameUK=""/>
+<attribute_value id="356541" nameRU="Philips XU5100/10" nameUK=""/>
+<attribute_value id="356542" nameRU="Philips PowerGo FC8240/09" nameUK=""/>
+<attribute_value id="356543" nameRU="Philips PowerGo FC8241/09" nameUK=""/>
+<attribute_value id="356544" nameRU="Philips Series 8000" nameUK=""/>
+<attribute_value id="356545" nameRU="Philips 7000 Series AquaTrio" nameUK=""/>
+<attribute_value id="356546" nameRU="Philips XC3131/01" nameUK=""/>
+<attribute_value id="356547" nameRU="Philips XC3133/01" nameUK=""/>
+<attribute_value id="356548" nameRU="Philips XD1101/10" nameUK=""/>
+<attribute_value id="356549" nameRU="Philips FC9550/09" nameUK=""/>
+<attribute_value id="356550" nameRU="Philips FC9556/09" nameUK=""/>
+<attribute_value id="356551" nameRU="Philips OneUp" nameUK=""/>
+<attribute_value id="356552" nameRU="Philips PowerCyclone XB2125/09" nameUK=""/>
+<attribute_value id="356553" nameRU="Profi-Tec PVC2120BL" nameUK=""/>
+<attribute_value id="356554" nameRU="Profi-Tec PVC2520BL" nameUK=""/>
+<attribute_value id="356555" nameRU="Profi-Tec PVC1520" nameUK=""/>
+<attribute_value id="356556" nameRU="RAF R.8673" nameUK=""/>
+<attribute_value id="356557" nameRU="RAF R.8677" nameUK=""/>
+<attribute_value id="356558" nameRU="RAF R.8672" nameUK=""/>
+<attribute_value id="356559" nameRU="RAF R.6667R" nameUK=""/>
+<attribute_value id="356560" nameRU="RAF R8711B" nameUK=""/>
+<attribute_value id="356561" nameRU="RAF R.8758" nameUK=""/>
+<attribute_value id="356562" nameRU="Rainberg RB-2265" nameUK=""/>
+<attribute_value id="356563" nameRU="Rainberg RB-2316" nameUK=""/>
+<attribute_value id="356564" nameRU="Rainberg RB2296" nameUK=""/>
+<attribute_value id="356565" nameRU="Rainberg RB-2301" nameUK=""/>
+<attribute_value id="356566" nameRU="Rainberg RB-651" nameUK=""/>
+<attribute_value id="356567" nameRU="Rainberg RB-2320" nameUK=""/>
+<attribute_value id="356568" nameRU="Rainberg RB-652" nameUK=""/>
+<attribute_value id="356569" nameRU="Rainberg RB-2267" nameUK=""/>
+<attribute_value id="356570" nameRU="Rainberg RB-659-S" nameUK=""/>
+<attribute_value id="356571" nameRU="Rainberg RB-655TB" nameUK=""/>
+<attribute_value id="356572" nameRU="Roborock F25" nameUK=""/>
+<attribute_value id="356573" nameRU="Roborock H5" nameUK=""/>
+<attribute_value id="356574" nameRU="Rotex EcoClean RVB16-B" nameUK=""/>
+<attribute_value id="356575" nameRU="Rotex RVC22-B" nameUK=""/>
+<attribute_value id="356576" nameRU="Rotex RVC-22-E" nameUK=""/>
+<attribute_value id="356577" nameRU="Rotex RVC20-R" nameUK=""/>
+<attribute_value id="356578" nameRU="Rowenta Green Force Cyclonic" nameUK=""/>
+<attribute_value id="356579" nameRU="Rowenta X-Force Flex 9.60 Auto Animal Aqua" nameUK=""/>
+<attribute_value id="356580" nameRU="Rowenta Swift Power Cyclonic" nameUK=""/>
+<attribute_value id="356581" nameRU="Rowenta RO7487EA Silence Force" nameUK=""/>
+<attribute_value id="356582" nameRU="Rowenta X-Force Flex 14.60 Aqua" nameUK=""/>
+<attribute_value id="356583" nameRU="Rowenta X-Force Flex 14.80" nameUK=""/>
+<attribute_value id="356584" nameRU="Rowenta RH6735WH" nameUK=""/>
+<attribute_value id="356585" nameRU="Rowenta RH6753WO" nameUK=""/>
+<attribute_value id="356586" nameRU="Rowenta RH9AD1WO" nameUK=""/>
+<attribute_value id="356587" nameRU="Rowenta X-Force Flex 12.60 Neo Allergy Aqua" nameUK=""/>
+<attribute_value id="356588" nameRU="Rowenta X-Force Flex 16.60" nameUK=""/>
+<attribute_value id="356589" nameRU="Rowenta Compact Power Cyclonic" nameUK=""/>
+<attribute_value id="356590" nameRU="Rowenta RO3985EA" nameUK=""/>
+<attribute_value id="356591" nameRU="Rowenta RY8561WH" nameUK=""/>
+<attribute_value id="356592" nameRU="Rowenta RO7C89EA" nameUK=""/>
+<attribute_value id="356593" nameRU="Rowenta RO7457EA" nameUK=""/>
+<attribute_value id="356594" nameRU="Rowenta RO7B13EA" nameUK=""/>
+<attribute_value id="356595" nameRU="Rowenta X-PERT 7.60" nameUK=""/>
+<attribute_value id="356596" nameRU="Rowenta RO3731EA" nameUK=""/>
+<attribute_value id="356597" nameRU="Rowenta RO2957EA" nameUK=""/>
+<attribute_value id="356598" nameRU="Rowenta RH6921" nameUK=""/>
+<attribute_value id="356599" nameRU="Rowenta X-Clean 5 Pro" nameUK=""/>
+<attribute_value id="356600" nameRU="Ryobi RHV18F-0 ONE+" nameUK=""/>
+<attribute_value id="356601" nameRU="Samsung VC07M25M9WD/UK" nameUK=""/>
+<attribute_value id="356602" nameRU="Samsung VC07M2110SR/UK" nameUK=""/>
+<attribute_value id="356603" nameRU="Samsung VC07M31C0HG/UK" nameUK=""/>
+<attribute_value id="356604" nameRU="Samsung Bespoke Jet AI VS90F40DEK/UK" nameUK=""/>
+<attribute_value id="356605" nameRU="Samsung VCC41U1V3A/UK" nameUK=""/>
+<attribute_value id="356606" nameRU="Samsung VCC45W0S36/UK" nameUK=""/>
+<attribute_value id="356607" nameRU="Samsung VC07M31A1HP/UK" nameUK=""/>
+<attribute_value id="356608" nameRU="Sencor SVC-0740BL" nameUK=""/>
+<attribute_value id="356609" nameRU="Sencor SVC7814VT" nameUK=""/>
+<attribute_value id="356610" nameRU="Sencor SVC7811WH" nameUK=""/>
+<attribute_value id="356611" nameRU="Sencor SVC 5501BK" nameUK=""/>
+<attribute_value id="356612" nameRU="Sencor SVC 52WH-EUE3" nameUK=""/>
+<attribute_value id="356613" nameRU="Sencor SRV 3160TQ" nameUK=""/>
+<attribute_value id="356614" nameRU="Sencor SVC511TQ-EUE2" nameUK=""/>
+<attribute_value id="356615" nameRU="Sencor SVW 8872" nameUK=""/>
+<attribute_value id="356616" nameRU="Sencor SVC 45BL-EUE3" nameUK=""/>
+<attribute_value id="356617" nameRU="Sencor SVC 45GR-EUE3" nameUK=""/>
+<attribute_value id="356618" nameRU="Sencor SVC 3001" nameUK=""/>
+<attribute_value id="356619" nameRU="Sokany SK-13042" nameUK=""/>
+<attribute_value id="356620" nameRU="Sokany SK-13006" nameUK=""/>
+<attribute_value id="356621" nameRU="Sokany SK-3377" nameUK=""/>
+<attribute_value id="356622" nameRU="Sokany SK-13033" nameUK=""/>
+<attribute_value id="356623" nameRU="Sokany SK-13015" nameUK=""/>
+<attribute_value id="356624" nameRU="Sokany Max Line 3.1" nameUK=""/>
+<attribute_value id="356625" nameRU="Sokany SK-13011" nameUK=""/>
+<attribute_value id="356626" nameRU="Sokany SK13017W" nameUK=""/>
+<attribute_value id="356627" nameRU="Sokany SK-13020" nameUK=""/>
+<attribute_value id="356628" nameRU="Sokany Feel Happy" nameUK=""/>
+<attribute_value id="356629" nameRU="Sokany SK-13038" nameUK=""/>
+<attribute_value id="356630" nameRU="Sokany SK-13022" nameUK=""/>
+<attribute_value id="356631" nameRU="Sokany SK-13026" nameUK=""/>
+<attribute_value id="356632" nameRU="Sokany SK-13005" nameUK=""/>
+<attribute_value id="356633" nameRU="Sokany SK-13004" nameUK=""/>
+<attribute_value id="356634" nameRU="Sokany 900 New Version" nameUK=""/>
+<attribute_value id="356635" nameRU="Sokany SK-3387" nameUK=""/>
+<attribute_value id="356636" nameRU="Sokany SK-13032" nameUK=""/>
+<attribute_value id="356637" nameRU="Sokany SK-13036" nameUK=""/>
+<attribute_value id="356638" nameRU="Sokany SK-13016" nameUK=""/>
+<attribute_value id="356639" nameRU="Thomas Prestige 20S" nameUK=""/>
+<attribute_value id="356640" nameRU="Thomas Multi Clean X10" nameUK=""/>
+<attribute_value id="356641" nameRU="Thomas Wave XT Aqua-Box" nameUK=""/>
+<attribute_value id="356642" nameRU="Thomas TWIN AquaWash Pet" nameUK=""/>
+<attribute_value id="356643" nameRU="Thomas Aqua+ Allergy & Family" nameUK=""/>
+<attribute_value id="356644" nameRU="Thomas SKY XT Aqua-Box" nameUK=""/>
+<attribute_value id="356645" nameRU="Tineco Pure One A50S" nameUK=""/>
+<attribute_value id="356646" nameRU="Tineco iFloor 5" nameUK=""/>
+<attribute_value id="356647" nameRU="Tineco iCarpet One Spot" nameUK=""/>
+<attribute_value id="356648" nameRU="Tineco Pure One S15 Flex" nameUK=""/>
+<attribute_value id="356649" nameRU="ViLgrand VVC0401BC" nameUK=""/>
+<attribute_value id="356650" nameRU="ViLgrand VVC0305C" nameUK=""/>
+<attribute_value id="356651" nameRU="ViLgrand VVC-2233-MC" nameUK=""/>
+<attribute_value id="356652" nameRU="Xiaomi Mijia Wireless Vacuum Cleaner 2 Lite" nameUK=""/>
+<attribute_value id="356653" nameRU="Xiaomi Vacuum Cleaner G20" nameUK=""/>
+<attribute_value id="356654" nameRU="Xiaomi Vacuum Cleaner G20 Lite" nameUK=""/>
+<attribute_value id="356655" nameRU="Xiaomi Mijia E204" nameUK=""/>
+<attribute_value id="356656" nameRU="Xiaomi Vacuum Cleaner G9 Plus" nameUK=""/>
+<attribute_value id="356657" nameRU="Xiaomi Deerma DX700" nameUK=""/>
+<attribute_value id="356658" nameRU="Xiaomi Deerma DX115C" nameUK=""/>
+<attribute_value id="356659" nameRU="Xiaomi 70mai Vacuum Cleaner" nameUK=""/>
+<attribute_value id="356660" nameRU="Xiaomi Dust Mite Vacuum Cleaner" nameUK=""/>
+<attribute_value id="356661" nameRU="Xiaomi Robot Vacuum S40 Pro" nameUK=""/>
+<attribute_value id="356662" nameRU="Xiaomi Robot Vacuum 5 Pro" nameUK=""/>
+<attribute_value id="356663" nameRU="Zelmer ZVC032P" nameUK=""/>
+<attribute_value id="356664" nameRU="Zelmer Antek ZVC3501R" nameUK=""/>
+<attribute_value id="356665" nameRU="Zelmer Jozek ZVC3506" nameUK=""/>
+<attribute_value id="356666" nameRU="Zepline ZP-00348" nameUK=""/>
+<attribute_value id="356667" nameRU="Zepline ZP-00223" nameUK=""/>
+<attribute_value id="356668" nameRU="Zepline ZP-6804" nameUK=""/>
+<attribute_value id="356669" nameRU="Zepline ZP-6805" nameUK=""/>
+</attribute>
+</category>
+</categories>

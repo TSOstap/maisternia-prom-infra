@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1250317" nameRU="Садовые опрыскиватели" nameUK="Садові обприскувачі">
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="15" measureUnitUK="А. г"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="100" measureUnitUK="куб. см"/>
+<attribute id="349" nameRU="Емкость топливного бака" type="real" nameUK="Ємність паливного бака" measureUnitRU="л" min="0" max="20" measureUnitUK="л"/>
+<attribute id="877" nameRU="Тип насоса" type="multiselect" nameUK="Тип насосу">
+<attribute_value id="154537" nameRU="Поршневой" nameUK="Поршневий"/>
+</attribute>
+<attribute id="2049" nameRU="Максимальное давление" type="real" nameUK="Максимальний тиск" measureUnitRU="бар" min="0" max="100" measureUnitUK="бар"/>
+<attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="30" measureUnitUK="В"/>
+<attribute id="4107" nameRU="Объем бака" type="real" nameUK="Об'єм бака" measureUnitRU="л" min="0" max="110" measureUnitUK="л"/>
+<attribute id="4737" nameRU="Мощность" type="real" nameUK="Потужність" measureUnitRU="кВт" min="0" max="4" measureUnitUK="кВт"/>
+<attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+<attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+<attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+<attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+<attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+<attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+<attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+<attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+<attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+<attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+<attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+<attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+<attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+<attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+<attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+<attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+<attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+<attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+<attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+<attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+<attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+<attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+<attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+<attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+</attribute>
+<attribute id="5073" nameRU="Производительность" type="real" nameUK="Продуктивність" measureUnitRU="литр/мин" min="0" max="50" measureUnitUK="літр/хв"/>
+<attribute id="6355" nameRU="Длина шланга" type="real" nameUK="Довжина шланга" measureUnitRU="см" min="0" max="60000" measureUnitUK="см"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="11485" nameRU="Общий вес" type="real" nameUK="Загальна вага" measureUnitRU="кг" min="0" max="90" measureUnitUK="кг"/>
+<attribute id="11992" nameRU="Источник питания" type="singleselect" nameUK="Джерело живлення">
+<attribute_value id="154534" nameRU="Аккумуляторный" nameUK="Акумуляторний"/>
+<attribute_value id="154535" nameRU="Бензиновый" nameUK="Бензиновий"/>
+<attribute_value id="154536" nameRU="Механический" nameUK="Механічний"/>
+</attribute>
+<attribute id="14791" nameRU="Тип опрыскивателя" type="singleselect" nameUK="Тип обприскувача">
+<attribute_value id="154527" nameRU="Ручной" nameUK="Ручний"/>
+<attribute_value id="154528" nameRU="Мотоопрыскиватель" nameUK="Мотооприскувач"/>
+<attribute_value id="154529" nameRU="Аккумуляторный (электрический)" nameUK="Акумуляторний (електричний)"/>
+<attribute_value id="350396" nameRU="Аксессуары" nameUK="Аксесуари"/>
+<attribute_value id="350397" nameRU="Бензиновые (Мотоопрыскиватели)" nameUK="Бензинові (Мотообприскувачі)"/>
+</attribute>
+<attribute id="14792" nameRU="Способ транспортировки опрыскивателя" type="singleselect" nameUK="Спосіб транспортування обприскувача">
+<attribute_value id="154530" nameRU="В руках" nameUK="В руках"/>
+<attribute_value id="154531" nameRU="Плечевой (на плече)" nameUK="Плечовий (на плечі)"/>
+<attribute_value id="154532" nameRU="Ранцевый (за спиной)" nameUK="Ранцевий (за спиною)"/>
+<attribute_value id="154533" nameRU="На тележке" nameUK="На візку"/>
+</attribute>
+<attribute id="14793" nameRU="Дальность/радиус опрыскивания" type="real" nameUK="Дальність/радіус обприскування" measureUnitRU="м" min="0" max="30" measureUnitUK="м"/>
+<attribute id="14794" nameRU="Длина распылительной трубки" type="real" nameUK="Довжина розпилювальної трубки" measureUnitRU="см" min="0" max="200" measureUnitUK="см"/>
+<attribute id="14795" nameRU="Максимальная температура распыляемой жидкости" type="real" nameUK="Максимальна температура рідини, що розпилюється" measureUnitRU="град." min="0" max="40" measureUnitUK="град."/>
+<attribute id="14796" nameRU="Регулировка струи распыления" type="bool" nameUK="Регулювання струменя розпилення"/>
+<attribute id="14797" nameRU="Продолжительность автономной работы" type="real" nameUK="Тривалість автономної роботи" measureUnitRU="час" min="0" max="10" measureUnitUK="годин"/>
+<attribute id="19438" nameRU="Материал опрыскивателя" type="singleselect" nameUK="Матеріал обприскувача">
+<attribute_value id="350375" nameRU="Агроткань" nameUK=""/>
+<attribute_value id="350376" nameRU="Бамбук" nameUK=""/>
+<attribute_value id="350377" nameRU="Бумага" nameUK=""/>
+<attribute_value id="350378" nameRU="Джут" nameUK=""/>
+<attribute_value id="350379" nameRU="Капрон" nameUK=""/>
+<attribute_value id="350380" nameRU="Кожа" nameUK=""/>
+<attribute_value id="350381" nameRU="Латекс" nameUK=""/>
+<attribute_value id="350382" nameRU="Металл" nameUK=""/>
+<attribute_value id="350383" nameRU="Металл + пластик" nameUK=""/>
+<attribute_value id="350384" nameRU="Нитрил" nameUK=""/>
+<attribute_value id="350385" nameRU="Пластик" nameUK=""/>
+<attribute_value id="350386" nameRU="Пластик + кокосовое волокно" nameUK=""/>
+<attribute_value id="350387" nameRU="Полипропилен" nameUK=""/>
+<attribute_value id="350388" nameRU="Полистирол" nameUK=""/>
+<attribute_value id="350389" nameRU="Полиуретан" nameUK=""/>
+<attribute_value id="350390" nameRU="Полиэстер" nameUK=""/>
+<attribute_value id="350391" nameRU="Спанбонд" nameUK=""/>
+<attribute_value id="350392" nameRU="Сталь" nameUK=""/>
+<attribute_value id="350393" nameRU="Стекло" nameUK=""/>
+<attribute_value id="350394" nameRU="Тарпаулин" nameUK=""/>
+<attribute_value id="350395" nameRU="Текстиль" nameUK=""/>
+</attribute>
+<attribute id="19439" nameRU="Транспортировка/использование" type="singleselect" nameUK="Транспортування/використання">
+<attribute_value id="350398" nameRU="В руках" nameUK=""/>
+<attribute_value id="350399" nameRU="На колесах" nameUK=""/>
+<attribute_value id="350400" nameRU="На одно плечо" nameUK=""/>
+<attribute_value id="350401" nameRU="На спину (ранцевые)" nameUK=""/>
+</attribute>
+</category>
+</categories>

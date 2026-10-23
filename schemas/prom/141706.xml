@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141706" nameRU="Строительные фены" nameUK="Будівельні фени">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="4000" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5" measureUnitUK="кг"/>
+<attribute id="33" nameRU="Дополнительная рукоятка" type="bool" nameUK="Додаткова рукоятка"/>
+<attribute id="34" nameRU="Наличие LCD-дисплея" type="bool" nameUK="Наявність LCD-дисплея"/>
+<attribute id="35" nameRU="Регулировка температуры" type="singleselect" nameUK="Регулювання температури">
+<attribute_value id="6920" nameRU="Ступенчатая" nameUK="Ступінчаста"/>
+<attribute_value id="6921" nameRU="Плавная" nameUK="Плавна"/>
+<attribute_value id="290981" nameRU="Цифровая" nameUK=""/>
+</attribute>
+<attribute id="36" nameRU="Теплозащитный кожух" type="bool" nameUK="Теплозахисний кожух"/>
+<attribute id="37" nameRU="Отключение нагревательного элемента при перегреве" type="bool" nameUK="Відключення нагрівального елемента в разі перегріву"/>
+<attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="2000" measureUnitUK="град."/>
+<attribute id="90" nameRU="Максимальный объем воздуха" type="real" nameUK="Максимальний об'єм повітря" measureUnitRU="литр/мин" min="0" max="700" measureUnitUK="літр/хв"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+<attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+<attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+<attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+<attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+</category>
+</categories>

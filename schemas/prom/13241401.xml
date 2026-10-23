@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13241401" nameRU="Бытовые насосы" nameUK="Побутові насоси">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="20000" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="500" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="360" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="176" nameRU="Количество скоростей" type="real" nameUK="Кількість швидкостей"/>
+<attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+<attribute_value id="7132" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+<attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="19913" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="27658" nameRU="Бронза" nameUK="Бронза"/>
+<attribute_value id="39731" nameRU="Чугун" nameUK="Чавун"/>
+<attribute_value id="67250" nameRU="Латунь" nameUK="Латунь"/>
+<attribute_value id="67251" nameRU="Медь" nameUK="Мідь"/>
+<attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+<attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+<attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+<attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+</attribute>
+<attribute id="190" nameRU="Длина сетевого шнура" type="real" nameUK="Довжина мережевого шнура" measureUnitRU="м" min="0" max="150" measureUnitUK="м"/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="394" nameRU="Защита от перегрева" type="bool" nameUK="Захист від перегріву"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="1493" nameRU="Частота" type="real" nameUK="Частота" measureUnitRU="Гц" min="0" max="300" measureUnitUK="Гц"/>
+<attribute id="2053" nameRU="Напряжение сети" type="multiselect" nameUK="Напруга мережі">
+<attribute_value id="11945" nameRU="220~240 В" nameUK="220~240 В"/>
+<attribute_value id="11946" nameRU="380~400 В" nameUK="380~400 В"/>
+<attribute_value id="35999" nameRU="100~120 В" nameUK="100~120 В"/>
+</attribute>
+<attribute id="4015" nameRU="Пропускная способность" type="real" nameUK="Пропускна здатність" measureUnitRU="куб. м/час" min="0" max="500" measureUnitUK="куб.м/год"/>
+<attribute id="4309" nameRU="Класс защиты корпусов электронного оборудования" type="singleselect" nameUK="Клас захисту корпусів електронного устаткування">
+<attribute_value id="27642" nameRU="IPX4D" nameUK="IPX4D"/>
+<attribute_value id="27643" nameRU="IPX5D" nameUK="IPX5D"/>
+<attribute_value id="27644" nameRU="IP20" nameUK="IP20"/>
+<attribute_value id="27645" nameRU="IP44" nameUK="IP44"/>
+<attribute_value id="27646" nameRU="IP65" nameUK="IP65"/>
+<attribute_value id="28458" nameRU="IP40" nameUK="IP40"/>
+<attribute_value id="39734" nameRU="IP68" nameUK="IP68"/>
+<attribute_value id="234126" nameRU="IP54" nameUK="IP54"/>
+<attribute_value id="282466" nameRU="IP55" nameUK="IP55"/>
+<attribute_value id="292039" nameRU="IPX8" nameUK=""/>
+<attribute_value id="301025" nameRU="IP42" nameUK=""/>
+<attribute_value id="301027" nameRU="IP64" nameUK=""/>
+</attribute>
+<attribute id="5161" nameRU="Минимальная температура окружающей среды" type="real" nameUK="Мінімальна температура навколишнього середовища" measureUnitRU="град." min="-40" max="10" measureUnitUK="град."/>
+<attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0" max="110" measureUnitUK="град."/>
+<attribute id="5858" nameRU="Способ установки насоса" type="singleselect" nameUK="Спосіб установки насоса">
+<attribute_value id="39633" nameRU="Погружной" nameUK="Занурювальний"/>
+<attribute_value id="39634" nameRU="Поверхностный" nameUK="Поверхневий"/>
+</attribute>
+<attribute id="5859" nameRU="Максимальный напор" type="real" nameUK="Максимальний напір" measureUnitRU="м" min="0" max="500" measureUnitUK="м"/>
+<attribute id="5867" nameRU="Минимальная температура рабочей жидкости" type="real" nameUK="Мінімальна температура робочої рідини" measureUnitRU="град." min="-25" max="30" measureUnitUK="град."/>
+<attribute id="5868" nameRU="Максимальная температура рабочей жидкости" type="real" nameUK="Максимальна температура робочої рідини" measureUnitRU="град." min="10" max="150" measureUnitUK="град."/>
+<attribute id="5869" nameRU="Качество воды" type="singleselect" nameUK="Якість води">
+<attribute_value id="39679" nameRU="Грязная" nameUK="Брудна"/>
+<attribute_value id="39680" nameRU="Чистая" nameUK="Чистий"/>
+</attribute>
+<attribute id="5870" nameRU="Установка насоса" type="singleselect" nameUK="Встановлення насоса">
+<attribute_value id="39685" nameRU="Горизонтальная/вертикальная" nameUK="Горизонтальна/вертикальна"/>
+<attribute_value id="39686" nameRU="Горизонтальная" nameUK="Горизонтальна"/>
+<attribute_value id="39687" nameRU="Вертикальная" nameUK="Вертикальна"/>
+</attribute>
+<attribute id="5871" nameRU="Тип ротора" type="singleselect" nameUK="Тип ротора">
+<attribute_value id="39711" nameRU=""Мокрый"" nameUK="Мокрий"/>
+<attribute_value id="39712" nameRU=""Сухой"" nameUK="Сухий"/>
+</attribute>
+<attribute id="5872" nameRU="Диаметр разъема соединения" type="real" nameUK="Діаметр роз'єму з'єднання" measureUnitRU="дюйм" min="0" max="25" measureUnitUK="дюйм"/>
+<attribute id="5874" nameRU="Автоматический контроль уровня рабочей среды" type="bool" nameUK="Автоматичний контроль рівня робочої середовища"/>
+<attribute id="5875" nameRU="Плавный пуск двигателя" type="bool" nameUK="Плавний пуск двигуна"/>
+<attribute id="5881" nameRU="Максимальная глубина погружения" type="real" nameUK="Максимальна глибина занурення" measureUnitRU="м" min="0" max="450" measureUnitUK="м"/>
+<attribute id="5886" nameRU="Глубина до зеркала воды" type="real" nameUK="Глибина до дзеркала води" measureUnitRU="м" min="0" max="100" measureUnitUK="м"/>
+<attribute id="5917" nameRU="Режущая насадка" type="bool" nameUK="Ріжуча насадка"/>
+<attribute id="5927" nameRU="Диаметр перекачиваемых частиц" type="real" nameUK="Діаметр перекачуваних частинок" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+<attribute id="5928" nameRU="Максимальное количество пусков в час" type="integer" nameUK="Максимальна кількість пусків в годину"/>
+<attribute id="5938" nameRU="Тип выключателя насоса" type="singleselect" nameUK="Тип вимикача насоса">
+<attribute_value id="40244" nameRU="Поплавковый" nameUK="Поплавковий"/>
+<attribute_value id="40245" nameRU="Электронный" nameUK="Електронний"/>
+</attribute>
+<attribute id="5951" nameRU="Объем гидробака" type="real" nameUK="Об'єм гідробака" measureUnitRU="л" min="1" max="150" measureUnitUK="л"/>
+<attribute id="5952" nameRU="Повышение давления" type="bool" nameUK="Підвищення тиску"/>
+<attribute id="8745" nameRU="Число водозаборных точек" type="integer" nameUK="Кількість водозабірних точок"/>
+<attribute id="8748" nameRU="Общий объём резервуара (ов)" type="real" nameUK="Загальний об`єм резервуара (ів)" measureUnitRU="л" min="0" max="1000" measureUnitUK="л"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="15286" nameRU="Вид насоса" type="singleselect" nameUK="Вид насоса">
+<attribute_value id="160037" nameRU="Дренажный" nameUK="Дренажний"/>
+<attribute_value id="160038" nameRU="Колодезный" nameUK="Колодязний"/>
+<attribute_value id="160039" nameRU="Скважинный" nameUK="Свердловинний"/>
+<attribute_value id="160040" nameRU="Фекальный" nameUK="Фекальний"/>
+<attribute_value id="160041" nameRU="Насосная станция" nameUK="Насосна станція"/>
+<attribute_value id="160042" nameRU="Для системы отопления" nameUK="Для системи опалення"/>
+<attribute_value id="165178" nameRU="Канализационная установка" nameUK="Каналізаційна установка"/>
+<attribute_value id="246659" nameRU="Центробежный" nameUK="Відцентровий"/>
+<attribute_value id="246660" nameRU="Вихревой" nameUK="Вихровий"/>
+<attribute_value id="246661" nameRU="Вибрационный" nameUK="Вібраційний"/>
+<attribute_value id="246711" nameRU="Дренажно-фекальный" nameUK="Дренажно-фекальний"/>
+<attribute_value id="272632" nameRU="Циркуляционный" nameUK="Циркуляційний"/>
+<attribute_value id="290961" nameRU="Многоступенчатый" nameUK="Багатоступінчастий"/>
+<attribute_value id="304838" nameRU="Для повышения давления воды" nameUK="Для підвищення тиску води"/>
+<attribute_value id="306804" nameRU="Мембранный" nameUK="Мембранний"/>
+<attribute_value id="310615" nameRU="Перистальтический" nameUK="Перистальтичний"/>
+<attribute_value id="339511" nameRU="Глубинный" nameUK="Глибинний"/>
+</attribute>
+<attribute id="19448" nameRU="Назначение насоса" type="singleselect" nameUK="Призначення насоса">
+<attribute_value id="350498" nameRU="Для грязной воды" nameUK=""/>
+<attribute_value id="350499" nameRU="Для дождевой воды" nameUK=""/>
+<attribute_value id="350500" nameRU="Для канализации" nameUK=""/>
+<attribute_value id="350501" nameRU="Для колодца" nameUK=""/>
+<attribute_value id="350502" nameRU="Для полива" nameUK=""/>
+<attribute_value id="350503" nameRU="Для скважины" nameUK=""/>
+<attribute_value id="350504" nameRU="Для фонтана" nameUK=""/>
+<attribute_value id="350505" nameRU="Для чистой воды" nameUK=""/>
+</attribute>
+<attribute id="19449" nameRU="Особенности насоса" type="singleselect" nameUK="Особливості насоса">
+<attribute_value id="350506" nameRU="С верхним забором воды" nameUK=""/>
+<attribute_value id="350507" nameRU="С измельчителем" nameUK=""/>
+<attribute_value id="350508" nameRU="С нижним забором воды" nameUK=""/>
+</attribute>
+</category>
+</categories>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="143109" nameRU="Точильные станки" nameUK="Точильні верстати">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="кВт" min="0" max="10000" measureUnitUK="кВт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" measureUnitUK="кг"/>
+<attribute id="58" nameRU="Максимальный диаметр диска" type="real" nameUK="Максимальний діаметр диска" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="79" nameRU="Диаметр посадочного отверстия" type="real" nameUK="Діаметр посадкового отвору" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="176" nameRU="Количество скоростей" type="real" nameUK="Кількість швидкостей" measureUnitRU="шт" measureUnitUK="шт."/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="1493" nameRU="Частота" type="real" nameUK="Частота" measureUnitRU="GHz" min="0" max="300" measureUnitUK="GHz"/>
+<attribute id="1906" nameRU="Потребляемый ток" type="real" nameUK="Споживаний струм" measureUnitRU="А" min="0" max="100" measureUnitUK="А"/>
+<attribute id="2158" nameRU="Число оборотов холостого хода" type="integer" nameUK="Кількість обертів холостого ходу" measureUnitRU="об/мин" min="0" max="20000" measureUnitUK="об/хв"/>
+<attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="2000" measureUnitUK="В"/>
+<attribute id="2479" nameRU="ЧПУ" type="bool" nameUK="ЧПУ"/>
+<attribute id="2523" nameRU="Тип системы ЧПУ станка" type="multiselect" nameUK="Тип системи ЧПУ верстата">
+<attribute_value id="14583" nameRU="позиционная" nameUK="позиційна"/>
+<attribute_value id="14584" nameRU="контурная" nameUK="контурна"/>
+<attribute_value id="14585" nameRU="универсальная" nameUK="універсальна"/>
+<attribute_value id="14586" nameRU="замкнутая" nameUK="замкнута"/>
+<attribute_value id="14587" nameRU="разомкнутая" nameUK="розімкнена"/>
+<attribute_value id="14588" nameRU="с абсолютным отсчетом" nameUK="з абсолютним відліком"/>
+<attribute_value id="14589" nameRU="с относительным отсчетом" nameUK="з відносним відліком"/>
+<attribute_value id="14590" nameRU="одно-координатная" nameUK="одно-координатна"/>
+<attribute_value id="14591" nameRU="двух-координатная" nameUK="двох-координатна"/>
+<attribute_value id="14592" nameRU="трех-координатная" nameUK="трьох-координатна"/>
+<attribute_value id="14593" nameRU="четырех-координатная" nameUK="чотирьох-координатна"/>
+<attribute_value id="14594" nameRU="пяти-координатная" nameUK="п'яти-координатна"/>
+</attribute>
+<attribute id="2524" nameRU="Длина заготовки" type="real" nameUK="Довжина заготівлі" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="2525" nameRU="Ширина заготовки" type="real" nameUK="Ширина заготовки" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="2546" nameRU="Толщина заготовки" type="real" nameUK="Товщина заготовки" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="2554" nameRU="Скорость аспирации" type="real" nameUK="Швидкість аспірації" measureUnitRU="куб. м/час" measureUnitUK="куб.м/год"/>
+<attribute id="2556" nameRU="Диаметр патрубка отсасывания" type="real" nameUK="Діаметр патрубка відсмоктування" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="2558" nameRU="Угол наклона пилы" type="real" nameUK="Кут нахилу пили" measureUnitRU="град." measureUnitUK="град."/>
+<attribute id="2894" nameRU="Угол наклона" type="real" nameUK="Кут нахилу" measureUnitRU="град." measureUnitUK="град."/>
+<attribute id="3064" nameRU="Опрокидывающий момент" type="real" nameUK="Перекидаючий момент" measureUnitRU="кН*м" measureUnitUK="кН*м"/>
+<attribute id="3066" nameRU="Скорость шлифования" type="real" nameUK="Швидкість шліфування" measureUnitRU="м/сек" measureUnitUK="м/сек"/>
+<attribute id="3069" nameRU="Материал заточного диска" type="free" nameUK="Матеріалу заточного диска"/>
+<attribute id="3070" nameRU="Количество дисков" type="real" nameUK="Кількість дисків" measureUnitRU="шт" measureUnitUK="шт."/>
+<attribute id="3071" nameRU="Толщина диска" type="real" nameUK="Товщина диска" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="14191" nameRU="Дополнительный сервис" type="multiselect" nameUK="Додатковий сервіс">
+<attribute_value id="144186" nameRU="Установка" nameUK="Установка"/>
+<attribute_value id="144187" nameRU="Сервисное обслуживание" nameUK="Сервісне обслуговування"/>
+<attribute_value id="157787" nameRU="Обучение" nameUK="Навчання"/>
+</attribute>
+<attribute id="15504" nameRU="Тип станка" type="singleselect" nameUK="Тип верстата">
+<attribute_value id="180803" nameRU="Точильный" nameUK="Точильний"/>
+<attribute_value id="180804" nameRU="Заточной" nameUK="Заточний"/>
+</attribute>
+</category>
+</categories>

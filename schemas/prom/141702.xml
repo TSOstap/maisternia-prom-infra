@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141702" nameRU="Отверточные биты" nameUK="Викруткові біти">
+<attribute id="399" nameRU="Маркировка наконечника" type="singleselect" nameUK="Маркування накінечника">
+<attribute_value id="7668" nameRU="SL 2" nameUK="SL 2"/>
+<attribute_value id="7669" nameRU="SL 2,5" nameUK="SL 2,5"/>
+<attribute_value id="7670" nameRU="SL 3" nameUK="SL 3"/>
+<attribute_value id="7671" nameRU="SL 3,5" nameUK="SL 3,5"/>
+<attribute_value id="7672" nameRU="SL 4" nameUK="SL 4"/>
+<attribute_value id="7673" nameRU="SL 4,5" nameUK="SL 4,5"/>
+<attribute_value id="7674" nameRU="SL 5" nameUK="SL 5"/>
+<attribute_value id="7675" nameRU="SL 5,5" nameUK="SL 5,5"/>
+<attribute_value id="7676" nameRU="SL 6" nameUK="SL 6"/>
+<attribute_value id="7677" nameRU="SL 6,5" nameUK="SL 6,5"/>
+<attribute_value id="7678" nameRU="SL 7" nameUK="SL 7"/>
+<attribute_value id="7679" nameRU="SL 8" nameUK="SL 8"/>
+<attribute_value id="7680" nameRU="SL 9" nameUK="SL 9"/>
+<attribute_value id="7681" nameRU="SL 10" nameUK="SL 10"/>
+<attribute_value id="7682" nameRU="SL 12" nameUK="SL 12"/>
+<attribute_value id="7683" nameRU="SL 13" nameUK="SL 13"/>
+<attribute_value id="7684" nameRU="SL 14" nameUK="SL 14"/>
+<attribute_value id="7685" nameRU="SL 16" nameUK="SL 16"/>
+<attribute_value id="7686" nameRU="SL 18" nameUK="SL 18"/>
+<attribute_value id="7687" nameRU="PH 000" nameUK="PH 000"/>
+<attribute_value id="7688" nameRU="PH 00" nameUK="PH 00"/>
+<attribute_value id="7689" nameRU="PH 0" nameUK="PH 0"/>
+<attribute_value id="7690" nameRU="PH 1" nameUK="PH 1"/>
+<attribute_value id="7691" nameRU="PH 2" nameUK="PH 2"/>
+<attribute_value id="7692" nameRU="PH 3" nameUK="PH 3"/>
+<attribute_value id="7693" nameRU="PH 4" nameUK="PH 4"/>
+<attribute_value id="7694" nameRU="SW 1,5" nameUK="SW 1,5"/>
+<attribute_value id="7706" nameRU="SW 10" nameUK="SW 10"/>
+<attribute_value id="7726" nameRU="TX 15" nameUK="TX 15"/>
+<attribute_value id="7728" nameRU="TX 25" nameUK="TX 25"/>
+<attribute_value id="7729" nameRU="TX 27" nameUK="TX 27"/>
+<attribute_value id="7730" nameRU="TX 30" nameUK="TX 30"/>
+<attribute_value id="7731" nameRU="TX 40" nameUK="TX 40"/>
+<attribute_value id="7732" nameRU="TX 45" nameUK="TX 45"/>
+<attribute_value id="7733" nameRU="TX 50" nameUK="TX 50"/>
+<attribute_value id="7734" nameRU="TX 55" nameUK="TX 55"/>
+<attribute_value id="274917" nameRU="SL 9,5" nameUK="SL 9,5"/>
+<attribute_value id="277631" nameRU="Y2" nameUK="Y2"/>
+<attribute_value id="277632" nameRU="Y1" nameUK="Y1"/>
+<attribute_value id="277633" nameRU="Y0" nameUK="Y0"/>
+<attribute_value id="277634" nameRU="U5" nameUK="U5"/>
+<attribute_value id="277636" nameRU="T5" nameUK="T5"/>
+<attribute_value id="277637" nameRU="Т6" nameUK="Т6"/>
+<attribute_value id="280112" nameRU="PZ 2" nameUK="PZ 2"/>
+<attribute_value id="282999" nameRU="PZ 1" nameUK=""/>
+<attribute_value id="289637" nameRU="T 15" nameUK=""/>
+<attribute_value id="289638" nameRU="T 10" nameUK=""/>
+<attribute_value id="289639" nameRU="PZ 3" nameUK=""/>
+<attribute_value id="289640" nameRU="HEX 6" nameUK=""/>
+<attribute_value id="289641" nameRU="HEX 5" nameUK=""/>
+<attribute_value id="289642" nameRU="HEX 3" nameUK=""/>
+<attribute_value id="293216" nameRU="T 4" nameUK=""/>
+<attribute_value id="293217" nameRU="Т 5" nameUK=""/>
+<attribute_value id="293218" nameRU="Т 6" nameUK=""/>
+<attribute_value id="293219" nameRU="Т 7" nameUK=""/>
+<attribute_value id="293220" nameRU="Т 8" nameUK=""/>
+<attribute_value id="293221" nameRU="T 9" nameUK=""/>
+<attribute_value id="293222" nameRU="Т 20" nameUK=""/>
+<attribute_value id="293223" nameRU="Т 25" nameUK=""/>
+<attribute_value id="293224" nameRU="Т 27" nameUK=""/>
+<attribute_value id="293225" nameRU="Т 30" nameUK=""/>
+<attribute_value id="293226" nameRU="Т 40" nameUK=""/>
+<attribute_value id="293227" nameRU="Т 45" nameUK=""/>
+<attribute_value id="293228" nameRU="Т 50" nameUK=""/>
+<attribute_value id="293229" nameRU="Т 55" nameUK=""/>
+<attribute_value id="293230" nameRU="PZ/SL1" nameUK=""/>
+<attribute_value id="293231" nameRU="PZ/SL2" nameUK=""/>
+<attribute_value id="293232" nameRU="PH/SL1" nameUK=""/>
+<attribute_value id="293233" nameRU="PH/SL2" nameUK=""/>
+<attribute_value id="293449" nameRU="HX6" nameUK=""/>
+<attribute_value id="293450" nameRU="HX8" nameUK=""/>
+<attribute_value id="293451" nameRU="HX10" nameUK=""/>
+<attribute_value id="302360" nameRU="M5" nameUK=""/>
+<attribute_value id="302361" nameRU="M6" nameUK=""/>
+<attribute_value id="302362" nameRU="M8" nameUK=""/>
+<attribute_value id="302363" nameRU="M10" nameUK=""/>
+<attribute_value id="302364" nameRU="M12" nameUK=""/>
+<attribute_value id="302365" nameRU="M14" nameUK=""/>
+<attribute_value id="302366" nameRU="M16" nameUK=""/>
+<attribute_value id="303171" nameRU="HEX 4" nameUK=""/>
+<attribute_value id="303172" nameRU="HEX 8" nameUK=""/>
+<attribute_value id="303173" nameRU="HEX 12" nameUK=""/>
+<attribute_value id="306839" nameRU="HEX 2" nameUK=""/>
+<attribute_value id="306840" nameRU="HEX 7" nameUK=""/>
+<attribute_value id="306841" nameRU="HEX 10" nameUK=""/>
+<attribute_value id="306842" nameRU="SL 3x0.5" nameUK=""/>
+<attribute_value id="306843" nameRU="SL 5.5x1" nameUK=""/>
+<attribute_value id="306844" nameRU="SL 6.5x1.2" nameUK=""/>
+<attribute_value id="306845" nameRU="T 47" nameUK=""/>
+<attribute_value id="306846" nameRU="T 60" nameUK=""/>
+<attribute_value id="306847" nameRU="SL 5.5" nameUK=""/>
+<attribute_value id="306848" nameRU="SL 6.5" nameUK=""/>
+<attribute_value id="307460" nameRU="HEX 14" nameUK=""/>
+<attribute_value id="307529" nameRU="T 35" nameUK=""/>
+<attribute_value id="307530" nameRU="T 70" nameUK=""/>
+<attribute_value id="311155" nameRU="HEX 17" nameUK=""/>
+<attribute_value id="311156" nameRU="HEX 19" nameUK=""/>
+<attribute_value id="311157" nameRU="HEX 11" nameUK=""/>
+<attribute_value id="311158" nameRU="HEX 9" nameUK=""/>
+<attribute_value id="311159" nameRU="M9" nameUK=""/>
+<attribute_value id="311160" nameRU="M13" nameUK=""/>
+<attribute_value id="311161" nameRU="M7" nameUK=""/>
+<attribute_value id="314791" nameRU="HEX 2.5" nameUK=""/>
+<attribute_value id="330512" nameRU="HEX 5.5" nameUK="HEX 5.5"/>
+<attribute_value id="330513" nameRU="H13" nameUK="H13"/>
+<attribute_value id="330528" nameRU="H1.5" nameUK="H1.5"/>
+<attribute_value id="331118" nameRU="SL 2.5" nameUK=""/>
+<attribute_value id="331135" nameRU="3/32" nameUK="3/32"/>
+<attribute_value id="331137" nameRU="1/8" nameUK=""/>
+<attribute_value id="331554" nameRU="U6" nameUK=""/>
+<attribute_value id="331556" nameRU="U7" nameUK=""/>
+<attribute_value id="331557" nameRU="U8" nameUK=""/>
+<attribute_value id="332559" nameRU="S3" nameUK=""/>
+<attribute_value id="332560" nameRU="S2" nameUK=""/>
+<attribute_value id="332561" nameRU="S1" nameUK=""/>
+<attribute_value id="332562" nameRU="Y3" nameUK=""/>
+<attribute_value id="332583" nameRU="FPH3" nameUK=""/>
+<attribute_value id="332584" nameRU="FPH2" nameUK=""/>
+<attribute_value id="332585" nameRU="FPH1" nameUK=""/>
+<attribute_value id="332625" nameRU="HEX 1.3" nameUK=""/>
+<attribute_value id="332831" nameRU="PZ0" nameUK=""/>
+<attribute_value id="340927" nameRU="М13" nameUK=""/>
+<attribute_value id="345771" nameRU="H8" nameUK="H8"/>
+<attribute_value id="345772" nameRU="H10" nameUK="H10"/>
+<attribute_value id="349087" nameRU="PZ 4" nameUK=""/>
+<attribute_value id="349259" nameRU="T40" nameUK=""/>
+<attribute_value id="349395" nameRU="PH/FL2 " nameUK=""/>
+<attribute_value id="349524" nameRU="PZ1/PZ2" nameUK=""/>
+<attribute_value id="349525" nameRU="PH1/SL2" nameUK=""/>
+<attribute_value id="349526" nameRU="PH1/SL5" nameUK=""/>
+<attribute_value id="349545" nameRU="PH2/SL6" nameUK=""/>
+<attribute_value id="349548" nameRU="Т15/Т20" nameUK=""/>
+<attribute_value id="349555" nameRU="Т25/Т30" nameUK=""/>
+<attribute_value id="349572" nameRU="PH3/SL8" nameUK=""/>
+<attribute_value id="361887" nameRU="H4" nameUK=""/>
+</attribute>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="69917" nameRU="Удлинитель" nameUK="Подовжувач"/>
+<attribute_value id="82135" nameRU="Набор" nameUK="Набір"/>
+<attribute_value id="117123" nameRU="Кассета" nameUK="Касета"/>
+<attribute_value id="172592" nameRU="Бита" nameUK="Біта"/>
+<attribute_value id="172593" nameRU="Держатель" nameUK="Тримач"/>
+<attribute_value id="306858" nameRU="Бита в торцевой головке" nameUK="Біта в торцевій головці"/>
+</attribute>
+<attribute id="1403" nameRU="Масса" type="real" nameUK="Маса" measureUnitRU="г" min="0" max="10000" measureUnitUK="г"/>
+<attribute id="8595" nameRU="Квадрат" type="singleselect" nameUK="Квадрат">
+<attribute_value id="69924" nameRU="1/2"" nameUK="1/2""/>
+<attribute_value id="69925" nameRU="1/4"" nameUK="1/4""/>
+<attribute_value id="69927" nameRU="3/8"" nameUK="3/8""/>
+<attribute_value id="348892" nameRU="5/16"" nameUK=""/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="15775" nameRU="Тип биты" type="singleselect" nameUK="Тип біти">
+<attribute_value id="172594" nameRU="Односторонняя" nameUK="Одностороння"/>
+<attribute_value id="172595" nameRU="Двусторонняя" nameUK="Двостороння"/>
+</attribute>
+<attribute id="15776" nameRU="Тип шлица" type="multiselect" nameUK="Тип шліца">
+<attribute_value id="172596" nameRU="Прямой" nameUK="Прямий"/>
+<attribute_value id="172597" nameRU="Шестигранный" nameUK="Шестигранний"/>
+<attribute_value id="172598" nameRU="Крестообразный" nameUK="Хрестоподібний"/>
+<attribute_value id="302367" nameRU="Двенадцатигранник" nameUK="Дванадцятигранник"/>
+<attribute_value id="314808" nameRU="Торсион" nameUK="Торсіон"/>
+<attribute_value id="318738" nameRU="TORX" nameUK="TORX"/>
+<attribute_value id="331555" nameRU="U-образный" nameUK="U-подібний"/>
+<attribute_value id="331558" nameRU="Треугольный" nameUK="Трикутний"/>
+<attribute_value id="331559" nameRU="Y-образный" nameUK="Y-подібний"/>
+<attribute_value id="332557" nameRU="Квадратный" nameUK="Квадратний"/>
+<attribute_value id="340195" nameRU="PENTACLE" nameUK=""/>
+<attribute_value id="340201" nameRU="RIBE" nameUK=""/>
+<attribute_value id="361566" nameRU="HEX" nameUK=""/>
+<attribute_value id="361574" nameRU="SPLINE" nameUK=""/>
+</attribute>
+<attribute id="15777" nameRU="Исполнение биты" type="multiselect" nameUK="Виконання біти">
+<attribute_value id="172599" nameRU="1/2"" nameUK="1/2""/>
+<attribute_value id="172600" nameRU="1/4"" nameUK="1/4""/>
+<attribute_value id="172601" nameRU="5/16"" nameUK="5/16""/>
+<attribute_value id="273259" nameRU="3/8" nameUK="3/8"/>
+<attribute_value id="306838" nameRU="10 мм" nameUK=""/>
+</attribute>
+<attribute id="15778" nameRU="Шестигранник привода" type="singleselect" nameUK="Шестигранник приводу">
+<attribute_value id="172602" nameRU="Внутренний" nameUK="Внутрішній"/>
+<attribute_value id="172603" nameRU="Внешний" nameUK="Зовнішній"/>
+</attribute>
+</category>
+</categories>

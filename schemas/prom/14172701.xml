@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14172701" nameRU="Ручные дисковые пилы" nameUK="Ручні дискові пили">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="3000" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+<attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+<attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+<attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+</attribute>
+<attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+<attribute id="10" nameRU="Ограничение пускового тока" type="bool" nameUK="Обмеження пускового струму"/>
+<attribute id="12" nameRU="Поддержка постоянного количества оборотов под нагрузкой" type="bool" nameUK="Підтримка постійного числа обертів під навантаженням"/>
+<attribute id="15" nameRU="Лазерный маркер" type="bool" nameUK="Лазерний маркер"/>
+<attribute id="20" nameRU="Подключение пылесборника / пылесоса" type="bool" nameUK="Підключення пилозбірника/пилососа"/>
+<attribute id="24" nameRU="Блокировка кнопки включения" type="bool" nameUK="Блокування кнопки включення"/>
+<attribute id="25" nameRU="Блокировка шпинделя" type="bool" nameUK="Блокування шпинделя"/>
+<attribute id="42" nameRU="Параллельный упор" type="bool" nameUK="Паралельний упор"/>
+<attribute id="56" nameRU="Максимальная глубина пропила" type="real" nameUK="Максимальна глибина пропілу" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+<attribute id="58" nameRU="Максимальный диаметр диска" type="real" nameUK="Максимальний діаметр диска" measureUnitRU="мм" min="0" max="510" measureUnitUK="мм"/>
+<attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+<attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+<attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+<attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+</attribute>
+<attribute id="63" nameRU="Дополнительный аккумулятор" type="bool" nameUK="Додатковий акумулятор"/>
+<attribute id="77" nameRU="Защитный кожух" type="bool" nameUK="Захисний кожух"/>
+<attribute id="79" nameRU="Диаметр посадочного отверстия" type="real" nameUK="Діаметр посадкового отвору" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+<attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="20000" measureUnitUK="об/хв"/>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="5" measureUnitUK="А. г"/>
+<attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="54" measureUnitUK="В"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+<attribute id="151" nameRU="Рабочий ход" type="real" nameUK="Робочий хід" measureUnitRU="мм" min="0" max="700" measureUnitUK="мм"/>
+<attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+<attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+<attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+<attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+<attribute_value id="82305" nameRU="Картонная коробка" nameUK="Картонна коробка"/>
+</attribute>
+<attribute id="1266" nameRU="Класс" type="singleselect" nameUK="Клас">
+<attribute_value id="204573" nameRU="Профессиональный" nameUK="Професійний"/>
+</attribute>
+<attribute id="2392" nameRU="Тип установки" type="multiselect" nameUK="Тип встановлення">
+<attribute_value id="36482" nameRU="Напольный" nameUK="Підлоговий"/>
+</attribute>
+<attribute id="2894" nameRU="Угол наклона" type="real" nameUK="Кут нахилу" measureUnitRU="град." min="0" max="90" measureUnitUK="град."/>
+<attribute id="3153" nameRU="Диаметр фрезы" type="real" nameUK="Діаметр фрези" measureUnitRU="мм" min="0" max="300" measureUnitUK="мм"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="15750" nameRU="Глубина пропила под 45 градусами" type="integer" nameUK="Глибина пропилу під 45 градусами" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+<attribute id="18151" nameRU="Количество оборотов" type="real" nameUK="Кількість обертів" measureUnitRU="об/мин" min="0" max="12000" measureUnitUK="об/хв"/>
+<attribute id="18176" nameRU="Возможность стационарного крепления" type="bool" nameUK="Можливість стаціонарного кріплення"/>
+</category>
+</categories>

@@ -192,7 +192,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       if (!m.ok) { unmapped.push({ name: p.name, reason: m.reason }); continue; }
       const prev = cand.get(m.attr.id);
       if (prev && itemKey(prev.out) !== itemKey(m.out)) { ambiguous.add(m.attr.id); conflicts.push(`XML: кілька різних значень для «${m.out.name}»`); continue; }
-      cand.set(m.attr.id, { out: m.out, src: SRC.XML, frags: { ua: [], ru: [] } });
+      cand.set(m.attr.id, { out: m.out, src: SRC.XML, frags: { ua: [], ru: [] }, from: itemKey(p) });
     }
     const descCand = new Map();
     for (const [lang, html] of [["ua", descUa], ["ru", descRu]]) {
@@ -254,7 +254,13 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     }
     // RAW: якщо тепер зіставляється — підтверджене поле; інакше — актуальне сире значення з тією ж назвою.
     const a = attrOf(x.p.name);
-    if (a && cand.has(a)) { if (!used.has(a)) push(cand.get(a).out, cand.get(a).src, a); continue; }
+    if (a && cand.has(a)) {
+      // Замінюємо полем Prom лише тоді, коли поле виведене саме з цього запису; інакше (поле з іншого параметра
+      // постачальника) наявне значення може містити більше даних (напр. «Біметал HSS») — лишаємо його, поле не дублюємо.
+      if (cand.get(a).from === x.k) { if (!used.has(a)) push(cand.get(a).out, cand.get(a).src, a); }
+      else if (!used.has(a)) { conflicts.push(`«${x.p.name}»: наявне значення «${x.p.value}» залишено; поле Prom «${cand.get(a).out.value}» не застосовано (інший параметр постачальника)`); push(x.p, SRC.RAW, ""); used.add(a); }
+      continue;
+    }
     const now = rawByName.get(normName(x.p.name));
     if (now && !usedNames.has(normName(now.name))) push(now, SRC.RAW, "");
     else if (!now) removed.push(x.p.name);

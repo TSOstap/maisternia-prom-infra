@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141002" nameRU="Компрессоры поршневые" nameUK="Поршневі компресори">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="110000" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5000" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="12" measureUnitUK="бар"/>
+<attribute id="114" nameRU="Тип поршневого компрессора" type="singleselect" nameUK="Тип поршневого компресора">
+<attribute_value id="7045" nameRU="с прямым приводом" nameUK="з прямим приводом"/>
+<attribute_value id="7046" nameRU="с ременным приводом" nameUK="з ремінним приводом"/>
+</attribute>
+<attribute id="115" nameRU="Объем ресивера" type="real" nameUK="Об'єм ресивера" measureUnitRU="л" min="0" max="1000" measureUnitUK="л"/>
+<attribute id="116" nameRU="Количество цилиндров" type="singleselect" nameUK="Кількість циліндрів">
+<attribute_value id="7047" nameRU="1" nameUK="1"/>
+<attribute_value id="7048" nameRU="2" nameUK="2"/>
+<attribute_value id="7049" nameRU="3" nameUK="3"/>
+</attribute>
+<attribute id="118" nameRU="Регулировка давления" type="bool" nameUK="Регулювання тиску"/>
+<attribute id="119" nameRU="Система автоматической защиты" type="bool" nameUK="Система автоматичного захисту"/>
+<attribute id="120" nameRU="Воздушный фильтр" type="bool" nameUK="Повітряний фільтр"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="309" nameRU="Манометр" type="bool" nameUK="Манометр"/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="2049" nameRU="Максимальное давление" type="real" nameUK="Максимальний тиск" measureUnitRU="МПа" min="0" max="10000" measureUnitUK="МПа"/>
+<attribute id="2053" nameRU="Напряжение сети" type="multiselect" nameUK="Напруга мережі">
+<attribute_value id="11945" nameRU="220~240 В" nameUK="220~240 В"/>
+<attribute_value id="11946" nameRU="380~400 В" nameUK="380~400 В"/>
+<attribute_value id="35999" nameRU="100~120 В" nameUK="100~120 В"/>
+</attribute>
+<attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+<attribute id="4817" nameRU="Количество колес" type="integer" nameUK="Кількість коліс" measureUnitRU="шт" min="1" max="10" measureUnitUK="шт."/>
+<attribute id="5073" nameRU="Производительность" type="real" nameUK="Продуктивність" measureUnitRU="куб. м/мин" min="0" max="50000" measureUnitUK="куб. м/хв"/>
+<attribute id="5161" nameRU="Минимальная температура окружающей среды" type="real" nameUK="Мінімальна температура навколишнього середовища" measureUnitRU="град." min="-100" max="10" measureUnitUK="град."/>
+<attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+<attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+<attribute id="8015" nameRU="Номинальное давление" type="real" nameUK="Номінальний тиск" measureUnitRU="Бар" min="0" max="50" measureUnitUK="Бар"/>
+<attribute id="9484" nameRU="Расход масла" type="real" nameUK="Витрата масла" measureUnitRU="л/ч" min="0" max="5" measureUnitUK="л/год"/>
+<attribute id="9669" nameRU="Тип поршневого компрессора по количеству степеней сжатия" type="singleselect" nameUK="Тип поршневого компресора за кількістю ступенів стиснення">
+<attribute_value id="77723" nameRU="Одноступенчатый" nameUK="Одноступінчатий"/>
+<attribute_value id="77724" nameRU="Двухступенчатый" nameUK="Двоступінчастий"/>
+<attribute_value id="77725" nameRU="Многоступенчатый" nameUK="Багатоступінчастий"/>
+</attribute>
+<attribute id="9670" nameRU="Тип поршневого компрессора по применению смазки" type="singleselect" nameUK="Тип поршневого компресора за застосуванням мастила">
+<attribute_value id="77726" nameRU="Масляный" nameUK="Масляний"/>
+<attribute_value id="77727" nameRU="Безмасляный" nameUK="Безмасляний"/>
+</attribute>
+<attribute id="9671" nameRU="Расположение ресивера" type="singleselect" nameUK="Розташування ресивера">
+<attribute_value id="77728" nameRU="Вертикально" nameUK="Вертикально"/>
+<attribute_value id="77729" nameRU="Горизонтально" nameUK="Горизонтально"/>
+</attribute>
+<attribute id="9672" nameRU="Тип поршневого компрессора по расположению цилиндров" type="singleselect" nameUK="Тип поршневого компресора за розташуванням циліндрів">
+<attribute_value id="77730" nameRU="Вертикальный" nameUK="Вертикальний"/>
+<attribute_value id="77731" nameRU="Угловой" nameUK="Кутовий"/>
+<attribute_value id="77732" nameRU="Оппозитный(Горизонтальный)" nameUK="Опозитний(Горизонтальний)"/>
+</attribute>
+<attribute id="9673" nameRU="Система охлаждения цилиндров" type="singleselect" nameUK="Система охолодження циліндрів">
+<attribute_value id="77735" nameRU="Водяная" nameUK="Водяна"/>
+<attribute_value id="77736" nameRU="Воздушная" nameUK="Повітряна"/>
+</attribute>
+<attribute id="9675" nameRU="Тип компрессора по мобильности" type="singleselect" nameUK="Тип компресора по мобільності">
+<attribute_value id="77743" nameRU="Передвижной" nameUK="Пересувний"/>
+<attribute_value id="77744" nameRU="Стационарный" nameUK="Стаціонарний"/>
+</attribute>
+<attribute id="18151" nameRU="Количество оборотов" type="real" nameUK="Кількість обертів" measureUnitRU="об/мин" min="0" max="12000" measureUnitUK="об/хв"/>
+</category>
+</categories>

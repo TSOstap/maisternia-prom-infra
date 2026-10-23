@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201508" nameRU="Сверлильные коронки, кольцевые пилы" nameUK="Свердлильні коронки, кільцеві пилки">
+<attribute id="85" nameRU="Тип сверления" type="singleselect" nameUK="Тип свердління">
+<attribute_value id="6955" nameRU="Сухое" nameUK="Сухе"/>
+<attribute_value id="6956" nameRU="Мокрое" nameUK="Мокре"/>
+</attribute>
+<attribute id="112" nameRU="Тип хвостовика" type="singleselect" nameUK="Тип хвостовика">
+<attribute_value id="7041" nameRU="Шестигранный" nameUK="Шестигранний"/>
+<attribute_value id="7042" nameRU="Четырехгранный" nameUK="Чотиригранний"/>
+<attribute_value id="7043" nameRU="Цилиндрический" nameUK="Циліндричний"/>
+<attribute_value id="7044" nameRU="SDS" nameUK="SDS"/>
+<attribute_value id="142626" nameRU="SDS-plus" nameUK="SDS-plus"/>
+<attribute_value id="142627" nameRU="SDS-max" nameUK="SDS-max"/>
+<attribute_value id="142628" nameRU="SDS-quick" nameUK="SDS-quick"/>
+<attribute_value id="142629" nameRU="Трехгранный" nameUK="Тригранний"/>
+<attribute_value id="142630" nameRU="Конический" nameUK="Конічний"/>
+<attribute_value id="247385" nameRU="1 1/4"" nameUK="1 1/4""/>
+<attribute_value id="247386" nameRU="1/2"" nameUK="1/2""/>
+<attribute_value id="272051" nameRU="М 16" nameUK="М 16"/>
+<attribute_value id="273746" nameRU="М 14" nameUK="М 14"/>
+<attribute_value id="330989" nameRU="1/8" nameUK=""/>
+</attribute>
+<attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+<attribute_value id="8058" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+<attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="36087" nameRU="Гранит" nameUK="Граніт"/>
+<attribute_value id="36090" nameRU="Мрамор" nameUK="Мармур"/>
+<attribute_value id="169033" nameRU="Быстрорежущая сталь" nameUK="Швидкорізальна сталь"/>
+<attribute_value id="172709" nameRU="Биметалл" nameUK="Біметал"/>
+<attribute_value id="172710" nameRU="Высокоуглеродистая сталь" nameUK="Високовуглецева сталь"/>
+<attribute_value id="198257" nameRU="Керамогранит" nameUK="Керамограніт"/>
+<attribute_value id="272050" nameRU="Высококачественная сталь" nameUK="Високоякісна сталь"/>
+<attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+<attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+<attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+<attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+</attribute>
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="79614" nameRU="Переходник" nameUK="Перехідник"/>
+<attribute_value id="172757" nameRU="Коронка сверлильная" nameUK="Коронка свердлильна"/>
+<attribute_value id="172760" nameRU="Пила кольцевая" nameUK="Пила кільцева"/>
+<attribute_value id="172761" nameRU="Хвостовик" nameUK="Хвостовик"/>
+<attribute_value id="172762" nameRU="Центровочное сверло" nameUK="Центрувальне свердло"/>
+<attribute_value id="172763" nameRU="Набор коронок сверлильных" nameUK="Набір коронок свердлильних"/>
+<attribute_value id="172764" nameRU="Набор пил кольцевых" nameUK="Набір кільцевих пив"/>
+<attribute_value id="330971" nameRU="Выколотка" nameUK="Виколотка"/>
+</attribute>
+<attribute id="1237" nameRU="Конструкция" type="singleselect" nameUK="Конструкція">
+<attribute_value id="166836" nameRU="Сборная" nameUK="Збірна"/>
+</attribute>
+<attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+<attribute_value id="62747" nameRU="Универсальное" nameUK="Універсальне"/>
+<attribute_value id="142623" nameRU="По металлу" nameUK="По металу"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="11414" nameRU="Минимальная длина" type="real" nameUK="Мінімальна довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+<attribute id="11415" nameRU="Максимальная длина" type="real" nameUK="Максимальна довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+<attribute id="15368" nameRU="Обработка материала" type="multiselect" nameUK="Обробка матеріалу">
+<attribute_value id="166810" nameRU="Дерево" nameUK="Дерево"/>
+<attribute_value id="166811" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="166812" nameRU="Чугун" nameUK="Чавун"/>
+<attribute_value id="166813" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+<attribute_value id="166814" nameRU="Закаленная сталь" nameUK="Загартована сталь"/>
+<attribute_value id="166815" nameRU="Медь" nameUK="Мідь"/>
+<attribute_value id="166816" nameRU="Алюминий" nameUK="Алюміній"/>
+</attribute>
+<attribute id="15780" nameRU="Твердосплавная напайка" type="bool" nameUK="Твердосплавна напайка"/>
+<attribute id="15797" nameRU="Покрытие рабочей части" type="singleselect" nameUK="Покриття робочої частини">
+<attribute_value id="172768" nameRU="Карбидное порошковое" nameUK="Карбідне порошкове"/>
+<attribute_value id="172769" nameRU="Алмазное напыление" nameUK="Алмазне напилення"/>
+<attribute_value id="172770" nameRU="Нет" nameUK="Немає"/>
+<attribute_value id="247384" nameRU="Алмазный сегмент" nameUK="Алмазний сегмент"/>
+<attribute_value id="283097" nameRU="Вольфрамовое напыление" nameUK="Вольфрамове напилення"/>
+</attribute>
+<attribute id="15798" nameRU="Применение коронки/пилы" type="multiselect" nameUK="Застосування коронки/пилки">
+<attribute_value id="172772" nameRU="Дерево" nameUK="Дерево"/>
+<attribute_value id="172773" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="172774" nameRU="Пеноматериалы" nameUK="Піноматеріали"/>
+<attribute_value id="172775" nameRU="Плитка" nameUK="Плитка"/>
+<attribute_value id="172776" nameRU="Кафель" nameUK="Кахель"/>
+<attribute_value id="172777" nameRU="Стекло" nameUK="Скло"/>
+<attribute_value id="172778" nameRU="Камень" nameUK="Камінь"/>
+<attribute_value id="172779" nameRU="Бетон" nameUK="Бетон"/>
+<attribute_value id="172780" nameRU="Железобетон" nameUK="Залізобетон"/>
+<attribute_value id="172781" nameRU="Кирпич" nameUK="Цегла"/>
+<attribute_value id="272048" nameRU="Высоко армированный бетон" nameUK="Високо армований бетон"/>
+<attribute_value id="272049" nameRU="Искусственный камень" nameUK="Штучний камінь"/>
+<attribute_value id="298808" nameRU="Мрамор" nameUK="Мармур"/>
+<attribute_value id="300313" nameRU="Керамогранит" nameUK="Керамограніт"/>
+<attribute_value id="300314" nameRU="Гранит" nameUK="Граніт"/>
+<attribute_value id="322070" nameRU="Гипсокартон" nameUK="Гіпсокартон"/>
+</attribute>
+<attribute id="15799" nameRU="Минимальный диаметр" type="real" nameUK="Мінімальний діаметр" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="15800" nameRU="Максимальный диаметр" type="real" nameUK="Максимальний діаметр" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+</category>
+</categories>

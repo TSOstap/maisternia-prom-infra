@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="150410" nameRU="Ручные и налобные фонари" nameUK="Ручні та налобні ліхтарі">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="2200" measureUnitUK="г"/>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="мАч" min="0" max="32000" measureUnitUK="мАг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+<attribute_value id="7132" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+<attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="7867" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="70189" nameRU="Титан" nameUK="Титан"/>
+<attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+<attribute_value id="107082" nameRU="Резина" nameUK="Гума"/>
+<attribute_value id="126965" nameRU="Алюминиевый сплав" nameUK="Алюмінієвий сплав"/>
+<attribute_value id="181182" nameRU="Полиуретан" nameUK="Поліуретан"/>
+<attribute_value id="205716" nameRU="Магниевый сплав" nameUK="Магнієвий сплав"/>
+<attribute_value id="214067" nameRU="Анодированный алюминий" nameUK="Анодований алюміній"/>
+<attribute_value id="214091" nameRU="Металл и пластик" nameUK="Метал і пластик"/>
+<attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+<attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+<attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+</attribute>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="20" max="600" measureUnitUK="мм"/>
+<attribute id="1338" nameRU="Время работы" type="real" nameUK="Час роботи" measureUnitRU="час" min="0" max="1000" measureUnitUK="годин"/>
+<attribute id="1687" nameRU="Время заряда аккумулятора" type="real" nameUK="Час заряду акумулятора" measureUnitRU="час" min="0" max="48" measureUnitUK="годин"/>
+<attribute id="1980" nameRU="Тип питания" type="multiselect" nameUK="Тип живлення">
+<attribute_value id="11692" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+<attribute_value id="21680" nameRU="Батарейки" nameUK="Батарейки"/>
+<attribute_value id="24536" nameRU="USB-порт компьютера" nameUK="USB-порт комп'ютера"/>
+<attribute_value id="95189" nameRU="Сеть" nameUK="Мережа"/>
+</attribute>
+<attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+<attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+<attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+<attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+<attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+<attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+<attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+<attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+<attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+<attribute_value id="30802" nameRU="Оливковый" nameUK="Оливковий"/>
+<attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+<attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+<attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+<attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+<attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+<attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+<attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+<attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+<attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+<attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+<attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+<attribute_value id="264227" nameRU="Темно-синий" nameUK="Темно-синій"/>
+<attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+<attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+<attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+<attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+</attribute>
+<attribute id="5312" nameRU="Крепление" type="singleselect" nameUK="Кріплення">
+<attribute_value id="38931" nameRU="Универсальное" nameUK="Універсальне"/>
+<attribute_value id="116117" nameRU="Ремешок" nameUK="Ремінець"/>
+<attribute_value id="203160" nameRU="Магнитное" nameUK="Магнітне"/>
+<attribute_value id="301175" nameRU="Крючок" nameUK="Гачок"/>
+<attribute_value id="302852" nameRU="Клипса" nameUK="Кліпса"/>
+<attribute_value id="313328" nameRU="Карабин" nameUK="Карабін"/>
+</attribute>
+<attribute id="7950" nameRU="Мощность лампы" type="real" nameUK="Потужність лампи" measureUnitRU="Вт" min="0" max="100" measureUnitUK="Вт"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="10687" nameRU="Режимы работы фонаря" type="multiselect" nameUK="Режими роботи ліхтаря">
+<attribute_value id="95850" nameRU="Максимальный" nameUK="Максимальний"/>
+<attribute_value id="95851" nameRU="Средний" nameUK="Середній"/>
+<attribute_value id="95852" nameRU="Минимальный" nameUK="Мінімальний"/>
+<attribute_value id="95853" nameRU="Мигающий" nameUK="Миготливий"/>
+<attribute_value id="95854" nameRU="Режим SOS" nameUK="Режим SOS"/>
+<attribute_value id="108937" nameRU="Плавная регулировка яркости" nameUK="Плавне регулювання яскравості"/>
+<attribute_value id="108938" nameRU="Интенсивный" nameUK="Інтенсивний"/>
+<attribute_value id="108939" nameRU="Сберегающий" nameUK="Зберігаючий"/>
+<attribute_value id="298399" nameRU="Лазер" nameUK="Лазер"/>
+</attribute>
+<attribute id="10688" nameRU="Особенности фонаря" type="multiselect" nameUK="Особливості ліхтаря">
+<attribute_value id="95859" nameRU="Водонепроницаемый" nameUK="Водонепроникний"/>
+<attribute_value id="95860" nameRU="Влагостойкий" nameUK="Вологостійкий"/>
+<attribute_value id="95861" nameRU="Противоударный" nameUK="Протиударний"/>
+<attribute_value id="95862" nameRU="Лазерная подсветка" nameUK="Лазерна підсвітка"/>
+<attribute_value id="109065" nameRU="Зарядка для телефона" nameUK="Зарядка для телефону"/>
+<attribute_value id="205250" nameRU="Оптический зум" nameUK="Оптичний зум"/>
+<attribute_value id="220422" nameRU="Ультрафиолетовый" nameUK="Ультрафіолетовий"/>
+<attribute_value id="299409" nameRU="Инфракрасный свет" nameUK="Інфрачервоне світло"/>
+<attribute_value id="299542" nameRU="Взрывозащищенный" nameUK="Вибухозахищений"/>
+<attribute_value id="301315" nameRU="Противотуманные" nameUK="Протитуманні"/>
+<attribute_value id="301316" nameRU="Пылестойкий" nameUK="Пилостійкий"/>
+<attribute_value id="304279" nameRU="Сменный аккумулятор" nameUK="Змінний акумулятор"/>
+<attribute_value id="304282" nameRU="Встроенный аккумулятор" nameUK="Вбудований акумулятор"/>
+<attribute_value id="304399" nameRU="Индикатор заряду" nameUK="Індикатор заряду"/>
+<attribute_value id="304700" nameRU="Красная подсветка" nameUK="Червоне підсвічування"/>
+<attribute_value id="304701" nameRU="Сенсорное управление" nameUK="Сенсорне управління"/>
+<attribute_value id="313592" nameRU="Ночной режим" nameUK="Нічний режим"/>
+<attribute_value id="313593" nameRU="Детектор движения" nameUK="Детектор руху"/>
+<attribute_value id="319194" nameRU="Защита от перегрева" nameUK="Захист від перегріву"/>
+<attribute_value id="320741" nameRU="Регулируемый угол наклона" nameUK="Регульований кут нахилу"/>
+<attribute_value id="349857" nameRU="Для велосипедистов" nameUK="Для велосипедистов"/>
+<attribute_value id="349858" nameRU="Для книг" nameUK="Для книг"/>
+<attribute_value id="349859" nameRU="Подводные" nameUK="Підводні"/>
+<attribute_value id="349860" nameRU="Поисковые" nameUK="Пошукові"/>
+<attribute_value id="349861" nameRU="C динамиком" nameUK="З динаміком"/>
+<attribute_value id="349862" nameRU="Дальнобойные" nameUK="Дальнобійні"/>
+<attribute_value id="349863" nameRU="Поворотные" nameUK="Поворотні"/>
+<attribute_value id="349864" nameRU="С датчиком движения" nameUK="З датчиком руху"/>
+<attribute_value id="349865" nameRU="С инфракрасным излучением" nameUK="З інфрачервоним випромінюванням"/>
+<attribute_value id="349866" nameRU="С клипсой" nameUK="З кліпсою"/>
+<attribute_value id="349868" nameRU="С повербанком" nameUK="З повербанком"/>
+<attribute_value id="349869" nameRU="С радио" nameUK="З радіо"/>
+<attribute_value id="349870" nameRU="С солнечной панелью" nameUK="З сонячною панеллю"/>
+<attribute_value id="349871" nameRU="С УФ излучением" nameUK="З УФ випромінюванням"/>
+<attribute_value id="360587" nameRU="Фиксация на обувь" nameUK="Фіксація на взуття"/>
+</attribute>
+<attribute id="10691" nameRU="Дальность светового луча" type="integer" nameUK="Дальність світлового променя" measureUnitRU="м" min="0" max="2100" measureUnitUK="м"/>
+<attribute id="11377" nameRU="Световой поток" type="real" nameUK="Світловий потік" measureUnitRU="лм" min="0" max="1000000" measureUnitUK="лм"/>
+<attribute id="11381" nameRU="Тип заряда" type="multiselect" nameUK="Тип заряду">
+<attribute_value id="109013" nameRU="От сети" nameUK="Від мережі"/>
+<attribute_value id="109014" nameRU="Солнечные батареи" nameUK="Сонячні батареї"/>
+<attribute_value id="109015" nameRU="Динамо генератор" nameUK="Динамо генератор"/>
+<attribute_value id="109016" nameRU="USB" nameUK="USB"/>
+<attribute_value id="288948" nameRU="micro USB" nameUK=""/>
+<attribute_value id="298068" nameRU="Type-C" nameUK=""/>
+<attribute_value id="300936" nameRU="Magnetic USB" nameUK=""/>
+<attribute_value id="344241" nameRU="Автомобильная зарядка" nameUK="Автомобільна зарядка"/>
+</attribute>
+<attribute id="11735" nameRU="Количество светодиодов" type="integer" nameUK="Кількість світлодіодів" measureUnitRU="шт" min="0" max="100" measureUnitUK="шт."/>
+<attribute id="12640" nameRU="Тип лампы" type="singleselect" nameUK="Тип лампи">
+<attribute_value id="126707" nameRU="Накаливания" nameUK="Розжарювання"/>
+<attribute_value id="126711" nameRU="Газоразрядная" nameUK="Газорозрядна"/>
+<attribute_value id="137101" nameRU="Люминесцентная" nameUK="Люмінесцентна"/>
+<attribute_value id="137102" nameRU="Светодиодная" nameUK="Світлодіодна"/>
+<attribute_value id="329304" nameRU="Химический свет" nameUK="Хімічне світло "/>
+</attribute>
+<attribute id="13630" nameRU="Тип диода" type="singleselect" nameUK="Тип діода">
+<attribute_value id="137518" nameRU="LM" nameUK="LM"/>
+<attribute_value id="204575" nameRU="OSRAM" nameUK="OSRAM"/>
+<attribute_value id="204576" nameRU="XPE" nameUK="XPE"/>
+<attribute_value id="204577" nameRU="T6" nameUK="T6"/>
+<attribute_value id="204578" nameRU="LED" nameUK="LED"/>
+<attribute_value id="243560" nameRU="LTS" nameUK="LTS"/>
+<attribute_value id="273405" nameRU="Cree XHP50.2" nameUK="Cree XHP50.2"/>
+<attribute_value id="276629" nameRU="Cree XM-L T6" nameUK="Cree XML T6"/>
+<attribute_value id="276630" nameRU="Cree XM-L U2" nameUK="Cree XML U2"/>
+<attribute_value id="276631" nameRU="Cree XR-E Q5" nameUK="Cree XR-E Q5"/>
+<attribute_value id="284143" nameRU="2 SinglePower" nameUK=""/>
+<attribute_value id="288946" nameRU="CREE XTE 5W" nameUK=""/>
+<attribute_value id="289051" nameRU="XP-L" nameUK=""/>
+<attribute_value id="289052" nameRU="Cree XHP70.2" nameUK=""/>
+<attribute_value id="290983" nameRU="Nichia 144AR" nameUK=""/>
+<attribute_value id="292737" nameRU="COB" nameUK=""/>
+<attribute_value id="298398" nameRU="SFT40" nameUK=""/>
+<attribute_value id="298434" nameRU="Luminus SST20" nameUK="Luminus SST20"/>
+<attribute_value id="301218" nameRU="Т90" nameUK=""/>
+<attribute_value id="301219" nameRU="Т60" nameUK=""/>
+<attribute_value id="301224" nameRU="Р50" nameUK=""/>
+<attribute_value id="301232" nameRU="LED+COB" nameUK="LED+COB"/>
+<attribute_value id="304280" nameRU="XPE + COB" nameUK=""/>
+<attribute_value id="304281" nameRU="XPG" nameUK=""/>
+<attribute_value id="304319" nameRU="SMD+COB" nameUK=""/>
+<attribute_value id="304320" nameRU="SMD" nameUK=""/>
+<attribute_value id="304685" nameRU="Luminus SST40" nameUK=""/>
+<attribute_value id="308729" nameRU="Cree XP-L HD" nameUK=""/>
+<attribute_value id="308731" nameRU="CREE XHP-35 HI" nameUK=""/>
+<attribute_value id="309436" nameRU="Cree XP-L HI" nameUK=""/>
+<attribute_value id="309445" nameRU="Luminus SST70" nameUK=""/>
+<attribute_value id="309522" nameRU="Philips Luxeon TX" nameUK=""/>
+<attribute_value id="312956" nameRU="CA18" nameUK=""/>
+<attribute_value id="313078" nameRU="Cree XP-G2 S3" nameUK=""/>
+<attribute_value id="314900" nameRU="Luminus SFT70" nameUK="Luminus SFT70"/>
+<attribute_value id="314901" nameRU="CSLPM1.TG" nameUK="CSLPM1.TG"/>
+<attribute_value id="344239" nameRU="Т6 + COB" nameUK=""/>
+<attribute_value id="344240" nameRU="Cree XPE" nameUK=""/>
+<attribute_value id="345339" nameRU="TG+COB" nameUK=""/>
+<attribute_value id="345342" nameRU="CREE XPG+COB" nameUK=""/>
+<attribute_value id="345768" nameRU="P90" nameUK=""/>
+</attribute>
+<attribute id="15359" nameRU="Цветовая температура" type="singleselect" nameUK="Колірна температура">
+<attribute_value id="166585" nameRU="5000K" nameUK="5000K"/>
+<attribute_value id="166586" nameRU="6000K" nameUK="6000K"/>
+<attribute_value id="184842" nameRU="3500K" nameUK="3500K"/>
+<attribute_value id="253735" nameRU="6200K" nameUK="6200K"/>
+<attribute_value id="271424" nameRU="6500K" nameUK="6500K"/>
+<attribute_value id="276011" nameRU="4000К" nameUK="4000К"/>
+<attribute_value id="276669" nameRU="6400К" nameUK="6400К"/>
+<attribute_value id="278918" nameRU="7000K" nameUK="7000K"/>
+<attribute_value id="296184" nameRU="9000 К" nameUK=""/>
+<attribute_value id="300988" nameRU="5700К" nameUK="5700К"/>
+<attribute_value id="309437" nameRU="6600К" nameUK=""/>
+<attribute_value id="309438" nameRU="5400К" nameUK=""/>
+</attribute>
+<attribute id="17611" nameRU="Тип фонаря" type="singleselect" nameUK="Тип ліхтаря">
+<attribute_value id="214124" nameRU="Ручной" nameUK="Ручний"/>
+<attribute_value id="214125" nameRU="Налобный" nameUK="Налобний"/>
+<attribute_value id="283519" nameRU="Подствольный" nameUK="Підствольний"/>
+<attribute_value id="288653" nameRU="Подвесной" nameUK="Підвісний"/>
+<attribute_value id="344242" nameRU="Настольный" nameUK="Настільний"/>
+<attribute_value id="350345" nameRU="Сигнальные" nameUK="Сигнальний"/>
+<attribute_value id="350346" nameRU="Фонарь-брелок" nameUK="Ліхтар-брелок"/>
+<attribute_value id="350347" nameRU="Фонарь-перчатка" nameUK="Ліхтар-рукавичка"/>
+<attribute_value id="350348" nameRU="Фонарь-прожектор" nameUK="Ліхтар-прожектор"/>
+<attribute_value id="350349" nameRU="Лазерные" nameUK="Лазерні"/>
+<attribute_value id="350350" nameRU="Кемпинговые лампы" nameUK="Кемпінгові лампи"/>
+<attribute_value id="350351" nameRU="Карманные" nameUK="Кишенькові"/>
+<attribute_value id="350352" nameRU="Динамо-фонари" nameUK="Динамо-ліхтар"/>
+<attribute_value id="350353" nameRU="Аксессуары" nameUK="Аксесуари"/>
+<attribute_value id="360588" nameRU="Накладной" nameUK="Накладний"/>
+</attribute>
+<attribute id="18477" nameRU="Степень защиты, IP" type="multiselect" nameUK="Ступінь захисту, IP">
+<attribute_value id="273248" nameRU="IP65" nameUK="IP65"/>
+<attribute_value id="273701" nameRU="IP30" nameUK="IP30"/>
+<attribute_value id="293024" nameRU="IP44" nameUK=""/>
+<attribute_value id="294508" nameRU="IP20" nameUK=""/>
+<attribute_value id="304469" nameRU="IP67" nameUK=""/>
+<attribute_value id="304470" nameRU="IP68" nameUK=""/>
+<attribute_value id="304471" nameRU="Х2" nameUK=""/>
+<attribute_value id="304682" nameRU="IP66" nameUK=""/>
+<attribute_value id="305024" nameRU="IPX4" nameUK=""/>
+<attribute_value id="305026" nameRU="IPX8" nameUK=""/>
+<attribute_value id="305248" nameRU="IP 66" nameUK=""/>
+<attribute_value id="308204" nameRU="IPX7" nameUK=""/>
+<attribute_value id="308730" nameRU="IPX6" nameUK=""/>
+<attribute_value id="309957" nameRU="IPX5" nameUK=""/>
+<attribute_value id="313122" nameRU="IP24" nameUK="IP24"/>
+<attribute_value id="313594" nameRU="IP50" nameUK=""/>
+<attribute_value id="319865" nameRU="IP42" nameUK=""/>
+<attribute_value id="344228" nameRU="IP43" nameUK="IP43"/>
+<attribute_value id="345336" nameRU="IP64" nameUK=""/>
+</attribute>
+</category>
+</categories>

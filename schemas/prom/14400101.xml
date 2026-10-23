@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14400101" nameRU="Инверторы сварочные" nameUK="Зварювальні інвертори">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+<attribute id="3634" nameRU="Коэффициент полезного действия" type="real" nameUK="Коефіцієнт корисної дії" measureUnitRU="%" min="0" max="100" measureUnitUK="%"/>
+<attribute id="5161" nameRU="Минимальная температура окружающей среды" type="real" nameUK="Мінімальна температура навколишнього середовища" measureUnitRU="град." min="-100" max="10" measureUnitUK="град."/>
+<attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+<attribute id="5172" nameRU="Номинальная потребляемая мощность" type="real" nameUK="Номінальна споживана потужність" measureUnitRU="кВА" min="0" max="100" measureUnitUK="кВА"/>
+<attribute id="6212" nameRU="Напряжение питания" type="multiselect" nameUK="Напруга живлення">
+<attribute_value id="42681" nameRU="220 В" nameUK="220 В"/>
+<attribute_value id="42682" nameRU="380 В" nameUK="380 В"/>
+</attribute>
+<attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+<attribute id="6976" nameRU="Минимальный сварочный ток" type="real" nameUK="Мінімальний зварювальний струм" measureUnitRU="А" min="0" max="250" measureUnitUK="А"/>
+<attribute id="6977" nameRU="Максимальный сварочный ток" type="real" nameUK="Максимальний зварювальний струм" measureUnitRU="А" min="0" max="1000" measureUnitUK="А"/>
+<attribute id="6978" nameRU="Напряжение холостого хода" type="real" nameUK="Напруга холостого ходу" measureUnitRU="В" min="0" max="500" measureUnitUK="В"/>
+<attribute id="7197" nameRU="Номинальный сварочный ток" type="real" nameUK="Номінальний зварювальний струм" measureUnitRU="А" min="0" max="500" measureUnitUK="А"/>
+<attribute id="7201" nameRU="Максимальный диаметр используемого электрода" type="real" nameUK="Максимальний діаметр електрода, який використовується" measureUnitRU="мм" min="0" max="10" measureUnitUK="мм"/>
+<attribute id="7202" nameRU="Минимальный диаметр используемого электрода" type="real" nameUK="Мінімальний діаметр електрода, який використовується" measureUnitRU="мм" min="0" max="5" measureUnitUK="мм"/>
+<attribute id="14577" nameRU="Продолжительность нагрузки" type="real" nameUK="Тривалість навантаження" measureUnitRU="%" min="20" max="100" measureUnitUK="%"/>
+</category>
+</categories>

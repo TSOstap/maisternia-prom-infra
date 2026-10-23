@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1250309" nameRU="Садовые пылесосы, воздуходувки" nameUK="Садові пилосмокти, повітродувки">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="5000" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+<attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+<attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+<attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+<attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+<attribute_value id="8807" nameRU="Батарейки" nameUK="Батарейки"/>
+<attribute_value id="11634" nameRU="Сеть 12В" nameUK="Мережа 12В"/>
+<attribute_value id="18105" nameRU="Сеть 230В" nameUK="Мережа 230В"/>
+<attribute_value id="40710" nameRU="Батарейки одноразовые" nameUK="Батарейки одноразові"/>
+<attribute_value id="40711" nameRU="Батарейки аккумуляторного типа" nameUK="Батарейки акумуляторного типу"/>
+<attribute_value id="40713" nameRU="Специальный аккумулятор" nameUK="Спеціальний акумулятор"/>
+<attribute_value id="53227" nameRU="Сеть 110В" nameUK="Мережа 110В"/>
+<attribute_value id="106692" nameRU="Бензиновый двигатель" nameUK="Бензиновий двигун"/>
+<attribute_value id="122325" nameRU="Сеть 24В" nameUK="Мережа 24В"/>
+<attribute_value id="122326" nameRU="Солнечные батареи" nameUK="Сонячні батареї"/>
+<attribute_value id="141124" nameRU="PoE" nameUK="PoE"/>
+<attribute_value id="146939" nameRU="USB" nameUK="USB"/>
+<attribute_value id="148466" nameRU="AA" nameUK="AA"/>
+<attribute_value id="148467" nameRU="AAA" nameUK="AAA"/>
+<attribute_value id="148469" nameRU="Li-Ion" nameUK="Li-Ion"/>
+<attribute_value id="153916" nameRU="Li-Pol" nameUK="Li-Pol"/>
+<attribute_value id="166553" nameRU="6F22 (крона)" nameUK="6F22 (крона)"/>
+<attribute_value id="166554" nameRU="C" nameUK="C"/>
+<attribute_value id="166555" nameRU="CR2032" nameUK="CR2032"/>
+<attribute_value id="166556" nameRU="D" nameUK="D"/>
+<attribute_value id="236045" nameRU="PoE+" nameUK="PoE+"/>
+<attribute_value id="240878" nameRU="Аккумулятор 12В" nameUK="Акумулятор 12В"/>
+<attribute_value id="240880" nameRU="Аккумулятор 9В" nameUK="Акумулятор 9В"/>
+<attribute_value id="330846" nameRU="Комбинированное" nameUK="Комбіноване"/>
+<attribute_value id="332654" nameRU="Сеть" nameUK="Мережа"/>
+</attribute>
+<attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+<attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+<attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+<attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+<attribute_value id="10614" nameRU="Li-Pol" nameUK="Li-Pol"/>
+</attribute>
+<attribute id="82" nameRU="Объем масляного бака" type="real" nameUK="Об'єм масляного бака" measureUnitRU="л" min="0" max="2" measureUnitUK="л"/>
+<attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="130000" measureUnitUK="об/хв"/>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="5" measureUnitUK="А. г"/>
+<attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="56" measureUnitUK="В"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="116" nameRU="Количество цилиндров" type="singleselect" nameUK="Кількість циліндрів">
+<attribute_value id="7047" nameRU="1" nameUK="1"/>
+<attribute_value id="7048" nameRU="2" nameUK="2"/>
+<attribute_value id="7049" nameRU="3" nameUK="3"/>
+<attribute_value id="7050" nameRU="4" nameUK="4"/>
+</attribute>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+<attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+<attribute_value id="7132" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+<attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="7134" nameRU="Стекло" nameUK="Скло"/>
+<attribute_value id="7135" nameRU="Дерево" nameUK="Дерево"/>
+<attribute_value id="7616" nameRU="Керамика" nameUK="Кераміка"/>
+<attribute_value id="7867" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="9198" nameRU="Ламинированная ДСП" nameUK="Ламінована ДСП"/>
+<attribute_value id="9199" nameRU="ДСП покрытая пластиком" nameUK="ДСП покрита пластиком"/>
+<attribute_value id="9200" nameRU="Шпонированная ДСП" nameUK="Шпонована ДСП"/>
+<attribute_value id="9201" nameRU="МДФ" nameUK="МДФ"/>
+<attribute_value id="9202" nameRU="МДФ шпонированный" nameUK="МДФ шпонований"/>
+<attribute_value id="9203" nameRU="Мебельный щит" nameUK="Меблевий щит"/>
+<attribute_value id="9204" nameRU="МДФ крашеный" nameUK="МДФ фарбований"/>
+<attribute_value id="9205" nameRU="МДФ пленочный" nameUK="МДФ плівковий"/>
+<attribute_value id="9206" nameRU="МДФ покрытый пластиком" nameUK="МДФ покритий пластиком"/>
+<attribute_value id="9207" nameRU="Фанера" nameUK="Фанера"/>
+<attribute_value id="9208" nameRU="Гнутая фанера" nameUK="Гнута фанера"/>
+<attribute_value id="9209" nameRU="ДВП" nameUK="ДВП"/>
+<attribute_value id="9210" nameRU="Ламинированная ДВП" nameUK="Ламінована ДВП"/>
+<attribute_value id="9211" nameRU="ДВП шпонированная" nameUK="ДВП шпонована"/>
+<attribute_value id="9212" nameRU="Тамбурат" nameUK="Тамбурат"/>
+<attribute_value id="9213" nameRU="Кованый металл" nameUK="Кований метал"/>
+<attribute_value id="9214" nameRU="Хромированная сталь" nameUK="Хромована сталь"/>
+<attribute_value id="9215" nameRU="Софтформинг" nameUK="Софтформінг"/>
+<attribute_value id="9216" nameRU="Постформинг" nameUK="Постформінг"/>
+<attribute_value id="9217" nameRU="Бамбук" nameUK="Бамбук"/>
+<attribute_value id="9218" nameRU="Искусственный ротанг" nameUK="Штучний ротанг"/>
+<attribute_value id="9219" nameRU="Ротанг" nameUK="Ротанг"/>
+<attribute_value id="9220" nameRU="Абака" nameUK="Абака"/>
+<attribute_value id="9221" nameRU="Лоза" nameUK="Лоза"/>
+<attribute_value id="9222" nameRU="Шпон" nameUK="Шпон"/>
+<attribute_value id="19907" nameRU="Сталь покрытая порошковой краской" nameUK="Сталь покрита порошковою фарбою"/>
+<attribute_value id="19908" nameRU="Металл покрытый порошковой краской" nameUK="Метал покритий порошковою фарбою"/>
+<attribute_value id="19909" nameRU="Хромированный металл" nameUK="Хромований метал"/>
+<attribute_value id="19910" nameRU="Натуральное дерево" nameUK="Натуральне дерево"/>
+<attribute_value id="19913" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="27657" nameRU="Мрамор" nameUK="Мармур"/>
+<attribute_value id="27658" nameRU="Бронза" nameUK="Бронза"/>
+<attribute_value id="27659" nameRU="Искусственная кожа (кожзаменитель)" nameUK="Штучна шкіра (шкірозамінник)"/>
+<attribute_value id="27660" nameRU="Искусственный камень" nameUK="Штучний камінь"/>
+<attribute_value id="27661" nameRU="Натуральный камень" nameUK="Натуральний камінь"/>
+<attribute_value id="27663" nameRU="Натуральная кожа" nameUK="Натуральна шкіра"/>
+<attribute_value id="27664" nameRU="Гранит" nameUK="Граніт"/>
+<attribute_value id="27665" nameRU="Золото" nameUK="Золото"/>
+<attribute_value id="27667" nameRU="Серебро" nameUK="Срібло"/>
+<attribute_value id="27954" nameRU="Янтарь" nameUK="Бурштин"/>
+<attribute_value id="27957" nameRU="Оникс" nameUK="Онікс"/>
+<attribute_value id="37990" nameRU="Стеклокерамика" nameUK="Склокераміка"/>
+<attribute_value id="39731" nameRU="Чугун" nameUK="Чавун"/>
+<attribute_value id="67250" nameRU="Латунь" nameUK="Латунь"/>
+<attribute_value id="67251" nameRU="Медь" nameUK="Мідь"/>
+<attribute_value id="68847" nameRU="Углеродистая сталь" nameUK="Вуглецева сталь"/>
+<attribute_value id="70189" nameRU="Титан" nameUK="Титан"/>
+<attribute_value id="71274" nameRU="Полиэтилен" nameUK="Поліетилен"/>
+<attribute_value id="71275" nameRU="Поливинилхлорид" nameUK="Полівінілхлорид"/>
+<attribute_value id="71276" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+<attribute_value id="75483" nameRU="Карбон" nameUK="Карбон"/>
+<attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+<attribute_value id="75486" nameRU="Термопластик" nameUK="Термопластик"/>
+<attribute_value id="75487" nameRU="Стекловолокно" nameUK="Скловолокно"/>
+<attribute_value id="75488" nameRU="Композитный материал" nameUK="Композитний матеріал"/>
+<attribute_value id="75489" nameRU="Поликарбонат" nameUK="Полікарбонат"/>
+<attribute_value id="90332" nameRU="Нейлон" nameUK="Нейлон"/>
+<attribute_value id="90339" nameRU="Полибутилтерефталат" nameUK="Полібутілтерефталат"/>
+<attribute_value id="91583" nameRU="Алюминиевая фольга" nameUK="Алюмінієва фольга"/>
+<attribute_value id="101883" nameRU="Дюропласт" nameUK="Дюропласт"/>
+<attribute_value id="103769" nameRU="Силумин" nameUK="Силумін"/>
+<attribute_value id="104014" nameRU="Полиамид" nameUK="Поліамід"/>
+<attribute_value id="106155" nameRU="Дуалифиталат" nameUK="Дуаліфіталат"/>
+<attribute_value id="107082" nameRU="Резина" nameUK="Гума"/>
+<attribute_value id="107134" nameRU="Карболит" nameUK="Карболіт"/>
+<attribute_value id="109050" nameRU="АБС-пластик" nameUK="АБС-пластик"/>
+<attribute_value id="111025" nameRU="Фибра" nameUK="Фібра"/>
+<attribute_value id="112956" nameRU="Эпоксидный компаунд" nameUK="Епоксидний компаунд"/>
+<attribute_value id="114970" nameRU="Полимер" nameUK="Полімер"/>
+<attribute_value id="114971" nameRU="Фарфор" nameUK="Порцеляна"/>
+<attribute_value id="116041" nameRU="Эмалированная сталь" nameUK="Емальована сталь"/>
+<attribute_value id="117276" nameRU="Оргстекло" nameUK="Оргскло"/>
+<attribute_value id="118910" nameRU="Дюралюминий" nameUK="Дюралюміній"/>
+<attribute_value id="124262" nameRU="Древесностружечная плита" nameUK="Деревностружкова плита"/>
+<attribute_value id="124265" nameRU="Многослойная фанера" nameUK="Багатошарова фанера"/>
+<attribute_value id="124269" nameRU="Древесноволокнистая плита" nameUK="Деревоволокниста плита"/>
+<attribute_value id="126964" nameRU="Карбопласт" nameUK="Карбопласт"/>
+<attribute_value id="126965" nameRU="Алюминиевый сплав" nameUK="Алюмінієвий сплав"/>
+<attribute_value id="127178" nameRU="Металлическая фольга" nameUK="Металева фольга"/>
+<attribute_value id="127179" nameRU="Оцинкованное железо" nameUK="Оцинковане залізо"/>
+<attribute_value id="127180" nameRU="Зеркало" nameUK="Дзеркало"/>
+<attribute_value id="135967" nameRU="Плексиглас" nameUK="Плексиглас"/>
+<attribute_value id="137586" nameRU="Металлостекло" nameUK="Металоскло"/>
+<attribute_value id="137587" nameRU="Металлокерамика" nameUK="Металокераміка"/>
+<attribute_value id="138184" nameRU="Тантал" nameUK="Тантал"/>
+<attribute_value id="138185" nameRU="Цемент" nameUK="Цемент"/>
+<attribute_value id="139760" nameRU="Горячеоцинкованная сталь" nameUK="Гарячеоцинкована сталь"/>
+<attribute_value id="139761" nameRU="Оцинкованная сталь" nameUK="Оцинкована сталь"/>
+<attribute_value id="139762" nameRU="Луженая медь" nameUK="Луджена мідь"/>
+<attribute_value id="139763" nameRU="Медь полутвердая" nameUK="Мідь напівтвердий"/>
+<attribute_value id="139764" nameRU="Низколегированная сталь" nameUK="Низьколегована сталь"/>
+<attribute_value id="139765" nameRU="Двухкомпонентный герметизирующий компаунд" nameUK="Двокомпонентний герметизуючий компаунд"/>
+<attribute_value id="139766" nameRU="Коррозионностойкий металл" nameUK="Метал, корозійностійкий"/>
+<attribute_value id="147000" nameRU="Акрил" nameUK="Акрил"/>
+<attribute_value id="152483" nameRU="Полимерный композит" nameUK="Полімерний композит"/>
+<attribute_value id="152484" nameRU="Металлокомпозит" nameUK="Металлокомпозит"/>
+<attribute_value id="153910" nameRU="Пенопласт" nameUK="Пінопласт"/>
+<attribute_value id="155050" nameRU="Ударопрочный пластик" nameUK="Ударостійкий пластик"/>
+<attribute_value id="179371" nameRU="ABS-пластик" nameUK="ABS-пластик"/>
+<attribute_value id="179375" nameRU="Силикон" nameUK="Силікон"/>
+<attribute_value id="181182" nameRU="Полиуретан" nameUK="Поліуретан"/>
+<attribute_value id="181516" nameRU="Термостойкий пластик" nameUK="Термостійкий пластик"/>
+<attribute_value id="183866" nameRU="Листовая сталь" nameUK="Листова сталь"/>
+<attribute_value id="184111" nameRU="Листовой алюминий" nameUK="Листовий алюміній"/>
+<attribute_value id="200646" nameRU="ДСП" nameUK="ДСП"/>
+<attribute_value id="205715" nameRU="Прорезиненный пластик" nameUK="Прогумований пластик"/>
+<attribute_value id="205716" nameRU="Магниевый сплав" nameUK="Магнієвий сплав"/>
+<attribute_value id="205717" nameRU="Кожа" nameUK="Шкіра"/>
+<attribute_value id="214067" nameRU="Анодированный алюминий" nameUK="Анодований алюміній"/>
+<attribute_value id="214091" nameRU="Металл и пластик" nameUK="Метал і пластик"/>
+<attribute_value id="241447" nameRU="Металлопластик" nameUK="Металопластик"/>
+<attribute_value id="245169" nameRU="Прорезиненный металл" nameUK="Прогумований метал"/>
+<attribute_value id="251120" nameRU="Алюмопласт" nameUK="Алюмопласт"/>
+<attribute_value id="251914" nameRU="Полистоун" nameUK="Полістоун"/>
+<attribute_value id="270647" nameRU="Синтепон" nameUK="Синтепон"/>
+<attribute_value id="270648" nameRU="Поролон" nameUK="Поролон"/>
+<attribute_value id="270649" nameRU="Сухой брус сосны" nameUK="Сухий брус сосни"/>
+<attribute_value id="274107" nameRU="Цинк" nameUK="Цинк"/>
+<attribute_value id="274248" nameRU="Кортеновская сталь" nameUK="Кортеновская сталь"/>
+<attribute_value id="275052" nameRU="Ceramic Shield" nameUK="Ceramic Shield"/>
+<attribute_value id="277140" nameRU="Оргалит" nameUK="Оргаліт"/>
+<attribute_value id="277141" nameRU="Каучук" nameUK="Каучук"/>
+<attribute_value id="277711" nameRU="Картон" nameUK=""/>
+<attribute_value id="280463" nameRU="Ткань" nameUK="Тканина"/>
+<attribute_value id="291164" nameRU="Эпоксидная смола" nameUK=""/>
+<attribute_value id="291165" nameRU="Trivitt" nameUK=""/>
+<attribute_value id="298855" nameRU="Цинковый сплав" nameUK="Цинковий сплав"/>
+<attribute_value id="299032" nameRU="Бакелит" nameUK="Бакеліт"/>
+<attribute_value id="300744" nameRU="Эко-кожа" nameUK="Еко-шкіра"/>
+<attribute_value id="302044" nameRU="Глина" nameUK="Глина"/>
+<attribute_value id="308885" nameRU="Термостекло" nameUK="Термоскло"/>
+<attribute_value id="314717" nameRU="Бутилкаучук" nameUK="Бутилкаучук"/>
+<attribute_value id="319296" nameRU="Полистирол" nameUK="Полістирол"/>
+<attribute_value id="320478" nameRU="Алюминий+резина" nameUK="Алюміній + гума"/>
+<attribute_value id="320479" nameRU="Пластик+резина" nameUK="Пластик + гума"/>
+<attribute_value id="320481" nameRU="Алюминий + стекло" nameUK="Алюміній + скло"/>
+<attribute_value id="320482" nameRU="Алюминий+пластик" nameUK="Алюміній + пластик"/>
+<attribute_value id="320483" nameRU="Метал + стекло" nameUK="Метал + скло"/>
+<attribute_value id="320484" nameRU="Пластик + стекло" nameUK="Пластик + скло"/>
+<attribute_value id="320485" nameRU="Композит" nameUK="Композит"/>
+<attribute_value id="328812" nameRU="Полиэстер" nameUK="Поліестер"/>
+<attribute_value id="329436" nameRU="ASA пластик" nameUK="ASA пластик"/>
+<attribute_value id="341395" nameRU="PVDF" nameUK=""/>
+<attribute_value id="344749" nameRU="Технополимер" nameUK="Технополімер"/>
+<attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+<attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+<attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+<attribute_value id="349615" nameRU="Polystrong" nameUK=""/>
+<attribute_value id="349907" nameRU="Камень" nameUK="Камінь"/>
+</attribute>
+<attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="1000" measureUnitUK="куб. см"/>
+<attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="л. с." min="0" max="40" measureUnitUK="к. с."/>
+<attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="10" measureUnitUK="л/год"/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="86130" nameRU="Воздуходув садовый" nameUK="Повітродув садовий"/>
+<attribute_value id="86131" nameRU="Пылесос садовый" nameUK="Пилосос садовий"/>
+<attribute_value id="86242" nameRU="Воздуходув-пылесос" nameUK="Воздуходув-пилосос"/>
+</attribute>
+<attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+<attribute_value id="338835" nameRU="Бесщеточный" nameUK="Безщітковий"/>
+</attribute>
+<attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+<attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+<attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+</attribute>
+<attribute id="1079" nameRU="Марка двигателя" type="free" nameUK="Марка двигуна"/>
+<attribute id="1688" nameRU="Время работы от аккумулятора" type="real" nameUK="Час роботи від акумулятора" measureUnitRU="мин" min="0" max="600" measureUnitUK="хв"/>
+<attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+<attribute id="3137" nameRU="Количество оборотов двигателя" type="real" nameUK="Кількість обертів двигуна" measureUnitRU="об/мин" min="0" max="10000" measureUnitUK="об/хв"/>
+<attribute id="3817" nameRU="Мощность электродвигателя" type="real" nameUK="Потужність електродвигуна" measureUnitRU="Вт" min="0" max="2000" measureUnitUK="Вт"/>
+<attribute id="4817" nameRU="Количество колес" type="integer" nameUK="Кількість коліс" measureUnitRU="шт" min="1" max="5" measureUnitUK="шт."/>
+<attribute id="7042" nameRU="Форм-фактор" type="singleselect" nameUK="Форм-фактор">
+<attribute_value id="86232" nameRU="Переносной" nameUK="Переносний"/>
+<attribute_value id="86234" nameRU="Передвижной" nameUK="Пересувний"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="10077" nameRU="Тип привода" type="singleselect" nameUK="Тип приводу">
+<attribute_value id="85057" nameRU="Электродвигатель (от сети)" nameUK="Електродвигун (від мережі)"/>
+<attribute_value id="85058" nameRU="Бензиновый двигатель" nameUK="Бензиновий двигун"/>
+<attribute_value id="85059" nameRU="Дизельный двигатель" nameUK="Дизельний двигун"/>
+<attribute_value id="85060" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+</attribute>
+<attribute id="10115" nameRU="Максимальный объем воздушного потока" type="real" nameUK="Максимальний об'єм повітряного потоку" measureUnitRU="куб. м/час" min="0" max="2000" measureUnitUK="куб.м/год"/>
+<attribute id="10116" nameRU="Максимальная скорость воздушного потока" type="real" nameUK="Максимальна швидкість повітряного потоку" measureUnitRU="м/сек" min="0" max="400" measureUnitUK="м/сек"/>
+<attribute id="10117" nameRU="Объем мусоросборника" type="real" nameUK="Об'єм сміттєзбірника" measureUnitRU="л" min="0" max="200" measureUnitUK="л"/>
+</category>
+</categories>

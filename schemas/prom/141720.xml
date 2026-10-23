@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141720" nameRU="Электроножовки" nameUK="Електроножівки">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="3000" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+<attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+<attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+<attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+</attribute>
+<attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+<attribute id="10" nameRU="Ограничение пускового тока" type="bool" nameUK="Обмеження пускового струму"/>
+<attribute id="12" nameRU="Поддержка постоянного количества оборотов под нагрузкой" type="bool" nameUK="Підтримка постійного числа обертів під навантаженням"/>
+<attribute id="13" nameRU="Предохранительная муфта" type="bool" nameUK="Запобіжна муфта"/>
+<attribute id="16" nameRU="Маятниковый ход" type="bool" nameUK="Маятниковий хід"/>
+<attribute id="24" nameRU="Блокировка кнопки включения" type="bool" nameUK="Блокування кнопки включення"/>
+<attribute id="25" nameRU="Блокировка шпинделя" type="bool" nameUK="Блокування шпинделя"/>
+<attribute id="28" nameRU="Максимальная частота движения режущего инструмента" type="real" nameUK="Максимальна частота руху ріжучого інструменту" measureUnitRU="ход/мин" min="0" max="6000" measureUnitUK="хід/хв"/>
+<attribute id="38" nameRU="Система гашения вибрации" type="bool" nameUK="Система погашення вібрації"/>
+<attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+<attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+<attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+<attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+</attribute>
+<attribute id="63" nameRU="Дополнительный аккумулятор" type="bool" nameUK="Додатковий акумулятор"/>
+<attribute id="75" nameRU="Размер хода полотна" type="real" nameUK="Розмір ходу полотна" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+<attribute id="76" nameRU="Бесключевая замена оснастки" type="bool" nameUK="Безключова заміна оснащення"/>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="7" measureUnitUK="А. г"/>
+<attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="54" measureUnitUK="В"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+<attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+<attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+<attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+<attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+</attribute>
+<attribute id="532" nameRU="Плавная регулировка скорости" type="bool" nameUK="Плавне регулювання швидкості"/>
+<attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+<attribute_value id="338834" nameRU="Щеточный" nameUK="Щітковий"/>
+<attribute_value id="338835" nameRU="Бесщеточный" nameUK="Безщітковий"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="12216" nameRU="Высота пропила" type="real" nameUK="Висота пропилу" measureUnitRU="мм" min="0" max="255" measureUnitUK="мм"/>
+<attribute id="15991" nameRU="Глубина пропила" type="real" nameUK="Глибина пропилу" measureUnitRU="мм" min="0" max="250" measureUnitUK="мм"/>
+</category>
+</categories>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201509" nameRU="Отрезные, зачистные, шлифовальные, пильные круги" nameUK="Відрізні, зачисні, шліфувальні, пильні круги">
+<attribute id="3474" nameRU="Количество в упаковке" type="integer" nameUK="Кількість в упаковці" measureUnitRU="шт" min="0" max="1000" measureUnitUK="шт."/>
+<attribute id="4245" nameRU="Толщина" type="real" nameUK="Товщина" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+<attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+<attribute_value id="168094" nameRU="Отрезной" nameUK="Відрізний"/>
+<attribute_value id="168095" nameRU="Пильный" nameUK="Пиляльний"/>
+<attribute_value id="168096" nameRU="Зачистной" nameUK="Зачисний"/>
+<attribute_value id="168097" nameRU="Шлифовальный" nameUK="Шліфувальний"/>
+<attribute_value id="281687" nameRU="Заточной" nameUK="Заточний"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="14042" nameRU="Зернистость" type="real" nameUK="Зернистість"/>
+<attribute id="15368" nameRU="Обработка материала" type="multiselect" nameUK="Обробка матеріалу">
+<attribute_value id="166810" nameRU="Дерево" nameUK="Дерево"/>
+<attribute_value id="166811" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="166812" nameRU="Чугун" nameUK="Чавун"/>
+<attribute_value id="166813" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+<attribute_value id="166814" nameRU="Закаленная сталь" nameUK="Загартована сталь"/>
+<attribute_value id="166815" nameRU="Медь" nameUK="Мідь"/>
+<attribute_value id="166816" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="166817" nameRU="Графит" nameUK="Графіт"/>
+<attribute_value id="166847" nameRU="Камень" nameUK="Камінь"/>
+<attribute_value id="166848" nameRU="Бетон" nameUK="Бетон"/>
+<attribute_value id="166851" nameRU="Плитка" nameUK="Плитка"/>
+<attribute_value id="166852" nameRU="Гранит" nameUK="Граніт"/>
+<attribute_value id="166853" nameRU="Керамика" nameUK="Кераміка"/>
+<attribute_value id="166854" nameRU="Кирпич" nameUK="Цегла"/>
+<attribute_value id="166855" nameRU="Абразив" nameUK="Абразив"/>
+<attribute_value id="168098" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="168099" nameRU="Латунь" nameUK="Латунь"/>
+<attribute_value id="168100" nameRU="Хром" nameUK="Хром"/>
+<attribute_value id="168101" nameRU="Серебро" nameUK="Срібло"/>
+<attribute_value id="168102" nameRU="Лак" nameUK="Лак"/>
+<attribute_value id="168103" nameRU="Гипс" nameUK="Гіпс"/>
+<attribute_value id="168120" nameRU="Асбест" nameUK="Азбест"/>
+<attribute_value id="168121" nameRU="Шифер" nameUK="Шифер"/>
+<attribute_value id="173944" nameRU="Пластик" nameUK="Пластик"/>
+<attribute_value id="173947" nameRU="Ламинат" nameUK="Ламінат"/>
+<attribute_value id="173948" nameRU="Краска" nameUK="Фарба"/>
+<attribute_value id="173952" nameRU="Керамическая плитка" nameUK="Керамічна плитка"/>
+<attribute_value id="173953" nameRU="Пенобетон" nameUK="Пінобетон"/>
+<attribute_value id="173954" nameRU="Газобетон" nameUK="Газобетон"/>
+<attribute_value id="173955" nameRU="Железобетон" nameUK="Залізобетон"/>
+<attribute_value id="173956" nameRU="Фанера" nameUK="Фанера"/>
+<attribute_value id="173957" nameRU="Керамогранит" nameUK="Керамограніт"/>
+<attribute_value id="179742" nameRU="Шпаклевка" nameUK="Шпаклівка"/>
+<attribute_value id="179743" nameRU="Грунтовка" nameUK="Грунтовка"/>
+<attribute_value id="227187" nameRU="Мрамор" nameUK="Мармур"/>
+<attribute_value id="227188" nameRU="Песчаник" nameUK="Піщаник"/>
+<attribute_value id="227190" nameRU="Тротуарная плитка" nameUK="Тротуарна плитка"/>
+<attribute_value id="227191" nameRU="Ракушняк" nameUK="Ракушняк"/>
+<attribute_value id="227192" nameRU="Армированный бетон" nameUK="Армований бетон"/>
+<attribute_value id="227193" nameRU="Асфальт" nameUK="Асфальт"/>
+<attribute_value id="227194" nameRU="Высокоармированный бетон" nameUK="Високоармований бетон"/>
+<attribute_value id="227195" nameRU="Гидротехнический бетон" nameUK="Гідротехнічний бетон"/>
+<attribute_value id="235937" nameRU="МДФ" nameUK="МДФ"/>
+<attribute_value id="235938" nameRU="Мягкая древесина" nameUK="М'яка деревина"/>
+<attribute_value id="235939" nameRU="Твердая древесина" nameUK="Тверда деревина"/>
+<attribute_value id="235940" nameRU="Оргстекло" nameUK="Оргскло"/>
+<attribute_value id="235941" nameRU="ЛДСП" nameUK="ЛДСП"/>
+<attribute_value id="235942" nameRU="Искусственный камень" nameUK="Штучний камінь"/>
+<attribute_value id="240503" nameRU="Металлопластик" nameUK="Металопластик"/>
+<attribute_value id="266129" nameRU="Стекло" nameUK="Скло"/>
+<attribute_value id="272768" nameRU="HPL" nameUK="HPL"/>
+</attribute>
+<attribute id="15472" nameRU="Материал круга" type="multiselect" nameUK="Матеріал кола">
+<attribute_value id="168111" nameRU="Абразив" nameUK="Абразив"/>
+<attribute_value id="168112" nameRU="Алмаз" nameUK="Алмаз"/>
+<attribute_value id="168113" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="168114" nameRU="Быстрорежущая сталь" nameUK="Швидкорізальна сталь"/>
+<attribute_value id="168115" nameRU="Твердый сплав" nameUK="Твердий сплав"/>
+<attribute_value id="168116" nameRU="Войлок" nameUK="Повсть"/>
+<attribute_value id="191142" nameRU="A 24 SBF" nameUK="A 24 SBF"/>
+<attribute_value id="274182" nameRU="Карбид кремния " nameUK="Карбід кремнію "/>
+<attribute_value id="281100" nameRU="Нетканое волокно (скотч Брайта)" nameUK="Неткане волокно (скотч Брайта)"/>
+<attribute_value id="288728" nameRU="Винил" nameUK="Вініл"/>
+<attribute_value id="305786" nameRU="Электрокорунд хром-титанистый" nameUK="Електрокорунд хром-титанистий"/>
+<attribute_value id="314164" nameRU="Оксид алюминия (ALOX)" nameUK="Оксид алюмінію (ALOX)"/>
+<attribute_value id="330506" nameRU="Электрокорунд" nameUK="Електрокорунд"/>
+<attribute_value id="330507" nameRU="Бакелитовая связка" nameUK="Бакелітова зв'язка"/>
+<attribute_value id="330508" nameRU="Карбид вольфрама" nameUK="Карбід вольфраму"/>
+</attribute>
+<attribute id="15473" nameRU="Диаметр внешний" type="real" nameUK="Діаметр зовнішній" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+<attribute id="15474" nameRU="Диаметр внутренний" type="real" nameUK="Діаметр внутрішній" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="15476" nameRU="Количество зубов" type="integer" nameUK="Кількість зубів"/>
+<attribute id="15477" nameRU="Количество сегментов" type="integer" nameUK="Кількість сегментів"/>
+<attribute id="15535" nameRU="Тип насыпки" type="singleselect" nameUK="Тип насипання">
+<attribute_value id="168952" nameRU="Открытая" nameUK="Відкрита"/>
+<attribute_value id="168953" nameRU="Полуоткрытая" nameUK="Напіввідкрита"/>
+<attribute_value id="168954" nameRU="Закрытая" nameUK="Закрита"/>
+<attribute_value id="314189" nameRU="Трехмерная" nameUK="Тривимірна"/>
+</attribute>
+<attribute id="17919" nameRU="Вид обработки" type="multiselect" nameUK="Вид обробки">
+<attribute_value id="236336" nameRU="Быстрый рез" nameUK="Швидкий різ"/>
+<attribute_value id="236337" nameRU="Чистый рез" nameUK="Чистий рез"/>
+<attribute_value id="236338" nameRU="Пазование" nameUK="Пазование"/>
+<attribute_value id="236339" nameRU="Подрезка" nameUK="Підрізка"/>
+<attribute_value id="236340" nameRU="Поперечное пиление" nameUK="Поперечне пиляння"/>
+<attribute_value id="236341" nameRU="Продольное пиление" nameUK="Поздовжнє пиляння"/>
+<attribute_value id="282434" nameRU="Шлифование" nameUK="Шліфування"/>
+<attribute_value id="298491" nameRU="Зачистной" nameUK="Зачистний"/>
+</attribute>
+</category>
+</categories>
