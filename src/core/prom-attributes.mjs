@@ -370,6 +370,10 @@ function dupEvidence(p, q, names) {
 // Відмінність лише в мові? (числа й латинські слова однакові) — підказка для власника, не рішення.
 const tokens = (s) => (htmlText(s).toLowerCase().match(/\d+(?:[.,]\d+)?|[a-z]+/g) || []).map((x) => x.replace(",", ".")).join(" ");
 
+/** Назва гарантійного терміну (без уточнень на кшталт «на акумулятор»; одиниця в назві допускається: «Гарантія, міс»). */
+const WARRANTY_RE = /^(гарантія|гарантия|гарантійний термін|гарантийный срок|гарантійний строк|термін гарантії|срок гарантии)(\s*[,(]\s*[^,()\d]{1,12}\)?)?$/;
+export const isWarrantyName = (n) => WARRANTY_RE.test(normName(n));
+
 /** Вирівнювання пар UA- і RU-опису (описи — переклади одне одного, порядок пар однаковий). Найкраще впорядковане
  *  зіставлення: 2 — та сама підтверджена назва, 1 — те саме значення (після нормалізації); між сусідніми
  *  зіставленими парами рівні за довжиною проміжки зіставляються по порядку (0 — «за позицією», значення різні).
@@ -416,7 +420,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
   const notes = [];
-  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [] }, aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [] };
+  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], warranty: null, uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [] }, aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [] };
   if (!schema && mode === "main") { notes.push(`немає схеми категорії ${categoryId || "?"} — підготовлені характеристики не змінено`); return unchanged; }
   const opt = { mapping, units };
   const fmt = (p) => `${p.name}: ${p.value}${p.unit ? " " + p.unit : ""}`;
@@ -434,7 +438,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const review = (name, values, reason) => needsReview.push({ name, values, reason, kind: /можливо, лише переклад/.test(reason) ? "переклад?" : /не визначити/.test(reason) ? "слова різні" : "конфлікт" });
   const hint = (a, b) => { const ta = tokens(a), tb = tokens(b); return ta !== tb ? "" : ta ? " (числа й латиниця однакові — можливо, лише переклад)" : " (без чисел і латиниці — переклад чи інший зміст, не визначити)"; };
   let uaRuMerged = 0; // та сама характеристика в UA- і RU-описі з однаковим значенням → одна
-  const aligned = [], gapProps = [], valueProps = [], ruOnly = []; // вирівняні пари UA/RU; пропозиції словника; лише RU
+  const aligned = [], gapProps = [], valueProps = [], ruOnly = [], warrantyDesc = []; // вирівняні пари UA/RU; пропозиції словника; лише RU
   const extras = new Map(); // ключ → { out, src, from, blocked, why }
   const extra = (key, out, src, from, more = {}) => {
     if (!key) return;
@@ -464,7 +468,13 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       if (!prev) cand.set(m.attr.id, { out: m.out, src: SRC.XML, frags: { ua: [], ru: [] }, from: itemKey(p) });
     }
     const pairs = [];
-    for (const [lang, html] of [["ua", descUa], ["ru", descRu]]) for (const pr of descriptionPairs(html)) pairs.push({ lang, ...pr, m: mapParam(schema, { name: pr.key, value: pr.value, unit: "" }, opt) });
+    for (const [lang, html] of [["ua", descUa], ["ru", descRu]]) for (const pr of descriptionPairs(html)) {
+      const one = { lang, ...pr, m: mapParam(schema, { name: pr.key, value: pr.value, unit: "" }, opt) };
+      // Гарантійний термін — лише зі структурованих характеристик (XML, підготовлені, ручні), НЕ з тексту опису
+      // (власник, 24.10.2026). Пара з опису не заповнює й не створює гарантію; розбіжність — лише інформаційно.
+      if (isWarrantyName(one.m.attr ? one.m.attr.nameUK || one.m.attr.nameRU : nameOf(pr.key)) || isWarrantyName(pr.key)) { warrantyDesc.push(one); continue; }
+      pairs.push(one);
+    }
     const label = (pr) => ({ src: `опис ${pr.lang.toUpperCase()}`, value: `${pr.key}: ${pr.value}` });
     // 1а. Поля категорії з опису (UA і RU того самого атрибута — одне поле; різні значення — ПОТРЕБУЄ ПЕРЕВІРКИ).
     const byAttr = new Map();
@@ -651,6 +661,14 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     if (items.filter((i) => !i.a).length >= MAX_CUSTOM) { overflow.push({ p: e.out, reason: `ліміт Prom ${MAX_CUSTOM} користувацьких характеристик` }); e.why = `ліміт Prom ${MAX_CUSTOM} користувацьких характеристик`; continue; }
     if (push(e.out, e.src, "")) { e.taken = true; if (e.src === SRC.DESC) descIdx.add(result.length - 1); } else e.why = `ліміт Prom ${MAX_PARAMS} характеристик на товар`;
   }
+  // Гарантія: значення — зі структурованих характеристик; опис — лише інформаційно (не ПОТРЕБУЄ ПЕРЕВІРКИ, не блокує).
+  const wIdx = result.findIndex((q, j) => isWarrantyName(q.name) || (items[j].a && isWarrantyName(attrById(items[j].a)?.nameUK || "")));
+  const warranty = wIdx >= 0 ? { value: fmt(result[wIdx]), source: items[wIdx].s } : null;
+  for (const pr of warrantyDesc) {
+    const v = { value: htmlText(pr.value).trim(), unit: "" };
+    const same = warranty && (sameValue(result[wIdx], v, names) || numEq(result[wIdx], v, names));
+    if (!same) notes.push(`гарантія з опису не використовується (правило: лише з характеристик): опис ${pr.lang.toUpperCase()} «${pr.key}: ${htmlText(pr.value).trim()}»${warranty ? ` ≠ характеристика «${warranty.value}»` : "; у характеристиках гарантії немає"}`);
+  }
   const unknownN = classified.filter((x) => x.s === SRC.UNKNOWN).length;
   if (unknownN) notes.push(`походження ${unknownN} характеристик не визначено — збережено без змін`);
   if (removed.length) notes.push("прибрано (постачальник більше не передає / не відповідає категорії): " + removed.join(", "));
@@ -691,7 +709,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const reviewNotes = needsReview.map((r) => `ПОТРЕБУЄ ПЕРЕВІРКИ «${r.name}»: ${r.values.map((v) => `${v.src} «${v.value}»`).join(" / ")} — ${r.reason}`);
   const provenanceOut = { v: 1, cat: String(categoryId || ""), items, x: [...suppressed], notes: [...reviewNotes, ...conflictsU, ...notes].slice(0, 30) };
   return {
-    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps }, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped,
+    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, warranty, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps }, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped,
     changed: JSON.stringify(result) !== JSON.stringify(cur),
   };
 }
