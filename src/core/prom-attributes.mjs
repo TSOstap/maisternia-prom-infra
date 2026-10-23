@@ -5,6 +5,15 @@
  *  Поле Prom заповнюється лише при підтвердженій відповідності: назва (точна назва атрибута ЦІЄЇ категорії або
  *  погоджений синонім), тип, одиниця (точна або погоджений перерахунок), діапазон min/max, допустимий варіант значення.
  *  Схожості назв недостатньо. Неоднозначність / конфлікт / непідтримуване значення — поле не заповнюється.
+ *  Уточнення власника 23.10.2026 (друге):
+ *   - характеристика без атрибута категорії передається як користувацька (дослівно); назва, що збігається з атрибутом
+ *     категорії, але значення не пройшло перевірку, користувацькою не передається (не видаємо за стандартну) — лишається
+ *     в сирих даних і звіті (rawOnly) з причиною;
+ *   - поле категорії — завжди українські назва / одиниця / значення зі схеми (Prom показує nameRU сам; окремих YML-тегів
+ *     для мов характеристик документація не описує);
+ *   - кілька значень (multiselect) — допустимі варіанти через « | » (документація Prom: «GSM | CDMA»);
+ *   - смислові дублі (той самий атрибут, сумісні одиниці, еквівалентні значення) об'єднуються; ручні не видаляються;
+ *   - понад MAX_PARAMS — не додається, перелік в overflow.
  *
  *  Походження кожної характеристики — у «Походження характеристик JSON»:
  *   { v, cat, items: [{ k, s, a }], x: [приховані власником], notes }  (k — ключ запису, s — джерело, a — id атрибута Prom). */
@@ -34,11 +43,20 @@ const YES = new Set(["так", "є", "да", "есть", "yes", "true", "+"]);
 const NO = new Set(["ні", "немає", "нема", "нет", "no", "false", "-"]);
 const round6 = (x) => Math.round(x * 1e6) / 1e6;
 
-/** Одиниця значення → множник до одиниці атрибута (точна UK/RU зі схеми або погоджений перерахунок); null — не підходить. */
+/** Атрибут без одиниці в схемі, але з одиницею в назві («Потужність двигуна, Вт») → «Вт»; інакше "". */
+export function nameUnit(at) {
+  if (at.unitUK || at.unitRU) return "";
+  const m = /,\s*([^,\d]{1,12})$/.exec(mtText(at.nameUK || at.nameRU));
+  return m ? m[1].trim() : "";
+}
+/** Одиниця значення → множник до одиниці атрибута (точна UK/RU зі схеми, одиниця з назви атрибута або погоджений
+ *  перерахунок); null — не підходить. */
 export function unitFactor(at, unit, units) {
   const u = normUnit(unit);
-  const targets = [at.unitUK, at.unitRU].filter(Boolean).map(normUnit);
+  const fromName = nameUnit(at);
+  const targets = [at.unitUK, at.unitRU, fromName].filter(Boolean).map(normUnit);
   if (!targets.length) return u ? null : 1;
+  if (!u && fromName) return 1; // одиниця вже в назві атрибута
   if (!u) return null; // без одиниці не вгадуємо (2.5 — кг чи г?)
   if (targets.includes(u)) return 1;
   for (const c of units?.conversions || []) if (normUnit(c.from) === u && targets.includes(normUnit(c.to)) && Number.isFinite(c.factor)) return c.factor;
@@ -59,6 +77,17 @@ export function resolveAttr(schema, name, mapping) {
   if (hits.length > 1) return { reason: "кілька атрибутів категорії з такою назвою" };
   return { reason: "у категорії немає такого атрибута" };
 }
+
+/** Варіант зі списку атрибута: погоджений синонім або точна назва UK/RU (єдина). */
+function findOption(at, value, valueSynonyms) {
+  const v = normName(value);
+  const syn = valueSynonyms?.[v];
+  return syn !== undefined ? at.values.filter((x) => x.id === String(syn)) : at.values.filter((x) => normName(x.nameUK) === v || normName(x.nameRU) === v);
+}
+const optionName = (o) => o.nameUK || o.nameRU;
+export const MULTI_SEPARATOR = " | ";
+// Число з одиницею вимірювання — не текстова назва (напр. «Марка двигуна: 19.0 HP»).
+const MEASURE_RE = /^[-+]?\d+(?:[.,]\d+)?\s*(?:hp|к\.?\s?с\.?|л\.?\s?с\.?|квт|kw|вт|w|в|v|а|a|а·?ч|а\.?\s?г|мм|см|м|mm|cm|кг|kg|г|гр|л|мл|об\/хв|об\/мин|гц|hz|бар|bar|дб|db|°\s?c|°|%|cc|см3|см³|куб\.?\s?см)\.?$/iu;
 
 /** Значення під тип атрибута. { value, unit } або { reason }.
  *  valueSynonyms — погоджені власником відповідності значень для ЦЬОГО атрибута: { "новый": "<id варіанта>" }. */
@@ -87,16 +116,30 @@ export function validateValue(at, rawValue, rawUnit, units, valueSynonyms = null
     }
     case "singleselect": {
       if (unit) return { reason: "одиниця для варіанта зі списку" };
-      const v = normName(value);
-      const syn = valueSynonyms?.[v];
-      const hits = syn !== undefined ? at.values.filter((x) => x.id === String(syn)) : at.values.filter((x) => normName(x.nameUK) === v || normName(x.nameRU) === v);
+      const hits = findOption(at, value, valueSynonyms);
       if (hits.length !== 1) return { reason: hits.length ? "кілька варіантів з такою назвою" : `«${value}» немає серед допустимих значень` };
-      return { value: hits[0].nameUK || hits[0].nameRU, unit: "" };
+      return { value: optionName(hits[0]), unit: "" };
     }
-    case "multiselect": return { reason: "кілька значень: формат передачі в YML не підтверджено — автоматично не заповнюється" };
+    case "multiselect": {
+      // Одне значення — варіант цілком; кілька — кожна частина (роздільники | ; , /) має бути допустимим варіантом.
+      if (unit) return { reason: "одиниця для варіантів зі списку" };
+      const one = findOption(at, value, valueSynonyms);
+      if (one.length === 1) return { value: optionName(one[0]), unit: "" };
+      if (one.length > 1) return { reason: "кілька варіантів з такою назвою" };
+      const parts = value.split(/\s*[|;,/]\s*/).filter(Boolean);
+      if (parts.length < 2) return { reason: `«${value}» немає серед допустимих значень` };
+      const picked = [];
+      for (const p of parts) {
+        const h = findOption(at, p, valueSynonyms);
+        if (h.length !== 1) return { reason: h.length ? `«${p}»: кілька варіантів з такою назвою` : `«${p}» немає серед допустимих значень` };
+        if (!picked.includes(h[0])) picked.push(h[0]);
+      }
+      return { value: picked.map(optionName).join(MULTI_SEPARATOR), unit: "" };
+    }
     case "free": {
       if (unit) return { reason: "одиниця для текстового поля" };
       if (value.length > FREE_MAX) return { reason: `довше за ${FREE_MAX} символів` };
+      if (MEASURE_RE.test(value)) return { reason: `«${value}» — число з одиницею в текстовому полі (ймовірна помилка постачальника) — не заповнюється` };
       return { value, unit: "" };
     }
     default: return { reason: `тип «${at.type}» не підтримується` };
@@ -106,10 +149,19 @@ export function validateValue(at, rawValue, rawUnit, units, valueSynonyms = null
 /** Характеристика → поле Prom: { ok, attr, out } або { ok: false, reason }. */
 export function mapParam(schema, param, { mapping, units } = {}) {
   const r = resolveAttr(schema, param?.name, mapping);
+  const v = r.attr && validateValue(r.attr, param.value, param.unit, units, mapping?.values?.[r.attr.id]);
+  if (v && !v.reason) return { ok: true, attr: r.attr, out: { name: r.attr.nameUK || r.attr.nameRU, value: v.value, unit: v.unit } };
+  // «Мощность двигателя: 680 Вт» → атрибут «Потужність двигуна, Вт» (та сама назва + одиниця значення в назві атрибута).
+  const su = mtText(param?.unit).trim() ? { num: mtText(param.value).trim(), unit: mtText(param.unit).trim() } : splitValueUnit(param?.value);
+  if (su && normName(param?.name)) {
+    const alt = schema.attributes.filter((a) => nameUnit(a) && [a.nameUK, a.nameRU].some((n) => normName(mtText(n).replace(/,[^,]*$/, "")) === normName(param.name)) && unitFactor(a, su.unit, units) !== null);
+    if (alt.length === 1) {
+      const w = validateValue(alt[0], su.num, su.unit, units, mapping?.values?.[alt[0].id]);
+      if (!w.reason) return { ok: true, attr: alt[0], via: "назва з одиницею", out: { name: alt[0].nameUK || alt[0].nameRU, value: w.value, unit: w.unit } };
+    }
+  }
   if (!r.attr) return { ok: false, reason: r.reason };
-  const v = validateValue(r.attr, param.value, param.unit, units, mapping?.values?.[r.attr.id]);
-  if (v.reason) return { ok: false, attr: r.attr, reason: v.reason };
-  return { ok: true, attr: r.attr, out: { name: r.attr.nameUK || r.attr.nameRU, value: v.value, unit: v.unit } };
+  return { ok: false, attr: r.attr, reason: v.reason };
 }
 
 // ---------- опис постачальника ----------
@@ -180,7 +232,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
   const notes = [];
-  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [] };
+  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [] };
   if (!schema && mode === "main") { notes.push(`немає схеми категорії ${categoryId || "?"} — підготовлені характеристики не змінено`); return unchanged; }
 
   // 1. Кандидати: XML, потім опис.
@@ -218,6 +270,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const rawByName = new Map(raw.map((p) => [normName(p.name), p]));
   const rawKeys = new Set(raw.map(itemKey));
   const attrOf = (name) => (schema ? resolveAttr(schema, name, mapping).attr?.id || "" : "");
+  const attrOfItem = (p) => { if (!schema) return ""; const m = mapParam(schema, p, { mapping, units }); return m.ok ? m.attr.id : attrOf(p.name); };
 
   // 2. Походження наявних записів.
   const prevItems = new Map((prov?.items || []).map((i) => [i.k, i]));
@@ -227,26 +280,42 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const classified = cur.map((p) => {
     const k = itemKey(p);
     const pi = prevItems.get(k);
-    if (pi) return { p, k, s: pi.s, a: pi.a || attrOf(p.name) };
-    if (prov) return { p, k, s: SRC.MANUAL, a: attrOf(p.name) }; // система цього не писала — правка власника
+    if (pi) return { p, k, s: pi.s, a: pi.a || attrOfItem(p) };
+    if (prov) return { p, k, s: SRC.MANUAL, a: attrOfItem(p) }; // система цього не писала — правка власника
     const c = candByKey.get(k);
     if (c) return { p, k, s: c.c.src, a: c.a };
     if (rawKeys.has(k)) return { p, k, s: SRC.RAW, a: "" };
-    return { p, k, s: SRC.UNKNOWN, a: attrOf(p.name) };
+    return { p, k, s: SRC.UNKNOWN, a: attrOfItem(p) };
   });
 
   // 3. Підсумок: ручні й невідомі — без змін; автоматичні — за актуальними даними; нові підтверджені — додаються.
-  const result = [], items = [], used = new Set(), usedNames = new Set(), removed = [], duplicates = [];
-  // Те саме значення (без урахування одиниці й мови назви): число = числу або однаковий текст.
-  const sameValue = (a, b) => { const x = parseNumber(mtText(a).replace(/[^\d.,\s-]/g, "").trim()), y = parseNumber(mtText(b).replace(/[^\d.,\s-]/g, "").trim()); return (x !== null && x === y) || normName(a) === normName(b); };
-  const push = (p, s, a) => { if (result.length >= MAX_PARAMS) return; result.push(p); items.push({ k: itemKey(p), s, a }); if (a) used.add(a); usedNames.add(normName(p.name)); };
+  const result = [], items = [], used = new Set(), usedNames = new Set(), removed = [], duplicates = [], merged = [], overflow = [];
+  const fmt = (p) => `${p.name}: ${p.value}${p.unit ? " " + p.unit : ""}`;
+  // Еквівалентний запис того самого атрибута (погоджено власником): після перевірки схемою дає те саме значення поля
+  // (зокрема RU-назва / RU-варіант / погоджений перерахунок одиниці), або те саме число без одиниці.
+  const equivalent = (p, out) => {
+    if (itemKey(p) === itemKey(out)) return true;
+    const m = schema && mapParam(schema, p, { mapping, units });
+    if (m?.ok) return itemKey(m.out) === itemKey(out);
+    const n = !mtText(p.unit).trim() && !splitValueUnit(p.value) ? parseNumber(p.value) : null;
+    return n !== null && n === parseNumber(out.value);
+  };
+  const push = (p, s, a) => {
+    if (result.length >= MAX_PARAMS) { overflow.push(fmt(p)); return; }
+    result.push(p); items.push({ k: itemKey(p), s, a }); if (a) used.add(a); usedNames.add(normName(p.name));
+  };
+  // Дубль об'єднано: лишається поле Prom (додається тут, якщо ще не додане).
+  const merge = (x, a) => { const c = cand.get(a); merged.push(`«${fmt(x.p)}» → поле Prom «${fmt(c.out)}»`); if (!used.has(a)) push(c.out, c.src, a); };
   const catChanged = Boolean(prov?.cat && categoryId && prov.cat !== String(categoryId));
   for (const x of classified) {
     if (x.s === SRC.MANUAL || x.s === SRC.UNKNOWN) {
       if (x.a && cand.has(x.a) && itemKey(cand.get(x.a).out) !== x.k) {
         const c = cand.get(x.a).out;
-        if (sameValue(x.p.value, c.value)) { if (normName(x.p.name) !== normName(c.name) || mtText(x.p.unit) !== mtText(c.unit)) duplicates.push(`«${x.p.name}: ${x.p.value}${x.p.unit ? " " + x.p.unit : ""}» дублює поле Prom «${c.name}: ${c.value}${c.unit ? " " + c.unit : ""}»`); }
-        else conflicts.push(`«${x.p.name}»: ${x.s === SRC.MANUAL ? "ручне" : "наявне"} значення «${x.p.value}» ≠ постачальник «${c.value}» — збережено наше`);
+        if (equivalent(x.p, c)) {
+          // Невизначене походження + еквівалентне поле Prom → об'єднання; ручне — ніколи не прибирається.
+          if (x.s === SRC.UNKNOWN && !suppressed.has(x.a)) { merge(x, x.a); continue; }
+          duplicates.push(`«${fmt(x.p)}» (ручне) дублює поле Prom «${fmt(c)}» — ручне збережено`);
+        } else conflicts.push(`«${x.p.name}»: ${x.s === SRC.MANUAL ? "ручне" : "наявне"} значення «${x.p.value}» ≠ постачальник «${c.value}» — збережено наше`);
       }
       if (catChanged && schema && !x.a) notes.push(`«${x.p.name}» не перевірено для нової категорії ${categoryId}`);
       push(x.p, x.s, x.a);
@@ -255,19 +324,21 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     if (x.s === SRC.XML || x.s === SRC.DESC) {
       const c = x.a && cand.get(x.a);
       if (c && !used.has(x.a)) push(c.out, c.src, x.a);
-      else if (c) { duplicates.push(`«${x.p.name}» — повторне поле Prom «${c.out.name}», збережено як було`); push(x.p, x.s, ""); }
+      else if (c && equivalent(x.p, c.out)) merge(x, x.a);
+      else if (c) { conflicts.push(`«${fmt(x.p)}» ≠ поле Prom «${fmt(c.out)}» — обидва збережено`); push(x.p, x.s, ""); }
       else removed.push(x.p.name);
       continue;
     }
     // RAW: якщо тепер зіставляється — підтверджене поле; інакше — актуальне сире значення з тією ж назвою.
-    const a = attrOf(x.p.name);
+    const a = attrOfItem(x.p);
     if (a && cand.has(a)) {
       // Замінюємо полем Prom лише тоді, коли поле виведене саме з цього запису; інакше (поле з іншого параметра
       // постачальника) наявне значення може містити більше даних (напр. «Біметал HSS») — лишаємо його, поле не дублюємо.
       // Підготовлений запис ніколи не зникає: якщо поле вже зайняте — запис лишається як був (дубль позначається).
       const c = cand.get(a);
       if (c.from === x.k && !used.has(a)) { push(c.out, c.src, a); continue; }
-      if (used.has(a)) duplicates.push(`«${x.p.name}: ${x.p.value}${x.p.unit ? " " + x.p.unit : ""}» — поле Prom «${c.out.name}» уже заповнене, запис збережено як був`);
+      if (!suppressed.has(a) && equivalent(x.p, c.out)) { merge(x, a); continue; }
+      if (used.has(a)) conflicts.push(`«${fmt(x.p)}» ≠ поле Prom «${fmt(c.out)}» — обидва збережено`);
       else { conflicts.push(`«${x.p.name}»: наявне значення «${x.p.value}» залишено; поле Prom «${c.out.value}» не застосовано (інший параметр постачальника)`); used.add(a); }
       push(x.p, SRC.RAW, "");
       continue;
@@ -278,24 +349,59 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   }
   for (const [a, c] of cand) if (!used.has(a) && !suppressed.has(a)) push(c.out, c.src, a);
   const hasUnknown = classified.some((x) => x.s === SRC.UNKNOWN);
-  // Незіставлені характеристики XML — як і раніше, окремими (не полями Prom), але лише коли походження всіх записів відоме
-  // (інакше можна задублювати вже підготовлене вручну, напр. «Стан» і «Состояние»).
-  if (!hasUnknown) {
-    for (const p of raw) {
-      const n = normName(p.name);
-      if (usedNames.has(n) || suppressed.has("n:" + n) || (schema && mapParam(schema, p, { mapping, units }).ok)) continue;
-      if (schema && attrOf(p.name) && used.has(attrOf(p.name))) continue;
-      push(p, SRC.RAW, "");
-    }
+  // Незіставлені характеристики XML — користувацькими (дослівно), але лише коли: назва не є атрибутом категорії (інакше
+  // видавали б за стандартну) і походження всіх записів відоме (інакше можна задублювати підготовлене іншою мовою,
+  // напр. «Стан» і «Состояние»). Решта — у rawOnly з причиною.
+  const rawWhy = new Map(); // ключ сирого запису → чому лише в сирих даних
+  for (const p of raw) {
+    const n = normName(p.name);
+    if (usedNames.has(n) || suppressed.has("n:" + n)) continue;
+    const m = schema && mapParam(schema, p, { mapping, units });
+    if (m?.ok) continue;
+    if (m?.attr) { rawWhy.set(itemKey(p), `${m.reason}; назва збігається з атрибутом категорії «${m.attr.nameUK || m.attr.nameRU}» — користувацькою не передається`); continue; }
+    if (hasUnknown) { rawWhy.set(itemKey(p), "у картці є записи невизначеного походження — можливий дубль іншою мовою, не додано"); continue; }
+    push(p, SRC.RAW, "");
   }
   if (hasUnknown) notes.push(`походження ${classified.filter((x) => x.s === SRC.UNKNOWN).length} характеристик не визначено — збережено без змін`);
   if (removed.length) notes.push("прибрано (постачальник більше не передає / не відповідає категорії): " + removed.join(", "));
+  // Кожна характеристика постачальника, якої немає в підсумку (ні дослівно, ні полем Prom), — з причиною.
+  const outKeys = new Set(items.map((i) => i.k));
+  const flat = (p) => normName(`${mtText(p.value)} ${mtText(p.unit)}`);
+  const rawOnly = [];
+  for (const p of raw) {
+    const k = itemKey(p);
+    if (outKeys.has(k)) continue;
+    const c = [...cand.values()].find((x) => x.from === k);
+    if (c && outKeys.has(itemKey(c.out))) continue;
+    // Та сама характеристика вже є в підсумку: дослівно з іншим записом одиниці («35 м» ↔ «35» + «м») або
+    // еквівалентним полем Prom того самого атрибута (повтор параметра постачальника, зокрема без одиниці).
+    if (result.some((q) => normName(q.name) === normName(p.name) && flat(q) === flat(p))) continue;
+    const pa = schema && attrOfItem(p);
+    const twin = pa ? items.findIndex((i, j) => i.a === pa && equivalent(p, result[j])) : -1;
+    if (twin >= 0) { merged.push(`«${fmt(p)}» (XML, повтор) → поле Prom «${fmt(result[twin])}»`); continue; }
+    let reason = rawWhy.get(k);
+    if (!reason) {
+      const m = schema ? mapParam(schema, p, { mapping, units }) : { ok: false, reason: "немає схеми категорії" };
+      if (!m.ok) reason = m.attr ? `${m.reason}; назва збігається з атрибутом категорії «${m.attr.nameUK || m.attr.nameRU}»` : m.reason;
+      else if (ambiguous.has(m.attr.id)) reason = `кілька різних значень для поля «${m.out.name}» — не заповнено`;
+      else if (suppressed.has(m.attr.id)) reason = "поле прибрав власник";
+      else if (used.has(m.attr.id)) reason = `поле «${m.out.name}» уже заповнене нашим значенням (збережено)`;
+      else if (overflow.length) reason = `ліміт ${MAX_PARAMS} характеристик`;
+      else reason = "дубль назви іншого запису";
+    }
+    rawOnly.push({ name: p.name, value: p.value, unit: p.unit, reason });
+  }
   // 4. Фрагменти опису, перенесені в поля (для очищення СИРОЇ копії опису).
   const descRanges = { ua: [], ru: [] };
   items.forEach((it) => { const c = it.a && cand.get(it.a); if (c && itemKey(c.out) === it.k) { descRanges.ua.push(...c.frags.ua); descRanges.ru.push(...c.frags.ru); } });
-  const provenanceOut = { v: 1, cat: String(categoryId || ""), items, x: [...suppressed], notes: [...conflicts, ...notes].slice(0, 20) };
+  // Збережені дослівні записи, назва яких збігається з атрибутом категорії (значення не з довідника): за документацією
+  // Prom такий запис імпортується як користувацький — позначаємо для перевірки, запис не прибираємо.
+  const customAttrNames = schema ? result.filter((p, i) => !items[i].a && attrOf(p.name)).map(fmt) : [];
+  const conflictsU = [...new Set(conflicts)]; // те саме з UA- і RU-опису — один раз
+  if (overflow.length) notes.push(`понад ${MAX_PARAMS} характеристик — не додано: ${overflow.length}`);
+  const provenanceOut = { v: 1, cat: String(categoryId || ""), items, x: [...suppressed], notes: [...conflictsU, ...notes].slice(0, 20) };
   return {
-    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts, duplicates, removed, descRanges, unmapped,
+    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow, rawOnly, customAttrNames, removed, descRanges, unmapped,
     changed: JSON.stringify(result) !== JSON.stringify(cur),
   };
 }

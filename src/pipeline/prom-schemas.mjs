@@ -2,6 +2,7 @@
  *   schemas/prom/<categoryId>.xml — схема рівно в тому вигляді, як її надав власник (один <category>);
  *   schemas/prom/MANIFEST.json    — перелік: id, назви, файл, SHA256, кількість атрибутів, дата отримання;
  *   schemas/prom/units.json       — погоджені перерахунки одиниць;
+ *   schemas/prom/synonyms.json    — погоджені синоніми назв для всіх категорій: { toAttribute: { "назва": "nameUK атрибута" } };
  *   schemas/prom/mapping/<categoryId>.json — погоджені синоніми: { synonyms: { "назва постачальника": "<id атрибута>" },
  *                                            values: { "<id атрибута>": { "значення постачальника": "<id варіанта>" } } }.
  *  Файл, SHA якого не збігається з MANIFEST, або схема з помилками структури — не використовується (лише попередження). */
@@ -22,6 +23,7 @@ export function readManifest(dir = SCHEMAS_DIR) {
 /** Схеми, словники й одиниці для синхронізації. */
 export function loadPromCatalog(dir = SCHEMAS_DIR) {
   const out = { schemas: new Map(), mappings: new Map(), units: readJson(path.join(dir, "units.json"), { conversions: [] }), problems: [] };
+  const globalSyn = readJson(path.join(dir, "synonyms.json"), {}).toAttribute || {};
   for (const e of readManifest(dir).categories || []) {
     const file = path.join(dir, e.file);
     if (!fs.existsSync(file)) { out.problems.push(`${e.id}: немає файлу ${e.file}`); continue; }
@@ -30,12 +32,21 @@ export function loadPromCatalog(dir = SCHEMAS_DIR) {
     const parsed = parseSchemaText(text);
     if (parsed.length !== 1 || parsed[0].schema.id !== String(e.id)) { out.problems.push(`${e.id}: у файлі має бути рівно одна категорія з цим id`); continue; }
     if (parsed[0].problems.length) { out.problems.push(`${e.id}: ${parsed[0].problems.join("; ")}`); continue; }
-    out.schemas.set(String(e.id), parsed[0].schema);
+    const schema = parsed[0].schema;
+    out.schemas.set(String(e.id), schema);
     const m = readJson(path.join(dir, "mapping", `${e.id}.json`), null);
-    if (m) out.mappings.set(String(e.id), {
-      synonyms: Object.fromEntries(Object.entries(m.synonyms || {}).map(([k, v]) => [normName(k), String(v)])),
-      values: Object.fromEntries(Object.entries(m.values || {}).map(([a, vals]) => [String(a), Object.fromEntries(Object.entries(vals || {}).map(([k, v]) => [normName(k), String(v)]))])),
-    });
+    const mapping = {
+      synonyms: Object.fromEntries(Object.entries(m?.synonyms || {}).map(([k, v]) => [normName(k), String(v)])),
+      values: Object.fromEntries(Object.entries(m?.values || {}).map(([a, vals]) => [String(a), Object.fromEntries(Object.entries(vals || {}).map(([k, v]) => [normName(k), String(v)]))])),
+    };
+    // Загальні погоджені синоніми: лише однозначний атрибут цієї категорії; синонім категорії має перевагу.
+    for (const [alias, target] of Object.entries(globalSyn)) {
+      const n = normName(alias);
+      const hits = schema.attributes.filter((a) => normName(a.nameUK) === normName(target));
+      const clash = schema.attributes.some((a) => normName(a.nameUK) === n || normName(a.nameRU) === n);
+      if (hits.length === 1 && !clash && mapping.synonyms[n] === undefined) mapping.synonyms[n] = hits[0].id;
+    }
+    if (m || Object.keys(mapping.synonyms).length) out.mappings.set(String(e.id), mapping);
   }
   return out;
 }
