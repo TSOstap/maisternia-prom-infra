@@ -1,2 +1,4 @@
 # Еталонні копії живого Apps Script зберігаються байт-у-байт (SHA у reference/README.md)
 reference/** -text
+# Схеми категорій Prom — байт-у-байт (SHA у schemas/prom/MANIFEST.json)
+schemas/prom/** -text

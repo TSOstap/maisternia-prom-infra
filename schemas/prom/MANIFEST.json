@@ -16,7 +16,7 @@
       "nameUK": "Апарати високого тиску",
       "nameRU": "Аппараты высокого давления",
       "file": "121105.xml",
-      "sha256": "36f08571191f56302cf35327d493be0b2f6e826321eb015ee38e3dc66f3a7264",
+      "sha256": "c8a29d2446e075af00acc492aefb260b757a72c7a2864dd2883e3c5b40e691b6",
       "attributes": 47,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
@@ -26,7 +26,7 @@
       "nameUK": "Свердловинні насоси",
       "nameRU": "Скважинные насосы",
       "file": "140309.xml",
-      "sha256": "deb43db8b5b394f61b28585be21a172064a79ae21fc64bb00e92f7e268c1cba0",
+      "sha256": "8369f1f4adf8a3646d0e0943dbbcadae86a9341142aaf6f393de8df621e18354",
       "attributes": 30,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
@@ -36,7 +36,7 @@
       "nameUK": "Апарати надвисокого тиску",
       "nameRU": "Аппараты сверхвысокого давления",
       "file": "140316.xml",
-      "sha256": "afa6de96bc1b6b862bf98dc7b214f3d22f5475d4f0f488e04f9f9ae33401e513",
+      "sha256": "362fdb4ac9028293d37ea454a4c3a6f40bbebf6ca1812f7599256e0f3f5083ca",
       "attributes": 24,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
@@ -46,7 +46,7 @@
       "nameUK": "Дрилі, шуруповерти",
       "nameRU": "Дрели, шуруповерты",
       "file": "141711.xml",
-      "sha256": "011c8f89525e478ebb79670c552b60929b46e57beb3a8aa222ba8df1077a665d",
+      "sha256": "fb797a5318e6828f21a20742df3d7392d90def6858b7ff60bec24ef5befd71e7",
       "attributes": 48,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
@@ -56,7 +56,7 @@
       "nameUK": "Шліфувальні машини",
       "nameRU": "Шлифовальные машины",
       "file": "141717.xml",
-      "sha256": "f8080d9bd5671d898b9203077ae3a0ad0d7c661ae7d6c948f3c2533a90440f26",
+      "sha256": "79d9baeaf576bdc85b5adfc46a7b296b61e7274329622f34c309eec1da5f86e8",
       "attributes": 40,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
@@ -66,7 +66,7 @@
       "nameUK": "Перфоратори",
       "nameRU": "Перфораторы",
       "file": "141725.xml",
-      "sha256": "d2011196c5757e307f1b6159f8d9091eff6c4c8ffc9aee9de2ec75ec63dbc128",
+      "sha256": "8ca8edaa7729fef7d033c2b2691046e08a98bce9a4dcbec93efddd6e80ca8436",
       "attributes": 37,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
@@ -76,7 +76,7 @@
       "nameUK": "Набори інструментів",
       "nameRU": "Наборы инструментов",
       "file": "142004.xml",
-      "sha256": "8fdb73983eb3a00ada29908c2a025e9541a641868efe48842de4cc179dba40cf",
+      "sha256": "05e62e96232c5657d8c9fe0542a4d8d76d1e5c1ec01ae7376902ebd7e45cf01f",
       "attributes": 9,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
@@ -106,7 +106,7 @@
       "nameUK": "Електрогенератори",
       "nameRU": "Электрогенераторы",
       "file": "410402.xml",
-      "sha256": "87e75a4795fc0c602d88a9b013f63f6af787d298c826810979825bb0d504c69e",
+      "sha256": "737d230fec0bf15b8f9d5f9119312eddd11bf7d02e6b150056a056739e394cf3",
       "attributes": 66,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
@@ -126,7 +126,7 @@
       "nameUK": "Бензопили і електропили",
       "nameRU": "Бензопилы и электропилы",
       "file": "1250302.xml",
-      "sha256": "f429b00282acc22b79046064fadcefd98d69c58f5f11c286edc3469daeaad416",
+      "sha256": "86ad4fb7d641c16e94ba6569d526ab40e77a93378d1665e77dfcaac3ff837cec",
       "attributes": 47,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
@@ -136,7 +136,7 @@
       "nameUK": "Газонокосарки",
       "nameRU": "Газонокосилки",
       "file": "1250308.xml",
-      "sha256": "7a50d2716268abed4438e1659e9a176a2c2a26565485cd37ba969f0b9f95d938",
+      "sha256": "58655950a77403fa48d64264bad3c51bb90aaf8aa0965ce70cc84212e35876cf",
       "attributes": 53,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
@@ -146,7 +146,7 @@
       "nameUK": "Мотокоси і тримери",
       "nameRU": "Мотокосы и триммеры",
       "file": "1250321.xml",
-      "sha256": "68a0ced91a4f6387a0b6e5532d82c463470b90cea5d171bd838b2e2ef49cbd20",
+      "sha256": "f7a97e5e0be916e9d38887d7713fb05c6f1bf7ae264813ff8f218b0fe9cccda4",
       "attributes": 38,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
@@ -166,7 +166,7 @@
       "nameUK": "Генератори, альтернатори і комплектуючі",
       "nameRU": "Генераторы, альтернаторы и комплектующие",
       "file": "12020302.xml",
-      "sha256": "20b57d91bb1a61795bb80933624f9fa5fa9b1f3720f9b14837e1ac3398870db1",
+      "sha256": "c37f6879de1d6a44351940f72ffe8a5cd8c50b76fdb8ff59f9484e3dd3b60f29",
       "attributes": 28,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
@@ -176,7 +176,7 @@
       "nameUK": "Пневматичні шурупокрути",
       "nameRU": "Пневматические шуруповерты",
       "file": "14200510.xml",
-      "sha256": "94fd143410973143d9f396da743b0be74a0320f00514913f78a3043bfa4a0d34",
+      "sha256": "f2df97135fdcdbf80386bae9fb3b8780f292d5344c42073b7c7fb68b3f20fa25",
       "attributes": 18,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"

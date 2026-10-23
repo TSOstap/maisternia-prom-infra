@@ -26,7 +26,7 @@ export function loadPromCatalog(dir = SCHEMAS_DIR) {
     const file = path.join(dir, e.file);
     if (!fs.existsSync(file)) { out.problems.push(`${e.id}: немає файлу ${e.file}`); continue; }
     const text = fs.readFileSync(file, "utf8");
-    if (sha256(text) !== e.sha256) { out.problems.push(`${e.id}: SHA файлу не збігається з MANIFEST — схему не використано`); continue; }
+    if (textSha(text) !== e.sha256) { out.problems.push(`${e.id}: SHA файлу не збігається з MANIFEST — схему не використано`); continue; }
     const parsed = parseSchemaText(text);
     if (parsed.length !== 1 || parsed[0].schema.id !== String(e.id)) { out.problems.push(`${e.id}: у файлі має бути рівно одна категорія з цим id`); continue; }
     if (parsed[0].problems.length) { out.problems.push(`${e.id}: ${parsed[0].problems.join("; ")}`); continue; }
@@ -40,7 +40,10 @@ export function loadPromCatalog(dir = SCHEMAS_DIR) {
   return out;
 }
 
-const fileText = (block) => `<?xml version="1.0" encoding="utf-8"?>\n<categories>\n${block}\n</categories>\n`;
+// Кінці рядків — LF (вихідні файли власника бувають CRLF); SHA не залежить від перетворень git на Windows.
+const lf = (s) => s.replace(/\r\n?/g, "\n");
+const textSha = (s) => sha256(lf(s));
+const fileText = (block) => `<?xml version="1.0" encoding="utf-8"?>\n<categories>\n${lf(block)}\n</categories>\n`;
 
 /** Імпорт файлів від власника: кожна коректна категорія → окремий файл + запис у MANIFEST. */
 export function importSchemaFiles(files, { dir = SCHEMAS_DIR, received = new Date().toISOString().slice(0, 10) } = {}) {
@@ -50,7 +53,7 @@ export function importSchemaFiles(files, { dir = SCHEMAS_DIR, received = new Dat
   // Один id у кількох місцях з РІЗНИМ вмістом — не вибираємо версію самі: категорія не імпортується.
   const all = files.flatMap((f) => parseSchemaText(fs.readFileSync(f, "utf8")).map((it) => ({ ...it, f })));
   const shaById = new Map();
-  for (const it of all) { const s = sha256(fileText(it.block)); const set = shaById.get(it.schema.id) || new Set(); set.add(s); shaById.set(it.schema.id, set); }
+  for (const it of all) { const s = textSha(fileText(it.block)); const set = shaById.get(it.schema.id) || new Set(); set.add(s); shaById.set(it.schema.id, set); }
   const written = new Set();
   for (const f of files) if (!all.some((it) => it.f === f)) report.push({ file: path.basename(f), status: "НЕМАЄ КАТЕГОРІЙ" });
   for (const f of files) {
@@ -64,7 +67,7 @@ export function importSchemaFiles(files, { dir = SCHEMAS_DIR, received = new Dat
       if (parseCategory(it.block).schema.id !== schema.id) throw new Error("внутрішня помилка розбору");
       const name = `${schema.id}.xml`;
       const prev = byId.get(schema.id);
-      const sha = sha256(text);
+      const sha = textSha(text);
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(path.join(dir, name), text);
       byId.set(schema.id, { id: schema.id, nameUK: schema.nameUK, nameRU: schema.nameRU, file: name, sha256: sha, attributes: schema.attributes.length, received: prev?.sha256 === sha ? prev.received : received, source: path.basename(f) });

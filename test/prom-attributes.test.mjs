@@ -41,8 +41,12 @@ test("імпорт: та сама категорія з різним вміст�
   const rep = importSchemaFiles([f1, f2], { dir: out });
   assert.ok(rep.every((r) => r.status === "КОНФЛІКТ"));
   assert.equal(fs.existsSync(path.join(out, "7.xml")), false);
+  fs.writeFileSync(f1, one(20).replace(/></g, ">\r\n<")); // вихідний файл власника з CRLF
   importSchemaFiles([f1], { dir: out });
   assert.equal(loadPromCatalog(out).schemas.size, 1);
+  const file = path.join(out, "7.xml");
+  fs.writeFileSync(file, fs.readFileSync(file, "utf8").replace(/\n/g, "\r\n")); // git на Windows видав CRLF
+  assert.equal(loadPromCatalog(out).schemas.size, 1, "SHA не залежить від кінців рядків");
   fs.appendFileSync(path.join(out, "7.xml"), " ");
   const c = loadPromCatalog(out);
   assert.equal(c.schemas.size, 0);
