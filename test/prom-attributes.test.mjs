@@ -225,3 +225,19 @@ test("дослівне значення постачальника не підм
   const r2 = buildCharacteristics({ schema: S("14201508"), categoryId: "14201508", rawParams: [P("Материал", "Биметалл")], current: [P("Материал", "Биметалл")], mode: "main" });
   assert.deepEqual(r2.params, [P("Матеріал", "Біметал")]);
 });
+
+test("підготовлені записи не зникають: дубль поля Prom (той самий параметр без одиниці / RU-назва) зберігається й позначається, не «конфлікт» (реальний випадок 141717)", () => {
+  const raw = [P("Емкость аккумулятора", "2", "А·ч"), P("Емкость аккумулятора", "2"), P("Вес", "1.05", "кг")];
+  const cur = [P("Ємність акумулятору", "2", "А. г"), P("Емкость аккумулятора", "2"), P("Вага", "1.05", "кг"), P("Вес", "1.05")];
+  const r = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: raw, current: cur, mode: "main" });
+  for (const c of cur) assert.ok(r.params.some((x) => x.name === c.name && x.value === c.value && x.unit === c.unit), "збережено: " + c.name);
+  assert.equal(r.params.length, cur.length);
+  assert.deepEqual(r.conflicts, [], "однакові значення — не конфлікт");
+  assert.ok(r.duplicates.length >= 2, JSON.stringify(r.duplicates));
+});
+
+test("той самий числовий вміст у різному записі (1,05 ↔ 1.05) — дубль, а не конфлікт", () => {
+  const r = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [P("Вес", "1.05", "кг")], current: [P("Вага", "1,05 кг")], mode: "main" });
+  assert.ok(r.params.some((x) => x.name === "Вага" && x.value === "1,05 кг"), "наявний запис збережено");
+  assert.deepEqual(r.conflicts, [], JSON.stringify(r.conflicts));
+});

@@ -236,12 +236,18 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   });
 
   // 3. Підсумок: ручні й невідомі — без змін; автоматичні — за актуальними даними; нові підтверджені — додаються.
-  const result = [], items = [], used = new Set(), usedNames = new Set(), removed = [];
+  const result = [], items = [], used = new Set(), usedNames = new Set(), removed = [], duplicates = [];
+  // Те саме значення (без урахування одиниці й мови назви): число = числу або однаковий текст.
+  const sameValue = (a, b) => { const x = parseNumber(mtText(a).replace(/[^\d.,\s-]/g, "").trim()), y = parseNumber(mtText(b).replace(/[^\d.,\s-]/g, "").trim()); return (x !== null && x === y) || normName(a) === normName(b); };
   const push = (p, s, a) => { if (result.length >= MAX_PARAMS) return; result.push(p); items.push({ k: itemKey(p), s, a }); if (a) used.add(a); usedNames.add(normName(p.name)); };
   const catChanged = Boolean(prov?.cat && categoryId && prov.cat !== String(categoryId));
   for (const x of classified) {
     if (x.s === SRC.MANUAL || x.s === SRC.UNKNOWN) {
-      if (x.a && cand.has(x.a) && itemKey(cand.get(x.a).out) !== x.k) conflicts.push(`«${x.p.name}»: ${x.s === SRC.MANUAL ? "ручне" : "наявне"} значення «${x.p.value}» ≠ постачальник «${cand.get(x.a).out.value}» — збережено наше`);
+      if (x.a && cand.has(x.a) && itemKey(cand.get(x.a).out) !== x.k) {
+        const c = cand.get(x.a).out;
+        if (sameValue(x.p.value, c.value)) { if (normName(x.p.name) !== normName(c.name) || mtText(x.p.unit) !== mtText(c.unit)) duplicates.push(`«${x.p.name}: ${x.p.value}${x.p.unit ? " " + x.p.unit : ""}» дублює поле Prom «${c.name}: ${c.value}${c.unit ? " " + c.unit : ""}»`); }
+        else conflicts.push(`«${x.p.name}»: ${x.s === SRC.MANUAL ? "ручне" : "наявне"} значення «${x.p.value}» ≠ постачальник «${c.value}» — збережено наше`);
+      }
       if (catChanged && schema && !x.a) notes.push(`«${x.p.name}» не перевірено для нової категорії ${categoryId}`);
       push(x.p, x.s, x.a);
       continue;
@@ -249,7 +255,8 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     if (x.s === SRC.XML || x.s === SRC.DESC) {
       const c = x.a && cand.get(x.a);
       if (c && !used.has(x.a)) push(c.out, c.src, x.a);
-      else if (!c) removed.push(x.p.name);
+      else if (c) { duplicates.push(`«${x.p.name}» — повторне поле Prom «${c.out.name}», збережено як було`); push(x.p, x.s, ""); }
+      else removed.push(x.p.name);
       continue;
     }
     // RAW: якщо тепер зіставляється — підтверджене поле; інакше — актуальне сире значення з тією ж назвою.
@@ -257,8 +264,12 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     if (a && cand.has(a)) {
       // Замінюємо полем Prom лише тоді, коли поле виведене саме з цього запису; інакше (поле з іншого параметра
       // постачальника) наявне значення може містити більше даних (напр. «Біметал HSS») — лишаємо його, поле не дублюємо.
-      if (cand.get(a).from === x.k) { if (!used.has(a)) push(cand.get(a).out, cand.get(a).src, a); }
-      else if (!used.has(a)) { conflicts.push(`«${x.p.name}»: наявне значення «${x.p.value}» залишено; поле Prom «${cand.get(a).out.value}» не застосовано (інший параметр постачальника)`); push(x.p, SRC.RAW, ""); used.add(a); }
+      // Підготовлений запис ніколи не зникає: якщо поле вже зайняте — запис лишається як був (дубль позначається).
+      const c = cand.get(a);
+      if (c.from === x.k && !used.has(a)) { push(c.out, c.src, a); continue; }
+      if (used.has(a)) duplicates.push(`«${x.p.name}: ${x.p.value}${x.p.unit ? " " + x.p.unit : ""}» — поле Prom «${c.out.name}» уже заповнене, запис збережено як був`);
+      else { conflicts.push(`«${x.p.name}»: наявне значення «${x.p.value}» залишено; поле Prom «${c.out.value}» не застосовано (інший параметр постачальника)`); used.add(a); }
+      push(x.p, SRC.RAW, "");
       continue;
     }
     const now = rawByName.get(normName(x.p.name));
@@ -284,7 +295,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   items.forEach((it) => { const c = it.a && cand.get(it.a); if (c && itemKey(c.out) === it.k) { descRanges.ua.push(...c.frags.ua); descRanges.ru.push(...c.frags.ru); } });
   const provenanceOut = { v: 1, cat: String(categoryId || ""), items, x: [...suppressed], notes: [...conflicts, ...notes].slice(0, 20) };
   return {
-    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts, removed, descRanges, unmapped,
+    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts, duplicates, removed, descRanges, unmapped,
     changed: JSON.stringify(result) !== JSON.stringify(cur),
   };
 }
