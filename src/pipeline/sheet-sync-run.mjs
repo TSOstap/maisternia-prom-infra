@@ -134,7 +134,7 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
   const book = await readBook(SYNC_SHEETS);
   const groupsRows = groupsOf(book);
   const warnings = [];
-  const fullById = await fullForQueue(book, fetchFull, warnings);
+  const fullById = await fullForQueue(book, fetchFull, warnings, [], { parsed, withMain: true });
   const plan = planSheetSync({ book, parsed, stamp, config, now, groupsRows, fullById });
   plan.warnings.push(...warnings);
   if (plan.abort) {
@@ -231,13 +231,26 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
 
 const rowsOf = (header, values) => values.map((v) => Object.fromEntries(header.map((k, j) => [k, v[j] ?? ""])));
 /** Повні дані (фото, характеристики, опис) для позицій черги — варіант А. Збій завантаження не зупиняє оновлення цін. */
-async function fullForQueue(book, fetchFull, warnings, extra = []) {
-  const v = book[SHEET.queue] || [];
-  const col = (v[0] || []).map(mtText).indexOf("ID постачальника");
-  const ids = [...new Set([...(col < 0 ? [] : v.slice(1).map((r) => mtText(r[col])).filter(Boolean)), ...extra])];
+/** Повні дані (фото, характеристики, опис, модель) для черги (і основного каталогу в синхронізації). Лише ПОВНИЙ перевірений XML:
+ *  якщо в ньому < 95% позицій, що є в операційному фіді, — фото й характеристики не оновлюються зовсім (попередження).
+ *  Полегшений фід без <picture> ніколи не використовується для фото. Збій завантаження не зупиняє оновлення цін. */
+export const FULL_COVERAGE_MIN = 0.95;
+async function fullForQueue(book, fetchFull, warnings, extra = [], { parsed = null, withMain = false } = {}) {
+  const idsOf = (name) => { const v = book[name] || []; const col = (v[0] || []).map(mtText).indexOf("ID постачальника"); return col < 0 ? [] : v.slice(1).map((r) => mtText(r[col])).filter(Boolean); };
+  const ids = [...new Set([...idsOf(SHEET.queue), ...(withMain ? idsOf(SHEET.main) : []), ...extra])];
   if (!ids.length || !fetchFull) return new Map();
-  try { return await fetchFull(ids); }
-  catch (e) { warnings.push("повний XML недоступний — фото/характеристики черги не оновлено: " + String(e?.message || e).slice(0, 120)); return new Map(); }
+  let full;
+  try { full = await fetchFull(ids); }
+  catch (e) { warnings.push("повний XML недоступний — фото/характеристики не оновлено: " + String(e?.message || e).slice(0, 120)); return new Map(); }
+  if (parsed) {
+    const expected = ids.filter((id) => parsed.offers.has(id));
+    const got = expected.filter((id) => full.has(id)).length;
+    if (expected.length && got / expected.length < FULL_COVERAGE_MIN) {
+      warnings.push(`повний XML неповний (${got} з ${expected.length} позицій) — фото й характеристики не оновлено`);
+      return new Map();
+    }
+  }
+  return full;
 }
 /** Нові колонки стану черги (додаються один раз): ширина аркуша + заголовок. */
 async function writeQueueHeader(sheets, header) {
@@ -254,7 +267,7 @@ export const INTAKE_SHEETS = [SHEET.main, SHEET.queue, SHEET.deferred, SHEET.fro
 export async function intakeSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now, ready = [], profile = "medium" }) {
   const book = await readBook(INTAKE_SHEETS);
   const warnings = [];
-  const fullById = await fullForQueue(book, fetchFull, warnings, ready.map((e) => mtText(e?.id)).filter(Boolean));
+  const fullById = await fullForQueue(book, fetchFull, warnings, ready.map((e) => mtText(e?.id)).filter(Boolean), { parsed });
   const plan = planIntake({ book, parsed, fullById, stamp, config, now, ready, profile });
   if (plan.abort) {
     const rec = await recordBlocked(sheets, stamp, plan.block);

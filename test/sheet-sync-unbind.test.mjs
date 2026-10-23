@@ -103,7 +103,11 @@ test("відв'язування через кілька оновлень: ста
   assert.equal(mtText(c["ID постачальника"]), ctx.oldId);
   assert.equal(mtText(c["Артикул постачальника"]), ctx.oldSku);
   assert.equal(mtText(c["Код товару Prom"]), ctx.oldCode);
-  assert.deepEqual([c["Назва UA"], c["Назва RU"], c["Опис UA"], c["Фото JSON"], c["Характеристики JSON"]], ctx.seo, "SEO, фото, характеристики збережено");
+  assert.deepEqual([c["Назва UA"], c["Назва RU"], c["Опис UA"]], ctx.seo.slice(0, 3), "наше SEO збережено");
+  // Фото й характеристики — сирі дані постачальника (погоджено 23.10.2026): наступна синхронізація бере їх зі старої позиції
+  await sync(w, xml);
+  const c2 = byOffer(w, ctx.offerId);
+  assert.deepEqual([c2["Фото JSON"], c2["Характеристики JSON"]], ctx.seo.slice(3), "фото й характеристики — актуальні дані старої позиції");
   assert.equal(c["Ціна постачальника"], 777, "ціна — з актуальної старої позиції, не 1234/1450");
   assert.equal(c["Наявність"], "+");
   assert.equal(c["Стан синхронізації"], "ЗІСТАВЛЕНО");

@@ -255,10 +255,14 @@ export function refreshQueueRow(row, offer, full, { stamp }) {
     const set = (col, next) => { if (mtText(r[col]) !== mtText(next)) { entries.push([stamp, SHEET.queue, id, col, jv(r[col]), jv(next), "ДАНІ ПОСТАЧАЛЬНИКА"]); r[col] = next; } };
     for (const [col, f] of RAW_COLUMNS) set(col, offer[f] ?? "");
     if (full) {
-      set("Фото JSON", JSON.stringify((full.pictures || []).slice(0, 10)));
+      // Фото — повним актуальним списком постачальника (порядок, головне фото); порожній список не стирає наявних.
+      if ((full.pictures || []).length) set("Фото JSON", JSON.stringify(full.pictures.slice(0, 10)));
+      else if ((jsonOr(r["Фото JSON"], []) || []).length) notes.push("у повному XML немає фото — залишено попередні");
       const params = JSON.stringify((full.params || []).slice(0, 100));
-      if (params.length <= CELL_LIMIT) set("Характеристики JSON", params);
-      else notes.push("характеристики постачальника завеликі для клітинки — не оновлено");
+      if (params.length > CELL_LIMIT) notes.push("характеристики постачальника завеликі для клітинки — не оновлено");
+      else if ((full.params || []).length || !(jsonOr(r["Характеристики JSON"], []) || []).length) set("Характеристики JSON", params);
+      else notes.push("у повному XML немає характеристик — залишено попередні");
+      if (supplierModel) set("Модель", supplierModel); // модель — сирі дані постачальника
     }
   }
   const raw = { ...rawFromQueueRow(r), descriptionUa: full?.descriptionUa || "", descriptionRu: full?.descriptionRu || "", hasDescription: Boolean(offer && full) };
@@ -272,9 +276,6 @@ export function refreshQueueRow(row, offer, full, { stamp }) {
     const seoSet = (col, next) => { if (mtText(r[col]) !== mtText(next)) { entries.push([stamp, SHEET.queue, id, col, jv(r[col]), jv(next), "SEO-КОПІЯ ПОСТАЧАЛЬНИКА"]); r[col] = next; } };
     seoSet("Назва UA", offer.nameUa ?? ""); seoSet("Назва RU", offer.nameRu ?? "");
     if (full) { seoSet("Опис UA", clip(full.descriptionUa, notes, "Опис UA")); seoSet("Опис RU", clip(full.descriptionRu, notes, "Опис RU")); }
-    // «Модель» (копія постачальника) — лише якщо її не змінювали після останнього запису системою
-    const lastCopy = jsonOr(snapshot, null);
-    if (supplierModel && (!lastCopy || mtKey(r["Модель"]) === mtKey(lastCopy.model))) seoSet("Модель", supplierModel);
     initialSeo = seoHash(r); // знімок системи рухається разом із копією
   }
   r["SHA SEO при додаванні"] = initialSeo;
@@ -308,6 +309,48 @@ export function refreshQueueRow(row, offer, full, { stamp }) {
       + "Якщо SEO — копія постачальника, поставте «" + SEO_SUPPLIER + "»; якщо власне — «" + VERIFIED + "».";
   } else if (prevSha && sha !== prevSha) notes.push((seoOwn ? "" : "SEO-копію оновлено разом із даними постачальника; ") + "дані постачальника оновлено (" + changedParts(prevSha, sha).join(", ") + ")");
   return { row: r, entries, notes, recheck, recheckNote, sha, changed: Boolean(prevSha && sha !== prevSha), verified: Boolean(verifiedCmd || supplierCmd), seoOwn };
+}
+
+/**
+ * Основний каталог (погоджено 23.10.2026): постачальник під тим самим ID змінив модель / артикул / інші дані — приймаємо
+ * автоматично: сирі поля, «Модель», фото (повним списком, у його порядку), характеристики; ціна й наявність — planRows.
+ * Наше SEO (SEO_FIELDS) не перезаписується ніколи — у «Журналі» інформаційне попередження «було → стало» (нічого не блокує).
+ * «Код товару Prom» іде за артикулом лише тоді, коли дорівнював попередньому артикулу й новий не зайнятий іншою карткою.
+ * Offer ID не змінюється. Фото й характеристики — лише з повного перевіреного XML (full); інакше не чіпаємо.
+ */
+export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "" }) {
+  if (!offer) return { row, entries: [], changed: false, identity: false, photos: false };
+  const r = { ...row };
+  const id = mtText(row["Offer ID"]);
+  const entries = [];
+  const status = "ДАНІ ПОСТАЧАЛЬНИКА (автоматично; SEO не змінено)";
+  const set = (col, next) => { if (mtText(r[col]) !== mtText(next)) { entries.push([stamp, SHEET.main, id, col, jv(r[col]), jv(next), status]); r[col] = next; return true; } return false; };
+  const pre = supplierSnapshot(row, "", mtText(row["Модель"]));
+  const oldSku = mtText(row["Артикул постачальника"]).trim();
+  for (const [col, f] of RAW_COLUMNS) set(col, f === "sku" ? mtText(offer.sku).trim() : offer[f] ?? "");
+  const newSku = mtText(r["Артикул постачальника"]).trim();
+  if (newSku !== oldSku) {
+    const code = mtText(row["Код товару Prom"]).trim();
+    const owner = newSku ? skuInUse(newSku, id) : "";
+    if ((!code || code === oldSku) && newSku && !owner) set("Код товару Prom", newSku);
+    else if (owner) entries.push([stamp, SHEET.main, id, "Код товару Prom", code, code, "НЕ ЗМІНЕНО: артикул «" + newSku + "» уже має товар " + owner]);
+  }
+  let photos = false;
+  if (full) {
+    const model = mtText(full.model).trim();
+    if (model) set("Модель", model);
+    if ((full.pictures || []).length) photos = set("Фото JSON", JSON.stringify(full.pictures.slice(0, 10)));
+    const params = JSON.stringify((full.params || []).slice(0, 100));
+    if (params.length <= CELL_LIMIT && (full.params || []).length) set("Характеристики JSON", params);
+  }
+  const changed = entries.some((e) => e[6] === status);
+  const identity = mtKey(pre.nameUa) !== mtKey(r["Назва постачальника UA"]) || mtKey(pre.nameRu) !== mtKey(r["Назва постачальника RU"]) || pre.sku !== newSku;
+  if (changed) {
+    r[SEAL_COLUMN] = rowSeal(r);
+    const details = describeSupplierChanges(pre, supplierSnapshot(r, "", mtText(r["Модель"])));
+    if (details.length) entries.push([stamp, SHEET.main, id, RECHECK, "", jv(details.join("; ")), "ІНФОРМАЦІЙНО: наше SEO не змінено — перевірте відповідність новим даним постачальника"]);
+  }
+  return { row: r, entries, changed, identity, photos };
 }
 
 /** Черга з колонками стану (додаються автоматично до черги, створеної до 22.10.2026). */
@@ -536,7 +579,33 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
   const supplierIds = [...mainRows, ...deferred].map((r) => mtText(r["ID постачальника"])).filter(Boolean);
   if (new Set(supplierIds).size !== supplierIds.length) return stop("КОНФЛІКТ ID ПОСТАЧАЛЬНИКА", "після рішень один ID постачальника належав би двом карткам — нічого не записано", supplierIds.length - new Set(supplierIds).size, 0);
 
-  // 2. Ціни й наявність (точний порт mtPlan) — на картках уже з урахуванням прив'язок.
+  // 1б. Основний каталог: зміни постачальника під тим самим ID — автоматично (не для карток, змінених прив'язкою цього запуску).
+  const skuOwners = new Map();
+  for (const r of mainRows) for (const k of ["Артикул постачальника", "Код товару Prom"]) { const v = mtText(r[k]).trim(); if (v && !skuOwners.has(v)) skuOwners.set(v, mtText(r["Offer ID"])); }
+  const skuInUse = (sku, self) => { const o = skuOwners.get(sku); return o && o !== self ? o : ""; };
+  const mainRaw = { entries: [], changed: new Set(), identity: 0, photos: 0 };
+  mainRows.forEach((r, i) => {
+    if (undo.changedMain.has(i) || bind.changedMain.has(i)) return;
+    const sid = mtText(r["ID постачальника"]);
+    const m = refreshMainRow(r, parsed.offers.get(sid), fullById.get(sid), { stamp, skuInUse });
+    if (!m.changed) { mainRaw.entries.push(...m.entries); return; }
+    mainRows[i] = m.row;
+    mainRaw.changed.add(i);
+    mainRaw.entries.push(...m.entries);
+    if (m.identity) mainRaw.identity++;
+    if (m.photos) mainRaw.photos++;
+  });
+  {
+    const an0 = config.policy?.anomaly || { maxNewlyMissing: 50, maxNewlyMissingRatio: 0.02 };
+    const lim = Math.max(an0.maxNewlyMissing, Math.ceil(mainRows.length * an0.maxNewlyMissingRatio));
+    const photoLim = Math.max(200, Math.ceil(mainRows.length * 0.1));
+    out.stats.mainRaw = { changed: mainRaw.changed.size, identity: mainRaw.identity, photos: mainRaw.photos };
+    // Захист від помилкового фіду: масова зміна назв / артикулів або фото — нічого не пишемо.
+    if (mainRaw.identity > lim) return stop("МАСОВА ЗМІНА ДАНИХ ПОСТАЧАЛЬНИКА", `назви / артикул змінились у ${mainRaw.identity} товарів основного каталогу (поріг ${lim}) — схоже на помилку у фіді; нічого не записано`, mainRaw.identity, lim);
+    if (mainRaw.photos > photoLim) return stop("МАСОВА ЗМІНА ФОТО", `фото змінились у ${mainRaw.photos} товарів основного каталогу (поріг ${photoLim}) — схоже на помилку у фіді; нічого не записано`, mainRaw.photos, photoLim);
+  }
+
+  // 2. Ціни й наявність (точний порт mtPlan) — на картках уже з урахуванням прив'язок і даних постачальника.
   const mainPlan = planRows(mainRows, parsed.offers, stamp, config.pricing);
   const queuePlan = planRows(queue.rows, parsed.offers, stamp, config.pricing);
   const missing = mainPlan.filter((p) => p.match === MATCH.MISSING).length;
@@ -603,11 +672,11 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
     updated["Перевірка"] = withNonProduct(queueEntryNote(rq, [updated["Перевірка"]]), nonProductReason(updated, auditTypes));
     keep.push(updated);
   });
-  out.main = { start: main.start, plan: mainPlan, rows: mainRows, changedRows: new Set([...undo.changedMain, ...bind.changedMain]) };
+  out.main = { start: main.start, plan: mainPlan, rows: mainRows, changedRows: new Set([...undo.changedMain, ...bind.changedMain, ...mainRaw.changed]) };
   out.queue = { header: queue.header, migrated: queue.migrated, keep, approve, reject, bound, reclaimed, planRowsByIndex: queuePlan };
   out.bindings = { history: bind.history, done: bind.done.length, refused: bind.refused.size, undoCells: undo.cells, undone: undo.undone.length, undoneList: undo.undone };
   out.deferredRows = deferred;
-  out.journal = [...changeEntries(stamp, SHEET.main, mainPlan), ...refreshed.flatMap((x) => x.entries), ...changeEntries(stamp, SHEET.queue, queuePlan)];
+  out.journal = [...mainRaw.entries, ...changeEntries(stamp, SHEET.main, mainPlan), ...refreshed.flatMap((x) => x.entries), ...changeEntries(stamp, SHEET.queue, queuePlan)];
   out.stats.queueRaw = { changed: refreshed.filter((x) => x.changed).length, recheck: refreshed.filter((x) => x.recheck.length).length, verified: refreshed.filter((x) => x.verified).length, migratedColumns: queue.migrated.length };
   out.ackInput = { mainRows, deferredRows: deferred, frozenIds, frozenFlag };
   out.passportBefore = passport;
