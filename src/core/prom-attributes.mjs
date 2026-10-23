@@ -271,7 +271,7 @@ export function normValue(v, names = null) {
  *  варіантів значень з усіх схем Prom; 2) погоджений словник (names-ua-ru.json: names, values); 3) технічна
  *  нормалізація (normValue, синоніми одиниць). Назва / значення з різними відповідниками в різних схемах —
  *  неоднозначні й не використовуються. */
-export function buildNames(schemas, approved = {}, aliasMap = new Map(), approvedValues = {}) {
+export function buildNames(schemas, approved = {}, aliasMap = new Map(), approvedValues = {}, approvedInContext = {}) {
   const name = new Map(), value = new Map(), unit = new Map();
   const bad = new Set();
   const put = (m, tag, k, v) => {
@@ -291,8 +291,11 @@ export function buildNames(schemas, approved = {}, aliasMap = new Map(), approve
     put(name, "n", normName(a.nameUK), uk); put(name, "n", normName(a.nameRU), uk);
     for (const o of a.values || []) { const c = normValue(o.nameUK || o.nameRU, names); put(value, "v", normValue(o.nameUK, names), c); put(value, "v", normValue(o.nameRU, names), c); }
   }
-  for (const [k, v] of Object.entries(approved || {})) { const uk = mtText(v).trim(); name.set(normName(k), uk); name.set(normName(uk), uk); }
+  // Погоджене не перезаписує наявну відповідність своєї української назви (інакше «Вес» → «Вага» зі схеми зникло б).
+  for (const [k, v] of Object.entries(approved || {})) { const uk = mtText(v).trim(); name.set(normName(k), uk); if (!name.has(normName(uk))) name.set(normName(uk), uk); }
   for (const [k, v] of Object.entries(approvedValues || {})) { const c = normValue(v, names); value.set(normValue(k, names), c); value.set(c, c); }
+  // Значення, погоджені лише для конкретної характеристики (ключ — її назва; поза нею не діють).
+  names.valueIn = new Map(Object.entries(approvedInContext || {}).map(([ch, vals]) => [normName(ch), new Map(Object.entries(vals || {}).flatMap(([k, v]) => { const c = normValue(v, names); return [[normValue(k, names), c], [c, c]]; }))]));
   return names;
 }
 // Відповідність назв — до кінцевої форми (ланцюжок «Источник питания» → «Джерело живлення» → «Живлення»), інакше ключі
@@ -323,6 +326,21 @@ export function sameValue(a, b, names = null) {
   if (na && nb) return na.n === nb.n && na.u === nb.u;
   const ca = names?.value.get(ta);
   return Boolean(ca && ca === names?.value.get(tb));
+}
+/** sameValue + значення, погоджені лише для цієї характеристики (keys — можливі назви характеристики: ключ, назви UA / RU). */
+export function sameValueIn(keys, a, b, names = null) {
+  if (sameValue(a, b, names)) return true;
+  const t = (p) => normValue(`${mtText(p.value)}${mtText(p.unit) ? " " + mtText(p.unit) : ""}`, names);
+  for (const k of keys) {
+    const m = names?.valueIn?.get(normName(k));
+    if (!m) continue;
+    const ca = m.get(t(a)) ?? t(a), cb = m.get(t(b)) ?? t(b);
+    if (ca === cb) return true;
+    // У цьому контексті погоджене значення «так» (напр. «Есть» = «Має») — так само «так» («Має» = «Так»).
+    const yesIn = (c) => YES.has(c) || [...m].some(([src, dst]) => dst === c && YES.has(src));
+    if (yesIn(ca) && yesIn(cb)) return true;
+  }
+  return false;
 }
 const numEq = (a, b, names) => { const x = numUnit(a, names), y = numUnit(b, names); return Boolean(x && y && x.n === y.n); };
 // Ознаки «те саме значення під іншою назвою» (для пар з опису проти інших джерел): число з сумісною одиницею
@@ -499,7 +517,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       const name = (u[0] || r[0]).out.name;
       if (u.length > 1 || r.length > 1) { review(name, orig, "різні значення в одному описі"); continue; }
       if (u.length && r.length) {
-        if (!sameValue(u[0].out, r[0].out, names)) {
+        if (!sameValueIn([key, u[0].pr.key, r[0].pr.key, nameOf(r[0].pr.key)], u[0].out, r[0].out, names)) {
           review(name, orig, "UA і RU значення відрізняються" + hint(u[0].out.value, r[0].out.value));
           valueProps.push({ name, ua: u[0].out.value, ru: r[0].out.value });
           continue;
@@ -618,7 +636,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     const at = usedKeys.get(key);
     if (at !== undefined) {
       const q = result[at];
-      if (sameValue(q, e.out, names) || numEq(q, e.out, names)) { e.taken = true; merged.push(`«${fmt(e.out)}» (${srcLabel(e.src)}) = «${fmt(q)}» — не дублюємо`); continue; }
+      if (sameValueIn([key, q.name, e.out.name], q, e.out, names) || numEq(q, e.out, names)) { e.taken = true; merged.push(`«${fmt(e.out)}» (${srcLabel(e.src)}) = «${fmt(q)}» — не дублюємо`); continue; }
       review(q.name, [{ src: srcLabel(items[at].s), value: fmt(q) }, { src: srcLabel(e.src), value: fmt(e.out) }], "значення постачальника відрізняється від наявного — збережено наявне" + hint(q.value, e.out.value));
       e.why = `ПОТРЕБУЄ ПЕРЕВІРКИ: відрізняється від наявного «${fmt(q)}»`;
       continue;

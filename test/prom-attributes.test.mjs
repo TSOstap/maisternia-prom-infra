@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { categoryBlocks, parseSchemaText } from "../src/core/prom-schema.mjs";
-import { SRC, alignPairs, buildCharacteristics, buildNames, cleanDescription, descriptionPairs, mapParam, sameValue, validateValue } from "../src/core/prom-attributes.mjs";
+import { SRC, alignPairs, buildCharacteristics, buildNames, charKey, cleanDescription, descriptionPairs, mapParam, sameValue, validateValue } from "../src/core/prom-attributes.mjs";
 import { SCHEMAS_DIR, importSchemaFiles, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
 
 const catalog = loadPromCatalog();
@@ -406,13 +406,15 @@ test("підтверджені еквіваленти UA/RU (приклади в
   // «Гарантія: 36 місяців» = «Гарантия: 36 месяцев» = «Гарантійний термін» (погоджено) — одне поле
   const g = B({ rawParams: [P("Гарантия", "36 мес.")], descUa: "<p>Гарантія: 36 місяців</p>", descRu: "<p>Гарантия: 36 месяцев</p>" });
   assert.deepEqual(g.params, [P("Гарантійний термін", "36", "міс")]); assert.deepEqual(g.needsReview, []);
-  // «Стан: Новий» / «Состояние: Новый» — відповідність значень не підтверджена (у схемі «Новое») → ПОТРЕБУЄ ПЕРЕВІРКИ
-  const st = B({ descUa: "<p>Стан: Новий</p>", descRu: "<p>Состояние: Новый</p>" });
+  // «Стан: Новий» / «Состояние: Новый» — без погодженої пари значень (у схемі «Новое») → ПОТРЕБУЄ ПЕРЕВІРКИ
+  const bare = buildNames([...catalog.schemas.values()], {}, units.aliasMap, {});
+  const B0 = (o) => buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [], current: [], names: bare, mapping, units, mode: "queue", ...o });
+  const st = B0({ descUa: "<p>Стан: Новий</p>", descRu: "<p>Состояние: Новый</p>" });
   assert.deepEqual(st.params, [P("Стан", "Новий")]);
   assert.equal(st.needsReview.length, 1); assert.equal(st.needsReview[0].kind, "слова різні");
-  // …після погодження пари значень — без попередження
-  const approved = buildNames([...catalog.schemas.values()], {}, units.aliasMap, { "Новый": "Новий" });
-  const st2 = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [], current: [], names: approved, mapping, units, mode: "queue", descUa: "<p>Стан: Новий</p>", descRu: "<p>Состояние: Новый</p>" });
+  // …з погодженою парою (власник, 24.10.2026, №37 «новый» → «новий») — без попередження
+  const st2 = B({ descUa: "<p>Стан: Новий</p>", descRu: "<p>Состояние: Новый</p>" });
+  assert.deepEqual(st2.params, [P("Стан", "Новий")]);
   assert.deepEqual(st2.needsReview, []);
   // Технічна нормалізація: латиниця-двійник («M14» / «М14»), одиниці й роздільники, декоративні символи
   const hg = B({ descUa: "<p>Модель: M14</p>", descRu: "<p>Модель: М14</p>" }); // та сама назва — підтверджено
@@ -429,7 +431,8 @@ test("підтверджені еквіваленти UA/RU (приклади в
   // Так/ні по порядку: кожна RU-пара — своя UA-пара; лише RU («Кейс») — передається
   const yn = B({ descUa: "<p>Акумулятор у комплекті: немає</p><p>Зарядний пристрій у комплекті: немає</p>", descRu: "<p>Аккумулятор в комплекте: нет</p><p>Зарядное устройство в комплекте: нет</p><p>Кейс: есть</p>" });
   // «у комплекті» (постачальник) ≠ офіційне «в комплекті» — назву не підтверджено: обидві передаються окремо
-  assert.deepEqual(yn.params.map((p) => p.name), ["Акумулятор у комплекті", "Зарядний пристрій у комплекті", "Акумулятор в комплекті", "Зарядное устройство в комплекте", "Кейс"]);
+  // …а «Зарядное устройство в комплекте» — погоджена пара (власник, 24.10.2026, №24): одна характеристика
+  assert.deepEqual(yn.params.map((p) => p.name), ["Акумулятор у комплекті", "Зарядний пристрій у комплекті", "Акумулятор в комплекті", "Кейс"]);
   assert.equal(yn.aligned, 0);
 });
 
@@ -484,4 +487,77 @@ test("опис: однаковий конфлікт з UA- і RU-опису — 
   const ok = buildCharacteristics({ schema: S(GEN), categoryId: GEN, rawParams: [], descUa: ua, descRu: ru, current: [], mode: "queue" });
   assert.equal(cleanDescription(ua, ok.descRanges.ua), "<p>Виробник: Edon</p>", "«Виробник» (без атрибута) лишається");
   assert.equal(cleanDescription(ru, ok.descRanges.ru), "<p>Производитель: Edon</p>");
+});
+
+test("погоджені словники (власник, 24.10.2026): №1–35 назви, №37/38/41/42 значення глобально, №36/39/40 — лише у своїй характеристиці", () => {
+  const names = catalog.names, mapping = catalog.mappings.get(GRIND), units = catalog.units;
+  const B = (o, cat = GRIND) => buildCharacteristics({ schema: S(cat), categoryId: cat, rawParams: [], current: [], names, mapping: catalog.mappings.get(cat), units, mode: "queue", ...o });
+  assert.deepEqual(catalog.problems, []);
+  // №1: одна характеристика з українською назвою; різні значення — ПОТРЕБУЄ ПЕРЕВІРКИ з обома оригіналами
+  assert.deepEqual(B({ descUa: "<p>Виробник: DeWALT</p>", descRu: "<p>Производитель: DeWALT</p>" }).params, [P("Виробник", "DeWALT")]);
+  const pr = B({ descUa: "<p>Виробник: DeWALT</p>", descRu: "<p>Производитель: Makita</p>" });
+  assert.deepEqual(pr.params, []); assert.equal(pr.needsReview[0].kind, "конфлікт");
+  assert.deepEqual(pr.needsReview[0].values.map((v) => v.value), ["Виробник: DeWALT", "Производитель: Makita"]);
+  // №38 — глобально
+  assert.deepEqual(B({ descUa: "<p>Підключення: Від мережі 220 В</p>", descRu: "<p>Подключение: От сети 220 В</p>" }).needsReview, []);
+  // №36 «Есть» → «Має» — лише в характеристиках наявності, де пару погоджено
+  const ok36 = B({ descUa: "<p>Захист від перегріву: Має</p>", descRu: "<p>Защита от перегрева: Есть</p>" });
+  assert.deepEqual(ok36.params, [P("Захист від перегріву", "Має")]); assert.deepEqual(ok36.needsReview, []);
+  const no36 = B({ descUa: "<p>Реверс: Має</p>", descRu: "<p>Реверс: Есть</p>" });
+  assert.deepEqual(no36.params, []); assert.equal(no36.needsReview.length, 1, "поза погодженим контекстом — обидва значення, неоднозначність");
+  // №39 — лише «Джерело живлення» (у шліфмашинах це атрибут «Живлення», №46); в іншій характеристиці — ні
+  const p39 = B({ descUa: "<p>Джерело живлення: акумуляторне</p>", descRu: "<p>Источник питания: аккумуляторный</p>" });
+  assert.deepEqual(p39.needsReview, []);
+  assert.deepEqual(p39.params, [P("Живлення", "акумуляторне")], "UA і RU — та сама характеристика (офіційна пара + №46): одна, значення UA без змін");
+  assert.equal(B({ descUa: "<p>Тип: акумуляторне</p>", descRu: "<p>Тип: аккумуляторный</p>" }).needsReview.length, 1);
+  // №40 — лише «Охолодження»
+  assert.deepEqual(B({ descUa: "<p>Охолодження: примусове</p>", descRu: "<p>Охлаждение: принудительное</p>" }).needsReview, []);
+  assert.equal(B({ descUa: "<p>Режим: примусове</p>", descRu: "<p>Режим: принудительное</p>" }).needsReview.length, 1, "та сама назва, але не «Охолодження» — пара значень не діє");
+  // непідтверджені назви («Вентиляція» / «Вентиляция») — окремі характеристики, нічого не зливається
+  assert.equal(B({ descUa: "<p>Вентиляція: примусове</p>", descRu: "<p>Вентиляция: принудительное</p>" }).params.length, 2);
+});
+
+test("синоніми атрибутів (власник, 24.10.2026): №43–45 — стандартне поле лише якщо атрибут є в схемі й значення проходить перевірку; №46 — лише у 19 категоріях з атрибутом «Живлення»", () => {
+  const names = catalog.names, units = catalog.units;
+  const B = (o, cat = GRIND) => buildCharacteristics({ schema: S(cat), categoryId: cat, rawParams: [], current: [], names, mapping: catalog.mappings.get(cat), units, mode: "queue", ...o });
+  const a = B({ rawParams: [P("Напруга акумулятора", "18", "В"), P("Ємність акумулятора", "4", "А·год"), P("Стан товару", "новий")] });
+  assert.deepEqual(a.params, [P("Напруга акумулятору", "18", "В"), P("Ємність акумулятору", "4", "А. г"), P("Стан", "Новий")]);
+  assert.ok(a.provenance.items.every((i) => i.a), "стандартні поля Prom");
+  // Значення не проходить поле — не підганяється: користувацька з офіційною назвою, значення постачальника
+  assert.deepEqual(B({ rawParams: [P("Напруга акумулятора", "18-20", "В")] }).params, [P("Напруга акумулятору", "18-20", "В")]);
+  // Категорія без атрибута — синонім не діє, характеристика лишається як є
+  const pump = "140309"; // Свердловинні насоси: «Живлення» немає
+  assert.equal(catalog.mappings.get(pump)?.synonyms?.["джерело живлення"], undefined);
+  assert.deepEqual(B({ rawParams: [P("Джерело живлення", "мережа")] }, pump).params, [P("Джерело живлення", "мережа")]);
+  // №46 у категорії з атрибутом: «Джерело живлення: Акумулятор» → поле «Живлення»
+  assert.deepEqual(B({ rawParams: [P("Джерело живлення", "Акумулятор")] }).params, [P("Живлення", "Акумулятор")]);
+  const cats = [...catalog.mappings].filter(([, m]) => m.synonyms["джерело живлення"]).map(([id]) => id);
+  assert.equal(cats.length, 19);
+  for (const id of cats) assert.equal(S(id).attributes.find((x) => x.id === catalog.mappings.get(id).synonyms["джерело живлення"]).nameUK, "Живлення");
+});
+
+test("заборонені відповідності №47–50 ніколи не застосовуються — ні напряму, ні через словники / ланцюжки синонімів", () => {
+  const forbidden = JSON.parse(fs.readFileSync(path.join(SCHEMAS_DIR, "synonyms.json"), "utf8")).forbidden;
+  assert.deepEqual(forbidden, [["Вага брутто", "Вага"], ["Потужність", "Споживана потужність"], ["Вес без аккумулятора", "Вага"], ["Частота", "Частота струму"]]);
+  // У жодній із 48 категорій — не один ключ
+  for (const [id, schema] of catalog.schemas) for (const [x, y] of forbidden) {
+    const opt = { mapping: catalog.mappings.get(id), names: catalog.names };
+    assert.notEqual(charKey(schema, x, opt), charKey(schema, y, opt), `${id}: «${x}» = «${y}»`);
+  }
+  // Наскрізно: однакові значення — дві окремі характеристики, без попередження й без об'єднання
+  const names = catalog.names, units = catalog.units, mapping = catalog.mappings.get(GRIND);
+  const r = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, current: [], names, mapping, units, mode: "queue",
+    rawParams: [P("Вес", "2", "кг"), P("Потребляемая мощность", "800", "Вт"), P("Частота тока", "50", "Гц")],
+    descUa: "<p>Вага брутто: 2 кг</p><p>Потужність: 800 Вт</p><p>Частота: 50 Гц</p>", descRu: "<p>Вес без аккумулятора: 2 кг</p>" });
+  for (const n of ["Вага", "Вага брутто", "Вес без аккумулятора", "Споживана потужність", "Потужність", "Частота"]) assert.ok(r.params.some((p) => p.name === n), n);
+  assert.deepEqual(r.merged, []);
+  // Якщо хтось додасть до словника ланцюжок, що веде до забороненої пари, — завантаження каталогу повідомляє про це
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mm-forbidden-"));
+  fs.cpSync(SCHEMAS_DIR, dir, { recursive: true });
+  const dict = JSON.parse(fs.readFileSync(path.join(dir, "names-ua-ru.json"), "utf8"));
+  dict.names["Вага брутто"] = "Вес"; // «Вес» → «Вага» (схема) — ланцюжок до забороненої пари
+  fs.writeFileSync(path.join(dir, "names-ua-ru.json"), JSON.stringify(dict));
+  const bad = loadPromCatalog(dir);
+  assert.ok(bad.problems.some((p) => /заборонена відповідність «Вага брутто» = «Вага»/.test(p)), JSON.stringify(bad.problems.slice(0, 3)));
+  fs.rmSync(dir, { recursive: true, force: true });
 });
