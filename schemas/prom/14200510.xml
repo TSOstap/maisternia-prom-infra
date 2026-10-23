@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200510" nameRU="Пневматические шуруповерты" nameUK="Пневматичні шурупокрути">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="3" measureUnitUK="кг"/>
+<attribute id="6" nameRU="Тип патрона" type="singleselect" nameUK="Тип патрона">
+<attribute_value id="5" nameRU="Быстрозажимной" nameUK="Швидкозатискний"/>
+<attribute_value id="7" nameRU="Шестигранник" nameUK="Шестигранник"/>
+<attribute_value id="301964" nameRU="Битодержатель" nameUK="Бітотримач"/>
+</attribute>
+<attribute id="8" nameRU="Реверс" type="bool" nameUK="Реверс"/>
+<attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+<attribute id="22" nameRU="Кейс в комплекте" type="bool" nameUK="Кейс в комплекті"/>
+<attribute id="24" nameRU="Блокировка кнопки включения" type="bool" nameUK="Блокування кнопки включення"/>
+<attribute id="33" nameRU="Дополнительная рукоятка" type="bool" nameUK="Додаткова рукоятка"/>
+<attribute id="64" nameRU="Ударный режим" type="bool" nameUK="Ударний режим"/>
+<attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="3000" measureUnitUK="об/хв"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="12" measureUnitUK="бар"/>
+<attribute id="106" nameRU="Расход воздуха" type="real" nameUK="Витрата повітря" measureUnitRU="литр/мин" min="0" max="1000" measureUnitUK="літр/хв"/>
+<attribute id="107" nameRU="Диаметр входного штуцера" type="singleselect" nameUK="Діаметр вхідного штуцера">
+<attribute_value id="7023" nameRU="1"" nameUK="1""/>
+<attribute_value id="7024" nameRU="2"" nameUK="2""/>
+<attribute_value id="7025" nameRU="1/2"" nameUK="1/2""/>
+<attribute_value id="7026" nameRU="1/4"" nameUK="1/4""/>
+<attribute_value id="7027" nameRU="1/8"" nameUK="1/8""/>
+<attribute_value id="7028" nameRU="3/4"" nameUK="3/4""/>
+<attribute_value id="7029" nameRU="3/8"" nameUK="3/8""/>
+</attribute>
+<attribute id="108" nameRU="Внутренний диаметр шланга" type="real" nameUK="Внутрішній діаметр шланга" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+<attribute id="109" nameRU="Переходной штуцер" type="bool" nameUK="Перехідний штуцер"/>
+<attribute id="110" nameRU="Набор насадок" type="bool" nameUK="Набір насадок"/>
+<attribute id="8196" nameRU="Максимальный крутящий момент" type="real" nameUK="Максимальний крутний момент" measureUnitRU="H*m" min="0" max="200" measureUnitUK="H*m"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+</category>
+</categories>

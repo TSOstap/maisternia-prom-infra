@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141717" nameRU="Шлифовальные машины" nameUK="Шліфувальні машини">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="12000" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+<attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+<attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+<attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+<attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+</attribute>
+<attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+<attribute id="10" nameRU="Ограничение пускового тока" type="bool" nameUK="Обмеження пускового струму"/>
+<attribute id="11" nameRU="Подсветка рабочей зоны" type="bool" nameUK="Підсвічування робочої зони"/>
+<attribute id="12" nameRU="Поддержка постоянного количества оборотов под нагрузкой" type="bool" nameUK="Підтримка постійного числа обертів під навантаженням"/>
+<attribute id="13" nameRU="Предохранительная муфта" type="bool" nameUK="Запобіжна муфта"/>
+<attribute id="20" nameRU="Подключение пылесборника / пылесоса" type="bool" nameUK="Підключення пилозбірника/пилососа"/>
+<attribute id="22" nameRU="Кейс в комплекте" type="bool" nameUK="Кейс в комплекті"/>
+<attribute id="24" nameRU="Блокировка кнопки включения" type="bool" nameUK="Блокування кнопки включення"/>
+<attribute id="25" nameRU="Блокировка шпинделя" type="bool" nameUK="Блокування шпинделя"/>
+<attribute id="33" nameRU="Дополнительная рукоятка" type="bool" nameUK="Додаткова рукоятка"/>
+<attribute id="58" nameRU="Максимальный диаметр диска" type="real" nameUK="Максимальний діаметр диска" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+<attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+<attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+<attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+<attribute_value id="10614" nameRU="Li-Pol" nameUK="Li-Pol"/>
+</attribute>
+<attribute id="63" nameRU="Дополнительный аккумулятор" type="bool" nameUK="Додатковий акумулятор"/>
+<attribute id="65" nameRU="Крепление шлифлиста" type="singleselect" nameUK="Кріплення шліфувального листа">
+<attribute_value id="6945" nameRU="Зажим" nameUK="Затискач"/>
+<attribute_value id="6946" nameRU="Липучка" nameUK="Липучка"/>
+<attribute_value id="6947" nameRU="Зажим / липучка" nameUK="Затискач / липучка"/>
+</attribute>
+<attribute id="66" nameRU="Размер хода платформы" type="real" nameUK="Розмір ходу платформи" measureUnitRU="мм" min="1" max="21" measureUnitUK="мм"/>
+<attribute id="67" nameRU="Длина ленты/листа" type="real" nameUK="Довжина стрічки/листа" measureUnitRU="мм" min="0" max="800" measureUnitUK="мм"/>
+<attribute id="68" nameRU="Ширина ленты/листа" type="real" nameUK="Ширина стрічки/листа" measureUnitRU="мм" min="0" max="150" measureUnitUK="мм"/>
+<attribute id="69" nameRU="Размер цанги" type="real" nameUK="Розмір цанги" measureUnitRU="мм" min="0" max="25" measureUnitUK="мм"/>
+<attribute id="70" nameRU="Диаметр щетки" type="real" nameUK="Діаметр щітки" measureUnitRU="мм" min="0" max="250" measureUnitUK="мм"/>
+<attribute id="71" nameRU="Длина щетки" type="real" nameUK="Довжина щітки" measureUnitRU="мм" min="0" max="300" measureUnitUK="мм"/>
+<attribute id="72" nameRU="Амплитуда колебаний" type="real" nameUK="Амплітуда коливань" measureUnitRU="мм" min="0" max="21" measureUnitUK="мм"/>
+<attribute id="73" nameRU="Тип паркетошлифовальной машины" type="singleselect" nameUK="Тип паркетошліфувальної машини">
+<attribute_value id="6948" nameRU="Дисковый" nameUK="Дисковий"/>
+<attribute_value id="6949" nameRU="Барабанный" nameUK="Барабанний"/>
+</attribute>
+<attribute id="74" nameRU="Ширина шлифования" type="real" nameUK="Ширина шліфування" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="40000" measureUnitUK="об/хв"/>
+<attribute id="93" nameRU="Максимальная частота колебания платформы" type="real" nameUK="Максимальна частота коливання платформи" measureUnitRU="кол/мин" min="0" max="45000" measureUnitUK="кол/хв"/>
+<attribute id="94" nameRU="Максимальная скорость ленты" type="real" nameUK="Максимальна швидкість стрічки" measureUnitRU="м/мин" min="0" max="2000" measureUnitUK="м/хв"/>
+<attribute id="95" nameRU="Производительность шлифования" type="integer" nameUK="Продуктивність шліфування" measureUnitRU="кв. м/час" min="0" max="100" measureUnitUK="кв.м/год"/>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="6" measureUnitUK="А. г"/>
+<attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="60" measureUnitUK="В"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+<attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+<attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+<attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+<attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+<attribute_value id="82305" nameRU="Картонная коробка" nameUK="Картонна коробка"/>
+</attribute>
+<attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+<attribute_value id="338834" nameRU="Щеточный" nameUK="Щітковий"/>
+<attribute_value id="338835" nameRU="Бесщеточный" nameUK="Безщітковий"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="13824" nameRU="Тип шлифмашины" type="singleselect" nameUK="Тип шліфмашини">
+<attribute_value id="139140" nameRU="полировальная" nameUK="полірувальна"/>
+<attribute_value id="139141" nameRU="ленточная" nameUK="стрічкова"/>
+<attribute_value id="139142" nameRU="вибрационная" nameUK="вібраційна"/>
+<attribute_value id="139143" nameRU="угловая (болгарка)" nameUK="кутова (болгарка)"/>
+<attribute_value id="139144" nameRU="мозаичная" nameUK="мозаїчна"/>
+<attribute_value id="139145" nameRU="прямая" nameUK="пряма"/>
+<attribute_value id="139146" nameRU="бетоношлифовальная" nameUK="бетоношлифувальна"/>
+<attribute_value id="139147" nameRU="щеточная" nameUK="щіткова"/>
+<attribute_value id="139148" nameRU="эксцентриковая" nameUK="ексцентрикова"/>
+<attribute_value id="139149" nameRU="дельта" nameUK="дельта"/>
+<attribute_value id="139150" nameRU="многофункциональная" nameUK="багатофункціональна"/>
+<attribute_value id="139151" nameRU="паркетошлифовальная" nameUK="паркетошліфувальна"/>
+<attribute_value id="346972" nameRU="Ударная" nameUK="Ударна"/>
+<attribute_value id="349372" nameRU="болгарка" nameUK="Болгарка"/>
+</attribute>
+<attribute id="18094" nameRU="Основная рукоятка" type="multiselect" nameUK="Основна рукоятка">
+<attribute_value id="246492" nameRU="Удлиненная" nameUK="Подовжена"/>
+<attribute_value id="246493" nameRU="Не удлиненная" nameUK="Не подовжена"/>
+<attribute_value id="246494" nameRU="Поворотная" nameUK="Поворотна"/>
+<attribute_value id="246495" nameRU="Не поворотная" nameUK="Не поворотна"/>
+</attribute>
+<attribute id="18644" nameRU="Обрабатываемая поверхность" type="multiselect" nameUK="Оброблювана поверхня">
+<attribute_value id="349361" nameRU="По бетону" nameUK="По бетону"/>
+<attribute_value id="349362" nameRU="Для пола" nameUK="Для підлоги"/>
+<attribute_value id="349363" nameRU="Для стен и потолков" nameUK="Для стін і стелі"/>
+<attribute_value id="349364" nameRU="По дереву" nameUK="По дереву"/>
+<attribute_value id="349365" nameRU="По камню" nameUK="По каменю"/>
+<attribute_value id="349366" nameRU="По металлу" nameUK="По металу"/>
+<attribute_value id="349367" nameRU="По пластику" nameUK="По пластику"/>
+</attribute>
+<attribute id="19412" nameRU="Регулировка оборотов" type="singleselect" nameUK="Регулювання оборотів">
+<attribute_value id="349368" nameRU="Без регулировки" nameUK="Без регулювання"/>
+<attribute_value id="349369" nameRU="Интеллектуальное снижение/увеличение оборотов" nameUK="Інтелектуальне зниження/збільшення обертів"/>
+<attribute_value id="349370" nameRU="Плавная регулировка" nameUK="Плавне регулювання"/>
+<attribute_value id="349371" nameRU="Ступенчатая регулировка" nameUK="Ступінчасте регулювання"/>
+</attribute>
+</category>
+</categories>

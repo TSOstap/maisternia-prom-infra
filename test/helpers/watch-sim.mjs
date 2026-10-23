@@ -11,7 +11,7 @@ import { MemorySheets } from "../../src/pipeline/sheets-writer.mjs";
 import { route } from "../../workers/new-items-watch/src/router.mjs";
 import { WatchCore } from "../../workers/new-items-watch/src/watch-core.mjs";
 import { doContext, doNamespace } from "./do-sqlite.mjs";
-import { intakeAll } from "./intake.mjs";
+import { EMPTY_CATALOG, intakeAll } from "./intake.mjs";
 import baseConfig from "../../config/default.json" with { type: "json" };
 
 export const T0 = Date.parse("2026-10-22T10:00:00Z");
@@ -30,7 +30,8 @@ export function offerXml(o) {
 }
 
 export class WatchSim {
-  constructor({ seed = 11 } = {}) {
+  constructor({ seed = 11, catalog = EMPTY_CATALOG } = {}) {
+    this.catalog = catalog; // схеми категорій Prom (за замовчуванням — жодної)
     this.config = structuredClone(baseConfig);
     this.s = generateSynthetic({ products: 120, queue: 12, deferred: 4, newOffers: 0, seed, now: T0 });
     this.book = {
@@ -88,14 +89,14 @@ export class WatchSim {
   /** Синхронізація кожні 4 год (ціни, рішення, сирі дані черги) + звіт у Worker. */
   async sync() {
     const xml = this.xml();
-    const r = await syncSheet({ sheets: this.sheets, readBook: this.readBook, parsed: await this.parsed(), fetchFull: async (ids) => extractFullOffers(xml, ids), stamp: this.stamp(), config: this.config, now: this.now });
+    const r = await syncSheet({ sheets: this.sheets, readBook: this.readBook, parsed: await this.parsed(), fetchFull: async (ids) => extractFullOffers(xml, ids), stamp: this.stamp(), config: this.config, now: this.now, catalog: this.catalog });
     if (r.ack && this.workerUp) await route(this.req("/ack", "POST", r.ack), this.env);
     return r;
   }
   /** GitHub intake: список — з Worker (GET /intake), звіт — назад (POST /ack). */
   async github() {
     const list = await (await route(this.req("/intake"), this.env)).json();
-    const r = await intakeAll({ sheets: this.sheets, readBook: this.readBook }, this.xml(), { stamp: this.stamp(), now: this.now, config: this.config, ready: list.ready });
+    const r = await intakeAll({ sheets: this.sheets, readBook: this.readBook }, this.xml(), { stamp: this.stamp(), now: this.now, config: this.config, ready: list.ready, catalog: this.catalog });
     this.intakes.push(r);
     if (r.ack) await route(this.req("/ack", "POST", r.ack), this.env);
     return r;

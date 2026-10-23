@@ -90,7 +90,7 @@ test("3. XML оновився, а дата yml_catalog — та сама: змі
   assert.ok(sim.dctx.counters.rowsWritten - w0 <= 2 * 6, `рядків записано ${sim.dctx.counters.rowsWritten - w0} за 2 цикли (без змін даних)`);
 });
 
-test("4. SEO вже підготовлено, а постачальник змінив комплектацію: сирі дані оновлено, SEO не змінено, «ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ», затвердження заблоковано", async () => {
+test("4. SEO вже підготовлено, а постачальник змінив комплектацію: сирі дані оновлено, SEO не змінено, «ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ» (інформаційне); затвердження НЕ блокується (рішення власника 23.10.2026)", async () => {
   const sim = new WatchSim();
   await sim.start();
   sim.setOffer(fullOffer(ID, { nameUa: "Шуруповерт Test 18 В 1 АКБ", nameRu: "Шуруповерт Test 18 В 1 АКБ", params: [{ name: "Кількість акумуляторів у комплекті", value: "1", unit: "шт" }] }));
@@ -114,14 +114,17 @@ test("4. SEO вже підготовлено, а постачальник змі
   assert.equal(q["Опис UA"], "<p>Наш SEO-опис</p>", "SEO-опис не перезаписано");
   assert.match(q["Перевірка"], /^ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ: .*назва UA.*характеристики.*різниця комплектації: кількість АКБ/);
   assert.ok(sim.journal(ID).some((e) => e[3] === "Назва постачальника UA" && e[6] === "ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ"), "зміни — у «Журналі»");
-  // Затвердження блокується
+  // Попередження інформаційне: «ЗАТВЕРДЖЕНО» переносить товар із нашим SEO; попередження лишається в «Журналі»
   sim.setCell(ID, "Група ID", sim.rows(SHEET.main)[0]["Група ID"]);
   sim.setCell(ID, "Категорія Prom ID", "501");
   sim.setDecision(ID, "ЗАТВЕРДЖЕНО (НЕ ДУБЛЬ)");
   const r = await sim.sync();
-  assert.equal(r.stats.approved, 0);
-  assert.match(sim.queueRow(ID)["Перевірка"], /НЕ ПЕРЕНЕСЕНО: ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ/);
-  assert.equal(sim.rows(SHEET.main).length, 132);
+  assert.equal(r.stats.approved, 1);
+  assert.equal(sim.queueRow(ID), undefined);
+  const m = sim.rows(SHEET.main).find((x) => x["Offer ID"] === ID);
+  assert.equal(m["Назва UA"], "SEO: Шуруповерт Test 18 В з одним АКБ", "наше SEO перенесено без змін");
+  assert.equal(m["Назва постачальника UA"], "Шуруповерт Test 18 В 2 АКБ");
+  assert.equal(sim.rows(SHEET.main).length, 133);
 });
 
 test("5. власник підтвердив дані («ПЕРЕВІРЕНО» прив'язано до SHA), постачальник змінив їх знову — підтвердження недійсне; застаріла SHA не приймається", async () => {

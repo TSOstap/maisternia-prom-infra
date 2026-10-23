@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1250321" nameRU="Мотокосы и триммеры" nameUK="Мотокоси і тримери">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="4000" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="15" measureUnitUK="кг"/>
+<attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+<attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+<attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+<attribute_value id="106692" nameRU="Бензиновый двигатель" nameUK="Бензиновий двигун"/>
+</attribute>
+<attribute id="47" nameRU="Режущий элемент" type="singleselect" nameUK="Ріжучий елемент">
+<attribute_value id="6926" nameRU="Леска" nameUK="Волосінь"/>
+<attribute_value id="6927" nameRU="Нож" nameUK="Ніж"/>
+<attribute_value id="6928" nameRU="Леска и нож" nameUK="Волосінь і ніж"/>
+<attribute_value id="346701" nameRU="Диск металлический" nameUK="Диск металевий"/>
+</attribute>
+<attribute id="48" nameRU="Расположение двигателя" type="singleselect" nameUK="Розташування двигуна">
+<attribute_value id="6929" nameRU="Сверху" nameUK="Зверху"/>
+<attribute_value id="6930" nameRU="Снизу" nameUK="Знизу"/>
+</attribute>
+<attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+<attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+<attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+<attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+</attribute>
+<attribute id="82" nameRU="Объем масляного бака" type="real" nameUK="Об'єм масляного бака" measureUnitRU="л" min="0" max="10" measureUnitUK="л"/>
+<attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="15000" measureUnitUK="об/хв"/>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="5" measureUnitUK="А. г"/>
+<attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="100" measureUnitUK="В"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+<attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="500" measureUnitUK="куб. см"/>
+<attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="л. с." min="0" max="10" measureUnitUK="к. с."/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="156594" nameRU="Мотокоса" nameUK="Мотокоса"/>
+<attribute_value id="156595" nameRU="Триммер" nameUK="Тример"/>
+<attribute_value id="284053" nameRU="Электрокоса" nameUK="Електрокоса"/>
+<attribute_value id="292254" nameRU="Комбисистемы" nameUK="Комбісистеми"/>
+</attribute>
+<attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+<attribute_value id="108961" nameRU="Коллекторный" nameUK="Колекторний"/>
+<attribute_value id="112343" nameRU="Асинхронные" nameUK="Асинхронні"/>
+<attribute_value id="345357" nameRU="2-тактный" nameUK="2-тактний"/>
+<attribute_value id="345358" nameRU="4-тактный" nameUK="4-тактний"/>
+</attribute>
+<attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+<attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+<attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+</attribute>
+<attribute id="1266" nameRU="Класс" type="singleselect" nameUK="Клас">
+<attribute_value id="204573" nameRU="Профессиональный" nameUK="Професійний"/>
+</attribute>
+<attribute id="1641" nameRU="Диаметр штанги" type="real" nameUK="Діаметр штанги" measureUnitRU="мм" min="0" max="260" measureUnitUK="мм"/>
+<attribute id="1687" nameRU="Время заряда аккумулятора" type="real" nameUK="Час заряду акумулятора" measureUnitRU="час" min="0" max="48" measureUnitUK="годин"/>
+<attribute id="1969" nameRU="Плечевой ремень" type="bool" nameUK="Плечовий ремінь"/>
+<attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="10" measureUnitUK="л"/>
+<attribute id="2158" nameRU="Число оборотов холостого хода" type="integer" nameUK="Кількість обертів холостого ходу" measureUnitRU="об/мин" min="0" max="5000" measureUnitUK="об/хв"/>
+<attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+<attribute id="3103" nameRU="Складная ручка" type="bool" nameUK="Складна ручка"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="10015" nameRU="Максимальная ширина скашивания" type="real" nameUK="Максимальна ширина скошування" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+<attribute id="10424" nameRU="Количество аккумуляторов" type="real" nameUK="Кількість акумуляторів" measureUnitRU="шт" min="0" max="5" measureUnitUK="шт."/>
+<attribute id="11101" nameRU="Тип рукоятки" type="singleselect" nameUK="Тип рукоятки">
+<attribute_value id="110878" nameRU="Т-образная" nameUK="Т-подібна"/>
+<attribute_value id="156642" nameRU="D-образная (кольцевая)" nameUK="D-подібна (кільцева)"/>
+<attribute_value id="156645" nameRU="U-образная (велосипедная)" nameUK="U-подібна (велосипедний)"/>
+</attribute>
+<attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+<attribute_value id="143291" nameRU="Плечевой ремень" nameUK="Плечовий ремінь"/>
+<attribute_value id="185947" nameRU="Защита от перегрева" nameUK="Захист від перегріву"/>
+<attribute_value id="345950" nameRU="Антивибрационная система" nameUK="Антивібраційна система"/>
+<attribute_value id="345957" nameRU="Плавный пуск" nameUK="Плавний пуск "/>
+<attribute_value id="346719" nameRU="Ранцевый" nameUK="Ранцевий"/>
+<attribute_value id="346721" nameRU="Автоматическая подача лески" nameUK="Автоматична подача волосіні"/>
+<attribute_value id="346722" nameRU="Электростартер" nameUK="Електростартер"/>
+<attribute_value id="346723" nameRU="Регулировка скорости работы" nameUK="Регулювання швидкості роботи"/>
+<attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+</attribute>
+<attribute id="12646" nameRU="Тип запуска" type="singleselect" nameUK="Тип запуску">
+<attribute_value id="174964" nameRU="Ручной" nameUK="Ручний"/>
+</attribute>
+<attribute id="15044" nameRU="Тип штанги" type="singleselect" nameUK="Тип штанги">
+<attribute_value id="156611" nameRU="Прямая" nameUK="Пряма"/>
+<attribute_value id="156612" nameRU="Изогнутая" nameUK="Вигнута"/>
+<attribute_value id="346728" nameRU="Неразборная" nameUK="Нерозбірна"/>
+<attribute_value id="346729" nameRU="Разборная" nameUK="Розбірна"/>
+<attribute_value id="346730" nameRU="Телескопическая" nameUK="Телескопічна"/>
+</attribute>
+<attribute id="15045" nameRU="Регулировка ручки по высоте" type="bool" nameUK="Регулювання ручки по висоті"/>
+<attribute id="15046" nameRU="Антивибрационная система" type="bool" nameUK="Антивібраційна система"/>
+<attribute id="18115" nameRU="Ширина скашивания ножа" type="real" nameUK="Ширина скошування ножа" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+<attribute id="18116" nameRU="Ширина скашивания лески" type="real" nameUK="Ширина скошування ліски" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+<attribute id="19243" nameRU="Время работы на одном заряде" type="real" nameUK="Час роботи на одному заряді" measureUnitRU="мин" min="0" max="180" measureUnitUK="хв"/>
+</category>
+</categories>

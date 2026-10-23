@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="147005" nameRU="Профессиональные пылесосы" nameUK="Професійні пилососи">
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+    </attribute>
+    <attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="60" measureUnitUK="В"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="1244" nameRU="Длина шнура" type="real" nameUK="Довжина шнура" measureUnitRU="м" min="0" max="100" measureUnitUK="м"/>
+    <attribute id="1337" nameRU="Тип пылесборника" type="multiselect" nameUK="Тип пилозбірника">
+      <attribute_value id="9684" nameRU="Мешок" nameUK="Мішок"/>
+      <attribute_value id="9685" nameRU="Контейнер" nameUK="Контейнер"/>
+      <attribute_value id="11134" nameRU="Циклонный фильтр" nameUK="Циклонний фільтр"/>
+      <attribute_value id="12003" nameRU="Бак" nameUK="Бак"/>
+    </attribute>
+    <attribute id="1361" nameRU="Фильтр для защиты мотора" type="bool" nameUK="Фільтр для захисту мотора"/>
+    <attribute id="1363" nameRU="Разрежение" type="real" nameUK="Розрідження" measureUnitRU="мбар" min="0" max="1000" measureUnitUK="мбар"/>
+    <attribute id="1892" nameRU="Количество моторов (двигателей)" type="integer" nameUK="Кількість моторів (двигунів)" measureUnitRU="шт" min="0" max="5" measureUnitUK="шт."/>
+    <attribute id="1893" nameRU="Количество турбин" type="integer" nameUK="Кількість турбін" measureUnitRU="шт" min="0" max="5" measureUnitUK="шт."/>
+    <attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+    <attribute id="2912" nameRU="Поток воздуха" type="real" nameUK="Потік повітря" measureUnitRU="куб. м/час" min="0" max="50000" measureUnitUK="куб.м/год"/>
+    <attribute id="2913" nameRU="Емкость бака" type="real" nameUK="Ємність бака" measureUnitRU="л" min="0" max="10000" measureUnitUK="л"/>
+    <attribute id="2918" nameRU="Масса без принадлежностей" type="real" nameUK="Вага без приладдя" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="4137" nameRU="Напряжение питающей сети" type="multiselect" nameUK="Напруга живильної мережі">
+      <attribute_value id="26795" nameRU="380 В" nameUK="380 В"/>
+      <attribute_value id="26796" nameRU="660 В" nameUK="660 В"/>
+      <attribute_value id="26797" nameRU="800 В" nameUK="800 В"/>
+      <attribute_value id="26798" nameRU="1 кВ" nameUK="1 кВ"/>
+      <attribute_value id="34425" nameRU="12 В" nameUK="12 В"/>
+      <attribute_value id="34426" nameRU="24 В" nameUK="24 В"/>
+      <attribute_value id="34427" nameRU="48 В" nameUK="48 В"/>
+      <attribute_value id="34428" nameRU="110 В" nameUK="110 В"/>
+      <attribute_value id="34430" nameRU="220 В" nameUK="220 В"/>
+    </attribute>
+    <attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+    <attribute id="8142" nameRU="Номинальная мощность (W)" type="real" nameUK="Номінальна потужність (W)" measureUnitRU="кВт" min="0" max="250" measureUnitUK="кВт"/>
+    <attribute id="8146" nameRU="Диаметр всасывающего патрубка" type="real" nameUK="Діаметр всмоктуючого патрубка" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="8147" nameRU="Длина всасывающего патрубка" type="real" nameUK="Довжина всмоктуючого патрубка" measureUnitRU="м" min="0" max="50" measureUnitUK="м"/>
+    <attribute id="8149" nameRU="Площадь главного фильтра" type="real" nameUK="Площа головного фільтра" measureUnitRU="кв. см" min="0" max="500000" measureUnitUK="кв. см"/>
+    <attribute id="8160" nameRU="Тип промышленного пылесоса" type="singleselect" nameUK="Тип промислового пилососа">
+      <attribute_value id="67427" nameRU="Мобильный" nameUK="Мобільний"/>
+      <attribute_value id="67428" nameRU="Стационарный" nameUK="Стаціонарний"/>
+    </attribute>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="212658" nameRU="Встряхиватель" nameUK="Струшувач"/>
+      <attribute_value id="212659" nameRU="Предохранительный вакуумный клапан" nameUK="Запобіжний вакуумний клапан"/>
+      <attribute_value id="212660" nameRU="Комплект для подключения электроинструментов" nameUK="Комплект для підключення електроінструментів"/>
+      <attribute_value id="212661" nameRU="Сливной шланг" nameUK="Зливний шланг"/>
+      <attribute_value id="212662" nameRU="Моющее средство" nameUK="Миючий засіб"/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+  </category>
+</categories>

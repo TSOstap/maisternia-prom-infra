@@ -80,7 +80,9 @@ const jsonList = (v) => { try { const a = JSON.parse(mtText(v) || "[]"); return 
 export function rawFromQueueRow(row) {
   return {
     id: mtText(row["ID постачальника"]), nameUa: row["Назва постачальника UA"], nameRu: row["Назва постачальника RU"], sku: row["Артикул постачальника"], url: row["URL постачальника"],
-    pictures: jsonList(row["Фото JSON"]).filter((u) => typeof u === "string"), params: jsonList(row["Характеристики JSON"]).filter((p) => p && typeof p === "object"),
+    // Сирі характеристики — окрема колонка (з 23.10.2026); у старих рядках — «Характеристики JSON», яку тоді писала система.
+    pictures: jsonList(row["Фото JSON"]).filter((u) => typeof u === "string"),
+    params: jsonList(mtText(row["Характеристики постачальника JSON"]).trim() ? row["Характеристики постачальника JSON"] : row["Характеристики JSON"]).filter((p) => p && typeof p === "object"),
     descriptionUa: "", descriptionRu: "", hasDescription: false,
   };
 }

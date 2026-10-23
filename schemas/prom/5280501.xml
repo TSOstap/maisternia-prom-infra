@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="5280501" nameRU="Аккумуляторы общего назначения" nameUK="Акумулятори загального призначення">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="300" measureUnitUK="кг"/>
+    <attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+      <attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+      <attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+      <attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+      <attribute_value id="10614" nameRU="Li-Pol" nameUK="Li-Pol"/>
+      <attribute_value id="89965" nameRU="Свинцово-кислотные (SLA)" nameUK="Свинцево-кислотні (SLA)"/>
+      <attribute_value id="113213" nameRU="GEL" nameUK="GEL"/>
+      <attribute_value id="142187" nameRU="AGM" nameUK="AGM"/>
+      <attribute_value id="179273" nameRU="LiFePO4" nameUK="LiFePO4"/>
+      <attribute_value id="220310" nameRU="OPzS" nameUK="OPzS"/>
+      <attribute_value id="220311" nameRU="OPzV" nameUK="OPzV"/>
+      <attribute_value id="251592" nameRU="Гироаккумулятор" nameUK="Гироаккумулятор"/>
+      <attribute_value id="295761" nameRU="LiND" nameUK=""/>
+      <attribute_value id="307852" nameRU="Li-NMC" nameUK=""/>
+    </attribute>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+    <attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="1000000 " measureUnitUK="А. г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="2500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1100" measureUnitUK="мм"/>
+    <attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+      <attribute_value id="7068" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="7069" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="7070" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="7071" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="7072" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="7075" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="7076" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="7077" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7078" nameRU="Антрацит" nameUK="Антрацит"/>
+      <attribute_value id="7079" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="7080" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="7081" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="7082" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="7083" nameRU="Медный" nameUK="Мідний"/>
+      <attribute_value id="7084" nameRU="Слоновая кость" nameUK="Слонова кістка"/>
+      <attribute_value id="7085" nameRU="Фисташковый" nameUK="Фісташковий"/>
+      <attribute_value id="7086" nameRU="Кремовый" nameUK="Кремовий"/>
+      <attribute_value id="7087" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="7088" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="7089" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="7090" nameRU="Малиновый" nameUK="Малиновий"/>
+      <attribute_value id="7091" nameRU="Сиреневый" nameUK="Бузковий"/>
+      <attribute_value id="7092" nameRU="Персиковый" nameUK="Персиковий"/>
+      <attribute_value id="7093" nameRU="Серебряный" nameUK="Срібний"/>
+      <attribute_value id="7094" nameRU="Другой" nameUK="Інший"/>
+      <attribute_value id="43982" nameRU="Светло-серый" nameUK="Світло-сірий"/>
+      <attribute_value id="44231" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="83208" nameRU="Прозрачный" nameUK="Прозорий"/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="1646" nameRU="Материал изготовления корпуса" type="multiselect" nameUK="Матеріал виготовлення корпусу">
+      <attribute_value id="10384" nameRU="Натуральное дерево" nameUK="Натуральне дерево"/>
+      <attribute_value id="10399" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="18267" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="91919" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+      <attribute_value id="91920" nameRU="Полиэтилен" nameUK="Поліетилен"/>
+      <attribute_value id="92966" nameRU="Эбонит" nameUK="Ебоніт"/>
+      <attribute_value id="277208" nameRU="Пластик ABS" nameUK="Пластик ABS"/>
+      <attribute_value id="300361" nameRU="Стеклотекстолит" nameUK=""/>
+      <attribute_value id="303939" nameRU="Стирол-акрилонитрил" nameUK="Стирол-акрилонітрил"/>
+    </attribute>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="2000" measureUnitUK="В"/>
+    <attribute id="3001" nameRU="Количество циклов" type="real" nameUK="Кількість циклів" measureUnitRU="цикл" min="100" max="7000" measureUnitUK="цикл"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="-50" max="0" measureUnitUK="град."/>
+    <attribute id="9771" nameRU="Ток заряда" type="real" nameUK="Струм заряду" measureUnitRU="А" min="0" max="1000" measureUnitUK="А"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10313" nameRU="Наработка" type="real" nameUK="Напрацювання" measureUnitRU="циклов заряда" min="0" max="10000" measureUnitUK="циклів заряду"/>
+    <attribute id="10409" nameRU="Материал решетки пластины" type="singleselect" nameUK="Матеріал решітки пластини">
+      <attribute_value id="92792" nameRU="Сурьма" nameUK="Сурма"/>
+      <attribute_value id="92793" nameRU="Свинец-сурьма" nameUK="Свинець-сурма"/>
+    </attribute>
+    <attribute id="10414" nameRU="Активный материал отрицательных пластин" type="singleselect" nameUK="Активний матеріал негативних пластин">
+      <attribute_value id="92842" nameRU="Двуокись свинца" nameUK="Двоокис свинцю"/>
+      <attribute_value id="92843" nameRU="Губчатый свинец" nameUK="Губчастий свинець"/>
+    </attribute>
+    <attribute id="10415" nameRU="Активный материал положительных пластин" type="singleselect" nameUK="Активний матеріал позитивних пластин">
+      <attribute_value id="92847" nameRU="Губчатый свинец" nameUK="Губчастий свинець"/>
+      <attribute_value id="92848" nameRU="Двуокись свинца" nameUK="Двоокис свинцю"/>
+    </attribute>
+    <attribute id="10416" nameRU="Количество сурьмы" type="real" nameUK="Кількість сурми" measureUnitRU="%" min="0" max="20" measureUnitUK="%"/>
+    <attribute id="10419" nameRU="Тип токовывода" type="singleselect" nameUK="Тип струмовивіду">
+      <attribute_value id="291508" nameRU="Медная винтовая М8" nameUK=""/>
+      <attribute_value id="301072" nameRU="Медная винтовая М5" nameUK="Мідна гвинтова М5"/>
+      <attribute_value id="301073" nameRU="Медная винтовая М6" nameUK="Мідна гвинтова М6"/>
+      <attribute_value id="361908" nameRU="клеммы T1/T2" nameUK="Клеми T1/T2"/>
+      <attribute_value id="361909" nameRU="Разъем Anderson" nameUK="Роз'єм Anderson"/>
+      <attribute_value id="361910" nameRU="кабели в комплекте" nameUK="Кабелі в комплекті"/>
+    </attribute>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="361830" nameRU="Подогрев аккумулятора" nameUK="Підігрів акумулятора"/>
+      <attribute_value id="361831" nameRU="Активный балансир" nameUK="Активный балансир"/>
+    </attribute>
+    <attribute id="18477" nameRU="Степень защиты, IP" type="multiselect" nameUK="Ступінь захисту, IP">
+      <attribute_value id="273247" nameRU="IP54" nameUK="IP54"/>
+      <attribute_value id="273248" nameRU="IP65" nameUK="IP65"/>
+      <attribute_value id="294508" nameRU="IP20" nameUK=""/>
+      <attribute_value id="304469" nameRU="IP67" nameUK=""/>
+      <attribute_value id="361779" nameRU="IP21" nameUK=""/>
+    </attribute>
+    <attribute id="19486" nameRU="Модель портативной колонки" type="singleselect" nameUK="Модель портативної колонки">
+      <attribute_value id="354616" nameRU="2E SoundXTube TWS" nameUK=""/>
+      <attribute_value id="354617" nameRU="2E SoundLegend" nameUK=""/>
+      <attribute_value id="354618" nameRU="2E SoundXTube Plus TWS" nameUK=""/>
+      <attribute_value id="354619" nameRU="2E SoundXPill" nameUK=""/>
+      <attribute_value id="354620" nameRU="2E SoundLegend Mini" nameUK=""/>
+      <attribute_value id="354621" nameRU="КликМаркет Charge mini" nameUK=""/>
+      <attribute_value id="354622" nameRU="КликМаркет K19" nameUK=""/>
+      <attribute_value id="354623" nameRU="КликМаркет ZXX-7171" nameUK=""/>
+      <attribute_value id="354624" nameRU="ACEFAST K3 Max" nameUK=""/>
+      <attribute_value id="354625" nameRU="ACEFAST K5 Max" nameUK=""/>
+      <attribute_value id="354626" nameRU="ACEFAST K4 Go" nameUK=""/>
+      <attribute_value id="354627" nameRU="Akai CEU-7300BT" nameUK=""/>
+      <attribute_value id="354628" nameRU="Akai Dj-880" nameUK=""/>
+      <attribute_value id="354629" nameRU="Akai ABTS-S38" nameUK=""/>
+      <attribute_value id="354630" nameRU="Anker Soundcore Select 2S" nameUK=""/>
+      <attribute_value id="354631" nameRU="Anker Soundcore Boom 3i" nameUK=""/>
+      <attribute_value id="354632" nameRU="Anker SoundCore Glow Mini" nameUK=""/>
+      <attribute_value id="354633" nameRU="Anker SoundCore Boom 2" nameUK=""/>
+      <attribute_value id="354634" nameRU="Bang &amp; Olufsen Beoplay Beolit" nameUK=""/>
+      <attribute_value id="354635" nameRU="Bang &amp; Olufsen BeoSound 2 Gen 2" nameUK=""/>
+      <attribute_value id="354636" nameRU="Bang &amp; Olufsen Beosound A1" nameUK=""/>
+      <attribute_value id="354637" nameRU="Blaupunkt PA10" nameUK=""/>
+      <attribute_value id="354638" nameRU="Blaupunkt MB10" nameUK=""/>
+      <attribute_value id="354639" nameRU="Blaupunkt MB06" nameUK=""/>
+      <attribute_value id="354640" nameRU="Borofone BR25" nameUK=""/>
+      <attribute_value id="354641" nameRU="Borofone BR30" nameUK=""/>
+      <attribute_value id="354642" nameRU="Borofone BR47" nameUK=""/>
+      <attribute_value id="354643" nameRU="Borofone BP12" nameUK=""/>
+      <attribute_value id="354644" nameRU="Borofone BP10" nameUK=""/>
+      <attribute_value id="354645" nameRU="Borofone BR21" nameUK=""/>
+      <attribute_value id="354646" nameRU="Borofone BR102" nameUK=""/>
+      <attribute_value id="354647" nameRU="Borofone BR100" nameUK=""/>
+      <attribute_value id="354648" nameRU="Borofone BR44" nameUK=""/>
+      <attribute_value id="354649" nameRU="Borofone BR20" nameUK=""/>
+      <attribute_value id="354650" nameRU="Borofone BR31" nameUK=""/>
+      <attribute_value id="354651" nameRU="Borofone BR16" nameUK=""/>
+      <attribute_value id="354652" nameRU="Borofone DR15" nameUK=""/>
+      <attribute_value id="354653" nameRU="Borofone BR37" nameUK=""/>
+      <attribute_value id="354654" nameRU="Bose SoundLink Micro" nameUK=""/>
+      <attribute_value id="354655" nameRU="Bose Soundlink Flex" nameUK=""/>
+      <attribute_value id="354656" nameRU="Bose SoundLink Home Cool" nameUK=""/>
+      <attribute_value id="354657" nameRU="Celebrat SP-5" nameUK=""/>
+      <attribute_value id="354658" nameRU="Celebrat SP-6" nameUK=""/>
+      <attribute_value id="354659" nameRU="Celebrat SP-20" nameUK=""/>
+      <attribute_value id="354660" nameRU="Defender Enjoy 40" nameUK=""/>
+      <attribute_value id="354661" nameRU="Defender Beatbox 25" nameUK=""/>
+      <attribute_value id="354662" nameRU="Defender G32" nameUK=""/>
+      <attribute_value id="354663" nameRU="Edifier MP260" nameUK=""/>
+      <attribute_value id="354664" nameRU="Edifier D12" nameUK=""/>
+      <attribute_value id="354665" nameRU="Edifier ES20" nameUK=""/>
+      <attribute_value id="354666" nameRU="Edifier MP230" nameUK=""/>
+      <attribute_value id="354667" nameRU="Golon RX-BT638" nameUK=""/>
+      <attribute_value id="354668" nameRU="Golon RX-S2618BTS" nameUK=""/>
+      <attribute_value id="354669" nameRU="Golon RX-6622" nameUK=""/>
+      <attribute_value id="354670" nameRU="Havit SF149BT" nameUK=""/>
+      <attribute_value id="354671" nameRU="Havit HV-SK894BT" nameUK=""/>
+      <attribute_value id="354672" nameRU="Havit HV-SK872BT" nameUK=""/>
+      <attribute_value id="354673" nameRU="Havit SK910BT" nameUK=""/>
+      <attribute_value id="354674" nameRU="Havit HV-SK835BT" nameUK=""/>
+      <attribute_value id="354675" nameRU="Havit HV-SQ149BT" nameUK=""/>
+      <attribute_value id="354676" nameRU="Hoco HA10" nameUK=""/>
+      <attribute_value id="354677" nameRU="Hoco HC44" nameUK=""/>
+      <attribute_value id="354678" nameRU="Hoco BK5" nameUK=""/>
+      <attribute_value id="354679" nameRU="Hoco HC34" nameUK=""/>
+      <attribute_value id="354680" nameRU="Hoco BS51" nameUK=""/>
+      <attribute_value id="354681" nameRU="Hoco DS70" nameUK=""/>
+      <attribute_value id="354682" nameRU="Hoco BS66" nameUK=""/>
+      <attribute_value id="354683" nameRU="Hoco River sports BT speaker" nameUK=""/>
+      <attribute_value id="354684" nameRU="Hoco BS48" nameUK=""/>
+      <attribute_value id="354685" nameRU="Hoco BS45" nameUK=""/>
+      <attribute_value id="354686" nameRU="Hoco HC5" nameUK=""/>
+      <attribute_value id="354687" nameRU="Hoco HC17" nameUK=""/>
+      <attribute_value id="354688" nameRU="Hoco HC30" nameUK=""/>
+      <attribute_value id="354689" nameRU="Hoco HC2" nameUK=""/>
+      <attribute_value id="354690" nameRU="Hoco HC22" nameUK=""/>
+      <attribute_value id="354691" nameRU="Hoco HT1" nameUK=""/>
+      <attribute_value id="354692" nameRU="Hoco HC28" nameUK=""/>
+      <attribute_value id="354693" nameRU="Hoco HC43" nameUK=""/>
+      <attribute_value id="354694" nameRU="Hoco HC1" nameUK=""/>
+      <attribute_value id="354695" nameRU="Hoco BS5" nameUK=""/>
+      <attribute_value id="354696" nameRU="Hoco HC12" nameUK=""/>
+      <attribute_value id="354697" nameRU="Hoco HC3" nameUK=""/>
+      <attribute_value id="354698" nameRU="Hoco Wave BT speaker" nameUK=""/>
+      <attribute_value id="354699" nameRU="Hoco HC16" nameUK=""/>
+      <attribute_value id="354700" nameRU="Hoco HC4" nameUK=""/>
+      <attribute_value id="354701" nameRU="Hoco HC29" nameUK=""/>
+      <attribute_value id="354702" nameRU="Hoco HA4" nameUK=""/>
+      <attribute_value id="354703" nameRU="Hoco HC24" nameUK=""/>
+      <attribute_value id="354704" nameRU="Hoco HC6" nameUK=""/>
+      <attribute_value id="354705" nameRU="Hoco BS64" nameUK=""/>
+      <attribute_value id="354706" nameRU="Hoco Sonar sports BT speaker" nameUK=""/>
+      <attribute_value id="354707" nameRU="Hoco BS47" nameUK=""/>
+      <attribute_value id="354708" nameRU="Hoco HC25" nameUK=""/>
+      <attribute_value id="354709" nameRU="Hoco HC8" nameUK=""/>
+      <attribute_value id="354710" nameRU="Hoco HC46" nameUK=""/>
+      <attribute_value id="354711" nameRU="Hoco HC9" nameUK=""/>
+      <attribute_value id="354712" nameRU="Hoco L23 Lemony speaker" nameUK=""/>
+      <attribute_value id="354713" nameRU="Hoco BS31" nameUK=""/>
+      <attribute_value id="354714" nameRU="Hoco BS46" nameUK=""/>
+      <attribute_value id="354715" nameRU="Hoco Give Every" nameUK=""/>
+      <attribute_value id="354716" nameRU="Hoco HC47" nameUK=""/>
+      <attribute_value id="354717" nameRU="Hoco BS60" nameUK=""/>
+      <attribute_value id="354718" nameRU="Hoco BS61" nameUK=""/>
+      <attribute_value id="354719" nameRU="Hoco Cool light RGB BT speaker" nameUK=""/>
+      <attribute_value id="354720" nameRU="Hoco BS63" nameUK=""/>
+      <attribute_value id="354721" nameRU="Hoco BS9" nameUK=""/>
+      <attribute_value id="354722" nameRU="Hoco DS33" nameUK=""/>
+      <attribute_value id="354723" nameRU="Hoco HC42" nameUK=""/>
+      <attribute_value id="354724" nameRU="Hoco DS50" nameUK=""/>
+      <attribute_value id="354725" nameRU="Hoco BS37" nameUK=""/>
+      <attribute_value id="354726" nameRU="Hoco HA6" nameUK=""/>
+      <attribute_value id="354727" nameRU="Hopestar P69" nameUK=""/>
+      <attribute_value id="354728" nameRU="Hopestar A30 PRO" nameUK=""/>
+      <attribute_value id="354729" nameRU="Hopestar A30" nameUK=""/>
+      <attribute_value id="354730" nameRU="Hopestar A40" nameUK=""/>
+      <attribute_value id="354731" nameRU="Hopestar A6 Party" nameUK=""/>
+      <attribute_value id="354732" nameRU="Hopestar A6 Club" nameUK=""/>
+      <attribute_value id="354733" nameRU="Hopestar H32" nameUK=""/>
+      <attribute_value id="354734" nameRU="Hopestar A60" nameUK=""/>
+      <attribute_value id="354735" nameRU="Hopestar A60 Ultra" nameUK=""/>
+      <attribute_value id="354736" nameRU="Hopestar H73 mini" nameUK=""/>
+      <attribute_value id="354737" nameRU="Hopestar A80" nameUK=""/>
+      <attribute_value id="354738" nameRU="Hopestar PARTYBOX 168" nameUK=""/>
+      <attribute_value id="354739" nameRU="Hopestar P35" nameUK=""/>
+      <attribute_value id="354740" nameRU="Hopestar Party 500" nameUK=""/>
+      <attribute_value id="354741" nameRU="Hopestar P92" nameUK=""/>
+      <attribute_value id="354742" nameRU="Hopestar P39" nameUK=""/>
+      <attribute_value id="354743" nameRU="Hopestar P5" nameUK=""/>
+      <attribute_value id="354744" nameRU="Hopestar PartyBox 120" nameUK=""/>
+      <attribute_value id="354745" nameRU="Hopestar H24" nameUK=""/>
+      <attribute_value id="354746" nameRU="Hopestar H60" nameUK=""/>
+      <attribute_value id="354747" nameRU="Hopestar A85" nameUK=""/>
+      <attribute_value id="354748" nameRU="Hopestar A41 Party" nameUK=""/>
+      <attribute_value id="354749" nameRU="Hopestar P91" nameUK=""/>
+      <attribute_value id="354750" nameRU="Hopestar H 27 dax" nameUK=""/>
+      <attribute_value id="354751" nameRU="Hopestar H43" nameUK=""/>
+      <attribute_value id="354752" nameRU="Hopestar PARTYONE CLUB" nameUK=""/>
+      <attribute_value id="354753" nameRU="Hopestar Give Every" nameUK=""/>
+      <attribute_value id="354754" nameRU="Hopestar A60 ULTRA" nameUK=""/>
+      <attribute_value id="354755" nameRU="Hopestar P58" nameUK=""/>
+      <attribute_value id="354756" nameRU="Hopestar P64" nameUK=""/>
+      <attribute_value id="354757" nameRU="Hopestar P64 Pro" nameUK=""/>
+      <attribute_value id="354758" nameRU="Hopestar A65" nameUK=""/>
+      <attribute_value id="354759" nameRU="Hopestar P50" nameUK=""/>
+      <attribute_value id="354760" nameRU="Hopestar H9" nameUK=""/>
+      <attribute_value id="354761" nameRU="Hopestar H51" nameUK=""/>
+      <attribute_value id="354762" nameRU="Hopestar Party 110 Mini" nameUK=""/>
+      <attribute_value id="354763" nameRU="Hopestar P61" nameUK=""/>
+      <attribute_value id="354764" nameRU="Hopestar A4" nameUK=""/>
+      <attribute_value id="354765" nameRU="Hopestar H34" nameUK=""/>
+      <attribute_value id="354766" nameRU="Hopestar A50" nameUK=""/>
+      <attribute_value id="354767" nameRU="Hopestar P65" nameUK=""/>
+      <attribute_value id="354768" nameRU="Hopestar H56" nameUK=""/>
+      <attribute_value id="354769" nameRU="Hopestar PARTY ONE" nameUK=""/>
+      <attribute_value id="354770" nameRU="Hopestar A90" nameUK=""/>
+      <attribute_value id="354771" nameRU="Hopestar PARTY200MINI" nameUK=""/>
+      <attribute_value id="354772" nameRU="Hopestar PARTY 130" nameUK=""/>
+      <attribute_value id="354773" nameRU="Hopestar P67" nameUK=""/>
+      <attribute_value id="354774" nameRU="Hopestar PartyOne Mini" nameUK=""/>
+      <attribute_value id="354775" nameRU="Hopestar H41" nameUK=""/>
+      <attribute_value id="354776" nameRU="Hopestar H20 Plus" nameUK=""/>
+      <attribute_value id="354777" nameRU="Infinity Mini Microphone" nameUK=""/>
+      <attribute_value id="354778" nameRU="Infinity Outdoor Magnetic Bluetooth Speaker Wireless" nameUK=""/>
+      <attribute_value id="354779" nameRU="Infinity K18" nameUK=""/>
+      <attribute_value id="354780" nameRU="JBL Charge 6" nameUK=""/>
+      <attribute_value id="354781" nameRU="JBL Flip 6" nameUK=""/>
+      <attribute_value id="354782" nameRU="JBL Flip Essential 2" nameUK=""/>
+      <attribute_value id="354783" nameRU="JBL Irx112 Bt" nameUK=""/>
+      <attribute_value id="354784" nameRU="JBL Charge 4" nameUK=""/>
+      <attribute_value id="354785" nameRU="JBL Extreme Big" nameUK=""/>
+      <attribute_value id="354786" nameRU="JBL PartyBox Club" nameUK=""/>
+      <attribute_value id="354787" nameRU="JBL Charge 5" nameUK=""/>
+      <attribute_value id="354788" nameRU="JBL Grip" nameUK=""/>
+      <attribute_value id="354789" nameRU="JBL Boombox 4" nameUK=""/>
+      <attribute_value id="354790" nameRU="JBL Clip 5" nameUK=""/>
+      <attribute_value id="354791" nameRU="JBL Authentics 200" nameUK=""/>
+      <attribute_value id="354792" nameRU="JBL Flip 7" nameUK=""/>
+      <attribute_value id="354793" nameRU="JBL Go 4" nameUK=""/>
+      <attribute_value id="354794" nameRU="JBL Party BOX 310" nameUK=""/>
+      <attribute_value id="354795" nameRU="JBL Clip 3" nameUK=""/>
+      <attribute_value id="354796" nameRU="JBL Xtreme 3" nameUK=""/>
+      <attribute_value id="354797" nameRU="JBL Xtreme 4" nameUK=""/>
+      <attribute_value id="354798" nameRU="JBL Horizon 3" nameUK=""/>
+      <attribute_value id="354799" nameRU="JBL 240H Espresso" nameUK=""/>
+      <attribute_value id="354800" nameRU="JBL PartyBox Stage 320" nameUK=""/>
+      <attribute_value id="354801" nameRU="JBL Charge 2" nameUK=""/>
+      <attribute_value id="354802" nameRU="JBL GO 5" nameUK=""/>
+      <attribute_value id="354803" nameRU="JBL PRX ONE-EK" nameUK=""/>
+      <attribute_value id="354804" nameRU="JBL GO 3" nameUK=""/>
+      <attribute_value id="354805" nameRU="JBL BAR 1000" nameUK=""/>
+      <attribute_value id="354806" nameRU="JBL Boombox 3" nameUK=""/>
+      <attribute_value id="354807" nameRU="JBL Go Essential 2" nameUK=""/>
+      <attribute_value id="354808" nameRU="JBL Clip 4" nameUK=""/>
+      <attribute_value id="354809" nameRU="JBL Flip 5" nameUK=""/>
+      <attribute_value id="354810" nameRU="JBL Wind 3S" nameUK=""/>
+      <attribute_value id="354811" nameRU="JBL Xtreme 5" nameUK=""/>
+      <attribute_value id="354812" nameRU="Kimiso QS-221" nameUK=""/>
+      <attribute_value id="354813" nameRU="Kimiso KM-203" nameUK=""/>
+      <attribute_value id="354814" nameRU="Kimiso KMS-E92" nameUK=""/>
+      <attribute_value id="354815" nameRU="Kisonli G102" nameUK=""/>
+      <attribute_value id="354816" nameRU="Kisonli LED-800B" nameUK=""/>
+      <attribute_value id="354817" nameRU="Kisonli LED-906" nameUK=""/>
+      <attribute_value id="354818" nameRU="Kisonli G1" nameUK=""/>
+      <attribute_value id="354819" nameRU="Kisonli Sp 5.0" nameUK=""/>
+      <attribute_value id="354820" nameRU="Kisonli LP-2S" nameUK=""/>
+      <attribute_value id="354821" nameRU="Klipsch Vegas" nameUK=""/>
+      <attribute_value id="354822" nameRU="Klipsch New York" nameUK=""/>
+      <attribute_value id="354823" nameRU="Klipsch Detroit" nameUK=""/>
+      <attribute_value id="354824" nameRU="Marshall Emberton II" nameUK=""/>
+      <attribute_value id="354825" nameRU="Marshall Emberton III" nameUK=""/>
+      <attribute_value id="354826" nameRU="Marshall Stockwell II" nameUK=""/>
+      <attribute_value id="354827" nameRU="Marshall Kilburn II" nameUK=""/>
+      <attribute_value id="354828" nameRU="Marshall Stanmore III" nameUK=""/>
+      <attribute_value id="354829" nameRU="Marshall Middleton II" nameUK=""/>
+      <attribute_value id="354830" nameRU="Marshall Bromley 750" nameUK=""/>
+      <attribute_value id="354831" nameRU="Muse M-780" nameUK=""/>
+      <attribute_value id="354832" nameRU="Muse M-1938" nameUK=""/>
+      <attribute_value id="354833" nameRU="Muse M-1805" nameUK=""/>
+      <attribute_value id="354834" nameRU="Proove Velvet" nameUK=""/>
+      <attribute_value id="354835" nameRU="Proove Fader" nameUK=""/>
+      <attribute_value id="354836" nameRU="Proove Loadstone" nameUK=""/>
+      <attribute_value id="354837" nameRU="Proove Firefly" nameUK=""/>
+      <attribute_value id="354838" nameRU="Proove SoundTrap 2" nameUK=""/>
+      <attribute_value id="354839" nameRU="Proove Funk 15W" nameUK=""/>
+      <attribute_value id="354840" nameRU="Proove Funk 40W" nameUK=""/>
+      <attribute_value id="354841" nameRU="Proove Black Rock" nameUK=""/>
+      <attribute_value id="354842" nameRU="Proove Stellar" nameUK=""/>
+      <attribute_value id="354843" nameRU="Remax RB-H30" nameUK=""/>
+      <attribute_value id="354844" nameRU="Remax RB-M9" nameUK=""/>
+      <attribute_value id="354845" nameRU="Remax RB-M28 Pro" nameUK=""/>
+      <attribute_value id="354846" nameRU="Remax RB-M15" nameUK=""/>
+      <attribute_value id="354847" nameRU="Remax RB-M21" nameUK=""/>
+      <attribute_value id="354848" nameRU="Sony ULT FIELD 1" nameUK=""/>
+      <attribute_value id="354849" nameRU="Sony SRS-XV800" nameUK=""/>
+      <attribute_value id="354850" nameRU="Sony SRS-XB13" nameUK=""/>
+      <attribute_value id="354851" nameRU="Sony SRS-LSR200" nameUK=""/>
+      <attribute_value id="354852" nameRU="Sony SRS-XV500" nameUK=""/>
+      <attribute_value id="354853" nameRU="Sony ULT FIELD 3" nameUK=""/>
+      <attribute_value id="354854" nameRU="SPS L 003" nameUK=""/>
+      <attribute_value id="354855" nameRU="SPS Charge 6" nameUK=""/>
+      <attribute_value id="354856" nameRU="SPS Z5" nameUK=""/>
+      <attribute_value id="354857" nameRU="SPS UBL BOOMBASS" nameUK=""/>
+      <attribute_value id="354858" nameRU="SPS UBL E2" nameUK=""/>
+      <attribute_value id="354859" nameRU="SPS ZQS6227" nameUK=""/>
+      <attribute_value id="354860" nameRU="T&amp;G TG-143" nameUK=""/>
+      <attribute_value id="354861" nameRU="T&amp;G TG648" nameUK=""/>
+      <attribute_value id="354862" nameRU="T&amp;G TG619" nameUK=""/>
+      <attribute_value id="354863" nameRU="T&amp;G TG619C" nameUK=""/>
+      <attribute_value id="354864" nameRU="T&amp;G TG365" nameUK=""/>
+      <attribute_value id="354865" nameRU="T&amp;G TG652" nameUK=""/>
+      <attribute_value id="354866" nameRU="T&amp;G TG396" nameUK=""/>
+      <attribute_value id="354867" nameRU="T&amp;G TG534" nameUK=""/>
+      <attribute_value id="354868" nameRU="T&amp;G TG368" nameUK=""/>
+      <attribute_value id="354869" nameRU="T&amp;G TG659" nameUK=""/>
+      <attribute_value id="354870" nameRU="T&amp;G TG523" nameUK=""/>
+      <attribute_value id="354871" nameRU="T&amp;G TG-311" nameUK=""/>
+      <attribute_value id="354872" nameRU="T&amp;G TG656" nameUK=""/>
+      <attribute_value id="354873" nameRU="Temeisheng SL 05-26" nameUK=""/>
+      <attribute_value id="354874" nameRU="Temeisheng A 8-15" nameUK=""/>
+      <attribute_value id="354875" nameRU="Temeisheng A4-2" nameUK=""/>
+      <attribute_value id="354876" nameRU="Tronsmart H1" nameUK=""/>
+      <attribute_value id="354877" nameRU="Tronsmart C3" nameUK=""/>
+      <attribute_value id="354878" nameRU="Tronsmart T7 Lite" nameUK=""/>
+      <attribute_value id="354879" nameRU="Tronsmart Halo 100" nameUK=""/>
+      <attribute_value id="354880" nameRU="WALKER WSP-110" nameUK=""/>
+      <attribute_value id="354881" nameRU="WALKER WSP-115" nameUK=""/>
+      <attribute_value id="354882" nameRU="WALKER WSP-120" nameUK=""/>
+      <attribute_value id="354883" nameRU="WALKER WSP-170" nameUK=""/>
+      <attribute_value id="354884" nameRU="XO F18" nameUK=""/>
+      <attribute_value id="354885" nameRU="XO F49" nameUK=""/>
+      <attribute_value id="354886" nameRU="XO F58" nameUK=""/>
+      <attribute_value id="354887" nameRU="XO F63" nameUK=""/>
+      <attribute_value id="354888" nameRU="XO F36" nameUK=""/>
+      <attribute_value id="354889" nameRU="XO F55" nameUK=""/>
+      <attribute_value id="354890" nameRU="Xtreme Mini" nameUK=""/>
+      <attribute_value id="354891" nameRU="Xtreme Xtreme 3" nameUK=""/>
+      <attribute_value id="354892" nameRU="Zealot S32" nameUK=""/>
+      <attribute_value id="354893" nameRU="Zealot S57" nameUK=""/>
+      <attribute_value id="354894" nameRU="Zealot S53" nameUK=""/>
+      <attribute_value id="354895" nameRU="ZPX ZX-7779" nameUK=""/>
+      <attribute_value id="354896" nameRU="ZPX ZX-7789" nameUK=""/>
+      <attribute_value id="354897" nameRU="ZPX ZX 7785" nameUK=""/>
+      <attribute_value id="354898" nameRU="ZPX ZXX-5505" nameUK=""/>
+      <attribute_value id="354899" nameRU="ZPX ZX-7786" nameUK=""/>
+    </attribute>
+    <attribute id="19520" nameRU="Энергоемкость, кВт·ч" type="singleselect" nameUK="Енергоємність, кВт·год">
+      <attribute_value id="361728" nameRU="До 1,5 кВт·ч" nameUK="До 1,5 кВт·ч"/>
+      <attribute_value id="361729" nameRU="1,5–3 кВт·" nameUK="1,5–3 кВт·"/>
+      <attribute_value id="361730" nameRU="3–5,5 кВт·ч" nameUK="3–5,5 кВт·ч"/>
+      <attribute_value id="361731" nameRU="5,5–8 кВт·ч" nameUK="5,5–8 кВт·ч"/>
+      <attribute_value id="361732" nameRU="8–12 кВт·ч" nameUK="8–12 кВт·ч"/>
+      <attribute_value id="361733" nameRU="12–17 кВт·ч" nameUK="12–17 кВт·ч"/>
+      <attribute_value id="361734" nameRU="Более 17 кВт·ч" nameUK="Понад 17 кВт·год"/>
+    </attribute>
+    <attribute id="19521" nameRU="Ток BMS, А" type="singleselect" nameUK="Струм BMS, А">
+      <attribute_value id="361735" nameRU="50 А" nameUK="50 А"/>
+      <attribute_value id="361736" nameRU="100 А" nameUK="100 А"/>
+      <attribute_value id="361737" nameRU="125 А" nameUK="125 А"/>
+      <attribute_value id="361738" nameRU="150 А" nameUK="150 А"/>
+      <attribute_value id="361739" nameRU="160 А" nameUK="160 А"/>
+      <attribute_value id="361740" nameRU="200 А" nameUK="200 А"/>
+      <attribute_value id="361741" nameRU="Более 200 А" nameUK="Понад 200 А"/>
+      <attribute_value id="361742" nameRU="Без BMS" nameUK="Без BMS"/>
+    </attribute>
+    <attribute id="19522" nameRU="Протокол связи с инвертором" type="singleselect" nameUK="Протокол связи с инвертором">
+      <attribute_value id="361743" nameRU="CAN" nameUK="CAN"/>
+      <attribute_value id="361744" nameRU="RS485" nameUK="RS485"/>
+      <attribute_value id="361745" nameRU="RS232" nameUK="RS232"/>
+      <attribute_value id="361746" nameRU="Без связи" nameUK="Без зв'язку"/>
+    </attribute>
+    <attribute id="19523" nameRU="Исполнение / тип монтажа" type="singleselect" nameUK="Виконання / тип монтажу">
+      <attribute_value id="361747" nameRU="Настенный" nameUK="Настінний"/>
+      <attribute_value id="361748" nameRU="Напольный" nameUK="Підлоговий"/>
+      <attribute_value id="361749" nameRU="Настенный / напольный" nameUK="Настінний / підлоговий"/>
+      <attribute_value id="361750" nameRU="Rack 19&quot; (в стойку)" nameUK="Rack 19&quot; (у стійку)"/>
+      <attribute_value id="361751" nameRU="Модульный (стековый)" nameUK="Модульний (стековий)"/>
+    </attribute>
+    <attribute id="19524" nameRU="Мониторинг" type="singleselect" nameUK="Моніторинг">
+      <attribute_value id="361752" nameRU="Bluetooth" nameUK="Bluetooth"/>
+      <attribute_value id="361753" nameRU="Wi-Fi" nameUK="Wi-Fi"/>
+      <attribute_value id="361754" nameRU="Дисплей на корпусе" nameUK="Дисплей на корпусі"/>
+      <attribute_value id="361755" nameRU="Без мониторинга" nameUK="Без моніторингу"/>
+    </attribute>
+    <attribute id="19525" nameRU="Совместимость с инверторами" type="singleselect" nameUK="Сумісність з інверторами">
+      <attribute_value id="361756" nameRU="Deye" nameUK="Deye"/>
+      <attribute_value id="361757" nameRU="MUST" nameUK="MUST"/>
+      <attribute_value id="361758" nameRU="Growatt" nameUK="Growatt"/>
+      <attribute_value id="361759" nameRU="Victron" nameUK="Victron"/>
+      <attribute_value id="361760" nameRU="LuxPower" nameUK="LuxPower"/>
+      <attribute_value id="361761" nameRU="Anenji" nameUK="Anenji"/>
+      <attribute_value id="361762" nameRU="Felicity" nameUK="Felicity"/>
+      <attribute_value id="361763" nameRU="Solax" nameUK="Solax"/>
+      <attribute_value id="361764" nameRU="Solis" nameUK="Solis"/>
+      <attribute_value id="361765" nameRU="Универсальная" nameUK="Універсальна"/>
+    </attribute>
+    <attribute id="19526" nameRU="Производитель ячеек" type="singleselect" nameUK="Виробник комірок">
+      <attribute_value id="361766" nameRU="EVE" nameUK="EVE"/>
+      <attribute_value id="361767" nameRU="CATL" nameUK="CATL"/>
+      <attribute_value id="361768" nameRU="BYD" nameUK="BYD"/>
+      <attribute_value id="361769" nameRU="CALB" nameUK="CALB"/>
+      <attribute_value id="361770" nameRU="Gotion" nameUK="Gotion"/>
+      <attribute_value id="361771" nameRU="REPT" nameUK="REPT"/>
+      <attribute_value id="361772" nameRU="Lishen" nameUK="Lishen"/>
+      <attribute_value id="361773" nameRU="Неизвестный" nameUK="Невідомий"/>
+      <attribute_value id="361774" nameRU="LG" nameUK="LG"/>
+    </attribute>
+    <attribute id="19527" nameRU="Макс. ток разряда, А" type="singleselect" nameUK="Макс. струм розряду, А">
+      <attribute_value id="361775" nameRU="До 100 А" nameUK="До 100 А"/>
+      <attribute_value id="361776" nameRU="100–150 А" nameUK="100–150 А"/>
+      <attribute_value id="361777" nameRU="151–200 А" nameUK="151–200 А"/>
+      <attribute_value id="361778" nameRU="Более 200 А" nameUK="Понад 200 А"/>
+    </attribute>
+  </category>
+</categories>

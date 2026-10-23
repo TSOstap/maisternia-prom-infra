@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { parseSupplierText } from "../src/core/supplier-feed.mjs";
 import { readSheet } from "../src/core/sync-plan.mjs";
 import { mtText } from "../src/core/text.mjs";
-import { SHEET, QUEUE_HEADERS, QUEUE_STATE, SEO_FIELDS, candidateRow, extractFullOffers, refreshQueueRow, seoHash } from "../src/core/sheet-sync.mjs";
+import { SHEET, QUEUE_HEADERS, QUEUE_STATE, CONTENT_COLUMNS, SEO_FIELDS, candidateRow, extractFullOffers, refreshQueueRow, seoHash } from "../src/core/sheet-sync.mjs";
 import {
   INTAKE_RULES, applyAck, changedParts, completeness, emptyState, markDispatched, parseFingerprint, planWatch, rawFromOffer, rawFromQueueRow,
   scanFeed, sheetFingerprint, verifyReady, watchFeedUrl, watchFingerprint,
@@ -215,14 +215,14 @@ test("варіант А: сирі дані оновлюються, SEO-поля 
   assert.notEqual(seoHash(edited), seoHash(first));
 });
 
-test("черга до 22.10.2026 (без колонок стану): синхронізація додає 5 колонок стану, дані рядків збережено", async () => {
+test("черга до 22.10.2026 (без колонок стану): синхронізація додає 5 колонок стану й 5 колонок контенту, дані рядків збережено", async () => {
   const sim = new WatchSim();
   await sim.start();
   sim.setOffer(fullOffer("2970000001"));
   for (let k = 0; k < 3; k++) await sim.tick();
   // Імітуємо стару чергу: прибрати колонки стану
   const v = sim.book[SHEET.queue];
-  const keep = v[0].map((k, i) => (QUEUE_STATE.includes(k) ? -1 : i)).filter((i) => i >= 0);
+  const keep = v[0].map((k, i) => (QUEUE_STATE.includes(k) || CONTENT_COLUMNS.includes(k) ? -1 : i)).filter((i) => i >= 0);
   sim.book[SHEET.queue] = v.map((r) => keep.map((i) => r[i]));
   const before = readSheet(sim.book[SHEET.queue], SHEET.queue).rows[0];
   const r = await sim.sync();
@@ -231,7 +231,8 @@ test("черга до 22.10.2026 (без колонок стану): синхр�
   const after = readSheet(sim.book[SHEET.queue], SHEET.queue).rows[0];
   for (const k of ["Offer ID", "Назва UA", "Опис UA", "Фото JSON", "Виявлено"]) assert.equal(mtText(after[k]), mtText(before[k]), k);
   assert.match(after["SHA даних постачальника"], /^s1\./);
-  assert.equal(r.stats.queueRaw.migratedColumns, 5);
+  assert.equal(r.stats.queueRaw.migratedColumns, 10);
+  assert.equal(after["Характеристики постачальника JSON"], before["Характеристики JSON"], "сирі характеристики — з колонки, яку система писала раніше");
 });
 
 test("intake не довіряє Worker на слово: < 10 хв від останньої зміни, некоректний час, неповні дані або інший відбиток — відмова", () => {

@@ -14,12 +14,23 @@ import { mtPrices } from "./pricing.mjs";
 import { cardKeys, resolveUnknownOffers } from "./identity.mjs";
 import { buildDupIndex, compareEntries, dupNote, findDuplicates, kitDifferences, rowEntry } from "./dup-check.mjs";
 import { INTAKE_RULES, changedParts, rawFromOffer, rawFromQueueRow, sheetFingerprint, verifyReady, watchFingerprint } from "./intake.mjs";
+import { buildCharacteristics, cleanDescription } from "./prom-attributes.mjs";
+import { CATEGORY_CONFIRMED } from "./prom-categories.mjs";
 
 export const SHEET = Object.freeze({ main: "Основний каталог", queue: "Нові товари", deferred: "Відкладені товари", frozen: "Заморожені ID", groups: "Групи", journal: "Журнал", passport: "Паспорт каталогу" });
 export const QUEUE_EXTRA = Object.freeze(["Рішення", "Перевірка", "Виявлено"]);
 /** Стан даних постачальника в черзі (варіант А, погоджено 22.10.2026). До наявної черги додаються автоматично. */
 export const QUEUE_STATE = Object.freeze(["Остання зміна постачальника", "SHA даних постачальника", "Погоджено для SHA", "SHA SEO при додаванні", "Погоджені дані постачальника"]);
-export const QUEUE_HEADERS = Object.freeze([...YML_HEADERS, ...QUEUE_EXTRA, ...QUEUE_STATE]);
+/** Контент постачальника й походження характеристик (погоджено 23.10.2026) — в обох аркушах, після наявних колонок.
+ *  Не входять у печатку (не YML_HEADERS): сирі дані постачальника оновлюються без зміни паспорта. */
+export const RAW_PARAMS = "Характеристики постачальника JSON";
+export const RAW_DESC_UA = "Опис постачальника UA";
+export const RAW_DESC_RU = "Опис постачальника RU";
+export const PARAMS_ORIGIN = "Походження характеристик JSON";
+export { CATEGORY_CONFIRMED };
+export const CONTENT_COLUMNS = Object.freeze([RAW_PARAMS, RAW_DESC_UA, RAW_DESC_RU, PARAMS_ORIGIN, CATEGORY_CONFIRMED]);
+export const MAIN_HEADERS = Object.freeze([...YML_HEADERS, ...CONTENT_COLUMNS]);
+export const QUEUE_HEADERS = Object.freeze([...YML_HEADERS, ...QUEUE_EXTRA, ...QUEUE_STATE, ...CONTENT_COLUMNS]);
 export const VERIFIED = "ПЕРЕВІРЕНО";
 export const RECHECK = "ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ";
 /** Наш SEO-контент — система його НЕ перезаписує. Зміна відносно значень при додаванні = «SEO-підготовку почато». */
@@ -101,7 +112,7 @@ export function extractFullOffers(xml, ids) {
 const clip = (s, notes, what) => { const t = mtText(s); if (t.length <= CELL_LIMIT) return t; notes.push(`${what} скорочено до ${CELL_LIMIT} символів (ліміт клітинки)`); return t.slice(0, CELL_LIMIT); };
 
 /** Рядок черги з ОРИГІНАЛЬНИМИ даними постачальника. Ідентичність і ціна — з операційного розбору (той самий, що для зіставлення). */
-export function candidateRow(offer, full, stamp, pricing) {
+export function candidateRow(offer, full, stamp, pricing, catalog = null) {
   const notes = [];
   let p = { base: "", final: "", discount: "", availability: "-" }, status = MATCH.OK;
   if (offer.currency && offer.currency !== "UAH") status = MATCH.UNKNOWN_CURRENCY;
@@ -122,15 +133,23 @@ export function candidateRow(offer, full, stamp, pricing) {
     "Назва постачальника UA": offer.nameUa, "Назва постачальника RU": offer.nameRu, "URL постачальника": offer.url,
     "Джерело контенту": "ПОСТАЧАЛЬНИК", "Статус імпорту": STATUS_NEW, "Виявлено": stamp,
   });
+  // Сирі дані постачальника — окремо; «Характеристики JSON» — підготовлені (без схеми категорії — копія сирих, як раніше).
+  row[RAW_PARAMS] = row["Характеристики JSON"];
+  row[RAW_DESC_UA] = row["Опис UA"];
+  row[RAW_DESC_RU] = row["Опис RU"];
+  const cat = mtText(row["Категорія Prom ID"]).trim();
+  const ch = buildCharacteristics({ schema: catalog?.schemas?.get(cat) || null, categoryId: cat, rawParams: full?.params || [], descUa: row[RAW_DESC_UA], descRu: row[RAW_DESC_RU], current: [], provenance: null, mapping: catalog?.mappings?.get(cat), units: catalog?.units, mode: "queue" });
+  if (ch.changed) row["Характеристики JSON"] = clip(JSON.stringify(ch.params), notes, "Характеристики");
+  row[PARAMS_ORIGIN] = JSON.stringify(ch.provenance);
   if (!full) notes.push("немає повного опису в XML постачальника — заповнити вручну");
   row["Перевірка"] = notes.join("; ");
   return row;
 }
 
 /** Що не дає затвердити рядок черги (порожній масив — можна переносити). */
-export function approvalProblems(row, { groupIds, mainIds, dupFlag, recheck = [] }) {
+export function approvalProblems(row, { groupIds, mainIds, dupFlag }) {
   const p = [];
-  if (recheck.length) p.push(`${RECHECK} (змінено: ${recheck.join(", ")}) — перевірте SEO й поставте «${VERIFIED}»`);
+  // «ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ» — інформаційне попередження (рішення власника 23.10.2026): затвердження не блокує.
   const decision = norm(row["Рішення"]);
   if (dupFlag && decision !== DECISION.APPROVE_NOT_DUP) p.push(`позначено «МОЖЛИВИЙ ДУБЛЬ» — перевірте й поставте «${DECISION.APPROVE_NOT_DUP}»`);
   if (mainIds.has(mtText(row["Offer ID"]))) p.push("такий Offer ID уже є в основному каталозі");
@@ -161,7 +180,9 @@ const shaMatches = (sha, token) => {
   const t = mtText(token).toLowerCase();
   return t === sha || (t.length >= 8 && /^[0-9a-f]+$/.test(t) && sha.replace(/^s1\./, "").replace(/\./g, "").startsWith(t));
 };
-const kitOf = (row) => ({ nameUa: row["Назва постачальника UA"], nameRu: row["Назва постачальника RU"], params: row["Характеристики JSON"] });
+/** Сирі характеристики постачальника рядка (рядок до 23.10.2026 без окремої колонки — «Характеристики JSON», яку тоді писала система). */
+const rawParamsOf = (row) => (mtText(row[RAW_PARAMS]).trim() ? row[RAW_PARAMS] : row["Характеристики JSON"]);
+const kitOf = (row) => ({ nameUa: row["Назва постачальника UA"], nameRu: row["Назва постачальника RU"], params: rawParamsOf(row) });
 const descKey = (s) => mtKey(mtText(s).replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " "));
 const descPart = (sha) => /^s1\.(?:[0-9a-f]{8}\.){6}([0-9a-f]{8})$/.exec(mtText(sha))?.[1] || "";
 const jsonOr = (v, d) => { try { const x = JSON.parse(mtText(v) || "null"); return x ?? d; } catch { return d; } };
@@ -172,7 +193,7 @@ function supplierSnapshot(row, sha, supplierModel = "") {
   return {
     nameUa: mtText(row["Назва постачальника UA"]), nameRu: mtText(row["Назва постачальника RU"]), sku: mtText(row["Артикул постачальника"]), url: mtText(row["URL постачальника"]),
     photos: (jsonOr(row["Фото JSON"], []) || []).filter((u) => typeof u === "string").map(photoId),
-    params: (jsonOr(row["Характеристики JSON"], []) || []).filter((p) => p && typeof p === "object").map((p) => [mtText(p.name), mtText(p.value), mtText(p.unit)]),
+    params: (jsonOr(rawParamsOf(row), []) || []).filter((p) => p && typeof p === "object").map((p) => [mtText(p.name), mtText(p.value), mtText(p.unit)]),
     model: mtText(supplierModel || row["Модель"]), desc: descPart(sha),
   };
 }
@@ -211,7 +232,7 @@ export function describeSupplierChanges(a, b) {
  *    постачальника; інакше власне або «походження невідоме» (команди «SEO ПОСТАЧАЛЬНИКА» / «ПЕРЕВІРЕНО»).
  * offer — операційний розбір; full — повний offer (фото, характеристики, опис) або undefined (тоді вони не змінюються).
  */
-export function refreshQueueRow(row, offer, full, { stamp }) {
+export function refreshQueueRow(row, offer, full, { stamp, catalog = null, cleanDescriptions = false }) {
   const r = { ...row };
   const entries = [], notes = [];
   const id = mtText(row["Offer ID"]);
@@ -251,19 +272,32 @@ export function refreshQueueRow(row, offer, full, { stamp }) {
   }
   // 3. Сирі дані постачальника
   const supplierModel = mtText(full?.model || offer?.model || "").trim();
+  let ch = null;
   if (offer) {
     const set = (col, next) => { if (mtText(r[col]) !== mtText(next)) { entries.push([stamp, SHEET.queue, id, col, jv(r[col]), jv(next), "ДАНІ ПОСТАЧАЛЬНИКА"]); r[col] = next; } };
     for (const [col, f] of RAW_COLUMNS) set(col, offer[f] ?? "");
+    // Рядок до 23.10.2026: сирі характеристики — те, що система тоді записала в «Характеристики JSON».
+    if (!mtText(r[RAW_PARAMS]).trim()) r[RAW_PARAMS] = mtText(row["Характеристики JSON"]) || "[]";
     if (full) {
       // Фото — повним актуальним списком постачальника (порядок, головне фото); порожній список не стирає наявних.
       if ((full.pictures || []).length) set("Фото JSON", JSON.stringify(full.pictures.slice(0, 10)));
       else if ((jsonOr(r["Фото JSON"], []) || []).length) notes.push("у повному XML немає фото — залишено попередні");
       const params = JSON.stringify((full.params || []).slice(0, 100));
       if (params.length > CELL_LIMIT) notes.push("характеристики постачальника завеликі для клітинки — не оновлено");
-      else if ((full.params || []).length || !(jsonOr(r["Характеристики JSON"], []) || []).length) set("Характеристики JSON", params);
+      else if ((full.params || []).length || !(jsonOr(r[RAW_PARAMS], []) || []).length) set(RAW_PARAMS, params);
       else notes.push("у повному XML немає характеристик — залишено попередні");
       if (supplierModel) set("Модель", supplierModel); // модель — сирі дані постачальника
+      // Оригінальний опис постачальника (для відновлення й перенесення характеристик); зміна вже видна в SHA опису.
+      if (mtText(full.descriptionUa).trim()) r[RAW_DESC_UA] = clip(full.descriptionUa, notes, "Опис постачальника UA");
+      if (mtText(full.descriptionRu).trim()) r[RAW_DESC_RU] = clip(full.descriptionRu, notes, "Опис постачальника RU");
     }
+    // 3б. Підготовлені характеристики для Prom: за схемою категорії, з урахуванням ручних виправлень.
+    const cat = mtText(r["Категорія Prom ID"]).trim();
+    ch = buildCharacteristics({ schema: catalog?.schemas?.get(cat) || null, categoryId: cat, rawParams: jsonOr(r[RAW_PARAMS], []), descUa: r[RAW_DESC_UA], descRu: r[RAW_DESC_RU], current: r["Характеристики JSON"], provenance: r[PARAMS_ORIGIN], mapping: catalog?.mappings?.get(cat), units: catalog?.units, mode: "queue" });
+    const prepared = JSON.stringify(ch.params);
+    if (ch.changed && prepared.length <= CELL_LIMIT) { entries.push([stamp, SHEET.queue, id, "Характеристики JSON", jv(r["Характеристики JSON"]), jv(prepared), "ХАРАКТЕРИСТИКИ (автоматично)"]); r["Характеристики JSON"] = prepared; }
+    r[PARAMS_ORIGIN] = JSON.stringify(ch.provenance);
+    if (ch.conflicts.length || ch.notes.length) notes.push("характеристики: " + [...ch.conflicts, ...ch.notes].slice(0, 5).join("; "));
   }
   const raw = { ...rawFromQueueRow(r), descriptionUa: full?.descriptionUa || "", descriptionRu: full?.descriptionRu || "", hasDescription: Boolean(offer && full) };
   const sha = offer ? sheetFingerprint(raw, prevSha) : prevSha || sheetFingerprint(raw);
@@ -275,7 +309,12 @@ export function refreshQueueRow(row, offer, full, { stamp }) {
   if (offer && !seoOwn && initialSeo) {
     const seoSet = (col, next) => { if (mtText(r[col]) !== mtText(next)) { entries.push([stamp, SHEET.queue, id, col, jv(r[col]), jv(next), "SEO-КОПІЯ ПОСТАЧАЛЬНИКА"]); r[col] = next; } };
     seoSet("Назва UA", offer.nameUa ?? ""); seoSet("Назва RU", offer.nameRu ?? "");
-    if (full) { seoSet("Опис UA", clip(full.descriptionUa, notes, "Опис UA")); seoSet("Опис RU", clip(full.descriptionRu, notes, "Опис RU")); }
+    if (full) {
+      // Очищення лише СИРОЇ копії опису й лише від пар, уже перенесених у поля Prom (вмикається окремо: cleanDescriptions).
+      const clean = (lang, text) => (cleanDescriptions && ch?.descRanges[lang].length && mtText(r[lang === "ua" ? RAW_DESC_UA : RAW_DESC_RU]) === text ? cleanDescription(text, ch.descRanges[lang]) : text);
+      seoSet("Опис UA", clean("ua", clip(full.descriptionUa, notes, "Опис UA")));
+      seoSet("Опис RU", clean("ru", clip(full.descriptionRu, notes, "Опис RU")));
+    }
     initialSeo = seoHash(r); // знімок системи рухається разом із копією
   }
   r["SHA SEO при додаванні"] = initialSeo;
@@ -313,18 +352,24 @@ export function refreshQueueRow(row, offer, full, { stamp }) {
 
 /**
  * Основний каталог (погоджено 23.10.2026): постачальник під тим самим ID змінив модель / артикул / інші дані — приймаємо
- * автоматично: сирі поля, «Модель», фото (повним списком, у його порядку), характеристики; ціна й наявність — planRows.
+ * автоматично: сирі поля, «Модель», фото (повним списком, у його порядку); ціна й наявність — planRows.
+ * Характеристики: сирі — у «Характеристики постачальника JSON» (автоматично); підготовлені «Характеристики JSON» — лише
+ * за схемою категорії Prom (buildCharacteristics): ручні й невизначені значення зберігаються; без схеми — без змін.
  * Наше SEO (SEO_FIELDS) не перезаписується ніколи — у «Журналі» інформаційне попередження «було → стало» (нічого не блокує).
  * «Код товару Prom» іде за артикулом лише тоді, коли дорівнював попередньому артикулу й новий не зайнятий іншою карткою.
- * Offer ID не змінюється. Фото й характеристики — лише з повного перевіреного XML (full); інакше не чіпаємо.
+ * Offer ID і категорія Prom не змінюються. Фото й характеристики — лише з повного перевіреного XML (full).
  */
-export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "" }) {
-  if (!offer) return { row, entries: [], changed: false, identity: false, photos: false };
+export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", catalog = null }) {
+  if (!offer) return { row, entries: [], changed: false, identity: false, photos: false, params: false };
   const r = { ...row };
   const id = mtText(row["Offer ID"]);
   const entries = [];
   const status = "ДАНІ ПОСТАЧАЛЬНИКА (автоматично; SEO не змінено)";
-  const set = (col, next) => { if (mtText(r[col]) !== mtText(next)) { entries.push([stamp, SHEET.main, id, col, jv(r[col]), jv(next), status]); r[col] = next; return true; } return false; };
+  let touched = false;
+  const set = (col, next, why = status) => { if (mtText(r[col]) !== mtText(next)) { entries.push([stamp, SHEET.main, id, col, jv(r[col]), jv(next), why]); r[col] = next; touched = true; return true; } return false; };
+  // Службові колонки без запису в «Журнал» (перше заповнення, походження).
+  const quiet = (col, next) => { if (mtText(r[col]) !== mtText(next)) { r[col] = next; touched = true; } };
+  const firstRaw = !mtText(row[RAW_PARAMS]).trim();
   const pre = supplierSnapshot(row, "", mtText(row["Модель"]));
   const oldSku = mtText(row["Артикул постачальника"]).trim();
   for (const [col, f] of RAW_COLUMNS) set(col, f === "sku" ? mtText(offer.sku).trim() : offer[f] ?? "");
@@ -335,30 +380,50 @@ export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "" })
     if ((!code || code === oldSku) && newSku && !owner) set("Код товару Prom", newSku);
     else if (owner) entries.push([stamp, SHEET.main, id, "Код товару Prom", code, code, "НЕ ЗМІНЕНО: артикул «" + newSku + "» уже має товар " + owner]);
   }
-  let photos = false;
+  let photos = false, params = false;
   if (full) {
     const model = mtText(full.model).trim();
     if (model) set("Модель", model);
     if ((full.pictures || []).length) photos = set("Фото JSON", JSON.stringify(full.pictures.slice(0, 10)));
-    const params = JSON.stringify((full.params || []).slice(0, 100));
-    if (params.length <= CELL_LIMIT && (full.params || []).length) set("Характеристики JSON", params);
+    const rawJson = JSON.stringify((full.params || []).slice(0, 100));
+    if (rawJson.length <= CELL_LIMIT && (full.params || []).length) { if (firstRaw) quiet(RAW_PARAMS, rawJson); else set(RAW_PARAMS, rawJson); }
+    for (const [col, text] of [[RAW_DESC_UA, full.descriptionUa], [RAW_DESC_RU, full.descriptionRu]]) {
+      if (mtText(text).trim() && mtText(text).length <= CELL_LIMIT) quiet(col, text); // зміну опису видно з SHA; повний текст у «Журнал» не пишемо
+    }
   }
-  const changed = entries.some((e) => e[6] === status);
+  // Підготовлені характеристики — за схемою категорії (без схеми: не змінюються).
+  const cat = mtText(r["Категорія Prom ID"]).trim();
+  const schema = catalog?.schemas?.get(cat) || null;
+  if (schema && mtText(r[RAW_PARAMS]).trim()) {
+    const ch = buildCharacteristics({ schema, categoryId: cat, rawParams: jsonOr(r[RAW_PARAMS], []), descUa: r[RAW_DESC_UA], descRu: r[RAW_DESC_RU], current: r["Характеристики JSON"], provenance: r[PARAMS_ORIGIN], mapping: catalog?.mappings?.get(cat), units: catalog?.units, mode: "main" });
+    const prepared = JSON.stringify(ch.params);
+    if (ch.changed && prepared.length <= CELL_LIMIT) params = set("Характеристики JSON", prepared, "ХАРАКТЕРИСТИКИ ЗА СХЕМОЮ PROM (автоматично; ручні значення збережено)");
+    quiet(PARAMS_ORIGIN, JSON.stringify(ch.provenance));
+  }
   const identity = mtKey(pre.nameUa) !== mtKey(r["Назва постачальника UA"]) || mtKey(pre.nameRu) !== mtKey(r["Назва постачальника RU"]) || pre.sku !== newSku;
-  if (changed) {
+  if (touched) {
     r[SEAL_COLUMN] = rowSeal(r);
-    const details = describeSupplierChanges(pre, supplierSnapshot(r, "", mtText(r["Модель"])));
+    const post = supplierSnapshot(r, "", mtText(r["Модель"]));
+    if (firstRaw) pre.params = post.params; // перше заповнення сирої колонки — не «зміна постачальника»
+    const details = describeSupplierChanges(pre, post);
     if (details.length) entries.push([stamp, SHEET.main, id, RECHECK, "", jv(details.join("; ")), "ІНФОРМАЦІЙНО: наше SEO не змінено — перевірте відповідність новим даним постачальника"]);
   }
-  return { row: r, entries, changed, identity, photos };
+  return { row: r, entries, changed: touched, identity, photos, params };
 }
 
-/** Черга з колонками стану (додаються автоматично до черги, створеної до 22.10.2026). */
+/** Черга з колонками стану й контенту (додаються автоматично в кінець, якщо аркуш створено раніше). */
 function readQueue(values) {
   const header = (values?.[0] || []).map(mtText);
-  const migrated = QUEUE_STATE.filter((k) => !header.includes(k));
+  const migrated = [...QUEUE_STATE, ...CONTENT_COLUMNS].filter((k) => !header.includes(k));
   const v = migrated.length ? [[...header, ...migrated], ...values.slice(1)] : values;
   return { ...readSheet(v, SHEET.queue), migrated };
+}
+/** Основний каталог з колонками контенту (погоджено 23.10.2026; додаються автоматично в кінець аркуша). */
+export function readMain(values) {
+  const header = (values?.[0] || []).map(mtText);
+  const migrated = values?.length ? CONTENT_COLUMNS.filter((k) => !header.includes(k)) : [];
+  const v = migrated.length ? [[...header, ...migrated], ...values.slice(1)] : values;
+  return { ...readSheet(v, SHEET.main), migrated };
 }
 const queueEntryNote = (rq, rest) => [rq.recheckNote, ...rq.notes, ...rest].filter(Boolean).join(" ");
 
@@ -387,7 +452,7 @@ export function ackFor({ mainRows, queueRows, deferredRows, frozenIds, frozenFla
 /** Рядок черги → рядок основного каталогу: ті самі ID і значення, «ДОЗВОЛЕНО», групи з довідника, нова печатка. */
 export function toMainRow(row, groupsById) {
   const g = groupsById.get(mtText(row["Група ID"]));
-  const out = Object.fromEntries(YML_HEADERS.map((k) => [k, row[k] ?? ""]));
+  const out = Object.fromEntries(MAIN_HEADERS.map((k) => [k, row[k] ?? ""]));
   if (g) { if (!mtText(out["Група UA"])) out["Група UA"] = g.ua; if (!mtText(out["Група RU"])) out["Група RU"] = g.ru; }
   out["Статус імпорту"] = "ДОЗВОЛЕНО";
   out[SEAL_COLUMN] = rowSeal(out);
@@ -544,17 +609,18 @@ function planUndos({ historyValues, mainRows, deferredRows, queueRows, offers, s
  *  book — { назва: values2D } (основний, черга, відкладені, заморожені, групи, паспорт, історія прив'язок);
  *  parsed — операційний розбір фіду (Map offers).
  */
-export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fullById = new Map() }) {
+export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fullById = new Map(), catalog = null }) {
+  const cleanDescriptions = config.characteristics?.cleanDescriptions === true; // очищення сирої копії опису — окреме погодження
   const out = { abort: null, block: null, warnings: [], stats: {} };
   // Зупинка: зрозуміла причина + тип, кількість зачеплених товарів і поріг (для «Журналу»).
   const stop = (type, reason, affected = "", limit = "") => { out.abort = reason; out.block = { type, reason, affected, limit }; return out; };
-  const main = readSheet(book[SHEET.main], SHEET.main);
+  const main = readMain(book[SHEET.main]);
   const queueValues = book[SHEET.queue];
   const queueHeader = (queueValues?.[0] || []).map(mtText);
   if (QUEUE_EXTRA.some((k) => !queueHeader.includes(k))) return stop("ЧЕРГА НЕ ГОТОВА", "аркуш «Нові товари» ще не переведено в режим черги (немає колонок «Рішення/Перевірка/Виявлено») — спершу перенесення NEW92");
   const queue0 = readQueue(queueValues);
   // Варіант А: сирі дані постачальника черги — з поточного XML (SEO не змінюється); далі всі кроки — на оновлених рядках.
-  const refreshed = queue0.rows.map((r) => refreshQueueRow(r, parsed.offers.get(mtText(r["ID постачальника"])), fullById.get(mtText(r["ID постачальника"])), { stamp }));
+  const refreshed = queue0.rows.map((r) => refreshQueueRow(r, parsed.offers.get(mtText(r["ID постачальника"])), fullById.get(mtText(r["ID постачальника"])), { stamp, catalog, cleanDescriptions }));
   const queue = { ...queue0, rows: refreshed.map((x) => x.row) };
   const deferred = book[SHEET.deferred] ? readSheet(book[SHEET.deferred], SHEET.deferred).rows : [];
   const frozenIds = new Set((book[SHEET.frozen] || []).slice(1).map((r) => mtText(r[0])).filter(Boolean));
@@ -583,23 +649,38 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
   const skuOwners = new Map();
   for (const r of mainRows) for (const k of ["Артикул постачальника", "Код товару Prom"]) { const v = mtText(r[k]).trim(); if (v && !skuOwners.has(v)) skuOwners.set(v, mtText(r["Offer ID"])); }
   const skuInUse = (sku, self) => { const o = skuOwners.get(sku); return o && o !== self ? o : ""; };
-  const mainRaw = { entries: [], changed: new Set(), identity: 0, photos: 0 };
-  mainRows.forEach((r, i) => {
-    if (undo.changedMain.has(i) || bind.changedMain.has(i)) return;
+  const mainRaw = { entries: [], changed: new Set(), identity: 0, photos: 0, params: 0, paramsHeld: 0 };
+  const refreshAll = (cat) => mainRows.map((r, i) => {
+    if (undo.changedMain.has(i) || bind.changedMain.has(i)) return null;
     const sid = mtText(r["ID постачальника"]);
-    const m = refreshMainRow(r, parsed.offers.get(sid), fullById.get(sid), { stamp, skuInUse });
-    if (!m.changed) { mainRaw.entries.push(...m.entries); return; }
+    return refreshMainRow(r, parsed.offers.get(sid), fullById.get(sid), { stamp, skuInUse, catalog: cat });
+  });
+  let refreshedMain = refreshAll(catalog);
+  // Масова зміна підготовлених характеристик (напр. щойно додано схеми) — не застосовується в цьому запуску;
+  // сирі дані, ціни й наявність оновлюються як завжди. Ліміт можна підняти лише окремим погодженим запуском.
+  const paramsLim = config.characteristics?.maxChangedRows ?? Math.max(200, Math.ceil(mainRows.length * 0.1));
+  const paramsChanged = refreshedMain.filter((m) => m?.params).length;
+  if (paramsChanged > paramsLim) {
+    mainRaw.paramsHeld = paramsChanged;
+    out.warnings.push(`МАСОВА ЗМІНА ХАРАКТЕРИСТИК: підготовлені характеристики змінились би в ${paramsChanged} товарах (поріг ${paramsLim}) — у цьому запуску не застосовано; сирі дані, ціни й наявність оновлено`);
+    mainRaw.entries.push([stamp, SHEET.main, "", "ХАРАКТЕРИСТИКИ НЕ ЗАСТОСОВАНО", "", paramsChanged, `МАСОВА ЗМІНА ХАРАКТЕРИСТИК (поріг ${paramsLim}) — потрібне окреме погодження`]);
+    refreshedMain = refreshAll(null);
+  }
+  refreshedMain.forEach((m, i) => {
+    if (!m) return;
+    mainRaw.entries.push(...m.entries);
+    if (!m.changed) return;
     mainRows[i] = m.row;
     mainRaw.changed.add(i);
-    mainRaw.entries.push(...m.entries);
     if (m.identity) mainRaw.identity++;
     if (m.photos) mainRaw.photos++;
+    if (m.params) mainRaw.params++;
   });
   {
     const an0 = config.policy?.anomaly || { maxNewlyMissing: 50, maxNewlyMissingRatio: 0.02 };
     const lim = Math.max(an0.maxNewlyMissing, Math.ceil(mainRows.length * an0.maxNewlyMissingRatio));
     const photoLim = Math.max(200, Math.ceil(mainRows.length * 0.1));
-    out.stats.mainRaw = { changed: mainRaw.changed.size, identity: mainRaw.identity, photos: mainRaw.photos };
+    out.stats.mainRaw = { changed: mainRaw.changed.size, identity: mainRaw.identity, photos: mainRaw.photos, params: mainRaw.params, paramsHeld: mainRaw.paramsHeld, migratedColumns: main.migrated.length };
     // Захист від помилкового фіду: масова зміна назв / артикулів або фото — нічого не пишемо.
     if (mainRaw.identity > lim) return stop("МАСОВА ЗМІНА ДАНИХ ПОСТАЧАЛЬНИКА", `назви / артикул змінились у ${mainRaw.identity} товарів основного каталогу (поріг ${lim}) — схоже на помилку у фіді; нічого не записано`, mainRaw.identity, lim);
     if (mainRaw.photos > photoLim) return stop("МАСОВА ЗМІНА ФОТО", `фото змінились у ${mainRaw.photos} товарів основного каталогу (поріг ${photoLim}) — схоже на помилку у фіді; нічого не записано`, mainRaw.photos, photoLim);
@@ -659,7 +740,7 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
     else if (decision === DECISION.APPROVE || decision === DECISION.APPROVE_NOT_DUP) {
       // «(НЕ ДУБЛЬ)» обов'язкове лише при схожості з товаром основного каталогу або оцінці «ймовірно той самий».
       const blocking = cands.some((c) => c.sheet === SHEET.main || c.level === "ЙМОВІРНО ТОЙ САМИЙ");
-      const problems = approvalProblems(updated, { groupIds, mainIds, dupFlag: blocking, recheck: rq.recheck });
+      const problems = approvalProblems(updated, { groupIds, mainIds, dupFlag: blocking });
       if (!problems.length) { approve.push(toMainRow(updated, groupsById)); mainIds.add(mtText(r["Offer ID"])); return; }
       updated["Перевірка"] = [dup, "НЕ ПЕРЕНЕСЕНО: " + problems.join("; ")].filter(Boolean).join(" ");
     } else if (isStateCommand(decision)) {
@@ -672,7 +753,7 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
     updated["Перевірка"] = withNonProduct(queueEntryNote(rq, [updated["Перевірка"]]), nonProductReason(updated, auditTypes));
     keep.push(updated);
   });
-  out.main = { start: main.start, plan: mainPlan, rows: mainRows, changedRows: new Set([...undo.changedMain, ...bind.changedMain, ...mainRaw.changed]) };
+  out.main = { start: main.start, header: main.header, migrated: main.migrated, plan: mainPlan, rows: mainRows, changedRows: new Set([...undo.changedMain, ...bind.changedMain, ...mainRaw.changed]) };
   out.queue = { header: queue.header, migrated: queue.migrated, keep, approve, reject, bound, reclaimed, planRowsByIndex: queuePlan };
   out.bindings = { history: bind.history, done: bind.done.length, refused: bind.refused.size, undoCells: undo.cells, undone: undo.undone.length, undoneList: undo.undone };
   out.deferredRows = deferred;
@@ -680,13 +761,14 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
   out.stats.queueRaw = { changed: refreshed.filter((x) => x.changed).length, recheck: refreshed.filter((x) => x.recheck.length).length, verified: refreshed.filter((x) => x.verified).length, migratedColumns: queue.migrated.length };
   out.ackInput = { mainRows, deferredRows: deferred, frozenIds, frozenFlag };
   out.passportBefore = passport;
+  out.catalog = catalog;
   out.stats.queue = { rows: queue.rows.length, approve: approve.length, reject: reject.length, keep: keep.length, bound: bound.length, newIds: 0, candidatesInFeed: out.candidatesInFeed };
   return out;
 }
 
 /** Фаза 2: підсумкова черга (лишені + нові з оригінальним контентом, з перевіркою схожості) і новий паспорт. */
 export function finalizeSheetSync(plan, { parsed, fullById, stamp, config, groupsRows, journalSummary }) {
-  const newRows = plan.newIds.map((id) => candidateRow(parsed.offers.get(id), fullById.get(id), stamp, config.pricing));
+  const newRows = plan.newIds.map((id) => candidateRow(parsed.offers.get(id), fullById.get(id), stamp, config.pricing, plan.catalog));
   // Схожість нових — проти карток, черги (включно з іншими новими) і відкладених, з фото й характеристиками постачальника.
   const index = dupIndexFor({ mainRows: plan.main.rows, queueRows: [...plan.queue.keep, ...newRows], deferredRows: plan.deferredRows, offers: parsed.offers });
   let possibleDuplicates = 0;
@@ -716,7 +798,8 @@ export function finalizeSheetSync(plan, { parsed, fullById, stamp, config, group
  *  Кожен повторно перевіряється за ПОВНИМ XML (verifyReady): ≥10 хв без змін, той самий відбиток, повні дані.
  *  Рішення власника (затвердження, відхилення, прив'язки) тут не обробляються — лише під час синхронізації.
  */
-export function planIntake({ book, parsed, fullById, stamp, config, now, ready = [], profile = "medium" }) {
+export function planIntake({ book, parsed, fullById, stamp, config, now, ready = [], profile = "medium", catalog = null }) {
+  const cleanDescriptions = config.characteristics?.cleanDescriptions === true;
   const rules = { ...INTAKE_RULES, ...(config.intake || {}) };
   const out = { abort: null, block: null, warnings: [], stats: {}, results: {} };
   const stop = (type, reason) => { out.abort = reason; out.block = { type, reason, affected: "", limit: "" }; return out; };
@@ -729,7 +812,7 @@ export function planIntake({ book, parsed, fullById, stamp, config, now, ready =
   const frozenIds = new Set((book[SHEET.frozen] || []).slice(1).map((r) => mtText(r[0])).filter(Boolean));
   const auditTypes = auditMarks(book[AUDIT_SHEET]);
 
-  const refreshed = queue0.rows.map((r) => refreshQueueRow(r, parsed.offers.get(mtText(r["ID постачальника"])), fullById.get(mtText(r["ID постачальника"])), { stamp }));
+  const refreshed = queue0.rows.map((r) => refreshQueueRow(r, parsed.offers.get(mtText(r["ID постачальника"])), fullById.get(mtText(r["ID постачальника"])), { stamp, catalog, cleanDescriptions }));
   const qRows = refreshed.map((x) => x.row);
   const queuePlan = planRows(qRows, parsed.offers, stamp, config.pricing);
   const kept = qRows.map((r, i) => { const x = { ...r }; LIVE_COLUMNS.forEach((k, j) => { x[k] = queuePlan[i].next[j]; }); return x; });
@@ -749,7 +832,7 @@ export function planIntake({ book, parsed, fullById, stamp, config, now, ready =
     const raw = offer && full ? rawFromOffer(offer, full) : null;
     const v = verifyReady(e, raw, now, { rules, profile });
     if (!v.ok) { out.results[id] = { status: "ВІДМОВА", reason: v.reason, ...(v.fullFp ? { fullFp: v.fullFp } : {}) }; continue; }
-    const row = candidateRow(offer, full, stamp, config.pricing);
+    const row = candidateRow(offer, full, stamp, config.pricing, catalog);
     const iso = (t) => (Number.isFinite(Date.parse(t)) ? new Date(Date.parse(t)).toISOString() : stamp);
     row["Виявлено"] = iso(e.firstSeen);
     row["Остання зміна постачальника"] = iso(e.lastChange);

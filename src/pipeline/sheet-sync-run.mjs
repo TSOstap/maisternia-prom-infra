@@ -7,6 +7,14 @@ import { YML_HEADERS, SEAL_COLUMN, approvalManifest, rowSeal } from "../core/sea
 import { objectsFromValues } from "../core/yml.mjs";
 import { GROUP_HEADERS } from "../core/seal.mjs";
 import { SHEET, QUEUE_HEADERS, PASSPORT_HEADER, BINDINGS_SHEET, BINDINGS_HEADERS, ackFor, finalizeSheetSync, passportValues, planIntake, planSheetSync, readPassport, samePassport } from "../core/sheet-sync.mjs";
+import { loadPromCatalog } from "./prom-schemas.mjs";
+
+/** Схеми категорій Prom із репозиторію (schemas/prom); помилки схем — лише попередження (така схема не використовується). */
+function catalogFor(catalog, warnings) {
+  const c = catalog ?? loadPromCatalog();
+  for (const p of c.problems || []) warnings.push("схема Prom: " + p);
+  return c;
+}
 
 export const SYNC_SHEETS = [SHEET.main, SHEET.queue, SHEET.deferred, SHEET.frozen, SHEET.passport, BINDINGS_SHEET, "Аудит"];
 const rowsEqual = (a, b) => a.length === b.length && a.every((r, i) => r.length === b[i].length && r.every((v, j) => mtText(v) === mtText(b[i][j])));
@@ -130,12 +138,12 @@ export async function mergeNew92({ sheets, readBook, stamp }) {
 }
 
 /** Синхронізація (як майбутній запуск кожні 4 год): ціни/наявність, черга нових, рішення власника, паспорт, журнал. */
-export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now, profile = "medium" }) {
+export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now, profile = "medium", catalog = null }) {
   const book = await readBook(SYNC_SHEETS);
   const groupsRows = groupsOf(book);
   const warnings = [];
   const fullById = await fullForQueue(book, fetchFull, warnings, [], { parsed, withMain: true });
-  const plan = planSheetSync({ book, parsed, stamp, config, now, groupsRows, fullById });
+  const plan = planSheetSync({ book, parsed, stamp, config, now, groupsRows, fullById, catalog: catalogFor(catalog, warnings) });
   plan.warnings.push(...warnings);
   if (plan.abort) {
     // Заблоковано: товарні дані не змінюються; лише подія в «Журналі».
@@ -149,7 +157,7 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
   const queueChanged = !rowsEqual(fresh[SHEET.queue], book[SHEET.queue]);
   // Ціни вже пораховано з урахуванням прив'язок/скасувань: якщо чергу змінили під час запуску, а такі рішення є — нічого не пишемо.
   if (queueChanged && plan.main.changedRows.size) return { state: "SKIPPED_CONCURRENT_EDIT", reason: "чергу змінено під час запуску, а в ній є прив'язки/скасування — нічого не записано, повтор наступного запуску" };
-  const mainHeader = readSheet(book[SHEET.main], SHEET.main).header;
+  const mainHeader = plan.main.header; // з колонками контенту (додаються автоматично)
   const approve = queueChanged ? [] : plan.queue.approve;
   const reject = queueChanged ? [] : plan.queue.reject;
   const passportAfter = queueChanged ? plan.passportBefore : fin.passportAfter;
@@ -169,6 +177,10 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
   const opsBlock = { title: SHEET.main, row: 2, col: plan.main.start + 1, values: plan.main.plan.map((p) => forSheet(LIVE_COLUMNS, p.next)) };
   const queueValues = fin.queueValues.map((r) => forSheet(plan.queue.header, r));
   try {
+    if (plan.main.migrated.length) {
+      await sheets.ensureColumns(SHEET.main, mainHeader.length);
+      await sheets.updateRanges([{ title: SHEET.main, row: 1, col: 1, values: [mainHeader] }]); done.add("mainHeader");
+    }
     await sheets.updateRanges([opsBlock]); done.add("mainOps");
     // Прив'язки/скасування змінюють і незмінні колонки картки — повний рядок (печатку перераховано).
     if (fullRows.length) { await sheets.updateRanges(fullRows); done.add("fullRows"); }
@@ -211,7 +223,8 @@ export async function syncSheet({ sheets, readBook, parsed, fetchFull, stamp, co
     const restore = [];
     try {
       if (done.has("mainOps")) { await sheets.updateRanges([{ ...opsBlock, values: before.mainOps }]); restore.push("ціни/наявність"); }
-      if (done.has("fullRows")) { await sheets.updateRanges(changedRows.map((i) => ({ title: SHEET.main, row: i + 2, col: 1, values: [before.mainRowsFull[i + 1]] }))); restore.push("прив'язані картки"); }
+      if (done.has("fullRows")) { await sheets.updateRanges(changedRows.map((i) => ({ title: SHEET.main, row: i + 2, col: 1, values: [pad(before.mainRowsFull[i + 1], mainHeader.length)] }))); restore.push("змінені картки"); }
+      if (done.has("mainHeader")) { await sheets.updateRanges([{ title: SHEET.main, row: 1, col: 1, values: [pad(before.mainRowsFull[0], mainHeader.length)] }]); restore.push("заголовок основного каталогу"); }
       if (done.has("history")) { await sheets.deleteRows(BINDINGS_SHEET, history.map((_, k) => before.historyLen + 1 + k)); restore.push("історія прив'язок"); }
       if (done.has("undoCells")) { await sheets.updateRanges(undoCells.map((c) => ({ title: BINDINGS_SHEET, row: c.row, col: stateCol, values: [[before.history[c.row - 1]?.[stateCol - 1] ?? ""]] }))); restore.push("стан скасувань"); }
       if (done.has("approve")) { await sheets.deleteRows(SHEET.main, approve.map((_, i) => before.mainLen + 2 + i)); restore.push("перенесені рядки"); }
@@ -264,11 +277,11 @@ export const INTAKE_SHEETS = [SHEET.main, SHEET.queue, SHEET.deferred, SHEET.fro
  *  ready — від «Сторожа новинок»; кожен кандидат повторно перевіряється за повним XML (planIntake → verifyReady).
  *  Повертає ack для Worker (база відомих ID, відбитки черги, результати) — навіть якщо записувати нічого.
  */
-export async function intakeSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now, ready = [], profile = "medium" }) {
+export async function intakeSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now, ready = [], profile = "medium", catalog = null }) {
   const book = await readBook(INTAKE_SHEETS);
   const warnings = [];
   const fullById = await fullForQueue(book, fetchFull, warnings, ready.map((e) => mtText(e?.id)).filter(Boolean), { parsed });
-  const plan = planIntake({ book, parsed, fullById, stamp, config, now, ready, profile });
+  const plan = planIntake({ book, parsed, fullById, stamp, config, now, ready, profile, catalog: catalogFor(catalog, warnings) });
   if (plan.abort) {
     const rec = await recordBlocked(sheets, stamp, plan.block);
     return { state: "ABORTED", reason: plan.abort, block: plan.block, ...rec };

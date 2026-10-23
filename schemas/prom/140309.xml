@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="140309" nameRU="Скважинные насосы" nameUK="Свердловинні насоси">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="кВт" min="0" max="100" measureUnitUK="кВт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5000" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="394" nameRU="Защита от перегрева" type="bool" nameUK="Захист від перегріву"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="2053" nameRU="Напряжение сети" type="multiselect" nameUK="Напруга мережі">
+<attribute_value id="11945" nameRU="220~240 В" nameUK="220~240 В"/>
+<attribute_value id="11946" nameRU="380~400 В" nameUK="380~400 В"/>
+<attribute_value id="35999" nameRU="100~120 В" nameUK="100~120 В"/>
+</attribute>
+<attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+<attribute id="2828" nameRU="Минимальное рабочее давление" type="real" nameUK="Мінімальний робочий тиск" measureUnitRU="бар" min="0" max="100" measureUnitUK="бар"/>
+<attribute id="2837" nameRU="Максимальное рабочее давление" type="real" nameUK="Максимальний робочий тиск" measureUnitRU="бар" min="0" max="200" measureUnitUK="бар"/>
+<attribute id="5052" nameRU="Номинальная пропускная способность" type="real" nameUK="Номінальна пропускна здатність" measureUnitRU="куб. м/час" min="0" max="500" measureUnitUK="куб.м/год"/>
+<attribute id="5161" nameRU="Минимальная температура окружающей среды" type="real" nameUK="Мінімальна температура навколишнього середовища" measureUnitRU="град." min="-100" max="10" measureUnitUK="град."/>
+<attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+<attribute id="5858" nameRU="Способ установки насоса" type="singleselect" nameUK="Спосіб установки насоса">
+<attribute_value id="39633" nameRU="Погружной" nameUK="Занурювальний"/>
+<attribute_value id="39634" nameRU="Поверхностный" nameUK="Поверхневий"/>
+</attribute>
+<attribute id="5859" nameRU="Максимальный напор" type="real" nameUK="Максимальний напір" measureUnitRU="м" min="0" max="500" measureUnitUK="м"/>
+<attribute id="5867" nameRU="Минимальная температура рабочей жидкости" type="real" nameUK="Мінімальна температура робочої рідини" measureUnitRU="град." min="-25" max="30" measureUnitUK="град."/>
+<attribute id="5868" nameRU="Максимальная температура рабочей жидкости" type="real" nameUK="Максимальна температура робочої рідини" measureUnitRU="град." min="10" max="150" measureUnitUK="град."/>
+<attribute id="5874" nameRU="Автоматический контроль уровня рабочей среды" type="bool" nameUK="Автоматичний контроль рівня робочої середовища"/>
+<attribute id="5875" nameRU="Плавный пуск двигателя" type="bool" nameUK="Плавний пуск двигуна"/>
+<attribute id="5881" nameRU="Максимальная глубина погружения" type="real" nameUK="Максимальна глибина занурення" measureUnitRU="м" min="0" max="450" measureUnitUK="м"/>
+<attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+<attribute id="7366" nameRU="Максимальная пропускная способность" type="real" nameUK="Максимальна пропускна здатність" measureUnitRU="куб. м/час" min="0" max="6500" measureUnitUK="куб.м/год"/>
+<attribute id="7951" nameRU="Перекачиваемые среды" type="multiselect" nameUK="Перекачувані середи">
+<attribute_value id="66582" nameRU="Чистая вода" nameUK="Чиста вода"/>
+<attribute_value id="66583" nameRU="Техническая вода" nameUK="Технічна вода"/>
+<attribute_value id="66584" nameRU="Вода с примесями" nameUK="Вода з домішками"/>
+<attribute_value id="66585" nameRU="Конденсаты" nameUK="Конденсати"/>
+<attribute_value id="66586" nameRU="Питательная вода" nameUK="Живильна вода"/>
+<attribute_value id="66587" nameRU="Морская вода" nameUK="Морська вода"/>
+<attribute_value id="66588" nameRU="Химически активные вещества" nameUK="Хімічно активні речовини"/>
+<attribute_value id="66589" nameRU="Химически нейтральные вещества" nameUK="Хімічно нейтральні речовини"/>
+<attribute_value id="66590" nameRU="Нефтепродукты" nameUK="Нафтопродукти"/>
+<attribute_value id="66591" nameRU="Сжиженые углеводородные газы" nameUK="Зріджені вуглеводневі гази"/>
+<attribute_value id="66592" nameRU="Спирты" nameUK="Спирти"/>
+<attribute_value id="66593" nameRU="Канализационные вещества" nameUK="Каналізаційні речовини"/>
+<attribute_value id="66594" nameRU="Абразивные гидросмеси" nameUK="Абразивні гідросуміші"/>
+<attribute_value id="66595" nameRU="Токсичные вещества" nameUK="Токсичні речовини"/>
+<attribute_value id="66596" nameRU="Взрыво-пожаро-опасные вещества" nameUK="Вибухо-пожежо-небезпечні речовини"/>
+<attribute_value id="66597" nameRU="Легкозастывающие вещества" nameUK="Легкозастигаючі речовини"/>
+</attribute>
+<attribute id="8055" nameRU="Максимальная кинематическая вязкость рабочей жидкости" type="real" nameUK="Максимальна кінематична в'язкість робочої рідини" measureUnitRU="кв. мм/с" min="0" max="5000" measureUnitUK="кв. мм/с"/>
+<attribute id="8056" nameRU="Минимальная кинематическая вязкость рабочей жидкости" type="real" nameUK="Мінімальна кінематична в'язкість робочої рідини" measureUnitRU="кв. мм/с" min="0" max="5000" measureUnitUK="кв. мм/с"/>
+<attribute id="8504" nameRU="Минимальная пропускная способность" type="real" nameUK="Мінімальна пропускна здатність" measureUnitRU="куб. м/час" min="0" max="200" measureUnitUK="куб.м/год"/>
+<attribute id="8612" nameRU="Взрывозащищенное исполнение" type="bool" nameUK="Вибухозахищене виконання"/>
+<attribute id="14191" nameRU="Дополнительный сервис" type="multiselect" nameUK="Додатковий сервіс">
+<attribute_value id="144186" nameRU="Установка" nameUK="Установка"/>
+<attribute_value id="144187" nameRU="Сервисное обслуживание" nameUK="Сервісне обслуговування"/>
+</attribute>
+</category>
+</categories>

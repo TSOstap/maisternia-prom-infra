@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="140316" nameRU="Аппараты сверхвысокого давления" nameUK="Апарати надвисокого тиску">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="кВт" min="0" max="500" measureUnitUK="кВт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="10000" measureUnitUK="куб. см"/>
+<attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="1000" measureUnitUK="л/год"/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="367" nameRU="Автоотключение при отсутствии воды" type="bool" nameUK="Автовідключення при відсутності води"/>
+<attribute id="394" nameRU="Защита от перегрева" type="bool" nameUK="Захист від перегріву"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="741" nameRU="Максимальная температура нагрева" type="real" nameUK="Максимальна температура нагріву" measureUnitRU="град." min="0" max="300" measureUnitUK="град."/>
+<attribute id="780" nameRU="Максимальная производительность" type="real" nameUK="Максимальна продуктивність" measureUnitRU="литр/мин" min="0" max="5000" measureUnitUK="літр/хв"/>
+<attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+<attribute_value id="9284" nameRU="Бензиновый" nameUK="Бензиновий"/>
+<attribute_value id="9285" nameRU="Дизельный" nameUK="Дизельний"/>
+<attribute_value id="70839" nameRU="Электрический" nameUK="Електричний"/>
+</attribute>
+<attribute id="2049" nameRU="Максимальное давление" type="real" nameUK="Максимальний тиск" measureUnitRU="бар" min="0" max="5000" measureUnitUK="бар"/>
+<attribute id="2051" nameRU="Минимальное давление" type="real" nameUK="Мінімальний тиск" measureUnitRU="бар" min="0" max="100" measureUnitUK="бар"/>
+<attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="500" measureUnitUK="л"/>
+<attribute id="2073" nameRU="Длина шланга высокого давления" type="real" nameUK="Довжина шланга високого тиску" measureUnitRU="м" min="0" max="150" measureUnitUK="м"/>
+<attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+<attribute id="5958" nameRU="Объем бака для воды" type="real" nameUK="Об'єм бака для води" measureUnitRU="л" min="0" max="500" measureUnitUK="л"/>
+<attribute id="6212" nameRU="Напряжение питания" type="multiselect" nameUK="Напруга живлення">
+<attribute_value id="42681" nameRU="220 В" nameUK="220 В"/>
+<attribute_value id="42682" nameRU="380 В" nameUK="380 В"/>
+</attribute>
+<attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+<attribute id="7846" nameRU="Длина сетевого кабеля" type="real" nameUK="Довжина мережевого кабелю" measureUnitRU="м" min="0" max="500" measureUnitUK="м"/>
+<attribute id="8821" nameRU="Объем для антифриза" type="real" nameUK="Об'єм для антифризу" measureUnitRU="л" min="0" max="150" measureUnitUK="л"/>
+</category>
+</categories>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="410402" nameRU="Электрогенераторы" nameUK="Електрогенератори">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="40000" measureUnitUK="кг"/>
+<attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+<attribute_value id="89965" nameRU="Свинцово-кислотные (SLA)" nameUK="Свинцево-кислотні (SLA)"/>
+<attribute_value id="113213" nameRU="GEL" nameUK="GEL"/>
+<attribute_value id="142187" nameRU="AGM" nameUK="AGM"/>
+<attribute_value id="179273" nameRU="LiFePO4" nameUK="LiFePO4"/>
+</attribute>
+<attribute id="77" nameRU="Защитный кожух" type="bool" nameUK="Захисний кожух"/>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="Вт/ч" min="0" max="1300" measureUnitUK="Вт/год"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="10000" measureUnitUK="бар"/>
+<attribute id="116" nameRU="Количество цилиндров" type="singleselect" nameUK="Кількість циліндрів">
+<attribute_value id="7047" nameRU="1" nameUK="1"/>
+<attribute_value id="7048" nameRU="2" nameUK="2"/>
+<attribute_value id="7049" nameRU="3" nameUK="3"/>
+<attribute_value id="7050" nameRU="4" nameUK="4"/>
+<attribute_value id="9298" nameRU="6" nameUK="6"/>
+<attribute_value id="9299" nameRU="8" nameUK="8"/>
+<attribute_value id="9300" nameRU="12" nameUK="12"/>
+<attribute_value id="151278" nameRU="9" nameUK="9"/>
+<attribute_value id="151279" nameRU="10" nameUK="10"/>
+<attribute_value id="151280" nameRU="14" nameUK="14"/>
+<attribute_value id="151281" nameRU="16" nameUK="16"/>
+<attribute_value id="151282" nameRU="18" nameUK="18"/>
+<attribute_value id="151283" nameRU="20" nameUK="20"/>
+</attribute>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="700000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="700000" measureUnitUK="мм"/>
+<attribute id="335" nameRU="Дисплей" type="bool" nameUK="Дисплей"/>
+<attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="100000" measureUnitUK="куб. см"/>
+<attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="л. с." min="0" max="10000" measureUnitUK="к. с."/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="426" nameRU="Номинальная мощность" type="real" nameUK="Номінальна потужність" measureUnitRU="кВт" min="0" max="3000" measureUnitUK="кВт"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="700000" measureUnitUK="мм"/>
+<attribute id="776" nameRU="Количество колесиков" type="integer" nameUK="Кількість коліщат"/>
+<attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+<attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+<attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+</attribute>
+<attribute id="1079" nameRU="Марка двигателя" type="free" nameUK="Марка двигуна"/>
+<attribute id="1185" nameRU="Ручка для переноса" type="bool" nameUK="Ручка для перенесення"/>
+<attribute id="1237" nameRU="Конструкция" type="singleselect" nameUK="Конструкція">
+<attribute_value id="106397" nameRU="Стационарная" nameUK="Стаціонарна"/>
+<attribute_value id="106398" nameRU="Портативная" nameUK="Портативна"/>
+</attribute>
+<attribute id="1266" nameRU="Класс" type="singleselect" nameUK="Клас">
+<attribute_value id="204573" nameRU="Профессиональный" nameUK="Професійний"/>
+<attribute_value id="245427" nameRU="Полупрофессиональный" nameUK="Напівпрофесійний"/>
+<attribute_value id="349378" nameRU="Домашние" nameUK="Домашні"/>
+<attribute_value id="360589" nameRU="Промышленный" nameUK="Промисловий"/>
+</attribute>
+<attribute id="1438" nameRU="Тип топлива" type="singleselect" nameUK="Тип палива">
+<attribute_value id="9835" nameRU="Бензин" nameUK="Бензин"/>
+<attribute_value id="29824" nameRU="Дизельное" nameUK="Дизельне"/>
+<attribute_value id="29827" nameRU="Газ" nameUK="Газ"/>
+<attribute_value id="106387" nameRU="Комбинированое" nameUK="Комбіноване"/>
+<attribute_value id="117242" nameRU="Газ/Бензин" nameUK="Газ/Бензин"/>
+</attribute>
+<attribute id="1480" nameRU="Тип корпуса" type="singleselect" nameUK="Тип корпусу">
+<attribute_value id="361794" nameRU="в шумозащитном кожухе" nameUK="У шумозахисному кожусі"/>
+<attribute_value id="361795" nameRU="Закрытый (кейс)" nameUK="Закритий (кейс)"/>
+<attribute_value id="361796" nameRU="Открытый (рамный)" nameUK="Відкритий (рамний)"/>
+</attribute>
+<attribute id="1900" nameRU="Система охлаждения двигателя" type="singleselect" nameUK="Система охолодження двигуна">
+<attribute_value id="11455" nameRU="Прямоточная" nameUK="Прямоточна"/>
+<attribute_value id="11456" nameRU="Обводная (Байпасная)" nameUK="Обвідна (Байпасна)"/>
+<attribute_value id="11954" nameRU="Воздушная" nameUK="Повітряна"/>
+<attribute_value id="11955" nameRU="Водяная" nameUK="Водяна"/>
+<attribute_value id="151290" nameRU="Масляная" nameUK="Масляна"/>
+</attribute>
+<attribute id="2064" nameRU="Количество оборотов вала двигателя" type="integer" nameUK="Кількість обертів вала двигуна" measureUnitRU="об/мин" min="0" max="5000" measureUnitUK="об/хв"/>
+<attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="50000" measureUnitUK="л"/>
+<attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="11000" measureUnitUK="В"/>
+<attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+<attribute id="3959" nameRU="Время непрерывной работы" type="real" nameUK="Час безперервної роботи" measureUnitRU="час" min="0" max="85" measureUnitUK="годин"/>
+<attribute id="4677" nameRU="Объем масляной системы двигателя" type="real" nameUK="Об'єм масляної системи двигуна" measureUnitRU="л" min="0" max="1000" measureUnitUK="л"/>
+<attribute id="4841" nameRU="Режим работы" type="singleselect" nameUK="Режим роботи">
+<attribute_value id="40700" nameRU="Непрерывный" nameUK="Безперервний"/>
+<attribute_value id="94987" nameRU="Аварийный" nameUK="Аварійний"/>
+</attribute>
+<attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+<attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+<attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+<attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+<attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+<attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+<attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+<attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+<attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+<attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+<attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+<attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+<attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+</attribute>
+<attribute id="5161" nameRU="Минимальная температура окружающей среды" type="real" nameUK="Мінімальна температура навколишнього середовища" measureUnitRU="град." min="-100" max="10" measureUnitUK="град."/>
+<attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+<attribute id="5409" nameRU="Максимальная мощность" type="real" nameUK="Максимальна потужність" measureUnitRU="кВт" min="0" max="3000" measureUnitUK="кВт"/>
+<attribute id="5490" nameRU="Срок службы" type="real" nameUK="Термін служби" measureUnitRU="лет" min="0" max="60" measureUnitUK="років"/>
+<attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+<attribute_value id="62854" nameRU="Для дома" nameUK="Для дому"/>
+<attribute_value id="361797" nameRU="Для котла и отопления" nameUK=""/>
+<attribute_value id="361798" nameRU="Для дачи" nameUK=""/>
+<attribute_value id="361799" nameRU="Для строительства" nameUK=""/>
+<attribute_value id="361800" nameRU="Для магазина / бизнеса" nameUK=""/>
+<attribute_value id="361801" nameRU="Для медоборудования" nameUK=""/>
+<attribute_value id="361802" nameRU="Для кемпинга" nameUK=""/>
+<attribute_value id="361803" nameRU="Для квартиры" nameUK=""/>
+</attribute>
+<attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+<attribute id="7440" nameRU="Потребление топлива" type="real" nameUK="Споживання палива" measureUnitRU="л/ч" min="0" max="700" measureUnitUK="л/год"/>
+<attribute id="7443" nameRU="Номинальная сила тока" type="real" nameUK="Номінальна сила струму" measureUnitRU="А" min="0" max="2000" measureUnitUK="А"/>
+<attribute id="7786" nameRU="Защита от перегрузки" type="bool" nameUK="Захист від перевантаження"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="10449" nameRU="Наличие вольтметра" type="bool" nameUK="Наявність вольтметра"/>
+<attribute id="10490" nameRU="Форма выходного напряжения" type="singleselect" nameUK="Форма вихідної напруги">
+<attribute_value id="93752" nameRU="Чистая синусоида" nameUK="Чиста синусоїда"/>
+<attribute_value id="349383" nameRU="Модифицированная синусоида" nameUK="Модифікована синусоїда"/>
+</attribute>
+<attribute id="10494" nameRU="Защита от короткого замыкания" type="bool" nameUK="Захист від короткого замикання"/>
+<attribute id="10657" nameRU="Коэффициент мощности" type="real" nameUK="Коефіцієнт потужності"/>
+<attribute id="10684" nameRU="Количество фаз" type="singleselect" nameUK="Кількість фаз">
+<attribute_value id="95830" nameRU="1" nameUK="1"/>
+<attribute_value id="95831" nameRU="2" nameUK="2"/>
+<attribute_value id="95832" nameRU="3" nameUK="3"/>
+<attribute_value id="301427" nameRU="1 и 3" nameUK="1 та 3"/>
+</attribute>
+<attribute id="10843" nameRU="Режимы запуска" type="multiselect" nameUK="Режими запуску">
+<attribute_value id="106393" nameRU="Автоматический запуск" nameUK="Автоматичний запуск"/>
+<attribute_value id="106394" nameRU="Ручной запуск" nameUK="Ручний запуск"/>
+<attribute_value id="106395" nameRU="Самовозврат" nameUK="Самоповернення"/>
+<attribute_value id="106396" nameRU="Электростартер" nameUK="Електростартер"/>
+<attribute_value id="120251" nameRU="Электрический" nameUK="Електричний"/>
+<attribute_value id="305231" nameRU="Дистанционный" nameUK="Дистанційний"/>
+</attribute>
+<attribute id="11246" nameRU="Тип генератора" type="singleselect" nameUK="Тип генератора">
+<attribute_value id="106388" nameRU="Синхронный" nameUK="Синхронний"/>
+<attribute_value id="106389" nameRU="Асинхронный" nameUK="Асинхронний"/>
+<attribute_value id="298631" nameRU="Инверторный" nameUK="Інверторний"/>
+<attribute_value id="345790" nameRU="Постоянного напряжения" nameUK="Постійної напруги"/>
+</attribute>
+<attribute id="11247" nameRU="Датчик уровня масла" type="bool" nameUK="Датчик рівня мастила"/>
+<attribute id="11248" nameRU="Компрессия" type="real" nameUK="Компресія"/>
+<attribute id="11596" nameRU="Материал обмотки" type="singleselect" nameUK="Матеріал обмотки">
+<attribute_value id="113032" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="113033" nameRU="Медь" nameUK="Мідь"/>
+<attribute_value id="361793" nameRU="медь + алюминий" nameUK="Медь + алюминий"/>
+</attribute>
+<attribute id="12267" nameRU="Полная мощность" type="real" nameUK="Повна потужність" measureUnitRU="кВА" min="0" max="10000" measureUnitUK="кВА"/>
+<attribute id="12268" nameRU="Счетчик моточасов" type="bool" nameUK="Лічильник мотогодин"/>
+<attribute id="12562" nameRU="Подключение устройства" type="singleselect" nameUK="Підключення пристрою">
+<attribute_value id="302407" nameRU="Розетка AC 230В" nameUK=""/>
+<attribute_value id="302408" nameRU="USB Type-C" nameUK=""/>
+<attribute_value id="302409" nameRU="USB Type-A" nameUK=""/>
+</attribute>
+<attribute id="14417" nameRU="Аккумулятор в комплекте" type="bool" nameUK="Акумулятор в комплекті"/>
+<attribute id="15370" nameRU="Автоматический регулятор напряжения" type="bool" nameUK="Автоматичний регулятор напруги"/>
+<attribute id="15450" nameRU="Пиковая мощность" type="real" nameUK="Пікова потужність" measureUnitRU="Вт" min="0" max="1500000" measureUnitUK="Вт"/>
+<attribute id="17621" nameRU="Расход газа (пропан-бутан)" type="real" nameUK="Витрата газу (пропан-бутан)" measureUnitRU="л/ч" min="0" max="200" measureUnitUK="л/год"/>
+<attribute id="17622" nameRU="Расход газа (метан)" type="real" nameUK="Витрата газу (метан)" measureUnitRU="куб. м/час" min="0" max="200" measureUnitUK="куб.м/год"/>
+<attribute id="18060" nameRU="Степень автоматизации" type="singleselect" nameUK="Ступінь автоматизації">
+<attribute_value id="243476" nameRU="1" nameUK="1"/>
+<attribute_value id="243477" nameRU="2" nameUK="2"/>
+<attribute_value id="243478" nameRU="3" nameUK="3"/>
+</attribute>
+<attribute id="18918" nameRU="Предпусковой подогрев" type="bool" nameUK="Передстартовий підігрів "/>
+<attribute id="18919" nameRU="Вход ATS" type="bool" nameUK="Вхід ATS"/>
+<attribute id="18920" nameRU="Параллельное подключение" type="bool" nameUK="Паралельне підключення"/>
+<attribute id="19434" nameRU="Оснащение генератора" type="singleselect" nameUK="Оснащення генератора">
+<attribute_value id="350256" nameRU="Автоматический регулятор напряжения (AVR)" nameUK=""/>
+<attribute_value id="350257" nameRU="В кожухе" nameUK=""/>
+<attribute_value id="350258" nameRU="Вольтметр" nameUK=""/>
+<attribute_value id="350259" nameRU="Выход постоянного тока 12 В" nameUK=""/>
+<attribute_value id="350260" nameRU="Датчик уровня масла" nameUK=""/>
+<attribute_value id="350261" nameRU="Датчик уровня топлива" nameUK=""/>
+<attribute_value id="350262" nameRU="Защита от короткого замыкания" nameUK=""/>
+<attribute_value id="350263" nameRU="Защита от низкого уровня масла" nameUK=""/>
+<attribute_value id="350264" nameRU="Защита от перегрузки" nameUK=""/>
+<attribute_value id="350265" nameRU="С аккумуляторной батареей" nameUK=""/>
+<attribute_value id="350266" nameRU="С дисплеем" nameUK=""/>
+<attribute_value id="350267" nameRU="С колесами" nameUK=""/>
+<attribute_value id="350268" nameRU="С подогревом охлаждающей жидкости" nameUK=""/>
+<attribute_value id="350269" nameRU="С правильной синусоидой" nameUK=""/>
+<attribute_value id="350270" nameRU="С системой подогрева топлива" nameUK=""/>
+<attribute_value id="350271" nameRU="Счетчик моточасов" nameUK=""/>
+</attribute>
+<attribute id="19435" nameRU="Система пуска генератора" type="singleselect" nameUK="Система запуску генератора">
+<attribute_value id="350272" nameRU="Автоматический пуск" nameUK=""/>
+<attribute_value id="350273" nameRU="Дистанционный пуск (пульт ДУ)" nameUK=""/>
+<attribute_value id="350274" nameRU="Ручной стартер" nameUK=""/>
+<attribute_value id="350275" nameRU="Электрический пуск" nameUK=""/>
+</attribute>
+</category>
+</categories>

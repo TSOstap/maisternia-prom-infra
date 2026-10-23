@@ -49,7 +49,7 @@ test("2. сире SEO → постачальник змінив опис → SEO
   assert.doesNotMatch(q(sim)["Перевірка"], /ПОТРЕБУЄ/);
 });
 
-test("3. власне SEO → постачальник змінив модель (MIG-20HB → MIG-22FD / 008388) → наше SEO збережено, попередження «було → стало»; затвердження заблоковано", async () => {
+test("3. власне SEO → постачальник змінив модель (MIG-20HB → MIG-22FD / 008388) → наше SEO збережено, попередження «було → стало» (інформаційне); затвердження не блокується", async () => {
   const sim = await queued();
   writeOwnSeo(sim);
   await sim.sync();
@@ -69,8 +69,11 @@ test("3. власне SEO → постачальник змінив модель
   sim.setCell(ID, "Категорія Prom ID", "501");
   sim.setDecision(ID, "ЗАТВЕРДЖЕНО (НЕ ДУБЛЬ)");
   const res = await sim.sync();
-  assert.equal(res.stats.approved, 0);
-  assert.match(q(sim)["Перевірка"], /НЕ ПЕРЕНЕСЕНО: ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ/);
+  assert.equal(res.stats.approved, 1, "попередження не блокує ручне затвердження");
+  const m = sim.rows(SHEET.main).find((x) => x["Offer ID"] === ID);
+  assert.equal(m["Назва UA"], "Наш SEO: зварювальний інвертор MIG-20HB", "наше SEO перенесено");
+  assert.equal(m["Артикул постачальника"], "008388", "сирі дані — нові");
+  assert.ok(sim.book[SHEET.journal].some((e) => e[2] === ID && e[6] === "ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ"), "попередження — у «Журналі»");
 });
 
 test("4. власне SEO → постачальник змінив характеристики → SEO збережено, попередження з конкретною характеристикою", async () => {
@@ -164,14 +167,23 @@ test("10. старий рядок без знімка SEO: власні текс
   assert.match(r["Перевірка"], /^ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ: походження SEO невідоме/);
   sim.setCell(ID, "Група ID", sim.rows(SHEET.main)[0]["Група ID"]);
   sim.setCell(ID, "Категорія Prom ID", "501");
-  sim.setDecision(ID, "ЗАТВЕРДЖЕНО");
-  assert.equal((await sim.sync()).stats.approved, 0, "затвердження заблоковано");
   sim.setDecision(ID, "SEO ПОСТАЧАЛЬНИКА");
   await sim.sync();
   r = q(sim);
   assert.equal(r["Опис UA"], "<p>Опис уже інший</p>", "підтверджено як копію постачальника — оновлено");
   assert.doesNotMatch(r["Перевірка"], /ПОТРЕБУЄ/);
   assert.equal(mtText(r["Рішення"]), "");
+  // (б2) походження невідоме — попередження інформаційне: «ЗАТВЕРДЖЕНО» не блокується, SEO переноситься без змін
+  sim = await queued();
+  strip(sim);
+  sim.setOffer({ id: ID, descUa: "Опис уже інший", descRu: "Описание уже другое" });
+  await sim.sync();
+  assert.match(q(sim)["Перевірка"], /^ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ: походження SEO невідоме/);
+  sim.setCell(ID, "Група ID", sim.rows(SHEET.main)[0]["Група ID"]);
+  sim.setCell(ID, "Категорія Prom ID", "501");
+  sim.setDecision(ID, "ЗАТВЕРДЖЕНО");
+  assert.equal((await sim.sync()).stats.approved, 1, "затвердження не блокується");
+  assert.equal(sim.rows(SHEET.main).find((x) => x["Offer ID"] === ID)["Опис UA"], "<p>Опис MIG-20HB</p>", "SEO не перезаписано");
   // (в) усе збігається з постачальником → сире: автооновлення
   sim = await queued();
   strip(sim);
@@ -239,14 +251,16 @@ test("режим intake застосовує ті самі правила: си�
   assert.match(q(sim)["Перевірка"], /^ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ: Постачальник змінив назву/);
 });
 
-test("власник поставив «ЗАТВЕРДЖЕНО» за сирим SEO, а постачальник у той самий момент змінив модель → копію не підмінено мовчки, затвердження заблоковано", async () => {
+test("власник поставив «ЗАТВЕРДЖЕНО» за сирим SEO, а постачальник у той самий момент змінив модель → копію не підмінено мовчки; затверджено те, що бачив власник, попередження в «Журналі»", async () => {
   const sim = await queued();
   sim.setCell(ID, "Група ID", sim.rows(SHEET.main)[0]["Група ID"]);
   sim.setCell(ID, "Категорія Prom ID", "501");
   sim.setDecision(ID, "ЗАТВЕРДЖЕНО");
   sim.setOffer({ id: ID, ...MIG22 });
   const res = await sim.sync();
-  assert.equal(res.stats.approved, 0);
-  assert.equal(q(sim)["Назва UA"], MIG20.nameUa, "те, що затверджував власник, не змінено");
-  assert.match(q(sim)["Перевірка"], /НЕ ПЕРЕНЕСЕНО: ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ/);
+  assert.equal(res.stats.approved, 1, "попередження не блокує затвердження");
+  const m = sim.rows(SHEET.main).find((x) => x["Offer ID"] === ID);
+  assert.equal(m["Назва UA"], MIG20.nameUa, "перенесено те, що затверджував власник (без мовчазної підміни)");
+  assert.equal(m["Назва постачальника UA"], MIG22.nameUa, "сирі дані — нові");
+  assert.ok(sim.book[SHEET.journal].some((e) => e[2] === ID && e[6] === "ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ"), "попередження — у «Журналі»");
 });

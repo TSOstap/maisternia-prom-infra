@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142004" nameRU="Наборы инструментов" nameUK="Набори інструментів">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+<attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+<attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+<attribute_value id="67488" nameRU="Металлический кейс" nameUK="Металевий кейс"/>
+<attribute_value id="82305" nameRU="Картонная коробка" nameUK="Картонна коробка"/>
+<attribute_value id="280382" nameRU="Ложемент" nameUK="Ложемент"/>
+</attribute>
+<attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+<attribute_value id="8059" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="8696" nameRU="Пластмасса" nameUK="Пластмаса"/>
+<attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="8699" nameRU="Резина" nameUK="Гума"/>
+<attribute_value id="31381" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="33399" nameRU="Керамика" nameUK="Кераміка"/>
+<attribute_value id="33402" nameRU="Ткань" nameUK="Тканина"/>
+<attribute_value id="33523" nameRU="Стекло" nameUK="Скло"/>
+<attribute_value id="35372" nameRU="Латунь" nameUK="Латунь"/>
+<attribute_value id="36534" nameRU="Полиэстер" nameUK="Поліестер"/>
+<attribute_value id="42610" nameRU="Силикон" nameUK="Силікон"/>
+<attribute_value id="61869" nameRU="Чугун" nameUK="Чавун"/>
+<attribute_value id="62586" nameRU="ПВХ" nameUK="ПВХ"/>
+<attribute_value id="73174" nameRU="Полиуретан" nameUK="Поліуретан"/>
+<attribute_value id="74175" nameRU="Полиамид" nameUK="Поліамід"/>
+<attribute_value id="127579" nameRU="Неопрен" nameUK="Неопрен"/>
+<attribute_value id="127646" nameRU="Дюралюминий" nameUK="Дюралюміній"/>
+<attribute_value id="128228" nameRU="Вольфрам" nameUK="Вольфрам"/>
+<attribute_value id="159631" nameRU="Натуральное дерево" nameUK="Натуральне дерево"/>
+<attribute_value id="302776" nameRU="Полиакрил" nameUK="Поліакріл"/>
+<attribute_value id="312482" nameRU="Кожа" nameUK="Шкіра"/>
+<attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+<attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+<attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+<attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+</attribute>
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="70257" nameRU="Набор электроинструмента" nameUK="Набір електроінструменту"/>
+<attribute_value id="70258" nameRU="Набор пневмоинструмента" nameUK="Набір пневмоінструменту"/>
+<attribute_value id="70259" nameRU="Набор гидравлического инструмента" nameUK="Набір гідравлічного інструменту"/>
+<attribute_value id="70260" nameRU="Набор ручного инструмента" nameUK="Набір ручного інструменту"/>
+<attribute_value id="78521" nameRU="Набор холодильного инструмента" nameUK="Набір холодильного інструменту"/>
+<attribute_value id="183360" nameRU="Набор инструментов для телекоммуникационных сетей" nameUK="Набір інструментів для телекомунікаційних мереж"/>
+</attribute>
+<attribute id="8657" nameRU="Набор ручного инструмента" type="singleselect" nameUK="Набір ручного інструменту">
+<attribute_value id="70261" nameRU="набор слесарно-столярного инструмента" nameUK="набір слюсарно-столярного інструменту"/>
+<attribute_value id="70262" nameRU="набор автомобильного инструмента" nameUK="набір автомобільного інструменту"/>
+<attribute_value id="70263" nameRU="набор электромонтажного инструмента" nameUK="набір електромонтажного інструменту"/>
+<attribute_value id="70264" nameRU="набор резьбонарезного инструмента" nameUK="набір різьбонарізного інструменту"/>
+<attribute_value id="70265" nameRU="набор шарнирно-губцевого инструмента" nameUK="набір шарнірно-губцевого інструменту"/>
+<attribute_value id="70266" nameRU="набор отверток" nameUK="набір викруток"/>
+<attribute_value id="70267" nameRU="набор напильников" nameUK="набір напилків"/>
+<attribute_value id="308868" nameRU="набор часовщика" nameUK="Набір годинникаря"/>
+</attribute>
+<attribute id="8658" nameRU="Количество инструментов в наборе" type="integer" nameUK="Кількість в наборі інструментів"/>
+<attribute id="9049" nameRU="Максимальный диаметр реза" type="real" nameUK="Максимальний діаметр реза" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+</category>
+</categories>

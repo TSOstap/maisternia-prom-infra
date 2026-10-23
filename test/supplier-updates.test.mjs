@@ -27,7 +27,7 @@ async function syncWith(sim, fetchFull) {
 }
 const passportOk = (sim) => samePassport(readPassport(sim.book[SHEET.passport]), approvalManifest(mainRows(sim), objectsFromValues(sim.book[SHEET.groups], GROUP_HEADERS)));
 
-test("основний каталог: модель / артикул / назви / характеристики / фото змінились під тим самим ID → прийнято автоматично; ціна й наявність оновлені; SEO збережено; Offer ID той самий; печатка й паспорт оновлено", async () => {
+test("основний каталог: модель / артикул / назви / сирі характеристики / фото змінились під тим самим ID → прийнято автоматично; ціна й наявність оновлені; SEO збережено; Offer ID той самий; печатка й паспорт оновлено", async () => {
   const sim = new WatchSim();
   await sim.start();
   const c = mainRows(sim).find((r) => !mtText(r["Код товару Prom"]));
@@ -43,7 +43,8 @@ test("основний каталог: модель / артикул / назв�
   assert.equal(a["Артикул постачальника"], "008388");
   assert.equal(a["Код товару Prom"], "008388", "код Prom іде за артикулом (був порожній)");
   assert.equal(a["Модель"], "MIG-22FD Professional");
-  assert.equal(a["Характеристики JSON"], JSON.stringify([{ name: "Максимальний зварювальний струм", value: "200", unit: "А" }]));
+  assert.equal(a["Характеристики постачальника JSON"], JSON.stringify([{ name: "Максимальний зварювальний струм", value: "200", unit: "А" }]), "сирі характеристики — нові");
+  assert.equal(a["Характеристики JSON"], c["Характеристики JSON"], "підготовлені характеристики без схеми категорії не перезаписано сирими");
   assert.equal(a["Фото JSON"], JSON.stringify(["https://images.prom.ua/4900000002_b.jpg", "https://images.prom.ua/4900000001_a.jpg"]));
   assert.deepEqual(["Назва UA", "Назва RU", "Опис UA", "Опис RU", "Запити UA", "Запити RU"].map((k) => a[k]), seo, "наше SEO не змінено");
   assert.equal(a["Стан синхронізації"], "ЗІСТАВЛЕНО", "не ЗМІНА_ІДЕНТИЧНОСТІ — ціни не заблоковано");
