@@ -319,3 +319,26 @@ test("нова позиція щоп'ять хвилин — GitHub запуск
   const added = sim.intakes.reduce((n, r) => n + (r.stats?.added || 0), 0);
   assert.ok(added > at.length, `додано ${added} позицій за ${at.length} запусків — пакетами`);
 });
+
+test("рядок черги до запуску контролю: intake оновив сирі дані — примітка «Перевірка» (схожість) перерахована за новими даними, не застаріла", async () => {
+  const sim = new WatchSim();
+  await sim.start();
+  const A = "2963000001", B = "2963000002";
+  const same = { nameUa: "Зварювальний апарат Test MIG-20 Master", nameRu: "Сварочный аппарат Test MIG-20 Master", sku: "MIG-20" };
+  sim.setOffer(fullOffer(A, same));
+  sim.setOffer(fullOffer(B, { ...same, pictures: ["https://images.prom.ua/4833333333_b.jpg"] }));
+  for (let k = 0; k < 3; k++) await sim.tick();
+  assert.match(sim.queueRow(B)["Перевірка"], /ЙМОВІРНО ТОЙ САМИЙ/);
+  // Як черга до 22.10.2026: колонок стану немає
+  const { QUEUE_STATE, SHEET } = await import("../src/core/sheet-sync.mjs");
+  const v = sim.book[SHEET.queue];
+  const keep = v[0].map((k, i) => (QUEUE_STATE.includes(k) ? -1 : i)).filter((i) => i >= 0);
+  sim.book[SHEET.queue] = v.map((r) => keep.map((i) => r[i]));
+  // Постачальник перетворив B на іншу модель
+  sim.setOffer({ id: B, nameUa: "Інвертор Test ZZTEST-777 Pro", nameRu: "Инвертор Test ZZTEST-777 Pro", sku: "ZZTEST-777" });
+  const { intakeAll } = await import("./helpers/intake.mjs");
+  await intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { stamp: sim.stamp(), now: sim.now, config: sim.config, ready: [] });
+  const b = sim.queueRow(B);
+  assert.equal(b["Артикул постачальника"], "ZZTEST-777", "сирі дані оновлено");
+  assert.doesNotMatch(b["Перевірка"], /ЙМОВІРНО ТОЙ САМИЙ/, "застарілої примітки немає");
+});

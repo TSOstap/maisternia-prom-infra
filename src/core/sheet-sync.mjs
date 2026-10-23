@@ -605,7 +605,9 @@ export function planIntake({ book, parsed, fullById, stamp, config, now, ready =
   const index = dupIndexFor({ mainRows: main.rows, queueRows: [...kept, ...newRows], deferredRows: deferred, offers: parsed.offers });
   kept.forEach((r, i) => {
     const rq = refreshed[i];
-    if (!rq.changed && !rq.verified && !rq.recheck.length && !rq.notes.length) return; // без змін — «Перевірку» лишаємо (рішення обробить синхронізація)
+    // Без змін — «Перевірку» лишаємо (рішення обробить синхронізація). Змінились сирі поля (також у рядку, доданому
+    // до запуску контролю, де перший прохід лише ставить базову SHA) — схожість перераховується за новими даними.
+    if (!rq.changed && !rq.verified && !rq.recheck.length && !rq.notes.length && !rq.entries.some((e) => e[6] !== "РІШЕННЯ ВЛАСНИКА")) return;
     const dup = dupNote(findDuplicates(index, queueEntry(r)), { frozen: frozenIds.has(mtText(r["ID постачальника"])) });
     r["Перевірка"] = withNonProduct(queueEntryNote(rq, [dup]), nonProductReason(r, auditTypes));
   });
