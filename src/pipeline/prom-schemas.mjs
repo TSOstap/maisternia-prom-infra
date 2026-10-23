@@ -12,7 +12,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { sha256 } from "../core/text.mjs";
 import { parseCategory, parseSchemaText } from "../core/prom-schema.mjs";
-import { buildNames, normName } from "../core/prom-attributes.mjs";
+import { buildNames, normName, unitAliasMap } from "../core/prom-attributes.mjs";
 
 export const SCHEMAS_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../schemas/prom");
 const readJson = (f, d) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : d);
@@ -50,7 +50,10 @@ export function loadPromCatalog(dir = SCHEMAS_DIR) {
     if (m || Object.keys(mapping.synonyms).length) out.mappings.set(String(e.id), mapping);
   }
   // Підтверджені UA/RU відповідності: офіційні пари назв зі схем Prom + погоджений власником словник.
-  out.names = buildNames([...out.schemas.values()], readJson(path.join(dir, "names-ua-ru.json"), {}).names || {});
+  // Синоніми одиниць — однозначна технічна нормалізація (units.json → aliases); погоджений словник — names / values.
+  out.units.aliasMap = unitAliasMap(out.units.aliases);
+  const dict = readJson(path.join(dir, "names-ua-ru.json"), {});
+  out.names = buildNames([...out.schemas.values()], dict.names || {}, out.units.aliasMap, dict.values || {});
   return out;
 }
 
