@@ -172,7 +172,7 @@ export function mapParam(schema, param, { mapping, units } = {}) {
 }
 
 // ---------- опис постачальника ----------
-const ENT = { nbsp: " ", ndash: "–", mdash: "—", minus: "−", deg: "°", sup1: "¹", sup2: "²", sup3: "³", rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", laquo: "«", raquo: "»", times: "×", plusmn: "±", frac12: "½", frac14: "¼", frac34: "¾", hellip: "…", middot: "·", bull: "•", micro: "µ", prime: "′", Prime: "″", quot: '"', apos: "'", amp: "&", lt: "<", gt: ">", Oslash: "Ø", oslash: "ø", asymp: "≈", le: "≤", ge: "≥", trade: "™", reg: "®", copy: "©" };
+const ENT = { ensp: " ", emsp: " ", thinsp: " ", zwnj: "", zwj: "", shy: "", nbsp: " ", ndash: "–", mdash: "—", minus: "−", deg: "°", sup1: "¹", sup2: "²", sup3: "³", rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", laquo: "«", raquo: "»", times: "×", plusmn: "±", frac12: "½", frac14: "¼", frac34: "¾", hellip: "…", middot: "·", bull: "•", micro: "µ", prime: "′", Prime: "″", quot: '"', apos: "'", amp: "&", lt: "<", gt: ">", Oslash: "Ø", oslash: "ø", asymp: "≈", le: "≤", ge: "≥", trade: "™", reg: "®", copy: "©" };
 /** HTML-сутності → символи (текст так, як його бачить покупець в описі); невідомі лишаються як є. */
 export const htmlText = (v) => mtText(v).replace(/&(#x[0-9a-f]+|#\d+|[a-z]+\d*);/gi, (all, k) => (k[0] === "#" ? String.fromCodePoint(k[1].toLowerCase() === "x" ? parseInt(k.slice(2), 16) : Number(k.slice(1))) : ENT[k] ?? ENT[k.toLowerCase()] ?? all));
 const textOf = (html) => htmlText(mtDecode(mtText(html).replace(/<[^>]+>/g, " ").replace(/&nbsp;|&#160;/gi, " "))).replace(/\s+/g, " ").trim();
@@ -258,7 +258,8 @@ const HOMO = { a: "а", e: "е", o: "о", p: "р", c: "с", x: "х", y: "у", i:
  *  декоративні символи на початку («✔»), лапки, десятковий роздільник, пробіли в числах і діапазонах, одиниці
  *  (синоніми одиниць), латиниця-двійник кирилиці, кінцева пунктуація. Значення для Prom не змінюється. */
 export function normValue(v, names = null) {
-  let s = htmlText(v).toLowerCase().replace(/ё/g, "е").replace(/[’ʼ`´]/g, "'");
+  // Невидимі символи й типографські пробіли; «²» / «³» = «2» / «3» (м/с² = м/с2) — однозначна технічна нормалізація.
+  let s = htmlText(v).replace(/[\u200b-\u200d\u2060\ufeff\u00ad]/g, "").replace(/[\u00a0\u2000-\u200a\u202f]/g, " ").replace(/²/g, "2").replace(/³/g, "3").toLowerCase().replace(/ё/g, "е").replace(/[’ʼ`´]/g, "'");
   s = s.replace(/^[\s✔✓✅☑•·*–—-]+/u, "").replace(/[«»"“”„]/g, "");
   s = s.replace(/(\d)\s*[–—-]\s*(\d)/g, "$1-$2").replace(/(\d)[\s  ](?=\d{3}(?!\d))/g, "$1").replace(/(\d),(\d)/g, "$1.$2");
   s = s.replace(/(\d)\s*([a-zа-яіїєґ°℃²³*·]+(?:\.?\/?[a-zа-яіїєґ°²³]+)*)\.?/giu, (all, d, u) => `${d} ${names?.unitKnown?.(u) ? names.unitCanon(u) : u}`);
@@ -294,7 +295,13 @@ export function buildNames(schemas, approved = {}, aliasMap = new Map(), approve
   for (const [k, v] of Object.entries(approvedValues || {})) { const c = normValue(v, names); value.set(normValue(k, names), c); value.set(c, c); }
   return names;
 }
-const canonName = (names, n) => names?.name.get(normName(n)) || mtText(n).trim();
+// Відповідність назв — до кінцевої форми (ланцюжок «Источник питания» → «Джерело живлення» → «Живлення»), інакше ключі
+// тієї самої характеристики розходяться й виникають дублі. Зациклення неможливе (обмеження кроків).
+const canonName = (names, n) => {
+  let cur = mtText(n).trim();
+  for (let i = 0; i < 5; i++) { const next = names?.name.get(normName(cur)); if (!next || normName(next) === normName(cur)) break; cur = next; }
+  return cur;
+};
 const unitC = (u, names) => (names?.unitCanon ? names.unitCanon(u) : normUnit(u));
 function numUnit(p, names) {
   let v = htmlText(p.value).trim(), u = htmlText(p.unit).trim();
@@ -391,7 +398,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
   const notes = [];
-  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [] }, aligned: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [] };
+  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [] }, aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [] };
   if (!schema && mode === "main") { notes.push(`немає схеми категорії ${categoryId || "?"} — підготовлені характеристики не змінено`); return unchanged; }
   const opt = { mapping, units };
   const fmt = (p) => `${p.name}: ${p.value}${p.unit ? " " + p.unit : ""}`;
@@ -469,37 +476,20 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     const pk = (pr) => normName(pr.m.attr ? pr.m.attr.nameUK || pr.m.attr.nameRU : nameOf(pr.key));
     const pv = (pr) => ({ value: htmlText(pr.value).trim(), unit: "" });
     const al = alignPairs(U, R, (u, r) => (pk(u) === pk(r) ? 2 : sameValue(pv(u), pv(r), names) ? 1 : 0));
-    const twinU = new Map(al.map((x) => [x.u, x])), twinR = new Map(al.map((x) => [x.r, x]));
     const uaKeys = new Set(U.map(pk));
-    const isField = (pr) => pr.m.ok && cand.has(pr.m.attr.id);
     const dx = { ua: new Map(), ru: new Map() };
     const add = (lang, key, pr, name) => dx[lang].set(key, [...(dx[lang].get(key) || []), { pr, out: { name, value: pv(pr).value, unit: "" } }]);
     const nameOfPair = (pr) => (pr.m.attr ? pr.m.attr.nameUK || pr.m.attr.nameRU : nameOf(pr.key));
-    for (const u of U) {
-      if (u.m.ok) continue;
-      const x = twinU.get(u);
-      // UA-пара, якій за позицією відповідає RU-пара, що стала полем категорії (RU-назва є в схемі, UA — ні).
-      if (x && x.s < 2 && isField(x.r)) {
-        if (x.s === 1) { aligned.push({ ua: u, ru: x.r, how: "UA → поле з RU-опису" }); continue; }
-        review(nameOfPair(u), [label(u), label(x.r)], `ймовірно та сама характеристика (позиція в описі), що й поле «${x.r.m.out.name}» з RU-опису; назву й значення не підтверджено` + hint(u.value, x.r.value));
-        gapProps.push({ ua: u, ru: x.r });
-        continue;
-      }
-      add("ua", pk(u), u, nameOfPair(u));
-    }
+    // Позиція в описі, однакові числа, латиниця чи «Так/Да» НЕ підтверджують, що це та сама характеристика (власник,
+    // 24.10.2026: «Реверс — Так» ≠ «Подсветка — Да»). Вирівнювання — лише джерело ПРОПОЗИЦІЙ для словника; на
+    // результат не впливає: непідтверджена RU-пара не об'єднується й не відкидається — передається окремо.
+    for (const x of al) if (x.s === 1) aligned.push({ ua: x.u, ru: x.r, how: "та сама позиція й значення" }); else if (x.s === 0) gapProps.push({ ua: x.u, ru: x.r });
+    for (const u of U) if (!u.m.ok) add("ua", pk(u), u, nameOfPair(u));
     for (const r of R) {
       if (r.m.ok) continue;
       const key = pk(r);
-      if (uaKeys.has(key)) { add("ru", key, r, nameOfPair(r)); continue; } // та сама (підтверджена) характеристика є в UA-описі
-      const x = twinR.get(r);
-      if (x && x.s === 1) { aligned.push({ ua: x.u, ru: r, how: "RU = UA за позицією й значенням" }); continue; }
-      if (x && x.s === 0) {
-        review(nameOfPair(r), [label(x.u), label(r)], "ймовірно та сама характеристика (позиція в описі), назву й значення не підтверджено" + hint(x.u.value, r.value));
-        gapProps.push({ ua: x.u, ru: r });
-        continue;
-      }
-      ruOnly.push(r);
-      add("ru", key, r, nameOfPair(r)); // лише в RU-описі: оригінальна назва (або підтверджена українська)
+      if (!uaKeys.has(key)) ruOnly.push(r); // підтвердженої UA-відповідності немає — оригінальна назва (або підтверджена українська)
+      add("ru", key, r, nameOfPair(r));
     }
     for (const key of new Set([...dx.ua.keys(), ...dx.ru.keys()])) {
       const ua = dx.ua.get(key) || [], ru = dx.ru.get(key) || [];
@@ -683,7 +673,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const reviewNotes = needsReview.map((r) => `ПОТРЕБУЄ ПЕРЕВІРКИ «${r.name}»: ${r.values.map((v) => `${v.src} «${v.value}»`).join(" / ")} — ${r.reason}`);
   const provenanceOut = { v: 1, cat: String(categoryId || ""), items, x: [...suppressed], notes: [...reviewNotes, ...conflictsU, ...notes].slice(0, 30) };
   return {
-    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps }, aligned: aligned.length, ruOnly: ruOnly.length, ruDup: aligned.map((x) => `«${x.ru.key}: ${htmlText(x.ru.value)}» ↔ «${x.ua.key}: ${htmlText(x.ua.value)}» (${x.how})`), removed, descRanges, unmapped,
+    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps }, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped,
     changed: JSON.stringify(result) !== JSON.stringify(cur),
   };
 }
