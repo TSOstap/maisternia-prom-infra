@@ -326,6 +326,14 @@ export function verifyReady(entry, raw, now, { rules = INTAKE_RULES, profile = "
   return { ok: true };
 }
 
+/** Обмежений набір кандидатів (контрольований тест): перші n за часом першого виявлення, потім за ID; 0 — усі. */
+export function limitReady(ready, n) {
+  const list = (Array.isArray(ready) ? ready : []).filter((e) => /^\d+$/.test(String(e?.id || "")));
+  const sorted = list.slice().sort((a, b) => String(a.firstSeen).localeCompare(String(b.firstSeen)) || String(a.id).localeCompare(String(b.id)));
+  const k = Number(n);
+  return Number.isInteger(k) && k > 0 ? sorted.slice(0, k) : sorted;
+}
+
 /** Адреса фіду для Worker: та сама база (TOOLS_FEED_URL), інший набір полів. */
 export function watchFeedUrl(base, profile = "medium") {
   let url = mtText(base);

@@ -214,8 +214,13 @@ test("захисти: повторний запуск intake без дублів
   for (let k = 0; k < 3; k++) await sim.tick();
   assert.ok(sim.queueRow(ID));
   const before = sim.rows().length;
-  const again = await sim.github(); // той самий список ще раз
-  assert.equal(again.stats.results["ВЖЕ Є"], 1);
+  const again = await sim.github(); // повторний запуск: DO доданого вже не віддає
+  assert.equal(again.stats.ready, 0, "DO не передає доданого повторно");
+  assert.equal(sim.rows().length, before, "без дубля");
+  // Навіть якщо старий список потрапить в intake напряму — «ВЖЕ Є», без другої позиції
+  const { intakeAll, readyFromXml } = await import("./helpers/intake.mjs");
+  const direct = await intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { stamp: sim.stamp(), now: sim.now, config: sim.config, ready: readyFromXml(sim.xml(), sim.now, { ids: [ID] }) });
+  assert.equal(direct.stats.results["ВЖЕ Є"], 1);
   assert.equal(sim.rows().length, before, "без дубля");
 
   // Підтвердження не дійшло (GitHub упав після запису) — Worker повторить після тайм-ауту

@@ -379,3 +379,31 @@ test("серія, рівень 2: «залишковий» alarm після за
   assert.equal((await sim.status()).series.done, 2);
   assert.equal(sim.dctx.alarm, null);
 });
+
+test("контрольований intake: ліміт N (за часом виявлення), повторна передача неможлива — /intake не віддає доданих, змінених чи зниклих", async () => {
+  const { limitReady } = await import("../src/core/intake.mjs");
+  const list = [{ id: "3", firstSeen: "2026-10-22T10:02:00Z" }, { id: "1", firstSeen: "2026-10-22T10:00:00Z" }, { id: "2", firstSeen: "2026-10-22T10:00:00Z" }, { id: "bad" }];
+  assert.deepEqual(limitReady(list, 2).map((e) => e.id), ["1", "2"]);
+  assert.deepEqual(limitReady(list, 0).map((e) => e.id), ["1", "2", "3"]);
+  assert.deepEqual(limitReady(list, "x").map((e) => e.id), ["1", "2", "3"]);
+  const sim = new WatchSim();
+  delete sim.env.GITHUB_TOKEN; // лише спостереження: GitHub запускаємо вручну
+  await sim.start();
+  for (let k = 0; k < 3; k++) sim.setOffer(fullOffer(String(2982000001 + k)));
+  for (let k = 0; k < 3; k++) await sim.tick();
+  let i = await (await sim.core.fetch(sim.req("/intake"))).json();
+  assert.equal(i.ready.length, 3);
+  // Ручний intake лише 2 з 3
+  const r = await (await import("./helpers/intake.mjs")).intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { stamp: sim.stamp(), now: sim.now, config: sim.config, ready: limitReady(i.ready, 2) });
+  assert.equal(r.stats.added, 2);
+  await sim.core.fetch(sim.req("/ack", "POST", r.ack));
+  i = await (await sim.core.fetch(sim.req("/intake"))).json();
+  assert.equal(i.ready.length, 1, "додані не віддаються повторно");
+  assert.equal(i.offered, 3);
+  // Третій змінився — теж не віддається, доки знову не стабілізується
+  sim.setOffer({ id: "2982000003", sku: "CHANGED" });
+  await sim.tick();
+  i = await (await sim.core.fetch(sim.req("/intake"))).json();
+  assert.equal(i.ready.length, 0, "змінений не віддається зі старим відбитком");
+  assert.equal(sim.rows().filter((x) => String(x["Offer ID"]).startsWith("298200000")).length, 2, "без дублів");
+});

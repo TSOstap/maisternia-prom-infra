@@ -28,6 +28,7 @@ import { operationalUrl, parseSupplierText, validateFeed } from "../src/core/sup
 import { readSheet } from "../src/core/sync-plan.mjs";
 import { sanitize, mtText, sha256 } from "../src/core/text.mjs";
 import { SHEET, extractFullOffers } from "../src/core/sheet-sync.mjs";
+import { limitReady } from "../src/core/intake.mjs";
 import { intakeSheet, mergeNew92, syncSheet, refreshCopyFromLive, recordBlocked, feedBlock, SYNC_SHEETS, REFRESH_SHEETS } from "../src/pipeline/sheet-sync-run.mjs";
 import { findLastSync } from "../src/verify/supplier-shadow.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
@@ -180,7 +181,12 @@ try {
       if (mode === "intake") {
         const list = await readyList();
         if (!list) report.result = { state: "SKIPPED", reason: "немає списку кандидатів (Worker не налаштовано) — новинки лишаються кандидатами" };
-        else report.result = await intakeSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now: NOW, ready: list.ready || [], profile: list.profile || config.intake?.profile || "medium" });
+        else {
+          // Контрольований тест: MM_INTAKE_LIMIT (вхід workflow «intake_limit», лише число) — передати не більше N кандидатів.
+          const ready = limitReady(list.ready || [], process.env.MM_INTAKE_LIMIT || 0);
+          report.intakeInput = { offeredByWatch: (list.ready || []).length, passed: ready.length, limit: Number(process.env.MM_INTAKE_LIMIT || 0) };
+          report.result = await intakeSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now: NOW, ready, profile: list.profile || config.intake?.profile || "medium" });
+        }
       } else report.result = await syncSheet({ sheets, readBook, parsed, fetchFull, stamp, config, now: NOW, profile: config.intake?.profile || "medium" });
       // Звіт для Worker містить ID — у вивід не потрапляє.
       if (report.result?.ack !== undefined) { report.ackSent = await sendAck(report.result.ack); delete report.result.ack; }

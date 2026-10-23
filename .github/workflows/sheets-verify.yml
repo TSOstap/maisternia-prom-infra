@@ -21,6 +21,10 @@ on:
         type: choice
         options: [sheets, supplier-shadow, shadow-publish, copy-refresh, copy-merge, copy-sync, copy-scenario, copy-scenario-mass, copy-intake]
         default: sheets
+      intake_limit:
+        description: "copy-intake: не більше N кандидатів (0 — усі). Лише число, без ID і адрес."
+        type: string
+        default: "0"
 permissions:
   contents: read
   id-token: write          # лише запит OIDC-токена GitHub; права запису в репозиторій не дає
@@ -122,4 +126,5 @@ jobs:
           # «Сторож новинок» (Worker): список кандидатів і звіт. Поки секретів немає — intake SKIPPED, звіт «не налаштовано».
           MM_WATCH_URL: ${{ secrets.MM_WATCH_URL }}
           MM_WATCH_KEY: ${{ secrets.MM_WATCH_KEY }}
+          MM_INTAKE_LIMIT: ${{ inputs.intake_limit }}
         run: node tools/sheet-sync.mjs --mode="${MODE#copy-}" --source=api --summary="$GITHUB_STEP_SUMMARY"

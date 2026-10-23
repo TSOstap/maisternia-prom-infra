@@ -168,7 +168,11 @@ export class WatchCore {
     }
     if (req.method === "GET" && url.pathname === "/intake") {
       const s = this.store.load();
-      return json(s.lastDispatch || { profile: profileOf(this.env), ready: [], refresh: [] });
+      const d = s.lastDispatch || { profile: profileOf(this.env), ready: [], refresh: [] };
+      const known = new Set(s.known?.ids || []);
+      // Лише кандидати, що досі очікують із тим самим відбитком: додані (у базі відомих), зниклі чи змінені — не повторюємо.
+      const ready = (d.ready || []).filter((e) => !known.has(e.id) && s.candidates[e.id] && s.candidates[e.id].fp === e.fp && ["ГОТОВИЙ", "ПЕРЕДАНО"].includes(s.candidates[e.id].status));
+      return json({ ...d, ready, offered: (d.ready || []).length });
     }
     if (req.method === "POST" && url.pathname === "/ack") {
       const body = await req.text();
