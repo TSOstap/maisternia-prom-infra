@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="12110201" nameRU="Автомобильные домкраты, подставки" nameUK="Автомобільні домкрати, підставки">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="1280" nameRU="Грузоподъемность" type="real" nameUK="Вантажопідйомність" measureUnitRU="кг" min="0" max="100000" measureUnitUK="кг"/>
+    <attribute id="1342" nameRU="Высота подъема" type="real" nameUK="Висота підйому" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="5838" nameRU="Собственный вес" type="real" nameUK="Власна вага" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="5978" nameRU="Ширина площадки" type="real" nameUK="Ширина майданчика" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="5979" nameRU="Длина площадки" type="real" nameUK="Довжина майданчика" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="6269" nameRU="Высота подхвата" type="real" nameUK="Висота підхоплення" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="6292" nameRU="Домкрат подкатной" type="bool" nameUK="Домкрат підкатний"/>
+    <attribute id="6295" nameRU="Принцип действия автомобильного домкрата" type="singleselect" nameUK="Принцип дії автомобільного домкрата">
+      <attribute_value id="43434" nameRU="Гидравлический" nameUK="Гідравлічний"/>
+      <attribute_value id="43435" nameRU="Винтовой" nameUK="Гвинтовий"/>
+      <attribute_value id="43436" nameRU="Реечный" nameUK="Рейковий"/>
+      <attribute_value id="153062" nameRU="Пневматический" nameUK="Пневматичний"/>
+      <attribute_value id="153063" nameRU="Пневмогидравлический" nameUK="Пневмогідравлічний"/>
+      <attribute_value id="330541" nameRU="Электрогидравлический" nameUK="Електрогідравлічний"/>
+      <attribute_value id="350180" nameRU="Механические" nameUK="Механічний"/>
+      <attribute_value id="350181" nameRU="Пневмогидравлические" nameUK="Пневмогідравлічний"/>
+      <attribute_value id="350182" nameRU="Электрический" nameUK="Електричний"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="18319" nameRU="Артикул производителя" type="free" nameUK="Артикул виробника"/>
+    <attribute id="19254" nameRU="Модель/Серия продукта" type="free" nameUK="Модель/Серія продукту"/>
+    <attribute id="19430" nameRU="Вид домкратов" type="singleselect" nameUK="Вид домкратів">
+      <attribute_value id="350183" nameRU="Бутылочные" nameUK="Пляшкові"/>
+      <attribute_value id="350184" nameRU="Подкатные" nameUK="Підкатні"/>
+      <attribute_value id="350185" nameRU="Подставки" nameUK="Підставки"/>
+      <attribute_value id="350186" nameRU="Распорки" nameUK="Розпорки"/>
+      <attribute_value id="350187" nameRU="Реечные" nameUK="Рейкові"/>
+      <attribute_value id="350188" nameRU="Ромбовидные" nameUK="Ромбоподібні"/>
+    </attribute>
+  </category>
+</categories>

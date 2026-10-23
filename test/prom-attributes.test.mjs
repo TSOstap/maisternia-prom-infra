@@ -15,11 +15,11 @@ const GRIND = "141717", SAW = "1250302", GEN = "410402"; // Шліфувальн
 const attrOf = (id, name) => S(id).attributes.find((a) => a.nameUK === name);
 const P = (name, value, unit = "") => ({ name, value, unit });
 
-test("схеми: 45 категорій із MANIFEST завантажено без помилок; порожні «…, загальне» — коректні, без атрибутів", () => {
+test("схеми: 48 категорій із MANIFEST завантажено без помилок; порожні «…, загальне» — коректні, без атрибутів", () => {
   assert.deepEqual(catalog.problems, []);
-  assert.equal(catalog.schemas.size, 45);
+  assert.equal(catalog.schemas.size, 48);
   assert.equal(S("141714").nameUK, "Електричні гайковерти");
-  assert.equal(S("12110201", true), undefined, "обірвана схема не імпортована");
+  assert.equal(S("12110201").attributes.length, 16, "повна схема (обірваний фрагмент раніше не імпортовано)");
   assert.equal(S("410499").empty, true);
   assert.equal(S("52807").empty, true);
   assert.equal(S(GEN).attributes.length, 66);

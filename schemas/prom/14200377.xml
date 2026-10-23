@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200377" nameRU="Монтажные присоски" nameUK="Монтажні присоски">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="1000" measureUnitUK="г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="64738" nameRU="металл" nameUK="метал"/>
+    </attribute>
+    <attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+    <attribute id="1280" nameRU="Грузоподъемность" type="real" nameUK="Вантажопідйомність" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+    <attribute id="7687" nameRU="Тип присоски" type="singleselect" nameUK="Тип присоски">
+      <attribute_value id="65030" nameRU="Стандартная (прямая)" nameUK="Стандартна (пряма)"/>
+      <attribute_value id="65031" nameRU="Угловая" nameUK="Кутова"/>
+      <attribute_value id="65032" nameRU="Угловая регулируемая" nameUK="Кутова регульована"/>
+    </attribute>
+    <attribute id="7688" nameRU="Количество присосок" type="real" nameUK="Кількість присосок"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

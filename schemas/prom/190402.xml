@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="190402" nameRU="Лазерные нивелиры, уровни, сканеры" nameUK="Лазерні нівеліри, рівні, сканери">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="8807" nameRU="Батарейки" nameUK="Батарейки"/>
+    </attribute>
+    <attribute id="24" nameRU="Блокировка кнопки включения" type="bool" nameUK="Блокування кнопки включення"/>
+    <attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+      <attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+      <attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+      <attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+    </attribute>
+    <attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="20" measureUnitUK="А. г"/>
+    <attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="36" measureUnitUK="В"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+      <attribute_value id="82305" nameRU="Картонная коробка" nameUK="Картонна коробка"/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="600" measureUnitUK="мм"/>
+    <attribute id="728" nameRU="Тип компенсатора" type="singleselect" nameUK="Тип компенсатора">
+      <attribute_value id="8793" nameRU="Магнитный" nameUK="Магнітний"/>
+      <attribute_value id="307288" nameRU="Электронный" nameUK="Електронний"/>
+    </attribute>
+    <attribute id="732" nameRU="Рабочий диапазон" type="real" nameUK="Робочий діапазон" measureUnitRU="м" min="0" max="1500" measureUnitUK="м"/>
+    <attribute id="735" nameRU="Штатив" type="bool" nameUK="Штатив"/>
+    <attribute id="738" nameRU="Погрешность измерения" type="real" nameUK="Похибка вимірювання" measureUnitRU="мм/м" min="0" max="2" measureUnitUK="мм/м"/>
+    <attribute id="740" nameRU="Время автоматического нивелирования" type="real" nameUK="Час автоматичного нівелювання" measureUnitRU="сек" min="0" max="10" measureUnitUK="сек"/>
+    <attribute id="742" nameRU="Угол самовыравнивания" type="real" nameUK="Кут самовирівнювання" measureUnitRU="град." min="0" max="10" measureUnitUK="град."/>
+    <attribute id="745" nameRU="Класс лазера" type="singleselect" nameUK="Клас лазера">
+      <attribute_value id="8808" nameRU="Класс 1" nameUK="Клас 1"/>
+      <attribute_value id="8809" nameRU="Класс 2" nameUK="Клас 2"/>
+      <attribute_value id="8810" nameRU="Класс 2b" nameUK="Клас 2b"/>
+      <attribute_value id="8811" nameRU="Класс 3" nameUK="Клас 3"/>
+      <attribute_value id="8812" nameRU="Класс 3b" nameUK="Клас 3b"/>
+      <attribute_value id="8813" nameRU="Класс 4" nameUK="Клас 4"/>
+    </attribute>
+    <attribute id="747" nameRU="Лазерный диод" type="real" nameUK="Лазерний діод" measureUnitRU="нм" min="0" max="1000" measureUnitUK="нм"/>
+    <attribute id="3290" nameRU="Регулируемые опоры" type="bool" nameUK="Регульовані опори"/>
+    <attribute id="6300" nameRU="Защита оборудования от воды и пыли IP" type="singleselect" nameUK="Захист обладнання від води і пилу IP">
+      <attribute_value id="43463" nameRU="IP10" nameUK="IP10"/>
+      <attribute_value id="43464" nameRU="IP11" nameUK="IP11"/>
+      <attribute_value id="43465" nameRU="IP12" nameUK="IP12"/>
+      <attribute_value id="43466" nameRU="IP13" nameUK="IP13"/>
+      <attribute_value id="43467" nameRU="IP14" nameUK="IP14"/>
+      <attribute_value id="43468" nameRU="IP15" nameUK="IP15"/>
+      <attribute_value id="43469" nameRU="IP16" nameUK="IP16"/>
+      <attribute_value id="43470" nameRU="IP17" nameUK="IP17"/>
+      <attribute_value id="43471" nameRU="IP18" nameUK="IP18"/>
+      <attribute_value id="43472" nameRU="IP19" nameUK="IP19"/>
+      <attribute_value id="43473" nameRU="IP20" nameUK="IP20"/>
+      <attribute_value id="43474" nameRU="IP21" nameUK="IP21"/>
+      <attribute_value id="43475" nameRU="IP22" nameUK="IP22"/>
+      <attribute_value id="43476" nameRU="IP23" nameUK="IP23"/>
+      <attribute_value id="43477" nameRU="IP24" nameUK="IP24"/>
+      <attribute_value id="43478" nameRU="IP25" nameUK="IP25"/>
+      <attribute_value id="43479" nameRU="IP26" nameUK="IP26"/>
+      <attribute_value id="43480" nameRU="IP27" nameUK="IP27"/>
+      <attribute_value id="43481" nameRU="IP28" nameUK="IP28"/>
+      <attribute_value id="43482" nameRU="IP29" nameUK="IP29"/>
+      <attribute_value id="43483" nameRU="IP30" nameUK="IP30"/>
+      <attribute_value id="43484" nameRU="IP31" nameUK="IP31"/>
+      <attribute_value id="43485" nameRU="IP32" nameUK="IP32"/>
+      <attribute_value id="43486" nameRU="IP33" nameUK="IP33"/>
+      <attribute_value id="43487" nameRU="IP34" nameUK="IP34"/>
+      <attribute_value id="43488" nameRU="IP35" nameUK="IP35"/>
+      <attribute_value id="43489" nameRU="IP36" nameUK="IP36"/>
+      <attribute_value id="43490" nameRU="IP37" nameUK="IP37"/>
+      <attribute_value id="43491" nameRU="IP38" nameUK="IP38"/>
+      <attribute_value id="43492" nameRU="IP39" nameUK="IP39"/>
+      <attribute_value id="43493" nameRU="IP40" nameUK="IP40"/>
+      <attribute_value id="43494" nameRU="IP41" nameUK="IP41"/>
+      <attribute_value id="43495" nameRU="IP42" nameUK="IP42"/>
+      <attribute_value id="43496" nameRU="IP44" nameUK="IP44"/>
+      <attribute_value id="43497" nameRU="IP45" nameUK="IP45"/>
+      <attribute_value id="43498" nameRU="IP46" nameUK="IP46"/>
+      <attribute_value id="43499" nameRU="IP47" nameUK="IP47"/>
+      <attribute_value id="43500" nameRU="IP48" nameUK="IP48"/>
+      <attribute_value id="43501" nameRU="IP49" nameUK="IP49"/>
+      <attribute_value id="43502" nameRU="IP50" nameUK="IP50"/>
+      <attribute_value id="43503" nameRU="IP51" nameUK="IP51"/>
+      <attribute_value id="43504" nameRU="IP52" nameUK="IP52"/>
+      <attribute_value id="43505" nameRU="IP53" nameUK="IP53"/>
+      <attribute_value id="43506" nameRU="IP54" nameUK="IP54"/>
+      <attribute_value id="43507" nameRU="IP55" nameUK="IP55"/>
+      <attribute_value id="43508" nameRU="IP56" nameUK="IP56"/>
+      <attribute_value id="43509" nameRU="IP57" nameUK="IP57"/>
+      <attribute_value id="43510" nameRU="IP58" nameUK="IP58"/>
+      <attribute_value id="43511" nameRU="IP59" nameUK="IP59"/>
+      <attribute_value id="43512" nameRU="IP60" nameUK="IP60"/>
+      <attribute_value id="43513" nameRU="IP61" nameUK="IP61"/>
+      <attribute_value id="43514" nameRU="IP62" nameUK="IP62"/>
+      <attribute_value id="43515" nameRU="IP63" nameUK="IP63"/>
+      <attribute_value id="43516" nameRU="IP64" nameUK="IP64"/>
+      <attribute_value id="43517" nameRU="IP65" nameUK="IP65"/>
+      <attribute_value id="43518" nameRU="IP66" nameUK="IP66"/>
+      <attribute_value id="43519" nameRU="IP67" nameUK="IP67"/>
+      <attribute_value id="43520" nameRU="IP68" nameUK="IP68"/>
+      <attribute_value id="43521" nameRU="IP43" nameUK="IP43"/>
+    </attribute>
+    <attribute id="6516" nameRU="Наличие Bluetooth" type="bool" nameUK="Наявність Bluetooth"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11356" nameRU="Количество лучей" type="integer" nameUK="Кількість променів"/>
+    <attribute id="15360" nameRU="Вращающийся лимб" type="bool" nameUK="Обертальний лімб"/>
+    <attribute id="15361" nameRU="Пузырьковый уровень" type="bool" nameUK="Бульбашковий рівень"/>
+    <attribute id="15362" nameRU="Работа в наклонном положении" type="bool" nameUK="Робота в похилому положенні"/>
+    <attribute id="15363" nameRU="Сигнализация разгоризонтовки" type="bool" nameUK="Сигналізація разгоризонтовки"/>
+    <attribute id="16509" nameRU="Рабочий диапазон с приемником" type="real" nameUK="Робочий діапазон з приймачем" measureUnitRU="м" min="0" max="1500" measureUnitUK="м"/>
+    <attribute id="18867" nameRU="Тип лазерного нивелира" type="singleselect" nameUK="Тип лазерного нівеліру">
+      <attribute_value id="307284" nameRU="Построитель плоскостей" nameUK="Побудовник площин"/>
+      <attribute_value id="307285" nameRU="Ротационный лазер" nameUK="Ротаційний лазер"/>
+      <attribute_value id="307286" nameRU="Точечный лазер" nameUK="Точковий лазер"/>
+      <attribute_value id="307287" nameRU="Прибор вертикального проектирования" nameUK="Прилад вертикального проектування"/>
+    </attribute>
+    <attribute id="18868" nameRU="Количество лазерных плоскостей" type="real" nameUK="Кількість лазерних площин"/>
+    <attribute id="18869" nameRU="Цвет лазера" type="multiselect" nameUK="Колір лазера">
+      <attribute_value id="307299" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="307300" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="307301" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="307302" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+    </attribute>
+  </category>
+</categories>
