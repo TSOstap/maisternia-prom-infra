@@ -215,7 +215,7 @@ test("варіант А: сирі дані оновлюються, SEO-поля 
   assert.notEqual(seoHash(edited), seoHash(first));
 });
 
-test("черга до 22.10.2026 (без колонок стану): синхронізація додає 4 колонки, дані рядків збережено", async () => {
+test("черга до 22.10.2026 (без колонок стану): синхронізація додає 5 колонок стану, дані рядків збережено", async () => {
   const sim = new WatchSim();
   await sim.start();
   sim.setOffer(fullOffer("2970000001"));
@@ -231,7 +231,7 @@ test("черга до 22.10.2026 (без колонок стану): синхр�
   const after = readSheet(sim.book[SHEET.queue], SHEET.queue).rows[0];
   for (const k of ["Offer ID", "Назва UA", "Опис UA", "Фото JSON", "Виявлено"]) assert.equal(mtText(after[k]), mtText(before[k]), k);
   assert.match(after["SHA даних постачальника"], /^s1\./);
-  assert.equal(r.stats.queueRaw.migratedColumns, 4);
+  assert.equal(r.stats.queueRaw.migratedColumns, 5);
 });
 
 test("intake не довіряє Worker на слово: < 10 хв від останньої зміни, некоректний час, неповні дані або інший відбиток — відмова", () => {

@@ -18,13 +18,15 @@ import { INTAKE_RULES, changedParts, rawFromOffer, rawFromQueueRow, sheetFingerp
 export const SHEET = Object.freeze({ main: "Основний каталог", queue: "Нові товари", deferred: "Відкладені товари", frozen: "Заморожені ID", groups: "Групи", journal: "Журнал", passport: "Паспорт каталогу" });
 export const QUEUE_EXTRA = Object.freeze(["Рішення", "Перевірка", "Виявлено"]);
 /** Стан даних постачальника в черзі (варіант А, погоджено 22.10.2026). До наявної черги додаються автоматично. */
-export const QUEUE_STATE = Object.freeze(["Остання зміна постачальника", "SHA даних постачальника", "Погоджено для SHA", "SHA SEO при додаванні"]);
+export const QUEUE_STATE = Object.freeze(["Остання зміна постачальника", "SHA даних постачальника", "Погоджено для SHA", "SHA SEO при додаванні", "Погоджені дані постачальника"]);
 export const QUEUE_HEADERS = Object.freeze([...YML_HEADERS, ...QUEUE_EXTRA, ...QUEUE_STATE]);
 export const VERIFIED = "ПЕРЕВІРЕНО";
 export const RECHECK = "ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ";
 /** Наш SEO-контент — система його НЕ перезаписує. Зміна відносно значень при додаванні = «SEO-підготовку почато». */
 export const SEO_FIELDS = Object.freeze(["Назва UA", "Назва RU", "Опис UA", "Опис RU", "Запити UA", "Запити RU"]);
 const LEGACY_SEO = "УСПАДКОВАНО (SEO змінено до запуску контролю)";
+const UNKNOWN_SEO = "НЕВІДОМО (рядок до запуску контролю; потрібне підтвердження)";
+export const SEO_SUPPLIER = "SEO ПОСТАЧАЛЬНИКА";
 export const seoHash = (row) => "seo1." + sha256(SEO_FIELDS.map((k) => mtText(row[k])).join("\u0000")).slice(0, 16);
 export const PASSPORT_HEADER = Object.freeze(["Поле", "Значення"]);
 export const DECISION = Object.freeze({ APPROVE: "ЗАТВЕРДЖЕНО", APPROVE_NOT_DUP: "ЗАТВЕРДЖЕНО (НЕ ДУБЛЬ)", REJECT: "ВІДХИЛЕНО" });
@@ -147,9 +149,12 @@ export function approvalProblems(row, { groupIds, mainIds, dupFlag, recheck = []
   return p;
 }
 
-// ---------- варіант А: сирі дані постачальника незатверджених позицій ----------
+// ---------- варіант А + правила SEO (погоджено 23.10.2026) ----------
 const RAW_COLUMNS = Object.freeze([["Назва постачальника UA", "nameUa"], ["Назва постачальника RU", "nameRu"], ["Артикул постачальника", "sku"], ["URL постачальника", "url"]]);
 const VERIFIED_RE = /^ПЕРЕВІРЕНО(?:\s+(\S+))?$/;
+const SEO_SUPPLIER_RE = /^SEO ПОСТАЧАЛЬНИКА$/;
+/** Службові команди «Рішення», що стосуються перевірки даних (не затвердження). */
+export const isStateCommand = (decision) => VERIFIED_RE.test(decision) || SEO_SUPPLIER_RE.test(decision);
 const JOURNAL_VALUE = 1000;
 const jv = (v) => { const t = mtText(v); return t.length > JOURNAL_VALUE ? t.slice(0, JOURNAL_VALUE) + "…" : t; };
 const shaMatches = (sha, token) => {
@@ -157,11 +162,53 @@ const shaMatches = (sha, token) => {
   return t === sha || (t.length >= 8 && /^[0-9a-f]+$/.test(t) && sha.replace(/^s1\./, "").replace(/\./g, "").startsWith(t));
 };
 const kitOf = (row) => ({ nameUa: row["Назва постачальника UA"], nameRu: row["Назва постачальника RU"], params: row["Характеристики JSON"] });
+const descKey = (s) => mtKey(mtText(s).replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " "));
+const descPart = (sha) => /^s1\.(?:[0-9a-f]{8}\.){6}([0-9a-f]{8})$/.exec(mtText(sha))?.[1] || "";
+const jsonOr = (v, d) => { try { const x = JSON.parse(mtText(v) || "null"); return x ?? d; } catch { return d; } };
+const photoId = (u) => (/images\.prom\.ua\/(\d+)_/.exec(mtText(u)) || [])[1] || mtText(u).trim();
+
+/** Знімок СИРИХ даних постачальника (не нашого SEO) — для попередження «було → стало». */
+function supplierSnapshot(row, sha, supplierModel = "") {
+  return {
+    nameUa: mtText(row["Назва постачальника UA"]), nameRu: mtText(row["Назва постачальника RU"]), sku: mtText(row["Артикул постачальника"]), url: mtText(row["URL постачальника"]),
+    photos: (jsonOr(row["Фото JSON"], []) || []).filter((u) => typeof u === "string").map(photoId),
+    params: (jsonOr(row["Характеристики JSON"], []) || []).filter((p) => p && typeof p === "object").map((p) => [mtText(p.name), mtText(p.value), mtText(p.unit)]),
+    model: mtText(supplierModel || row["Модель"]), desc: descPart(sha),
+  };
+}
+const snapshotText = (s) => { const x = JSON.stringify(s); return x.length <= CELL_LIMIT ? x : JSON.stringify({ ...s, params: [], cut: true }); };
+const cutText = (s, n = 90) => { const x = mtText(s).replace(/\s+/g, " ").trim(); return x.length > n ? x.slice(0, n) + "…" : x; };
+/** Що саме змінив постачальник: попередні й нові дані ПОСТАЧАЛЬНИКА (не наше SEO). */
+export function describeSupplierChanges(a, b) {
+  const out = [];
+  const q = (s) => "«" + cutText(s) + "»";
+  if (mtKey(a.nameUa) !== mtKey(b.nameUa)) out.push("назва UA: було " + q(a.nameUa) + " → стало " + q(b.nameUa));
+  if (mtKey(a.nameRu) !== mtKey(b.nameRu)) out.push("назва RU: було " + q(a.nameRu) + " → стало " + q(b.nameRu));
+  if (mtText(a.sku).trim() !== mtText(b.sku).trim()) out.push("артикул: було " + q(a.sku) + " → стало " + q(b.sku));
+  if (a.model && b.model && mtKey(a.model) !== mtKey(b.model)) out.push("модель: було " + q(a.model) + " → стало " + q(b.model));
+  if (mtText(a.url).trim() !== mtText(b.url).trim()) out.push("сторінка постачальника змінилась");
+  const pa = new Set(a.photos || []), pb = new Set(b.photos || []);
+  const added = [...pb].filter((x) => !pa.has(x)).length, removed = [...pa].filter((x) => !pb.has(x)).length;
+  if (added || removed) out.push("фото: " + [added ? "+" + added + " нових" : "", removed ? "−" + removed + " прибрано" : ""].filter(Boolean).join(", "));
+  const ma = new Map((a.params || []).map((p) => [mtKey(p[0]), p])), mb = new Map((b.params || []).map((p) => [mtKey(p[0]), p]));
+  const changed = [...mb].filter(([k, p]) => ma.has(k) && (mtKey(ma.get(k)[1]) !== mtKey(p[1]) || mtKey(ma.get(k)[2]) !== mtKey(p[2])));
+  const pAdded = [...mb.keys()].filter((k) => !ma.has(k)).length, pRemoved = [...ma.keys()].filter((k) => !mb.has(k)).length;
+  if (changed.length || pAdded || pRemoved) {
+    const items = changed.slice(0, 4).map(([, p]) => { const o = ma.get(mtKey(p[0])); return "«" + cutText(p[0], 40) + "» " + cutText(o[1] + (o[2] ? " " + o[2] : ""), 30) + " → " + cutText(p[1] + (p[2] ? " " + p[2] : ""), 30); });
+    out.push("характеристики: " + [...items, changed.length > 4 ? "ще " + (changed.length - 4) + " змін" : "", pAdded ? "+" + pAdded + " нових" : "", pRemoved ? "−" + pRemoved + " прибрано" : ""].filter(Boolean).join("; "));
+  }
+  if (a.desc && b.desc && a.desc !== b.desc) out.push("опис постачальника змінився");
+  return out;
+}
 
 /**
- * Оновлює сирі дані постачальника в рядку черги (назви, артикул, URL, фото, характеристики; ціни — planRows).
- * SEO-поля (SEO_FIELDS) не змінюються. «ПЕРЕВІРЕНО» прив'язується до SHA, ЗАПИСАНОЇ в рядку (саме ці дані бачив власник),
- * а не до свіжих даних XML: якщо постачальник змінив дані до цього запуску — підтвердження одразу недійсне.
+ * Рядок черги: сирі дані постачальника — з поточного XML; правила SEO (погоджено 23.10.2026):
+ *  • сире SEO (не редаговане нами: SEO-поля = знімку, записаному системою) — оновлюється разом із постачальником, без попереджень;
+ *  • власне SEO — ніколи не перезаписується; суттєва зміна даних постачальника → «ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ» з «було → стало»;
+ *  • «ПЕРЕВІРЕНО» прив'язується до SHA, записаної в рядку (саме ці дані бачив власник); наступна суттєва зміна — знову перевірка;
+ *  • ціна й наявність — окремо (planRows), не входять у SHA і ніколи не блокуються;
+ *  • рядок до запуску контролю без знімка: сире — лише якщо назви = назвам постачальника, запитів немає й опис = опису
+ *    постачальника; інакше власне або «походження невідоме» (команди «SEO ПОСТАЧАЛЬНИКА» / «ПЕРЕВІРЕНО»).
  * offer — операційний розбір; full — повний offer (фото, характеристики, опис) або undefined (тоді вони не змінюються).
  */
 export function refreshQueueRow(row, offer, full, { stamp }) {
@@ -171,24 +218,39 @@ export function refreshQueueRow(row, offer, full, { stamp }) {
   const prevSha = mtText(row["SHA даних постачальника"]);
   const decision = norm(row["Рішення"]);
   const verifiedCmd = VERIFIED_RE.exec(decision);
+  const supplierCmd = SEO_SUPPLIER_RE.test(decision);
+  // 1. Походження SEO
   let initialSeo = mtText(row["SHA SEO при додаванні"]);
   if (!initialSeo) {
-    // Рядок із черги до запуску контролю: SEO вважаємо початим, якщо назви вже відрізняються від назв постачальника.
-    const edited = mtKey(row["Назва UA"]) !== mtKey(row["Назва постачальника UA"]) || mtKey(row["Назва RU"]) !== mtKey(row["Назва постачальника RU"]);
-    initialSeo = edited ? LEGACY_SEO : seoHash(row);
+    const namesRaw = mtKey(row["Назва UA"]) === mtKey(row["Назва постачальника UA"]) && mtKey(row["Назва RU"]) === mtKey(row["Назва постачальника RU"])
+      && !mtText(row["Запити UA"]).trim() && !mtText(row["Запити RU"]).trim();
+    if (!namesRaw) initialSeo = LEGACY_SEO;
+    else if (full) initialSeo = descKey(row["Опис UA"]) === descKey(full.descriptionUa) && descKey(row["Опис RU"]) === descKey(full.descriptionRu) ? seoHash(row) : UNKNOWN_SEO;
+    // без повного XML рішення відкладається; цей прохід — як для власного SEO (нічого не перезаписуємо)
   }
-  r["SHA SEO при додаванні"] = initialSeo;
-  const seoStarted = seoHash(row) !== initialSeo || Boolean(decision && !verifiedCmd);
+  if (supplierCmd) { // власник підтвердив: SEO — копія постачальника → дозволено автооновлення
+    entries.push([stamp, SHEET.queue, id, SEO_SUPPLIER, initialSeo, "сире SEO", "РІШЕННЯ ВЛАСНИКА"]);
+    initialSeo = seoHash(row);
+    r["Рішення"] = "";
+  }
+  let seoUnknown = initialSeo === UNKNOWN_SEO;
+  const seoOwn = !initialSeo || initialSeo === LEGACY_SEO || seoUnknown || seoHash(row) !== initialSeo || Boolean(decision && !isStateCommand(decision));
+  // 2. «ПЕРЕВІРЕНО» — до даних, які бачив власник (SHA у рядку)
   let agreed = mtText(row["Погоджено для SHA"]);
+  let snapshot = mtText(row["Погоджені дані постачальника"]);
+  const pre = supplierSnapshot(row, prevSha);
   if (verifiedCmd) {
-    if (!prevSha) notes.push(`«${VERIFIED}» не прийнято: SHA даних постачальника ще не записано — повторіть після наступного оновлення`);
-    else if (verifiedCmd[1] && !shaMatches(prevSha, verifiedCmd[1])) notes.push(`«${VERIFIED}» не прийнято: указана SHA не відповідає поточній (${prevSha.slice(0, 11)}…) — дані змінилися`);
+    if (!prevSha && !seoUnknown) notes.push("«" + VERIFIED + "» не прийнято: SHA даних постачальника ще не записано — повторіть після наступного оновлення");
+    else if (verifiedCmd[1] && prevSha && !shaMatches(prevSha, verifiedCmd[1])) notes.push("«" + VERIFIED + "» не прийнято: указана SHA не відповідає поточній (" + prevSha.slice(0, 11) + "…) — дані змінилися");
     else {
       entries.push([stamp, SHEET.queue, id, VERIFIED, agreed, prevSha, "РІШЕННЯ ВЛАСНИКА"]);
-      agreed = prevSha;
+      if (prevSha) { agreed = prevSha; snapshot = snapshotText(pre); }
+      if (seoUnknown) { initialSeo = LEGACY_SEO; seoUnknown = false; } // підтверджено: SEO власне
       r["Рішення"] = "";
     }
   }
+  // 3. Сирі дані постачальника
+  const supplierModel = mtText(full?.model || offer?.model || "").trim();
   if (offer) {
     const set = (col, next) => { if (mtText(r[col]) !== mtText(next)) { entries.push([stamp, SHEET.queue, id, col, jv(r[col]), jv(next), "ДАНІ ПОСТАЧАЛЬНИКА"]); r[col] = next; } };
     for (const [col, f] of RAW_COLUMNS) set(col, offer[f] ?? "");
@@ -202,22 +264,50 @@ export function refreshQueueRow(row, offer, full, { stamp }) {
   const raw = { ...rawFromQueueRow(r), descriptionUa: full?.descriptionUa || "", descriptionRu: full?.descriptionRu || "", hasDescription: Boolean(offer && full) };
   const sha = offer ? sheetFingerprint(raw, prevSha) : prevSha || sheetFingerprint(raw);
   if (prevSha && full && offer) {
-    const a = /^s1\.(?:[0-9a-f]{8}\.){6}([0-9a-f]{8})$/.exec(prevSha)?.[1], b = /^s1\.(?:[0-9a-f]{8}\.){6}([0-9a-f]{8})$/.exec(sha)?.[1];
-    if (a && b && a !== b) entries.push([stamp, SHEET.queue, id, "Опис постачальника", "SHA " + a, `SHA ${b} (${mtText(full.descriptionUa).length} симв.)`, "ДАНІ ПОСТАЧАЛЬНИКА"]);
+    const a = descPart(prevSha), b = descPart(sha);
+    if (a && b && a !== b) entries.push([stamp, SHEET.queue, id, "Опис постачальника", "SHA " + a, "SHA " + b + " (" + mtText(full.descriptionUa).length + " симв.)", "ДАНІ ПОСТАЧАЛЬНИКА"]);
   }
+  // 4. Сире SEO — автооновлення разом із постачальником (без попереджень)
+  if (offer && !seoOwn && initialSeo) {
+    const seoSet = (col, next) => { if (mtText(r[col]) !== mtText(next)) { entries.push([stamp, SHEET.queue, id, col, jv(r[col]), jv(next), "SEO-КОПІЯ ПОСТАЧАЛЬНИКА"]); r[col] = next; } };
+    seoSet("Назва UA", offer.nameUa ?? ""); seoSet("Назва RU", offer.nameRu ?? "");
+    if (full) { seoSet("Опис UA", clip(full.descriptionUa, notes, "Опис UA")); seoSet("Опис RU", clip(full.descriptionRu, notes, "Опис RU")); }
+    // «Модель» (копія постачальника) — лише якщо її не змінювали після останнього запису системою
+    const lastCopy = jsonOr(snapshot, null);
+    if (supplierModel && (!lastCopy || mtKey(r["Модель"]) === mtKey(lastCopy.model))) seoSet("Модель", supplierModel);
+    initialSeo = seoHash(r); // знімок системи рухається разом із копією
+  }
+  r["SHA SEO при додаванні"] = initialSeo;
   r["SHA даних постачальника"] = sha;
   if (prevSha && sha !== prevSha) r["Остання зміна постачальника"] = stamp;
   else if (!mtText(r["Остання зміна постачальника"])) r["Остання зміна постачальника"] = mtText(row["Виявлено"]) || stamp;
-  if (!seoStarted || !agreed) agreed = sha; // до початку SEO погоджене «йде за» даними постачальника
+  const cur = supplierSnapshot(r, sha, supplierModel);
+  // 5. Погоджені дані: сире SEO — «йдуть за» постачальником; власне — фіксуються (перший раз — на даних, які бачив власник)
+  if (!seoOwn) { agreed = sha; snapshot = snapshotText(cur); }
+  else if (!agreed) {
+    agreed = prevSha || sheetFingerprint({ ...rawFromQueueRow(row), descriptionUa: full?.descriptionUa || "", descriptionRu: full?.descriptionRu || "", hasDescription: Boolean(full) });
+    snapshot = snapshotText(pre);
+  } else if (!snapshot && agreed === prevSha) snapshot = snapshotText(pre);
   r["Погоджено для SHA"] = agreed;
-  const recheck = seoStarted && agreed !== sha ? changedParts(agreed, sha) : [];
+  r["Погоджені дані постачальника"] = snapshot;
+  // 6. Попередження
+  let recheck = seoOwn && agreed !== sha ? changedParts(agreed, sha) : [];
   let recheckNote = "";
   if (recheck.length) {
-    const kit = kitDifferences(kitOf(row), kitOf(r));
-    recheckNote = `${RECHECK}: після підготовки SEO змінились дані постачальника (${recheck.join(", ")}${kit.length ? "; різниця комплектації: " + kit.join(", ") : ""}) — перевірте SEO й поставте «${VERIFIED}» у «Рішення»`;
+    const was = jsonOr(snapshot, null);
+    const details = was ? describeSupplierChanges(was, cur) : [];
+    const kit = kitDifferences(kitOf(was ? { "Назва постачальника UA": was.nameUa, "Назва постачальника RU": was.nameRu, "Характеристики JSON": JSON.stringify((was.params || []).map((p) => ({ name: p[0], value: p[1], unit: p[2] }))) } : row), kitOf(r));
+    const identity = details.some((d) => /^(назва|артикул|модель)/.test(d)) ? "Постачальник змінив назву / артикул / модель товару. " : "";
+    recheckNote = RECHECK + ": " + identity + (details.length ? details.join("; ") : "змінено: " + recheck.join(", ") + " (попередні значення не збережено)")
+      + (kit.length ? "; різниця комплектації: " + kit.join(", ") : "")
+      + ". Наше SEO не змінено — перевірте відповідність SEO новим даним постачальника і поставте «" + VERIFIED + "» у «Рішення».";
     for (const e of entries) if (e[6] === "ДАНІ ПОСТАЧАЛЬНИКА") e[6] = RECHECK;
-  } else if (prevSha && sha !== prevSha) notes.push(`дані постачальника оновлено (${changedParts(prevSha, sha).join(", ")}) — SEO-поля не змінено`);
-  return { row: r, entries, notes, recheck, recheckNote, sha, changed: Boolean(prevSha && sha !== prevSha), verified: Boolean(verifiedCmd) };
+  } else if (seoUnknown) {
+    recheck = ["походження SEO"];
+    recheckNote = RECHECK + ": походження SEO невідоме (рядок доданий до запуску контролю, а опис постачальника відтоді змінився) — SEO не оновлюється автоматично. "
+      + "Якщо SEO — копія постачальника, поставте «" + SEO_SUPPLIER + "»; якщо власне — «" + VERIFIED + "».";
+  } else if (prevSha && sha !== prevSha) notes.push((seoOwn ? "" : "SEO-копію оновлено разом із даними постачальника; ") + "дані постачальника оновлено (" + changedParts(prevSha, sha).join(", ") + ")");
+  return { row: r, entries, notes, recheck, recheckNote, sha, changed: Boolean(prevSha && sha !== prevSha), verified: Boolean(verifiedCmd || supplierCmd), seoOwn };
 }
 
 /** Черга з колонками стану (додаються автоматично до черги, створеної до 22.10.2026). */
@@ -503,8 +593,8 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
       const problems = approvalProblems(updated, { groupIds, mainIds, dupFlag: blocking, recheck: rq.recheck });
       if (!problems.length) { approve.push(toMainRow(updated, groupsById)); mainIds.add(mtText(r["Offer ID"])); return; }
       updated["Перевірка"] = [dup, "НЕ ПЕРЕНЕСЕНО: " + problems.join("; ")].filter(Boolean).join(" ");
-    } else if (VERIFIED_RE.test(decision)) {
-      updated["Перевірка"] = dup; // «ПЕРЕВІРЕНО» не прийнято — причина в rq.notes
+    } else if (isStateCommand(decision)) {
+      updated["Перевірка"] = dup; // службову команду не прийнято — причина в rq.notes
     } else if (decision) {
       updated["Перевірка"] = [dup, `невідоме «Рішення»: «${mtText(r["Рішення"])}» (можна: ${DECISION.APPROVE}, ${DECISION.APPROVE_NOT_DUP}, ${DECISION.REJECT}, ПРИВ'ЯЗАТИ ДО <Offer ID>)`].filter(Boolean).join(" ");
     } else if (queuePlan[i].match !== MATCH.OK) {
