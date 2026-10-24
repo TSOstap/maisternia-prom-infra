@@ -12,7 +12,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { sha256 } from "../core/text.mjs";
 import { parseCategory, parseSchemaText } from "../core/prom-schema.mjs";
-import { buildNames, charKey, normName, unitAliasMap } from "../core/prom-attributes.mjs";
+import { buildNames, charKey, normName, normUnit, unitAliasMap } from "../core/prom-attributes.mjs";
 
 export const SCHEMAS_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../schemas/prom");
 const readJson = (f, d) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : d);
@@ -42,9 +42,12 @@ export function loadPromCatalog(dir = SCHEMAS_DIR) {
   // Синоніми одиниць — однозначна технічна нормалізація (units.json → aliases); погоджений словник — names / values /
   // valuesInContext (лише для названої характеристики).
   out.units.aliasMap = unitAliasMap(out.units.aliases);
+  // Масштаб одиниць однієї величини (units.json → scales) — лише для виявлення помилки одиниці, не для перерахунку.
+  out.units.scale = new Map();
+  for (const [dim, list] of Object.entries(out.units.scales || {})) for (const [u, f] of list) for (const k of [normUnit(u), out.units.aliasMap.get(normUnit(u))]) if (k && !out.units.scale.has(k)) out.units.scale.set(k, { dim, f });
   out.knownIssues = readJson(path.join(dir, "known-issues.json"), {}).attributes || []; // відомі вади довідника Prom (importRisks)
   const dict = readJson(path.join(dir, "names-ua-ru.json"), {});
-  out.names = buildNames([...out.schemas.values()], dict.names || {}, out.units.aliasMap, dict.values || {}, dict.valuesInContext || {});
+  out.names = buildNames([...out.schemas.values()], dict.names || {}, out.units.aliasMap, dict.values || {}, dict.valuesInContext || {}, out.units.conversions || []);
   for (const e of pending) {
     const schema = out.schemas.get(String(e.id));
     const m = readJson(path.join(dir, "mapping", `${e.id}.json`), null);
@@ -69,7 +72,10 @@ export function loadPromCatalog(dir = SCHEMAS_DIR) {
       if (schema.attributes.some((a) => normName(a.nameUK) === k || normName(a.nameRU) === k)) continue;
       mapping.synonyms[k] = target;
     }
-    if (m || Object.keys(mapping.synonyms).length) out.mappings.set(String(e.id), mapping);
+    // Поля з відомою вадою довідника Prom (known-issues.json, action «custom») — не заповнюються в цій категорії.
+    const blocked = Object.fromEntries(out.knownIssues.filter((k) => k.action === "custom" && (k.categories || []).map(String).includes(String(e.id)) && schema.attributes.some((a) => a.id === String(k.id))).map((k) => [String(k.id), k]));
+    if (Object.keys(blocked).length) mapping.blocked = blocked;
+    if (m || Object.keys(mapping.synonyms).length || mapping.blocked) out.mappings.set(String(e.id), mapping);
     // Заборонені власником пари (№47–50): у жодній категорії не можуть отримати один ключ.
     for (const [x, y] of synFile.forbidden || []) {
       const opt = { mapping, names: out.names };
