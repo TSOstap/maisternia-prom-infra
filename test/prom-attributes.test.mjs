@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { categoryBlocks, parseSchemaText } from "../src/core/prom-schema.mjs";
-import { SRC, alignPairs, buildCharacteristics, buildNames, charKey, cleanDescription, cleanValue, descriptionPairs, hoursValue, hoursWord, importRisks, mapParam, sameValue, sameValueIn, validateValue, wordsMatch, wordsMatchAnyOrder } from "../src/core/prom-attributes.mjs";
+import { SRC, alignPairs, buildCharacteristics, buildNames, charKey, cleanDescription, cleanValue, descriptionPairs, hoursValue, hoursWord, importRisks, timeValue, yearsWord, mapParam, sameValue, sameValueIn, validateValue, wordsMatch, wordsMatchAnyOrder } from "../src/core/prom-attributes.mjs";
 import { SCHEMAS_DIR, importSchemaFiles, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
 
 const catalog = loadPromCatalog();
@@ -675,16 +675,20 @@ test("GMIG-305P (власник, 24.10.2026): погоджені відпові�
   const B = (ua, ru, rawParams = []) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", rawParams, descUa: ua, descRu: ru });
   const r = B("<p>Номінальний вхідний струм: 30 А;</p><p>Максимальна вага котушки зі зварювальним дротом: 1 кг;</p><p>Тип завантаження котушки: бічний;</p><p>Тип охолодження: примусове повітряне;</p><p>Тип апарата: інверторний зварювальний напівавтомат;</p>",
     "<p>Номинальный входящий ток: 30 А;</p><p>Максимальный вес катушки со сварочной проволокой: 1 кг;</p><p>Тип загрузки катушки: боковой;</p><p>Тип охлаждения: принудительное;</p><p>Тип аппарата: сварочный инверторный полуавтомат;</p>");
-  assert.deepEqual(r.params, [P("Номінальний вхідний струм", "30 А"), P("Максимальна вага котушки зі зварювальним дротом", "1 кг"), P("Тип завантаження котушки", "бічний")]);
+  // 25.10.2026: «полуавтомат» = «напівавтомат» погоджено для типу апарата — одна характеристика з українською назвою
+  assert.deepEqual(r.params, [P("Номінальний вхідний струм", "30 А"), P("Максимальна вага котушки зі зварювальним дротом", "1 кг"), P("Тип завантаження котушки", "бічний"), P("Тип апарата", "інверторний зварювальний напівавтомат")]);
   // Справжні розбіжності — ПОТРЕБУЄ ПЕРЕВІРКИ з обома оригіналами, нічого не вибрано
-  assert.deepEqual(r.needsReview.map((x) => [x.name, x.values.length]), [["Тип охолодження", 2], ["Тип апарата", 2]]);
+  assert.deepEqual(r.needsReview.map((x) => [x.name, x.values.length]), [["Тип охолодження", 2]]);
   assert.equal(r.ruOnly, 0);
   // «боковой» = «бічний» — лише в контексті типу завантаження котушки
   assert.ok(sameValueIn(["Тип завантаження котушки"], P("x", "боковой"), P("x", "бічний"), names));
   assert.equal(sameValueIn(["Тип кріплення"], P("x", "боковой"), P("x", "бічний"), names), sameValue(P("x", "боковой"), P("x", "бічний"), names));
   // Повний зміст у будь-якому порядку слів: кожне слово має підтверджену пару; «полуавтомат» — без підтвердженого перекладу
   assert.ok(wordsMatchAnyOrder("інверторний зварювальний", "сварочный инверторный", names));
-  assert.equal(wordsMatchAnyOrder("інверторний зварювальний напівавтомат", "сварочный инверторный полуавтомат", names), false);
+  assert.equal(wordsMatchAnyOrder("інверторний зварювальний напівавтомат", "сварочный инверторный полуавтомат", names), false, "поза контекстом «полуавтомат» не підтверджено");
+  assert.ok(sameValueIn(["Тип апарата"], P("x", "сварочный инверторный полуавтомат"), P("x", "інверторний зварювальний напівавтомат"), names));
+  assert.equal(sameValueIn(["Тип апарата"], P("x", "сварочный полуавтомат"), P("x", "інверторний зварювальний напівавтомат"), names), false, "інша частина значення — не те саме");
+  assert.equal(sameValueIn(["Тип акумулятора"], P("x", "полуавтомат"), P("x", "напівавтомат"), names), false, "лише в контексті типу апарата");
   assert.equal(wordsMatchAnyOrder("інверторний зварювальний", "инверторный", names), false, "різна кількість слів");
   assert.equal(wordsMatchAnyOrder("інверторний інверторний", "сварочный инверторный", names), false, "слово не використовується двічі");
   const t = B("<p>Тип апарата: інверторний зварювальний</p>", "<p>Тип аппарата: сварочный инверторный</p>");
@@ -761,7 +765,11 @@ test("тривалість у годинах (власник, 24.10.2026, Optima
   assert.equal(H("Время зарядки", "21 час", false), "21 година");
   assert.equal(H("Тривалість роботи", "8", true, "год"), "8 годин");
   // Без змін: рос. «год» (= рік), інші показники, інші одиниці, повні слова
-  assert.equal(H("Время работы", "2 год", false), "2 год");
+  // 25.10.2026: у показнику тривалості «год» — години й у російській назві
+  assert.equal(H("Время работы", "2 год", false), "2 години");
+  assert.equal(H("Максимальное время работы", "5 год", false), "5 годин");
+  assert.equal(H("Автономна робота", "10 ч.", true), "10 годин");
+  assert.equal(H("Продолжительност работы АКБ без подзарядки", "4 ч", false), "4 години");
   assert.equal(H("Гарантія", "1 год", true), "1 год");
   assert.equal(H("Термін служби", "5 років", true), "5 років");
   assert.equal(H("Витрата палива", "1,2 л/год", true), "1,2 л/год");
@@ -817,7 +825,9 @@ test("перевірка каталогу (24.10.2026): різні слова н
   assert.match(g.needsReview[0].reason, /вадою довідника/);
   // Українська назва без і/ї/є/ґ («Час заряджання») — «год» = година
   assert.deepEqual(B(GRIND, { rawParams: [P("Час заряджання", "3 год")] }).params, [P("Час заряджання", "3 години")]);
-  assert.deepEqual(B(GRIND, { rawParams: [P("Максимальное время работы", "5 год")] }).params, [P("Максимальное время работы", "5 год")], "рос. «год» — без підтвердження годин не змінюється");
+  assert.deepEqual(B(GRIND, { rawParams: [P("Максимальное время работы", "5 год")] }).params, [P("Максимальное время работы", "5 годин")], "тривалість — «год» = години й у російській назві (25.10.2026)");
+  // UA- і RU-пари з тим самим часом — одна характеристика з українською назвою (приклад власника)
+  assert.deepEqual(B(GRIND, { descUa: "<p>Максимальний час роботи: 5 год</p>", descRu: "<p>Максимальное время работы: 5 год</p>" }).params, [P("Максимальний час роботи", "5 годин")]);
 });
 
 test("захисні випадки (мутаційна перевірка 24.10.2026): те саме число з несумісною одиницею — не дубль; «75 %» у тексті; вада довідника — лише те саме число; пари одного опису між собою не зливаються", () => {
@@ -839,4 +849,29 @@ test("захисні випадки (мутаційна перевірка 24.10
   assert.ok(wordsMatch("Боковий викид", "Боковой выброс", names));
   assert.ok(wordsMatch("Мініімальна довжина", "Мінімальна довжина", names), "подвоєна літера (помилка набору)");
   assert.ok(wordsMatch("Потужність, Ват", "Мощность, Ватт", names), "подвоєна літера в короткому слові");
+  assert.ok(sameValue(P("Тип", "вібраційний присосок для плитки"), P("Тип", "вибрационная присоска для плитки"), names), "закінчення й випадний голосний не важать");
+});
+
+test("одиниці часу (власник, 25.10.2026): тривалість — години (і в рос. назві); роки — «рік / роки / років»; продуктивність «л/год» — без змін; неоднозначне — ПОТРЕБУЄ ПЕРЕВІРКИ", () => {
+  const T = (name, value, unit = "") => { const r = timeValue(name, { value, unit }, false); return r.unit ? `${r.value} ${r.unit}` : r.value; };
+  assert.deepEqual(["1", "2", "5", "11", "21", "1,5"].map((n) => yearsWord(n)), ["рік", "роки", "років", "років", "рік", "року"]);
+  assert.equal(T("Термін служби", "1 г."), "1 рік");
+  assert.equal(T("Гарантия на двигатель", "2 год"), "2 роки");
+  assert.equal(T("Рік випуску", "2023 г."), "2023 рік");
+  assert.equal(T("Гарантия на двигатель", "10 лет (после регистрации)"), "10 лет (после регистрации)", "однозначне «лет» — без змін");
+  assert.equal(T("Строк служби", "1 рік"), "1 рік");
+  assert.equal(T("Витрата палива", "1,2 л/год"), "1,2 л/год", "продуктивність — без змін");
+  assert.equal(T("Продуктивність", "120 м3/год"), "120 м3/год");
+  assert.equal(T("Максимальное время работы", "5 год"), "5 годин");
+  assert.equal(T("Час служби", "5 год"), "5 років", "термін служби — роки, навіть якщо в назві «час»");
+  assert.ok(sameValue(P("x", "інверторний зварювальний"), P("x", "сварочный инверторный"), catalog.names), "ті самі слова в іншому порядку");
+  // Неоднозначне: скорочення годин у характеристиці, що не є ні тривалістю, ні роками — ПОТРЕБУЄ ПЕРЕВІРКИ, не передається
+  const B = (o) => buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, current: [], names: catalog.names, mapping: catalog.mappings.get(GRIND), units: catalog.units, mode: "queue", ...o });
+  const r = B({ descUa: "<p>Інтервал обслуговування: 50 год</p><p>Довгий опис: працює до 50 год на одному заряді завдяки безщітковому двигуну й ефективній електроніці керування</p>" });
+  assert.deepEqual(r.params.map((p) => p.name), ["Довгий опис"], "довгий текст — без змін");
+  assert.match(r.needsReview[0].reason, /неоднозначно/);
+  assert.match(r.rawOnly.length ? r.rawOnly[0].reason : "ПОТРЕБУЄ", /ПОТРЕБУЄ/);
+  // Різні види потужності з однаковим числом — не зливаються
+  const w = B({ descUa: "<p>Номінальна потужність: 1100 Вт</p><p>Вихідна потужність: 1100 Вт</p><p>Споживана потужність: 1,1 кВт</p>" });
+  assert.equal(w.params.length, 3, JSON.stringify(w.params));
 });

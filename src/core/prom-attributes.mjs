@@ -286,7 +286,7 @@ export function normValue(v, names = null) {
  *  варіантів значень з усіх схем Prom; 2) погоджений словник (names-ua-ru.json: names, values); 3) технічна
  *  нормалізація (normValue, синоніми одиниць). Назва / значення з різними відповідниками в різних схемах —
  *  неоднозначні й не використовуються. */
-export function buildNames(schemas, approved = {}, aliasMap = new Map(), approvedValues = {}, approvedInContext = {}, conversions = []) {
+export function buildNames(schemas, approved = {}, aliasMap = new Map(), approvedValues = {}, approvedInContext = {}, conversions = [], wordsInContext = {}) {
   const name = new Map(), value = new Map(), unit = new Map();
   const bad = new Set();
   const put = (m, tag, k, v) => {
@@ -315,6 +315,9 @@ export function buildNames(schemas, approved = {}, aliasMap = new Map(), approve
   names.lex = buildLexicon(schemas);
   // Значення, які власник погодив ЛИШЕ в контексті (№36, 39, 40), загальне пословне правило не зрівнює.
   names.restricted = new Set(Object.values(approvedInContext || {}).flatMap((vals) => Object.entries(vals || {}).flatMap(([k, v]) => [normValue(k, names), normValue(v, names)])));
+  // Відповідності СЛІВ значення, погоджені лише для конкретної характеристики (власник, 25.10.2026: «полуавтомат» =
+  // «напівавтомат» для типу зварювального апарата): { "характеристика": { "слово RU": "слово UA" } }.
+  names.wordsIn = new Map(Object.entries(wordsInContext || {}).map(([ch, w]) => [normName(ch), new Map(Object.entries(w || {}).map(([ru, ua]) => [normName(ru), normName(ua)]))]));
   names.valueIn = new Map(Object.entries(approvedInContext || {}).map(([ch, vals]) => [normName(ch), new Map(Object.entries(vals || {}).flatMap(([k, v]) => { const c = normValue(v, names); return [[normValue(k, names), c], [c, c]]; }))]));
   return names;
 }
@@ -369,7 +372,9 @@ function buildLexicon(schemas) {
 // Форма слова — кістяк з місцями голосних (без закінчення): «вхідного» / «вихідного» мають однаковий кістяк, але різну
 // форму; подвоєна літера («мініімальна» / «мінімальна») форми не змінює.
 const collapse = (w) => w.replace(/(.)\1+/g, "$1");
-const shape = (w) => collapse(w).replace(/[йьъ']/g, "").replace(/ґ/g, "г").replace(/[аеёиіїоуыэюяє]+/g, "·").replace(/·$/, ""); // закінчення не важить
+// Лише початок слова (до третього приголосного): закінчення й випадні голосні («присосок» / «присоска») не важать,
+// а різні префікси («вх-» / «вих-») — так.
+const shape = (w) => { const s = collapse(w).replace(/[йьъ']/g, "").replace(/ґ/g, "г").replace(/[аеёиіїоуыэюяє]+/g, "·"); let n = 0, i = 0; for (; i < s.length && n < 3; i++) if (s[i] !== "·") n++; return s.slice(0, i); };
 const skeleton = (w) => w.replace(/(.)\1+/g, "$1").replace(/[аеёиіїоуыэюяєьъй']/g, "").replace(/ґ/g, "г");
 // Та сама основа: слово без типового закінчення (від 4 літер) — початок іншого: «перегріву» → «перегрів» ⊂ «перегрівання»,
 // «обертання» → «оберт» ⊂ «обертів», «інверторний» → «інвертор» ⊂ «інверторне»; «перегріву» / «перегрузки» — ні
@@ -441,6 +446,9 @@ export function sameValueIn(keys, a, b, names = null) {
   if (sameValue(a, b, names)) return true;
   const t = (p) => normValue(`${mtText(p.value)}${mtText(p.unit) ? " " + mtText(p.unit) : ""}`, names);
   for (const k of keys) {
+    // Погоджені слова в контексті характеристики: повний зміст, кожне слово має пару (жодне не суперечить).
+    const w = names?.wordsIn?.get(normName(k));
+    if (w && wordsMatchAnyOrder(t(a), t(b), { ...names, lex: new Map([...(names.lex || []), ...w]) })) return true;
     const m = names?.valueIn?.get(normName(k));
     if (!m) continue;
     const ca = m.get(t(a)) ?? t(a), cb = m.get(t(b)) ?? t(b);
@@ -488,8 +496,11 @@ export const isWarrantyName = (n) => WARRANTY_RE.test(normName(n));
 // Prom машинно переклав «до 4,1 ч» як «до 4,1 рік». Для характеристик ТРИВАЛОСТІ (за назвою) скорочення годин після числа
 // («ч», «час»; «год» — лише в українському тексті, бо рос. «год» — рік) → повне українське слово з узгодженням
 // («до 4,1 години», «до 5 годин»). Число не змінюється; інші одиниці («хв», «рік», «років», «л/год») — без змін.
-const DURATION_RE = /(^|[\s(])(час|часу|время|времени|тривалість|тривалості|продолжительность|продолжительности|автономність|автономної|автономной|ресурс|напрацювання|наработка)(?![а-яіїєґё'])/;
-const NOT_DURATION_RE = /гаранті|гаранти|служб|годинник|часы/;
+const DURATION_RE = /(^|[\s(])(час|часу|время|времени|триваліст[а-яіїєґ]*|продолжительност[а-яё]*|автономн[а-яіїєґё]*|ресурс|напрацювання|наработка)(?![а-яіїєґё'])/;
+// Роки (гарантія, термін служби, вік, рік випуску) — не тривалість у годинах.
+const YEAR_NAME_RE = /гаранті|гаранти|служб|(^|[\s(])(вік|возраст)(?![а-яіїєґё])|(рік|год) (випуску|выпуска|виробництва|производства)/;
+const NOT_DURATION_RE = new RegExp(`${YEAR_NAME_RE.source}|годинник|часы`);
+export const isYearName = (n) => YEAR_NAME_RE.test(normName(n));
 export const isDurationName = (n) => { const s = normName(n); return DURATION_RE.test(s) && !NOT_DURATION_RE.test(s); };
 // Український текст: без рос. літер (ы э ъ ё) і з укр. літерою або укр. словом («Час заряджання», «Час роботи» — без і/ї/є/ґ).
 const isUaText = (s) => !/[ыэъё]/i.test(s) && (/[іїєґ]/i.test(s) || /(^|[\s(])(час|роботи|заряджання|заряду|тривалість)(?![а-яіїєґё])/i.test(s));
@@ -501,14 +512,37 @@ export const hoursWord = (num) => {
 };
 const HOURS_RE = /(\d+(?:[.,]\d+)?)(\s*)(ч|час|год)\.?(?![a-zа-яіїєґё])/gi;
 /** Значення тривалості в годинах — з однозначним записом одиниці (p — { value, unit }; ua — текст українською). */
+// Власник, 25.10.2026: у показнику тривалості «год» — години й у російській назві («Максимальное время работы: 5 год»);
+// рік — лише для років (гарантія, термін служби, вік, рік випуску — YEAR_NAME_RE). Параметр ua лишено для сумісності.
 export function hoursValue(name, p, ua) {
   if (!isDurationName(name)) return p;
-  const value = mtText(p.value).replace(HOURS_RE, (all, num, sp, u) => (u.toLowerCase() === "год" && !ua ? all : `${num} ${hoursWord(num)}`));
+  const value = mtText(p.value).replace(HOURS_RE, (all, num) => `${num} ${hoursWord(num)}`);
   let unit = mtText(p.unit);
   const u = unit.trim().replace(/\.$/, "").toLowerCase();
-  if ((u === "ч" || u === "час" || (u === "год" && ua)) && /\d/.test(value)) { const nums = value.match(/\d+(?:[.,]\d+)?/g); unit = hoursWord(nums[nums.length - 1]); }
+  if ((u === "ч" || u === "час" || u === "год") && /\d/.test(value)) { const nums = value.match(/\d+(?:[.,]\d+)?/g); unit = hoursWord(nums[nums.length - 1]); }
   return value === mtText(p.value) && unit === mtText(p.unit) ? p : { ...p, value, unit };
 }
+/** Узгодження з числом для років: 1 / 21 рік, 2–4 роки, 5–20 років, дробові — року; календарний рік («2023») — рік. */
+export const yearsWord = (num, calendar = false) => {
+  if (calendar) return "рік";
+  if (/[.,]/.test(num)) return "року";
+  const n = Number(num) % 100, d = n % 10;
+  return n >= 11 && n <= 14 ? "років" : d === 1 ? "рік" : d >= 2 && d <= 4 ? "роки" : "років";
+};
+const YEARS_RE = /(\d+(?:[.,]\d+)?)\s*(год|г)\.?(?![a-zа-яіїєґё])/gi;
+/** Роки (гарантія, термін служби, вік, рік випуску): неоднозначне «год» / «г.» після числа → «рік / роки / років».
+ *  «лет», «года», «років» (однозначні) — без змін. */
+export function yearsValue(name, p) {
+  if (!isYearName(name)) return p;
+  const cal = /випуску|выпуска|виробництва|производства/.test(normName(name));
+  const value = mtText(p.value).replace(YEARS_RE, (all, num) => `${num} ${yearsWord(num, cal && Number(num) >= 1000)}`);
+  return value === mtText(p.value) ? p : { ...p, value };
+}
+/** Однозначний запис одиниць часу (години — для тривалості, роки — для років). */
+export const timeValue = (name, p, ua) => yearsValue(name, hoursValue(name, p, ua));
+// Скорочення годин у короткому значенні характеристики, що не є ні тривалістю, ні роками, — неоднозначно (ПОТРЕБУЄ ПЕРЕВІРКИ).
+const HOUR_TOKEN_RE = /\d\s*(ч|час|год)\.?(?![a-zа-яіїєґё])/i;
+export const timeAmbiguous = (name, p) => !isDurationName(name) && !isYearName(name) && htmlText(p.value).length <= 60 && HOUR_TOKEN_RE.test(`${htmlText(p.value)} ${htmlText(p.unit)}`);
 
 /** Вирівнювання пар UA- і RU-опису (описи — переклади одне одного, порядок пар однаковий). Найкраще впорядковане
  *  зіставлення: 2 — та сама підтверджена назва, 1 — те саме значення (після нормалізації); між сусідніми
@@ -561,7 +595,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const opt = { mapping, units };
   const fmt = (p) => `${p.name}: ${p.value}${p.unit ? " " + p.unit : ""}`;
   const timeFixed = new Map(); // виправлені записи тривалості в годинах (для звіту)
-  const hv = (name, p, ua) => { const r = hoursValue(name, p, ua); if (r !== p) timeFixed.set(`${name}${p.value}${p.unit}`, { name, from: `${p.value}${p.unit ? " " + p.unit : ""}`, to: `${r.value}${r.unit ? " " + r.unit : ""}` }); return r; };
+  const hv = (name, p, ua) => { const r = timeValue(name, p, ua); if (r !== p) timeFixed.set(`${name}${p.value}${p.unit}`, { name, from: `${p.value}${p.unit ? " " + p.unit : ""}`, to: `${r.value}${r.unit ? " " + r.unit : ""}` }); return r; };
   // Поле з відомою вадою довідника Prom → погоджена назва користувацької (known-issues.json → customName).
   const blockedOf = (n) => { const a = schema && resolveAttr(schema, n, mapping).attr; return (a && mapping?.blocked?.[a.id]) || null; };
   const nameOf = (n) => (schema ? blockedOf(n)?.customName || canonName(names, n) : mtText(n).trim()); // без схеми — як є (сира копія)
@@ -727,6 +761,13 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       else extra(key, r[0].out, SRC.DESC, "", { lang: "ru", ...dm(r[0]) });
     }
     for (const e of extras.values()) {
+      // Скорочення годин у характеристиці, що не є ні тривалістю, ні роками (власник, 25.10.2026), — ПОТРЕБУЄ ПЕРЕВІРКИ.
+      if (!e.blocked && timeAmbiguous(e.out.name, e.out)) {
+        e.blocked = true; e.timeAmb = true;
+        e.why = "ПОТРЕБУЄ ПЕРЕВІРКИ: одиниця часу неоднозначна (не тривалість і не роки)";
+        review(e.out.name, [{ src: e.src === SRC.DESC ? "опис" : "XML", value: fmt(e.out) }], "одиниця часу «год / ч» у характеристиці, що не є тривалістю чи роками, — неоднозначно");
+        continue;
+      }
       if (!e.unitDefect) continue;
       e.blocked = true;
       e.why = `ПОТРЕБУЄ ПЕРЕВІРКИ: одиниця «${e.out.unit}» — вада довідника Prom; значення в «${e.unitDefect.realUnit}» в описі немає`;
@@ -826,7 +867,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       push(x.p, x.s, ""); continue;
     }
     if (e && !e.blocked && !e.taken) { e.taken = true; push(e.out, e.src, "", e.lang); continue; }
-    if (e?.unitDefect) { removed.push(x.p.name); continue; } // одиниця з вадою довідника — не передаємо (ПОТРЕБУЄ ПЕРЕВІРКИ)
+    if (e?.unitDefect || e?.timeAmb) { removed.push(x.p.name); continue; } // одиниця з вадою довідника — не передаємо (ПОТРЕБУЄ ПЕРЕВІРКИ)
     if (now) { if (e) e.taken = true; push(now, SRC.RAW, "", "xml"); continue; }
     if (e?.blocked) { push(x.p, x.s, ""); continue; } // нове значення потребує перевірки — наявне не прибираємо
     removed.push(x.p.name);

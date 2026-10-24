@@ -16,7 +16,7 @@
  *              у новому наборі — ПОТРЕБУЄ ПЕРЕВІРКИ.
  *  Сумнівне — ніколи не ВИДАЛИТИ. План складається за експортом Prom, зробленим ПІСЛЯ імпорту нового набору. */
 import { sha256 } from "./text.mjs";
-import { SRC, charKey, cleanValue, hoursValue, mapParam, normName, normValue, resolveAttr, sameValue, sameValueIn, wordsMatch } from "./prom-attributes.mjs";
+import { SRC, charKey, cleanValue, timeValue, mapParam, normName, normValue, resolveAttr, sameValue, sameValueIn, wordsMatch } from "./prom-attributes.mjs";
 
 export const ACTION = Object.freeze({ KEEP: "ЛИШИТИ", REMOVE: "ВИДАЛИТИ", CHECK: "ПЕРЕВІРИТИ" });
 
@@ -50,7 +50,7 @@ export function planStaleCleanup({ prom = [], prepared = [], items = [], review 
   const same = (q, p) => {
     const a = v(q), b = v(p);
     if (sameValueIn([p.name, q.name], a, b, names)) return true;
-    const h = hoursValue(p.name, a, isUa(q.name)); // «до 4,1 год» = «до 4,1 години»
+    const h = timeValue(p.name, a, isUa(q.name)); // «до 4,1 год» = «до 4,1 години»
     if (h !== a && sameValue(h, b, names)) return true;
     if (schema) { const m = mapParam(schema, { name: p.name, value: a.value, unit: a.unit }, { mapping, units }); if (m.ok && normValue(m.out.value, names) === normValue(b.value, names) && normName(m.out.unit) === normName(b.unit)) return true; }
     return false;
