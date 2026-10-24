@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { categoryBlocks, parseSchemaText } from "../src/core/prom-schema.mjs";
-import { SRC, alignPairs, buildCharacteristics, buildNames, charKey, cleanDescription, descriptionPairs, mapParam, sameValue, validateValue } from "../src/core/prom-attributes.mjs";
+import { SRC, alignPairs, buildCharacteristics, buildNames, charKey, cleanDescription, cleanValue, descriptionPairs, importRisks, mapParam, sameValue, validateValue, wordsMatch } from "../src/core/prom-attributes.mjs";
 import { SCHEMAS_DIR, importSchemaFiles, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
 
 const catalog = loadPromCatalog();
@@ -386,7 +386,10 @@ test("однакові числа — НЕ підстава об'єднуват�
   assert.deepEqual(a.merged, []); assert.equal(a.uaRuMerged, 0); assert.deepEqual(a.needsReview, []);
   assert.deepEqual(a.proposals.synonyms.map((x) => [x.name, x.other]), [["Потужність двигуна", "Споживана потужність"]]);
   const b = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [], descUa: "<p>Номінальна потужність: 1800 Вт</p><p>Споживча потужність: 1800 Вт</p>", descRu: "<p>Номинальная мощность: 1800 Вт</p><p>Потребляемая мощность: 1800 Вт</p>", current: [], names, mapping, units, mode: "queue" });
-  assert.deepEqual(b.params.map((p) => p.name).sort(), ["Номінальна потужність", "Споживана потужність", "Споживча потужність"], "«Споживча» (UA, назва поза схемою) не підмінюється полем з RU-опису");
+  // «Споживча потужність» (UA) і поле «Споживана потужність» (з RU «Потребляемая мощность») — слово в слово те саме (офіційний
+  // переклад «потребляемая» → «споживана», та сама основа), значення однакові: одна характеристика (власник, 24.10.2026).
+  assert.deepEqual(b.params.map((p) => p.name).sort(), ["Номінальна потужність", "Споживана потужність"]);
+  assert.equal(b.lexMerged.length, 1);
   // Те саме число в іншій позиції опису — не та сама характеристика: «Длина кабеля» ≠ «Довжина шини»
   const c = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [], descUa: "<p>Довжина шини: 40 см</p><p>Вага: 5 кг</p>", descRu: "<p>Вес: 5 кг</p><p>Длина кабеля: 40 см</p>", current: [], names, mapping, units, mode: "queue" });
   assert.deepEqual(c.params, [P("Вага", "5", "кг"), P("Довжина шини", "40 см"), P("Довжина кабелю", "40 см")], "кабель — окремо (назва — офіційний переклад зі схем Prom)");
@@ -411,7 +414,11 @@ test("підтверджені еквіваленти UA/RU (приклади в
   const B0 = (o) => buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: [], current: [], names: bare, mapping, units, mode: "queue", ...o });
   const st = B0({ descUa: "<p>Стан: Новий</p>", descRu: "<p>Состояние: Новый</p>" });
   assert.deepEqual(st.params, [P("Стан", "Новий")]);
-  assert.equal(st.needsReview.length, 1); assert.equal(st.needsReview[0].kind, "слова різні");
+  // «Новий» / «Новый» — те саме слово в UA- і RU-написанні (пословна відповідність, 24.10.2026): без попередження
+  assert.deepEqual(st.needsReview, []);
+  // а різні слова без погодженої пари — ПОТРЕБУЄ ПЕРЕВІРКИ
+  const st0 = B0({ descUa: "<p>Стан: Вживаний</p>", descRu: "<p>Состояние: Новый</p>" });
+  assert.equal(st0.needsReview.length, 1);
   // …з погодженою парою (власник, 24.10.2026, №37 «новый» → «новий») — без попередження
   const st2 = B({ descUa: "<p>Стан: Новий</p>", descRu: "<p>Состояние: Новый</p>" });
   assert.deepEqual(st2.params, [P("Стан", "Новий")]);
@@ -595,4 +602,60 @@ test("гарантія (власник, 24.10.2026): гарантійний те
   assert.equal(m.warranty.source, SRC.MANUAL);
   // «Гарантія на акумулятор» — інша характеристика, правилом гарантії не зачіпається
   assert.ok(B({ descUa: "<p>Гарантія на акумулятор: 6 місяців</p>" }).params.some((p) => p.name === "Гарантія на акумулятор"));
+});
+
+test("очищення значень перед XML (власник, 24.10.2026): HTML-сутності (іменовані й числові), кінцева «;» опису; «;» усередині, числа, діапазони, моделі, одиниці — без змін", () => {
+  assert.equal(cleanValue("Gr&ouml;sser;"), "Grösser");
+  assert.equal(cleanValue("GMIG-305P Pulse Function;"), "GMIG-305P Pulse Function");
+  assert.equal(cleanValue("IP21;"), "IP21");
+  assert.equal(cleanValue("є;"), "є");
+  assert.equal(cleanValue("0,8–1,0 мм;"), "0,8–1,0 мм", "десятковий роздільник і діапазон — без змін");
+  assert.equal(cleanValue("15W-40; 10W-40; SAE30"), "15W-40; 10W-40; SAE30", "«;» усередині значення — частина змісту");
+  assert.equal(cleanValue("&#216; 125 мм &#x2013; 1,6&nbsp;мм; ;"), "Ø 125 мм – 1,6 мм");
+  assert.equal(cleanValue("Caf&eacute; &amp; Co &euro;"), "Café & Co €");
+  assert.equal(cleanValue("230 В ±10%"), "230 В ±10%");
+  assert.equal(cleanValue("3 &frasl; 8"), "3 ⁄ 8", "дріб у дюймах — символ зберігається");
+  assert.equal(cleanValue("&unknown; 5"), "&unknown; 5", "невідома сутність — як є");
+  // У підсумку: значення з опису очищено; сирі дані постачальника — без змін
+  const raw = [P("Модель", "GMIG-305P Pulse Function;")];
+  const r = buildCharacteristics({ schema: S(GRIND), categoryId: GRIND, rawParams: raw, current: [], names: catalog.names, mapping: catalog.mappings.get(GRIND), units: catalog.units, mode: "queue", descUa: "<p>Виробник: Gr&ouml;sser;</p>" });
+  assert.deepEqual(r.params, [P("Модель", "GMIG-305P Pulse Function"), P("Виробник", "Grösser")]);
+  assert.equal(raw[0].value, "GMIG-305P Pulse Function;", "сирі дані не змінено");
+  assert.ok(sameValue(P("x", "1.6-5.0 мм"), P("x", "1,6–5 мм"), catalog.names), "«5.0» = «5»");
+});
+
+test("мовні дублі (власник, 24.10.2026, реальний тест Grosser GMIG-305P): погоджені пари й пословна відповідність — одна характеристика з українською назвою; значення різні — не зливаємо", () => {
+  const names = catalog.names, units = catalog.units, cat = "14400105";
+  const B = (ua, ru, rawParams = []) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units, mode: "queue", rawParams, descUa: ua, descRu: ru });
+  // 7 погоджених прикладів власника
+  const ex = [["Частота мережі", "50/60 Гц;", "Частота сети", "50/60 Гц;"], ["Діаметр котушки", "200 мм;", "Диаметр катушки", "200 мм;"], ["Типи зварювання", "MIG/MAG, MMA, TIG;", "Типы сварки", "MIG/MAG, MMA, TIG;"],
+    ["Робочий цикл (ПВ)", "100%;", "Рабочий цикл (ПВ)", "100%;"], ["Функція Pulse", "є;", "Функция Pulse", "есть;"], ["Діаметр зварювального дроту", "0,8–1,0 мм;", "Диаметр сварочной проволоки", "0,8–1,0 мм;"], ["Вага апарата", "7 кг;", "Вес аппарата", "7 кг;"]];
+  const r = B(ex.map(([n, v]) => `<p>${n}: ${v}</p>`).join(""), ex.map(([, , n, v]) => `<p>${n}: ${v}</p>`).join(""));
+  assert.deepEqual(r.params.map((p) => `${p.name}: ${p.value}`), ex.map(([n, v]) => `${n}: ${cleanValue(v)}`));
+  assert.deepEqual(r.needsReview, []);
+  // Пословна відповідність (без окремого погодження): офіційні переклади слів Prom / те саме слово в UA- і RU-написанні
+  const w = B("<p>Тип апарата: інверторний</p><p>Цифровий дисплей: є</p><p>Діапазон регулювання струму MMA: 20–305 А</p><p>Вихідна напруга: 15,5–24 В</p>",
+    "<p>Тип аппарата: инверторный</p><p>Цифровой дисплей: есть</p><p>Диапазон регулировки тока MMA: 20–305 А</p><p>Выходное напряжение: 15,5–24 В</p>");
+  assert.deepEqual(w.params.map((p) => p.name), ["Тип апарата", "Цифровий дисплей", "Діапазон регулювання струму MMA", "Вихідна напруга"]);
+  assert.equal(w.lexMerged.length, 4);
+  // Назви відповідають, значення різні — НЕ зливаємо: обидві окремо + пропозиція (не ховаємо)
+  const d = B("<p>Тип завантаження котушки: бічний</p><p>Номінальний вхідний струм: 30 А</p>", "<p>Тип загрузки катушки: боковой</p><p>Номинальный входящий ток: 30 А</p><p>Цифровой дисплей: нет</p>");
+  assert.equal(d.params.length, 5, JSON.stringify(d.params));
+  assert.deepEqual(d.needsReview, []);
+  // Негативні контролі: різні характеристики не зливаються навіть з однаковими числами
+  assert.equal(wordsMatch("Біт", "Бот", names), false, "короткі слова (< 4 літер) — лише точно або офіційний переклад");
+  for (const [ua, ru] of [["Вага брутто", "Вес"], ["Потужність", "Потребляемая мощность"], ["Частота", "Частота тока"], ["Довжина шини", "Длина кабеля"], ["Максимальна потужність", "Номинальная мощность"]]) assert.equal(wordsMatch(ua, ru, names), false, `${ua} ≠ ${ru}`);
+  const n = B("<p>Вага брутто: 7 кг</p><p>Довжина шини: 40 см</p>", "<p>Вес: 7 кг</p><p>Длина кабеля: 40 см</p>");
+  assert.ok(n.params.some((p) => p.name === "Вага брутто") && n.params.some((p) => p.name === "Довжина шини") && n.params.some((p) => /кабел/i.test(p.name)));
+});
+
+test("однакове число з різними одиницями — не те саме значення («50 Гц» ≠ «50 GHz»); синоніми однієї одиниці — те саме", () => {
+  const cat = "14209803", names = catalog.names;
+  const r = buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", rawParams: [P("Частота", "50", "GHz")], descUa: "<p>Частота: 50 Гц</p>" });
+  assert.deepEqual(r.params[0], P("Частота", "50", "GHz"), "поле категорії — як у схемі й XML постачальника (вада довідника Prom — importRisks)");
+  assert.deepEqual(r.merged, [], "«50 Гц» з опису не вважається тим самим, що «50 GHz»");
+  assert.equal(r.needsReview.length, 1);
+  // Ризики імпорту: вада довідника + автопереклад «ч/год»
+  const risks = importRisks({ params: [...r.params, P("Время работы при полной нагрузке", "до 4,1 ч")], provenance: { items: [...r.provenance.items, { a: "" }] }, categoryId: cat, knownIssues: catalog.knownIssues });
+  assert.deepEqual(risks.map((x) => x.kind), ["вада довідника Prom", "ризик автоперекладу Prom"]);
 });

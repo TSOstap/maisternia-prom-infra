@@ -173,8 +173,16 @@ export function mapParam(schema, param, { mapping, units } = {}) {
 
 // ---------- опис постачальника ----------
 const ENT = { ensp: " ", emsp: " ", thinsp: " ", zwnj: "", zwj: "", shy: "", nbsp: " ", ndash: "–", mdash: "—", minus: "−", deg: "°", sup1: "¹", sup2: "²", sup3: "³", rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", laquo: "«", raquo: "»", times: "×", plusmn: "±", frac12: "½", frac14: "¼", frac34: "¾", hellip: "…", middot: "·", bull: "•", micro: "µ", prime: "′", Prime: "″", quot: '"', apos: "'", amp: "&", lt: "<", gt: ">", Oslash: "Ø", oslash: "ø", asymp: "≈", le: "≤", ge: "≥", trade: "™", reg: "®", copy: "©" };
+// Латиниця-1 (&ouml;, &eacute;, … — коди 160–255 по порядку) і типові типографські сутності HTML: «Gr&ouml;sser» → «Grösser».
+"nbsp iexcl cent pound curren yen brvbar sect uml copy ordf laquo not shy reg macr deg plusmn sup2 sup3 acute micro para middot cedil sup1 ordm raquo frac14 frac12 frac34 iquest Agrave Aacute Acirc Atilde Auml Aring AElig Ccedil Egrave Eacute Ecirc Euml Igrave Iacute Icirc Iuml ETH Ntilde Ograve Oacute Ocirc Otilde Ouml times Oslash Ugrave Uacute Ucirc Uuml Yacute THORN szlig agrave aacute acirc atilde auml aring aelig ccedil egrave eacute ecirc euml igrave iacute icirc iuml eth ntilde ograve oacute ocirc otilde ouml divide oslash ugrave uacute ucirc uuml yacute thorn yuml"
+  .split(" ").forEach((n, i) => { if (!(n in ENT)) ENT[n] = String.fromCharCode(160 + i); });
+Object.assign(ENT, { euro: "€", sbquo: "‚", bdquo: "„", permil: "‰", ne: "≠", infin: "∞", larr: "←", rarr: "→", harr: "↔", uarr: "↑", darr: "↓", dagger: "†", lowast: "∗", empty: "∅", radic: "√", sim: "∼", cong: "≅", frasl: "⁄" });
 /** HTML-сутності → символи (текст так, як його бачить покупець в описі); невідомі лишаються як є. */
 export const htmlText = (v) => mtText(v).replace(/&(#x[0-9a-f]+|#\d+|[a-z]+\d*);/gi, (all, k) => (k[0] === "#" ? String.fromCodePoint(k[1].toLowerCase() === "x" ? parseInt(k.slice(2), 16) : Number(k.slice(1))) : ENT[k] ?? ENT[k.toLowerCase()] ?? all));
+/** Значення для Prom (власник, 24.10.2026): HTML-сутності → символи, зайві пробіли, без КІНЦЕВОЇ «;» (роздільник рядка
+ *  опису / таблиці: «IP21;» → «IP21»). Числа, моделі, одиниці, «;» усередині значення не змінюються. Вихідний текст
+ *  постачальника зберігається окремо — у сирих даних («Характеристики постачальника JSON», оригінальний опис). */
+export const cleanValue = (v) => htmlText(v).replace(/[  ]/g, " ").replace(/\s+/g, " ").trim().replace(/(\s*;)+$/, "").trim();
 const textOf = (html) => htmlText(mtDecode(mtText(html).replace(/<[^>]+>/g, " ").replace(/&nbsp;|&#160;/gi, " "))).replace(/\s+/g, " ").trim();
 const HEADER_KEYS = new Set(["характеристика", "характеристики", "параметр", "параметри", "параметры", "назва", "название"]);
 const HEADER_VALUES = new Set(["значення", "значение", "опис", "описание"]);
@@ -263,6 +271,8 @@ export function normValue(v, names = null) {
   s = s.replace(/^[\s✔✓✅☑•·*–—-]+/u, "").replace(/[«»"“”„]/g, "");
   s = s.replace(/(\d)\s*[–—-]\s*(\d)/g, "$1-$2").replace(/(\d)[\s  ](?=\d{3}(?!\d))/g, "$1").replace(/(\d),(\d)/g, "$1.$2");
   s = s.replace(/(\d)\s*([a-zа-яіїєґ°℃²³*·]+(?:\.?\/?[a-zа-яіїєґ°²³]+)*)\.?/giu, (all, d, u) => `${d} ${names?.unitKnown?.(u) ? names.unitCanon(u) : u}`);
+  // «5.0» = «5», «1.50» = «1.5» (технічно однакові числа).
+  s = s.replace(/(\d+)\.(\d*?)0+(?!\d)/g, (m, a, b) => (b ? a + "." + b : a));
   s = s.replace(/[a-z]/g, (ch) => HOMO[ch] || ch);
   return s.replace(/\s+/g, " ").replace(/\s*\/\s*/g, "/").replace(/\s*([,;])\s*/g, "$1 ").replace(/[\s.,;:!]+$/, "").trim();
 }
@@ -295,6 +305,9 @@ export function buildNames(schemas, approved = {}, aliasMap = new Map(), approve
   for (const [k, v] of Object.entries(approved || {})) { const uk = mtText(v).trim(); name.set(normName(k), uk); if (!name.has(normName(uk))) name.set(normName(uk), uk); }
   for (const [k, v] of Object.entries(approvedValues || {})) { const c = normValue(v, names); value.set(normValue(k, names), c); value.set(c, c); }
   // Значення, погоджені лише для конкретної характеристики (ключ — її назва; поза нею не діють).
+  names.lex = buildLexicon(schemas);
+  // Значення, які власник погодив ЛИШЕ в контексті (№36, 39, 40), загальне пословне правило не зрівнює.
+  names.restricted = new Set(Object.values(approvedInContext || {}).flatMap((vals) => Object.entries(vals || {}).flatMap(([k, v]) => [normValue(k, names), normValue(v, names)])));
   names.valueIn = new Map(Object.entries(approvedInContext || {}).map(([ch, vals]) => [normName(ch), new Map(Object.entries(vals || {}).flatMap(([k, v]) => { const c = normValue(v, names); return [[normValue(k, names), c], [c, c]]; }))]));
   return names;
 }
@@ -313,6 +326,38 @@ function numUnit(p, names) {
   if (n === null) return null;
   return { n, u: unitC(u.replace(/[.\s]+$/, ""), names) };
 }
+// ---------- пословна відповідність UA/RU (власник, 24.10.2026: дублі через мову не передавати) ----------
+// Слова — з офіційних пар Prom (nameUK / nameRU атрибутів і варіантів значень усіх схем; однакова кількість слів →
+// відповідність за позицією в парі). Використовується лише однозначний переклад слова (одне UA-слово або ≥ 90 % і ≥ 2).
+const WORD_RE = /[a-zа-яіїєґ']+|\d+(?:\.\d+)?/g;
+const wordsOf = (s) => normName(htmlText(s)).replace(/ё/g, "е").replace(/(\d),(\d)/g, "$1.$2").match(WORD_RE) || [];
+function buildLexicon(schemas) {
+  const all = new Map();
+  const add = (ua, ru) => { const a = wordsOf(ua), b = wordsOf(ru); if (!a.length || a.length !== b.length) return; a.forEach((w, i) => { if (w === b[i]) return; const m = all.get(b[i]) || new Map(); m.set(w, (m.get(w) || 0) + 1); all.set(b[i], m); }); };
+  for (const s of schemas) for (const at of s.attributes || []) { if (at.nameUK && at.nameRU) add(at.nameUK, at.nameRU); for (const o of at.values || []) if (o.nameUK && o.nameRU) add(o.nameUK, o.nameRU); }
+  const lex = new Map();
+  for (const [ru, m] of all) { const tot = [...m.values()].reduce((s, n) => s + n, 0); const [ua, n] = [...m].sort((x, y) => y[1] - x[1])[0]; if (m.size === 1 || (n / tot >= 0.9 && n >= 2)) lex.set(ru, ua); }
+  return lex;
+}
+// Те саме слово в українському й російському написанні («аппарата» / «апарата», «стол» / «стіл», «цифровой» / «цифровий»):
+// однаковий кістяк приголосних; лише слова від 4 літер. Різні слова («загрузки» / «завантаження») так не збігаються.
+const skeleton = (w) => w.replace(/[аеёиіїоуыэюяєьъй']/g, "").replace(/ґ/g, "г").replace(/(.)\1+/g, "$1");
+const sameStem = (a, b) => { let i = 0; while (i < a.length && i < b.length && a[i] === b[i]) i++; return i >= 4 && i >= Math.min(a.length, b.length) - 3; };
+function wordEq(ua, ru, lex) {
+  if (ua === ru) return true;
+  if (/^\d/.test(ua) || /^\d/.test(ru)) return false; // числа — лише точний збіг
+  const t = lex?.get(ru);
+  if (t && (t === ua || sameStem(t, ua))) return true; // офіційний переклад слова (рід / відмінок — та сама основа)
+  if (ua.length >= 4 && ru.length >= 4) { const s = skeleton(ua); if (s.length >= 2 && s === skeleton(ru)) return true; }
+  return false;
+}
+/** Назви (або значення) UA та RU — те саме, слово в слово: однакова кількість слів і кожне — те саме, офіційний переклад
+ *  Prom або те саме слово в іншому написанні. Числа — лише точний збіг. Самого збігу чисел / позиції недостатньо. */
+export function wordsMatch(ua, ru, names = null) {
+  const a = wordsOf(ua), b = wordsOf(ru);
+  if (!a.length || a.length !== b.length || !a.some((w) => !/^\d/.test(w))) return false;
+  return a.every((w, i) => wordEq(w, b[i], names?.lex));
+}
 /** Те саме значення (UA ↔ RU): однакове після технічної нормалізації, так/ні, те саме число з тією самою одиницею
  *  (з урахуванням синонімів одиниць), або підтверджені UA/RU-варіанти того самого значення (схеми Prom, погоджений
  *  словник). Непідтверджений переклад не вважається тим самим значенням. */
@@ -325,7 +370,10 @@ export function sameValue(a, b, names = null) {
   const na = numUnit(a, names), nb = numUnit(b, names);
   if (na && nb) return na.n === nb.n && na.u === nb.u;
   const ca = names?.value.get(ta);
-  return Boolean(ca && ca === names?.value.get(tb));
+  if (ca && ca === names?.value.get(tb)) return true;
+  // Те саме значення слово в слово (офіційні переклади слів Prom / те саме слово в UA- і RU-написанні; числа — точно).
+  if (names?.restricted?.has(ta) || names?.restricted?.has(tb)) return false;
+  return wordsMatch(ta, tb, names) || wordsMatch(tb, ta, names);
 }
 /** sameValue + значення, погоджені лише для цієї характеристики (keys — можливі назви характеристики: ключ, назви UA / RU). */
 export function sameValueIn(keys, a, b, names = null) {
@@ -342,7 +390,8 @@ export function sameValueIn(keys, a, b, names = null) {
   }
   return false;
 }
-const numEq = (a, b, names) => { const x = numUnit(a, names), y = numUnit(b, names); return Boolean(x && y && x.n === y.n); };
+// Те саме число з сумісною одиницею (або одиниця лише з одного боку): «50 Гц» ≠ «50 GHz», «36 міс» = «36 місяців».
+const numEq = (a, b, names) => { const x = numUnit(a, names), y = numUnit(b, names); return Boolean(x && y && x.n === y.n && (!x.u || !y.u || unitsCompatible(x.u, y.u))); };
 // Ознаки «те саме значення під іншою назвою» (для пар з опису проти інших джерел): число з сумісною одиницею
 // (одна — початок іншої: «міс» / «місяців», «м/с» / «м/сек»), зокрема всередині тексту («0,55 кВт / 550 Вт»);
 // помітне число без одиниці (≥ 10 або дробове); однаковий змістовний текст (від 4 символів, не так/ні).
@@ -420,7 +469,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
   const notes = [];
-  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], warranty: null, uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [] }, aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [] };
+  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], warranty: null, uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [], lexDiff: [] }, lexMerged: [], aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [] };
   if (!schema && mode === "main") { notes.push(`немає схеми категорії ${categoryId || "?"} — підготовлені характеристики не змінено`); return unchanged; }
   const opt = { mapping, units };
   const fmt = (p) => `${p.name}: ${p.value}${p.unit ? " " + p.unit : ""}`;
@@ -438,7 +487,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const review = (name, values, reason) => needsReview.push({ name, values, reason, kind: /можливо, лише переклад/.test(reason) ? "переклад?" : /не визначити/.test(reason) ? "слова різні" : "конфлікт" });
   const hint = (a, b) => { const ta = tokens(a), tb = tokens(b); return ta !== tb ? "" : ta ? " (числа й латиниця однакові — можливо, лише переклад)" : " (без чисел і латиниці — переклад чи інший зміст, не визначити)"; };
   let uaRuMerged = 0; // та сама характеристика в UA- і RU-описі з однаковим значенням → одна
-  const aligned = [], gapProps = [], valueProps = [], ruOnly = [], warrantyDesc = []; // вирівняні пари UA/RU; пропозиції словника; лише RU
+  const aligned = [], gapProps = [], valueProps = [], ruOnly = [], warrantyDesc = [], lexMerged = [], lexDiff = []; // вирівняні пари UA/RU; пропозиції словника; лише RU
   const extras = new Map(); // ключ → { out, src, from, blocked, why }
   const extra = (key, out, src, from, more = {}) => {
     if (!key) return;
@@ -456,7 +505,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
         unmapped.push({ name: p.name, reason: m.reason });
         // Не проходить поле категорії → користувацька з оригінальним значенням.
         const name = m.attr ? m.attr.nameUK || m.attr.nameRU : nameOf(p.name);
-        extra(normName(name), { name, value: p.value, unit: p.unit }, SRC.RAW, itemKey(p));
+        extra(normName(name), { name, value: cleanValue(p.value), unit: p.unit }, SRC.RAW, itemKey(p));
         continue;
       }
       const prev = cand.get(m.attr.id);
@@ -469,7 +518,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     }
     const pairs = [];
     for (const [lang, html] of [["ua", descUa], ["ru", descRu]]) for (const pr of descriptionPairs(html)) {
-      const one = { lang, ...pr, m: mapParam(schema, { name: pr.key, value: pr.value, unit: "" }, opt) };
+      const one = { lang, ...pr, m: mapParam(schema, { name: pr.key, value: cleanValue(pr.value), unit: "" }, opt) };
       // Гарантійний термін — лише зі структурованих характеристик (XML, підготовлені, ручні), НЕ з тексту опису
       // (власник, 24.10.2026). Пара з опису не заповнює й не створює гарантію; розбіжність — лише інформаційно.
       if (isWarrantyName(one.m.attr ? one.m.attr.nameUK || one.m.attr.nameRU : nameOf(pr.key)) || isWarrantyName(pr.key)) { warrantyDesc.push(one); continue; }
@@ -502,7 +551,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     // (вирівнювання) з тим самим значенням. Лише RU (без UA-відповідника) — передається з оригінальною назвою.
     const U = pairs.filter((pr) => pr.lang === "ua"), R = pairs.filter((pr) => pr.lang === "ru");
     const pk = (pr) => normName(pr.m.attr ? pr.m.attr.nameUK || pr.m.attr.nameRU : nameOf(pr.key));
-    const pv = (pr) => ({ value: htmlText(pr.value).trim(), unit: "" });
+    const pv = (pr) => ({ value: cleanValue(pr.value), unit: "" });
     const al = alignPairs(U, R, (u, r) => (pk(u) === pk(r) ? 2 : sameValue(pv(u), pv(r), names) ? 1 : 0));
     const uaKeys = new Set(U.map(pk));
     const dx = { ua: new Map(), ru: new Map() };
@@ -512,11 +561,28 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     // 24.10.2026: «Реверс — Так» ≠ «Подсветка — Да»). Вирівнювання — лише джерело ПРОПОЗИЦІЙ для словника; на
     // результат не впливає: непідтверджена RU-пара не об'єднується й не відкидається — передається окремо.
     for (const x of al) if (x.s === 1) aligned.push({ ua: x.u, ru: x.r, how: "та сама позиція й значення" }); else if (x.s === 0) gapProps.push({ ua: x.u, ru: x.r });
-    for (const u of U) if (!u.m.ok) add("ua", pk(u), u, nameOfPair(u));
+    // Пословна відповідність назв (офіційні переклади слів Prom / те саме слово в UA- і RU-написанні): якщо в описі
+    // рівно одна така пара й значення еквівалентні — це та сама характеристика (одна, з українською назвою). Якщо значення
+    // різні — НЕ зливаємо (відповідність назв не погоджена власником): обидві окремо + пропозиція.
+    const lexTwin = (p, list) => { const hits = list.filter((q) => q !== p && wordsMatch(q.lang === "ua" ? q.key : p.key, q.lang === "ua" ? p.key : q.key, names)); return hits.length === 1 ? hits[0] : null; };
+    const R2 = new Set(R.map(pk));
+    for (const u of U) {
+      if (u.m.ok) continue;
+      const key = pk(u);
+      const f = !R2.has(key) ? lexTwin(u, R.filter((r) => r.m.ok && cand.has(r.m.attr.id))) : null; // UA-назва поза схемою ↔ поле категорії з RU-опису
+      if (f && sameValue(pv(u), { value: f.m.out.value, unit: f.m.out.unit }, names)) { lexMerged.push({ ua: u.key, ru: f.key, value: pv(u).value }); add("ua", pk(f), u, nameOfPair(f)); continue; }
+      if (f) lexDiff.push({ ua: u.key, ru: f.key, ua_value: pv(u).value, ru_value: pv(f).value });
+      add("ua", key, u, nameOfPair(u));
+    }
     for (const r of R) {
       if (r.m.ok) continue;
       const key = pk(r);
-      if (!uaKeys.has(key)) ruOnly.push(r); // підтвердженої UA-відповідності немає — оригінальна назва (або підтверджена українська)
+      if (!uaKeys.has(key)) {
+        const t = lexTwin(r, U);
+        if (t && sameValue(pv(t), pv(r), names)) { lexMerged.push({ ua: t.key, ru: r.key, value: pv(t).value }); add("ru", pk(t), r, nameOfPair(t)); continue; }
+        if (t) lexDiff.push({ ua: t.key, ru: r.key, ua_value: pv(t).value, ru_value: pv(r).value });
+        ruOnly.push(r); // підтвердженої UA-відповідності немає — оригінальна назва (або підтверджена українська)
+      }
       add("ru", key, r, nameOfPair(r));
     }
     for (const key of new Set([...dx.ua.keys(), ...dx.ru.keys()])) {
@@ -709,7 +775,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const reviewNotes = needsReview.map((r) => `ПОТРЕБУЄ ПЕРЕВІРКИ «${r.name}»: ${r.values.map((v) => `${v.src} «${v.value}»`).join(" / ")} — ${r.reason}`);
   const provenanceOut = { v: 1, cat: String(categoryId || ""), items, x: [...suppressed], notes: [...reviewNotes, ...conflictsU, ...notes].slice(0, 30) };
   return {
-    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, warranty, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps }, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped,
+    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, warranty, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps, lexDiff }, lexMerged, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped,
     changed: JSON.stringify(result) !== JSON.stringify(cur),
   };
 }
@@ -719,4 +785,20 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
 export function charKey(schema, name, { mapping = null, names = null } = {}) {
   const attr = schema ? resolveAttr(schema, name, mapping).attr : null;
   return normName(attr ? attr.nameUK || attr.nameRU : schema ? canonName(names, name) : name);
+}
+
+/** Ризики перед реальним імпортом у Prom (не змінює характеристик; для підготовки файлу й звіту власнику).
+ *  1) Поле категорії з відомою вадою довідника Prom (knownIssues: напр. одиниця «GHz» для частоти мережі).
+ *  2) Користувацька з російською назвою, значення якої містить «ч» / «час» / «год» після числа: Prom автоматично
+ *     перекладає російські користувацькі на українську й плутає скорочення (у тесті: «до 5 ч» → «до 5 років»). */
+export function importRisks({ params = [], provenance = null, categoryId = "", knownIssues = [] } = {}) {
+  const out = [];
+  const items = provenance?.items || [];
+  params.forEach((p, i) => {
+    const a = items[i]?.a || "";
+    for (const k of knownIssues) if (a && String(k.id) === String(a) && (k.categories || []).map(String).includes(String(categoryId))) out.push({ kind: "вада довідника Prom", param: `${p.name}: ${p.value}${p.unit ? " " + p.unit : ""}`, issue: k.issue });
+    const ru = /[ыэъё]/i.test(p.name) || (!/[іїєґ]/i.test(p.name) && /(^|[\s(])(время|работы|нагрузк|питани|мощност|количеств|длина|вес)/i.test(p.name));
+    if (!a && ru && /\d\s*(ч|час|часа|часов|год)(?![a-zа-яіїєґё])/i.test(htmlText(p.value))) out.push({ kind: "ризик автоперекладу Prom", param: `${p.name}: ${p.value}`, issue: "російська користувацька з «ч/год» — Prom може перекласти як «рік/років»" });
+  });
+  return out;
 }

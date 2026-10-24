@@ -42,6 +42,7 @@ export function loadPromCatalog(dir = SCHEMAS_DIR) {
   // Синоніми одиниць — однозначна технічна нормалізація (units.json → aliases); погоджений словник — names / values /
   // valuesInContext (лише для названої характеристики).
   out.units.aliasMap = unitAliasMap(out.units.aliases);
+  out.knownIssues = readJson(path.join(dir, "known-issues.json"), {}).attributes || []; // відомі вади довідника Prom (importRisks)
   const dict = readJson(path.join(dir, "names-ua-ru.json"), {});
   out.names = buildNames([...out.schemas.values()], dict.names || {}, out.units.aliasMap, dict.values || {}, dict.valuesInContext || {});
   for (const e of pending) {
