@@ -748,11 +748,15 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       const u = uniq(ua), r = uniq(ru);
       const orig = [...ua, ...ru].map((x) => label(x.pr));
       const name = (u[0] || r[0]).out.name;
-      if (u.length > 1 || r.length > 1) { review(name, orig, "різні значення в одному описі"); continue; }
+      // Конфлікт значень (власник, 25.10.2026): нічого не вибираємо, але й наявне підготовлене значення картки не прибираємо —
+      // ключ «утримується» (наявний запис лишається в підсумку; нового значення до рішення немає). Синхронізацію не блокує.
+      const hold = (why) => { if (!extras.has(key)) extras.set(key, { out: (u[0] || r[0]).out, src: SRC.DESC, from: "", blocked: true, held: true, why }); };
+      if (u.length > 1 || r.length > 1) { review(name, orig, "різні значення в одному описі"); hold("ПОТРЕБУЄ ПЕРЕВІРКИ: різні значення в одному описі"); continue; }
       if (u.length && r.length) {
         if (!sameValueIn([key, u[0].pr.key, r[0].pr.key, nameOf(r[0].pr.key)], u[0].out, r[0].out, names)) {
           review(name, orig, "UA і RU значення відрізняються" + hint(u[0].out.value, r[0].out.value));
           valueProps.push({ name, ua: u[0].out.value, ru: r[0].out.value });
+          hold("ПОТРЕБУЄ ПЕРЕВІРКИ: UA і RU значення відрізняються");
           continue;
         }
         uaRuMerged++;
@@ -840,6 +844,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       if (c && !used.has(x.a)) push(c.out, c.src, x.a);
       else if (c && equivalent(x.p, c.out)) merge(x, x.a);
       else if (c) { conflicts.push(`«${fmt(x.p)}» ≠ поле Prom «${fmt(c.out)}» — обидва збережено`); push(x.p, x.s, ""); }
+      else if (ambiguous.has(x.a) && !suppressed.has(x.a)) push(x.p, x.s, x.a); // конфлікт нових значень поля — наявне лишається
       else removed.push(x.p.name);
       continue;
     }
@@ -867,7 +872,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       push(x.p, x.s, ""); continue;
     }
     if (e && !e.blocked && !e.taken) { e.taken = true; push(e.out, e.src, "", e.lang); continue; }
-    if (e?.unitDefect || e?.timeAmb) { removed.push(x.p.name); continue; } // одиниця з вадою довідника — не передаємо (ПОТРЕБУЄ ПЕРЕВІРКИ)
+    if (e?.unitDefect) { removed.push(x.p.name); continue; } // одиниця з вадою довідника («50 GHz») — не передаємо (погоджено)
     if (now) { if (e) e.taken = true; push(now, SRC.RAW, "", "xml"); continue; }
     if (e?.blocked) { push(x.p, x.s, ""); continue; } // нове значення потребує перевірки — наявне не прибираємо
     removed.push(x.p.name);

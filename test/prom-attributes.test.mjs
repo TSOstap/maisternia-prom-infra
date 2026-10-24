@@ -875,3 +875,38 @@ test("одиниці часу (власник, 25.10.2026): тривалість
   const w = B({ descUa: "<p>Номінальна потужність: 1100 Вт</p><p>Вихідна потужність: 1100 Вт</p><p>Споживана потужність: 1,1 кВт</p>" });
   assert.equal(w.params.length, 3, JSON.stringify(w.params));
 });
+
+test("конфлікт значень (власник, 25.10.2026): інформаційний — нічого не вибирається, наявне підготовлене значення лишається, решта характеристик оновлюється; товар не блокується", () => {
+  const names = catalog.names, cat = "14400105";
+  const B = (o) => buildCharacteristics({ schema: S(cat), categoryId: cat, names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  const desc = { descUa: "<p>Тип охолодження: примусове повітряне</p><p>Вага апарата: 7 кг</p>", descRu: "<p>Тип охлаждения: принудительное</p><p>Вес аппарата: 7 кг</p>" };
+  // Без наявного значення — запис не передається (лише сирі дані + ПОТРЕБУЄ ПЕРЕВІРКИ); решта — як звичайно
+  const a = B({ current: [], ...desc });
+  assert.deepEqual(a.params, [P("Вага апарата", "7 кг")]);
+  assert.equal(a.needsReview.length, 1);
+  // Наявне підготовлене значення (з попередньої синхронізації) — не прибирається й не перезаписується
+  const b = B({ current: [P("Тип охолодження", "примусове повітряне"), P("Вага апарата", "6 кг")], provenance: { v: 1, cat, items: [{ k: ["Тип охолодження", "примусове повітряне", ""].join("\u0001"), s: SRC.DESC, a: "" }, { k: ["Вага апарата", "6 кг", ""].join("\u0001"), s: SRC.DESC, a: "" }] }, ...desc });
+  assert.deepEqual(b.params, [P("Тип охолодження", "примусове повітряне"), P("Вага апарата", "7 кг")], "конфліктне — наявне лишається; безпечне — оновлено");
+  // Ручне значення власника — ніколи не перезаписується
+  const m = B({ current: [P("Тип охолодження", "повітряне (вручну)")], provenance: { v: 1, cat, items: [] }, ...desc });
+  assert.ok(m.params.some((p) => p.value === "повітряне (вручну)"));
+  // Поле категорії: опис UA ≠ RU — наявне значення поля лишається
+  const fa = attrOf(GEN, "Частота струму").id;
+  const g = buildCharacteristics({ schema: S(GEN), categoryId: GEN, names, mapping: catalog.mappings.get(GEN), units: catalog.units, mode: "queue", current: [P("Частота струму", "50", "Гц")], provenance: { v: 1, cat: GEN, items: [{ k: ["Частота струму", "50", "Гц"].join("\u0001"), s: SRC.DESC, a: fa }] }, descUa: "<p>Частота струму: 50 Гц</p>", descRu: "<p>Частота тока: 60 Гц</p>" });
+  assert.deepEqual(g.params, [P("Частота струму", "50", "Гц")]);
+  assert.equal(g.needsReview.length, 1);
+});
+
+test("погоджені 25.10.2026 відповідності: натяг ланцюга (назва + «Бічне = Боковой»), тип охолодження («повітряне / повітряний = воздушное / воздушный»), однозначні пари назв; «Рівні» — не додано", () => {
+  const names = catalog.names;
+  const B = (cat, ua, ru) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", descUa: ua, descRu: ru });
+  assert.deepEqual(B(SAW, "<p>Натягування ланцюга: Бічне</p>", "<p>Натяжение цепи: Боковой</p>").params, [P("Натягування ланцюга", "Бічне")]);
+  assert.equal(sameValueIn(["Тип кріплення"], P("x", "Боковой"), P("x", "Бічне"), names), false, "«Бічне = Боковой» — лише для натягу ланцюга");
+  for (const [ua, ru] of [["Повітряне", "Воздушное"], ["Повітряний", "Воздушное"], ["ПОВІТРЯНЕ ОХОЛОДЖЕННЯ", "ВОЗДУШНОЕ ОХЛАЖДЕНИЕ"]]) assert.ok(sameValueIn(["Тип охолодження"], P("x", ua), P("x", ru), names), `${ua} = ${ru}`);
+  assert.equal(sameValueIn(["Тип охолодження"], P("x", "примусове повітряне"), P("x", "принудительное"), names), false, "«принудительное» ≠ «примусове повітряне»");
+  assert.equal(sameValueIn(["Тип охолодження"], P("x", "повітряне примусове"), P("x", "принудительное воздушное"), names), false, "«принудительное» = «примусове» для типу охолодження не погоджено");
+  assert.deepEqual(B(SAW, "<p>Оберти двигуна: 6000 об/хв</p>", "<p>Обороты двигателя: 6000 об/мин</p>").params, [P("Оберти двигуна", "6000 об/хв")]);
+  assert.equal(B(SAW, "<p>Оберти двигуна: 6000 об/хв</p>", "<p>Обороты двигателя: 8000 об/мин</p>").needsReview.length, 1, "та сама назва, інше значення — ПОТРЕБУЄ ПЕРЕВІРКИ");
+  assert.equal(charKey(S(SAW), "Уровни", { mapping: catalog.mappings.get(SAW), names }) === charKey(S(SAW), "Рівні", { mapping: catalog.mappings.get(SAW), names }), false, "«Рівні ⇄ Уровни» не погоджено (неоднозначне слово)");
+  for (const [ua, ru] of [["Оберти х. х.", "Обрати х. х."], ["Країна виробництва", "Страна-производитель"], ["Оберти", "Обратить"], ["ВагаВага", "Вес"]]) assert.notEqual(charKey(S(SAW), ua, { mapping: catalog.mappings.get(SAW), names }), charKey(S(SAW), ru, { mapping: catalog.mappings.get(SAW), names }), `сумнівна пара ${ua} ⇄ ${ru} не погоджена`);
+});
