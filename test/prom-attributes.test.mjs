@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { categoryBlocks, parseSchemaText } from "../src/core/prom-schema.mjs";
-import { SRC, alignPairs, brandEq, isBatteryTypeName, buildCharacteristics, buildNames, charKey, cleanDescription, cleanValue, descriptionPairs, hoursValue, hoursWord, importRisks, timeValue, yearsWord, mapParam, sameValue, sameValueIn, validateValue, wordsMatch, wordsMatchAnyOrder } from "../src/core/prom-attributes.mjs";
+import { SRC, alignPairs, brandEq, isBatteryTypeName, itemsCompatible, normName, normValue, buildCharacteristics, buildNames, charKey, cleanDescription, cleanValue, descriptionPairs, hoursValue, hoursWord, importRisks, timeValue, yearsWord, mapParam, sameValue, sameValueIn, validateValue, wordsMatch, wordsMatchAnyOrder } from "../src/core/prom-attributes.mjs";
 import { SCHEMAS_DIR, importSchemaFiles, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
 
 const catalog = loadPromCatalog();
@@ -511,7 +511,10 @@ test("погоджені словники (власник, 24.10.2026): №1–3
   const ok36 = B({ descUa: "<p>Захист від перегріву: Має</p>", descRu: "<p>Защита от перегрева: Есть</p>" });
   assert.deepEqual(ok36.params, [P("Захист від перегріву", "Має")]); assert.deepEqual(ok36.needsReview, []);
   const no36 = B({ descUa: "<p>Реверс: Має</p>", descRu: "<p>Реверс: Есть</p>" });
-  assert.deepEqual(no36.params, []); assert.equal(no36.needsReview.length, 1, "поза погодженим контекстом — обидва значення, неоднозначність");
+  // 25.10.2026: «Має = Есть» погоджено для всіх характеристик наявності функцій / елементів (ціле значення)
+  assert.deepEqual(no36.params, [P("Реверс", "Має")]); assert.deepEqual(no36.needsReview, []);
+  const qty = B({ descUa: "<p>Зубило: 1шт.</p>", descRu: "<p>Зубило: Есть</p>" });
+  assert.deepEqual(qty.params, []); assert.equal(qty.needsReview.length, 1, "кількість ≠ «Есть» (ТОП-50 №40 відхилено)");
   // №39 — лише «Джерело живлення» (у шліфмашинах це атрибут «Живлення», №46); в іншій характеристиці — ні
   const p39 = B({ descUa: "<p>Джерело живлення: акумуляторне</p>", descRu: "<p>Источник питания: аккумуляторный</p>" });
   assert.deepEqual(p39.needsReview, []);
@@ -954,10 +957,15 @@ test("бренди (власник, 25.10.2026): оригінальне напи
   assert.deepEqual(a.needsReview, []);
   // Einhell / Эйнхель — офіційне «Einhell»
   assert.deepEqual(B({ brand: "Einhell", descUa: "<p>Бренд: Einhell</p>", descRu: "<p>Бренд: Эйнхель</p>" }).params, [P("Бренд", "Einhell")]);
-  // Метабо / Металбо — жодне не збігається з офіційним «Metabo»: ПОТРЕБУЄ ПЕРЕВІРКИ, не перекладаємо й не вгадуємо
-  const m = B({ brand: "Metabo", descUa: "<p>Бренд: Метабо</p>", descRu: "<p>Бренд: Металбо</p>" });
+  // Метабо / Металбо — погоджено (ТОП-50 №28) лише для товару з офіційним брендом Metabo; для іншого бренду — ПОТРЕБУЄ ПЕРЕВІРКИ
+  assert.deepEqual(B({ brand: "Metabo", descUa: "<p>Бренд: Метабо</p>", descRu: "<p>Бренд: Металбо</p>" }).params, [P("Бренд", "Metabo")]);
+  const m = B({ brand: "Bosch", descUa: "<p>Бренд: Метабо</p>", descRu: "<p>Бренд: Металбо</p>" });
   assert.deepEqual(m.params, []);
-  assert.match(m.needsReview[0].reason, /офіційне написання.*Metabo/);
+  assert.match(m.needsReview[0].reason, /офіційне написання.*Bosch/);
+  assert.deepEqual(B({ descUa: "<p>Бренд: Метабо</p>", descRu: "<p>Бренд: Металбо</p>" }).params, [], "без офіційного бренду — не вгадуємо");
+  // №45: повна назва «solo® by AL-KO» (не скорочувати до AL-KO); №21: «Start Pro»
+  assert.deepEqual(B({ brand: "AL-KO", descUa: "<p>Бренд: solo® by AL-KO</p>", descRu: "<p>Бренд: соло® от AL-KO</p>" }).params, [P("Бренд", "solo® by AL-KO")]);
+  assert.deepEqual(B({ brand: "Start Pro", descUa: "<p>Виробник: Startpro</p>", descRu: "<p>Производитель: Стартпро</p>" }).params, [P("Виробник", "Start Pro")]);
   // Без офіційного написання — ПОТРЕБУЄ ПЕРЕВІРКИ; схожі літери (латиниця / кирилиця) — не той самий бренд
   assert.equal(B({ descUa: "<p>Бренд: AL-KO</p>", descRu: "<p>Бренд: АЛ-КО</p>" }).needsReview.length, 1);
   assert.equal(brandEq("KOMA", "КОМА"), false, "латиниця ≠ кирилиця з тим самим виглядом");
@@ -1005,4 +1013,89 @@ test("бренд у синхронізації таблиці: офіційне 
   const full = { params: [P("Колір", "зелений")], pictures: [], descriptionUa: "<p>Бренд: AL-KO</p>", descriptionRu: "<p>Бренд: АЛ-НО</p>" };
   const res = refreshMainRow(row, offer, full, { stamp: "2026-10-25T10:00:00.000Z", catalog });
   assert.ok(JSON.parse(res.row["Характеристики JSON"]).some((p) => p.name === "Бренд" && p.value === "AL-KO"), res.row["Характеристики JSON"]);
+});
+
+test("комплектація (власник, 25.10.2026): поле Prom — лише за явними фразами постачальника; «потрібен 1 шт.», тип, напруга, «Solo» — не підтвердження; без впевненості — оригінал користувацькою", () => {
+  const names = catalog.names;
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  const solo = { titles: ["Потужний багатофункціональний інструмент акумуляторний Einhell TE-MG 18/1 Li - Solo : без АКБ (4465195)"], descUa: "<p>Постачається без акумулятора та зарядного пристрою</p><p>Акумулятор: Немає, потрібен акумулятор 1 шт. - Li-ion 18В</p>", descRu: "<p>Аккумулятор: Нет, Li-ion 1 шт. - 18В</p>" };
+  const kitV = { titles: ["Потужний багатофункціональний інструмент акумуляторний Einhell TE-MG 18/1 Li - Solo : з АКБ 18V 2.5Ah"], descUa: "<p>Постачається з Power X-Change акумулятором 18V 2,5 Ah і зарядним пристроєм</p><p>Акумулятор: PXC акумулятор Li-ion 18В, 2.5 Ah + Зарядне 3 А</p>" };
+  // 1. Каркас без АКБ (2528728768): №5 — одна характеристика (UA), без позначки; полів комплектації в 141717 немає — нічого не вигадуємо
+  const a = B("141717", solo);
+  assert.deepEqual(a.params, [P("Акумулятор", "Немає, потрібен акумулятор 1 шт. - Li-ion 18В")]);
+  assert.deepEqual(a.needsReview, []);
+  assert.ok(!a.params.some((p) => /Додатковий акумулятор/.test(p.name)), "«Додатковий акумулятор» — інша характеристика, не заповнюється");
+  // Категорія з полем «Комплектація» (1250308) — каркас: «Без акумулятора і зарядного пристрою»; комплект — «З акумулятором і зарядним пристроєм»
+  assert.ok(B("1250308", solo).params.some((p) => p.name === "Комплектація" && p.value === "Без акумулятора і зарядного пристрою"));
+  // 2. Комплект з АКБ і зарядкою (2529879460)
+  assert.ok(B("1250308", kitV).params.some((p) => p.name === "Комплектація" && p.value === "З акумулятором і зарядним пристроєм"));
+  assert.ok(B(GEN, kitV).params.some((p) => p.name === "Акумулятор в комплекті" && p.value === "Так"));
+  assert.ok(B(GEN, solo).params.some((p) => p.name === "Акумулятор в комплекті" && p.value === "Ні"));
+  // 3. «Потрібен акумулятор 1 шт.» без підтвердженої комплектації — оригінал користувацькою, поле не заповнюється
+  const c = B("1250308", { titles: ["Тример Einhell GE-CT 18/28 Li TC-Solo"], descUa: "<p>Акумулятор: потрібен акумулятор 1 шт.</p><p>Тип акумулятора: Li-Ion</p><p>Напруга акумулятора: 18 В</p>" });
+  assert.ok(c.params.some((p) => p.name === "Акумулятор" && p.value === "потрібен акумулятор 1 шт."));
+  assert.ok(!c.params.some((p) => p.name === "Комплектація"), "«Solo», тип і напруга — не підтвердження комплектації");
+  // 4. Суперечливі UA / RU («є» ≠ «нет») — нічого не вибираємо
+  const d = B("141717", { descUa: "<p>Акумулятор: Є, Li-ion 18В</p>", descRu: "<p>Аккумулятор: Нет, Li-ion 18В</p>" });
+  assert.deepEqual(d.params, []); assert.equal(d.needsReview[0].kind, "конфлікт");
+  // 5. Різне формулювання без суперечності, комплектацію не підтверджено — UA-оригінал передається, позначка інформаційна
+  const e = B("141717", { descUa: "<p>Батарея: немає Li-ion 18В</p>", descRu: "<p>Батарея: нет в комплекте, Li-ion 18В</p>" });
+  assert.deepEqual(e.params, [P("Батарея", "немає Li-ion 18В")]);
+  assert.equal(e.needsReview[0].kind, "інформаційно");
+  // 6. Ручна характеристика власника — без змін
+  const m = buildCharacteristics({ schema: S("1250308"), categoryId: "1250308", names, mapping: catalog.mappings.get("1250308"), units: catalog.units, mode: "queue", current: [P("Комплектація", "З акумулятором і зарядним пристроєм")], provenance: { v: 1, cat: "1250308", items: [] }, ...solo });
+  assert.ok(m.params.some((p) => p.name === "Комплектація" && p.value === "З акумулятором і зарядним пристроєм"), "ручне значення має пріоритет");
+  // Пара опису, що не стосується комплекту («Зарядка акумулятора: Без АКБ» у генераторі з ручним запуском), — не доказ
+  assert.ok(!B(GEN, { titles: ["Бензиновий інверторний генератор Tex.AC TA-G3800IN"], descUa: "<table><tr><td>Тип запуску</td><td>Ручний</td></tr><tr><td>Зарядка акумулятора</td><td>Без АКБ</td></tr></table>" }).params.some((p) => p.name === "Акумулятор в комплекті"));
+  // 7. Суперечливі фрази постачальника — поле не заповнюється
+  assert.ok(!B("1250308", { titles: ["Шліфмашина без АКБ"], descUa: "<p>Постачається з акумулятором 2 Ач і зарядним пристроєм</p>" }).params.some((p) => p.name === "Комплектація"));
+});
+
+test("ТОП-50 (власник, 25.10.2026): погоджені пари, тип акумулятора з платформою, «/хв = /мин», склад комплектації; №29 і відхилені — ПОТРЕБУЄ ПЕРЕВІРКИ", () => {
+  const names = catalog.names;
+  const B = (cat, ua, ru) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", descUa: ua, descRu: ru });
+  assert.deepEqual(B(GEN, "<p>Тип двигуна: 4-тактний</p>", "<p>Тип двигателя: 4-тактный</p>").params.filter((p) => /двигун/i.test(p.name)).map((p) => p.value), ["4-тактний"]);
+  // №3: поле «Тип акумулятора» — варіант схеми; платформа LXT зберігається окремо
+  const lxt = B("141711", "<p>Тип акумулятора: Li-ion, LXT</p>", "<p>Тип аккумулятора: литий-ионный, LXT</p>");
+  assert.deepEqual(lxt.params, [P("Тип акумулятора", "Li-Ion"), P("Акумуляторна платформа", "LXT")]);
+  assert.ok(lxt.provenance.items[0].a, "стандартне поле");
+  assert.deepEqual(lxt.needsReview, []);
+  // №14: «літій-іонний» = «литий-ионный» → поле «Li-Ion»
+  assert.deepEqual(B("141711", "<p>Тип акумулятора: літій-іонний</p>", "<p>Тип аккумулятора: литий-ионный</p>").params, [P("Тип акумулятора", "Li-Ion")]);
+  // №22 / №49: «/хв» = «/мин»
+  assert.equal(B("141725", "<p>Кількість обертів холостого ходу: 0 - 1.100 /хв</p>", "<p>Количество оборотов холостого хода: 0 – 1.100 /мин</p>").needsReview.length, 0);
+  // №30: склад комплектації той самий — одна; інший склад — ПОТРЕБУЄ ПЕРЕВІРКИ
+  const k1 = B("143109", "<p>Комплектація: Абразивний круг - 2 шт,захисний кожух,Картонна упаковка,скло для захисту очей від іскор</p>", "<p>Комплектация: Абразивный круг - 2 шт,защитный кожух,Картонная упаковка,стекло для защиты глаз от искр</p>");
+  assert.equal(k1.params.filter((p) => /Комплект/.test(p.name)).length, 1); assert.deepEqual(k1.needsReview, []);
+  assert.equal(itemsCompatible("Абразивний круг - 2 шт, захисний кожух", "Абразивный круг - 3 шт, защитный кожух"), false, "інша кількість");
+  assert.equal(itemsCompatible("інструкція, колеса, трубка", "инструкция, колеса"), false, "інший склад");
+  assert.ok(itemsCompatible("інструкція з експлуатації, захисний кожух, лещата", "защитный кожух, инструкция по эксплуатации, тиски"), "інший порядок — допустимо");
+  // №29: «670 м³/г» ≠ «670 м³/ч» без незалежного підтвердження
+  assert.equal(B("1250309", "<p>Витрата повітря: 670 м³/г</p>", "<p>Расход воздуха: 670 м³/ч</p>").needsReview.length, 1);
+  // Відхилені №31, 40
+  assert.equal(B("141711", "<p>Напруга акумулятора: 21 В</p>", "<p>Напряжение аккумулятора: 20 В</p>").needsReview.length, 1);
+});
+
+test("захисні випадки ТОП-50 / комплектації (мутаційна перевірка 25.10.2026)", async () => {
+  const names = catalog.names;
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  // Склад комплектації перевіряється навіть для погодженої пари (захист від неправильного застосування словника)
+  const fake = { ...names, valueIn: new Map([[normName("Комплектація"), new Map([[normValue("x1, x2", names), normValue("x1, x2, x3", names)], [normValue("x1, x2, x3", names), normValue("x1, x2, x3", names)]])]]) };
+  assert.equal(sameValueIn(["Комплектація"], P("x", "x1, x2"), P("x", "x1, x2, x3"), fake), false);
+  // Пари ТОП-50 не обмежують загального правила для інших характеристик (обмеження — лише для погоджених «тільки в контексті»)
+  assert.ok(names.restricted.has(normValue("боковой", names)), "«лише в контексті» (тип завантаження котушки)");
+  assert.equal(names.restricted.has(normValue("Цепные пилы", names)), false, "пари ТОП-50 не обмежують загального правила");
+  // Точна погоджена пара №8
+  assert.deepEqual(B("1250302", { descUa: "<p>Тип двигуна: Безщітковий</p>", descRu: "<p>Тип двигателя: Безщеточный</p>" }).needsReview, []);
+  // Суперечливі фрази постачальника про комплект — поле не заповнюється
+  assert.ok(!B("1250308", { titles: ["Газонокосарка без АКБ і ЗП"], descUa: "<p>Постачається з акумулятором 2 Ач і зарядним пристроєм</p>" }).params.some((p) => p.name === "Комплектація"));
+  // «без зусиль» — не «без ЗУ»
+  const kitV = { titles: ["Газонокосарка Einhell : з АКБ 18V 4,0 Ah"], descUa: "<p>Постачається з Power X-Change акумулятором 18V 4,0 Ah і зарядним пристроєм</p><p>Висота змінюється без зусиль</p>" };
+  assert.ok(B("1250308", kitV).params.some((p) => p.name === "Комплектація" && p.value === "З акумулятором і зарядним пристроєм"));
+  // Синхронізація таблиці передає назву постачальника (комплектація) і «Виробник»
+  const { refreshMainRow } = await import("../src/core/sheet-sync.mjs");
+  const row = { "Offer ID": "2", "ID постачальника": "2", "Категорія Prom ID": "1250308", "Виробник": "GTM", "Характеристики JSON": "[]", "Назва постачальника UA": "Газонокосарка GTM BLM42 без АКБ і ЗП", "Назва постачальника RU": "" };
+  const offer = { id: "2", vendor: "GTM", sku: "", nameUa: "Газонокосарка GTM BLM42 без АКБ і ЗП", nameRu: "", price: 100, available: true, currency: "UAH" };
+  const res = refreshMainRow(row, offer, { params: [P("Колір", "зелений")], pictures: [], descriptionUa: "<p>Ширина: 42 см</p>", descriptionRu: "" }, { stamp: "2026-10-25T10:00:00.000Z", catalog });
+  assert.ok(JSON.parse(res.row["Характеристики JSON"]).some((p) => p.name === "Комплектація" && p.value === "Без акумулятора і зарядного пристрою"), res.row["Характеристики JSON"]);
 });

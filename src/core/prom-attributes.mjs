@@ -92,14 +92,45 @@ export const brandEq = (a, b) => brandForm(a) === brandForm(b) && brandForm(a) !
 // значень UA/RU ці записи й так рівні (дефіс — роздільник слів у пословному порівнянні).
 const BATTERY_TYPE_RE = /^тип (акумулятор|аккумулятор|батаре)/;
 export const isBatteryTypeName = (n) => BATTERY_TYPE_RE.test(normName(n));
+
+// ---------- комплектація (власник, 25.10.2026) ----------
+// Перелік комплектації: той самий склад — однакова кількість елементів і ті самі числа (кількості); порядок не важить.
+const KIT_LIST_RE = /^(комплектація|комплектация|комплект поставки|комплектація поставки)$/;
+export const isKitListName = (n) => KIT_LIST_RE.test(normName(n));
+const kitItems = (v) => htmlText(v).replace(/^[\s✔✓✅☑•·*–—-]+/u, "").split(/\s*[,;]\s*|\s+\+\s+/).map((x) => x.trim()).filter(Boolean);
+const numsOf = (v) => (htmlText(v).match(/\d+(?:[.,]\d+)?/g) || []).map((x) => x.replace(",", ".")).sort().join(" ");
+export const itemsCompatible = (a, b) => kitItems(a).length === kitItems(b).length && numsOf(a) === numsOf(b);
+// Комплектуючі (акумулятор, зарядний пристрій, кейс, рукоятка, диск, маска…): згадка не означає, що вони в комплекті.
+const ACCESSORY_RE = /^(акумулятор|аккумулятор|акб|батарея|акумуляторна батарея|аккумуляторная батарея|зарядний пристрій|зарядное устройство|зарядка|кейс|валіза|додаткова рукоятка|дополнительная рукоятка|пиляльний диск|пильный диск|зварювальна маска|сварочная маска)(\s+(в|у)\s+комплект[а-яіїєґ]*)?$/;
+export const isAccessoryName = (n) => ACCESSORY_RE.test(normName(n).replace(/\s*\(.*\)$/, ""));
+const NEG_RE = /^(немає|нема|нет|ні|без|не входить|не входит|відсутн|отсутств)/i;
+// Пари «назва: значення» опису, що не стосуються комплекту («Зарядка акумулятора: Без АКБ» у генераторі), — не доказ комплектації.
+const KIT_KEY_RE = /^(комплектація|комплектация|комплект поставки|комплектація поставки|у комплекті|в комплекті|в комплекте|акумулятор|аккумулятор|акб|батарея|акумулятор (в|у) комплекті|зарядний пристрій|зарядное устройство)$/;
+export const kitTexts = (...htmls) => htmls.map((h) => cleanDescription(h, descriptionPairs(h).filter((p) => !KIT_KEY_RE.test(normName(p.key))).map((p) => [p.start, p.end])));
+/** Підтверджена комплектація за явними фразами постачальника (назва постачальника, описи): { battery, charger } — true / false /
+ *  null (не підтверджено або суперечливо). «Solo», тип чи напруга акумулятора, «потрібен 1 шт.» — НЕ підтвердження. */
+export function kitInfo({ titles = [], texts = [] } = {}) {
+  const tt = titles.map((x) => htmlText(mtText(x))).join(" \n ");
+  const t = [...titles, ...texts].map((x) => htmlText(mtText(x)).replace(/<[^>]+>/g, " ")).join(" \n ").replace(/\s+/g, " ");
+  const BAT = "(?:акумулятор[а-яіїєґ]*|аккумулятор[а-яё]*|АКБ)", CH = "(?:зарядн[а-яіїєґ]*\\s+(?:пристр[а-яіїєґ]*|устройств[а-яё]*)|зарядк[а-яіїєґ]*|(?:ЗП|ЗУ)(?![а-яіїєґё]))"; // «ЗУ» — не частина слова («без зусиль»)
+  const r = (s) => new RegExp(s, "i");
+  const batNo = r(`без\\s+${BAT}`).test(t) || r(`${BAT}(\\s+(і|та|и)\\s+${CH})?\\s+не\\s+входя?т`).test(t);
+  const chNo = r(`без\\s+(${BAT}\\s+(і|та|и)\\s+)?${CH}`).test(t) || r(`${CH}\\s+не\\s+входя?т`).test(t) || r(`${BAT}\\s+(і|та|и)\\s+${CH}\\s+не\\s+входя?т`).test(t);
+  const batYes = r(`(постача[а-яіїєґ]*|поставля[а-яіїєґ]*|комплект[а-яіїєґ]*)\\s+(з|із|зі|с)\\s+(\\S+\\s+){0,3}${BAT}`).test(t) || r(`(^|[\\s,:(])(з|із|с)\\s+АКБ`).test(tt) || r(`${BAT}\\s+\\S*\\s*\\d+([.,]\\d+)?\\s*(А·?год|Аг|Ah|А·?ч)\\s+(і|та|и|\\+)\\s+${CH}`).test(t);
+  const chYes = r(`(постача[а-яіїєґ]*|поставля[а-яіїєґ]*|комплект[а-яіїєґ]*)\\s+(з|із|с)\\s+[^.]{0,80}(і|та|и)\\s+${CH}`).test(t) || r(`\\d+([.,]\\d+)?\\s*(А·?год|Аг|Ah|А·?ч)\\s+(і|та|и|\\+)\\s+${CH}`).test(t);
+  const one = (yes, no) => (yes && no ? null : yes ? true : no ? false : null);
+  return { battery: one(batYes, batNo), charger: one(chYes, chNo), conflict: (batYes && batNo) || (chYes && chNo) };
+}
+// Власник, 25.10.2026 (ТОП-50 №3, №14): у типі акумулятора «Li-ion» = «літій-іонний» = «литий-ионный».
+const batteryCanon = (v) => liIon(v).replace(/(літій|литий|литиевый|літієвий)[\s‐‑‒–-]*(іонн[а-яіїєґ]*|ионн[а-яё]*)/gi, "Li-Ion");
 const liIon = (v) => mtText(v).replace(/\bli[\s‐‑‒–-]?ion\b/gi, "Li-Ion");
 
 /** Варіант зі списку атрибута: погоджений синонім або точна назва UK/RU (єдина). */
 function findOption(at, value, valueSynonyms) {
   const battery = isBatteryTypeName(at.nameUK || at.nameRU);
-  const v = normName(battery ? liIon(value) : value);
+  const v = normName(battery ? batteryCanon(value) : value);
   const syn = valueSynonyms?.[v];
-  const on = (n) => normName(battery ? liIon(n) : n);
+  const on = (n) => normName(battery ? batteryCanon(n) : n);
   return syn !== undefined ? at.values.filter((x) => x.id === String(syn)) : at.values.filter((x) => on(x.nameUK) === v || on(x.nameRU) === v);
 }
 const optionName = (o) => o.nameUK || o.nameRU;
@@ -293,6 +324,8 @@ export function normValue(v, names = null) {
   // «0;8 кг» = «0,8 кг»: «;» як десятковий роздільник — лише ізольована пара цифр; ланцюжок «17;19;21;23» — перелік, не змінюється.
   s = s.replace(/(?<![\d;])(\d+);(\d+)(?![\d;])/g, "$1.$2");
   s = s.replace(/(\d)\s*([a-zа-яіїєґ°℃²³*·]+(?:\.?\/?[a-zа-яіїєґ°²³]+)*)\.?/giu, (all, d, u) => `${d} ${names?.unitKnown?.(u) ? names.unitCanon(u) : u}`);
+  // «/хв» = «/мин» (власник, 25.10.2026): одиниці за хвилину (об/хв, уд/хв, м/хв, «0 – 1.100 /мин») — лише для порівняння.
+  s = s.replace(/\/\s*(мин|хв)\.?(?![а-яіїєґё])/g, "/хв");
   // «5.0» = «5», «1.50» = «1.5» (технічно однакові числа).
   s = s.replace(/(\d+)\.(\d*?)0+(?!\d)/g, (m, a, b) => (b ? a + "." + b : a));
   s = s.replace(/[a-z]/g, (ch) => HOMO[ch] || ch);
@@ -303,7 +336,7 @@ export function normValue(v, names = null) {
  *  варіантів значень з усіх схем Prom; 2) погоджений словник (names-ua-ru.json: names, values); 3) технічна
  *  нормалізація (normValue, синоніми одиниць). Назва / значення з різними відповідниками в різних схемах —
  *  неоднозначні й не використовуються. */
-export function buildNames(schemas, approved = {}, aliasMap = new Map(), approvedValues = {}, approvedInContext = {}, conversions = [], wordsInContext = {}) {
+export function buildNames(schemas, approved = {}, aliasMap = new Map(), approvedValues = {}, approvedInContext = {}, conversions = [], wordsInContext = {}, restrictedContexts = null) {
   const name = new Map(), value = new Map(), unit = new Map();
   const bad = new Set();
   const put = (m, tag, k, v) => {
@@ -331,7 +364,10 @@ export function buildNames(schemas, approved = {}, aliasMap = new Map(), approve
   // Значення, погоджені лише для конкретної характеристики (ключ — її назва; поза нею не діють).
   names.lex = buildLexicon(schemas);
   // Значення, які власник погодив ЛИШЕ в контексті (№36, 39, 40), загальне пословне правило не зрівнює.
-  names.restricted = new Set(Object.values(approvedInContext || {}).flatMap((vals) => Object.entries(vals || {}).flatMap(([k, v]) => [normValue(k, names), normValue(v, names)])));
+  // restrictedContexts — характеристики, де значення погоджено ЛИШЕ в контексті (поза ними загальне пословне порівняння для цих
+  // значень вимкнено); пари ТОП-50 (власник, 25.10.2026) — звичайні погоджені переклади, загальних правил не обмежують.
+  const rc = restrictedContexts ? new Set(restrictedContexts.map((x) => normName(x))) : null;
+  names.restricted = new Set(Object.entries(approvedInContext || {}).filter(([k]) => !rc || rc.has(normName(k))).map(([, v]) => v).flatMap((vals) => Object.entries(vals || {}).flatMap(([k, v]) => [normValue(k, names), normValue(v, names)])));
   // Відповідності СЛІВ значення, погоджені лише для конкретної характеристики (власник, 25.10.2026: «полуавтомат» =
   // «напівавтомат» для типу зварювального апарата): { "характеристика": { "слово RU": "слово UA" } }.
   names.wordsIn = new Map(Object.entries(wordsInContext || {}).map(([ch, w]) => [normName(ch), new Map(Object.entries(w || {}).map(([ru, ua]) => [normName(ru), normName(ua)]))]));
@@ -448,7 +484,8 @@ export function sameValue(a, b, names = null) {
   const t = (p) => normValue(`${mtText(p.value)}${mtText(p.unit) ? " " + mtText(p.unit) : ""}`, names);
   const ta = t(a), tb = t(b);
   if (ta === tb) return true;
-  const yn = (x) => (YES.has(x) ? 1 : NO.has(x) ? 0 : null);
+  // «Має» = «Есть» / «Имеет» (власник, 25.10.2026) — лише ціле значення наявності, не текст і не кількість.
+  const yn = (x) => (YES.has(x) || x === "має" || x === "имеет" ? 1 : NO.has(x) ? 0 : null);
   if (yn(ta) !== null && yn(ta) === yn(tb)) return true;
   const na = quantity(a, names), nb = quantity(b, names);
   if (na && nb) return qtyEq(na, nb, names) || qtyEq(nb, na, names);
@@ -462,6 +499,9 @@ export function sameValue(a, b, names = null) {
 export function sameValueIn(keys, a, b, names = null) {
   const full = (p) => `${mtText(p.value)}${mtText(p.unit) ? " " + mtText(p.unit) : ""}`;
   if (keys.some((k) => isBrandName(k))) return brandEq(full(a), full(b)); // бренд — лише однакове написання
+  // Комплектація (власник, 25.10.2026): той самий склад — та сама кількість елементів і ті самі числа (порядок не важить).
+  if (keys.some((k) => isKitListName(k)) && !itemsCompatible(full(a), full(b))) return false;
+  if (keys.some((k) => isBatteryTypeName(k)) && sameValue({ ...a, value: batteryCanon(a.value) }, { ...b, value: batteryCanon(b.value) }, names)) return true;
   if (sameValue(a, b, names)) return true;
   const t = (p) => normValue(`${mtText(p.value)}${mtText(p.unit) ? " " + mtText(p.unit) : ""}`, names);
   for (const k of keys) {
@@ -604,7 +644,7 @@ export function alignPairs(U, R, score) {
  *  в UA- і RU-описі (за підтвердженою відповідністю назв): однакові значення — одна характеристика з українською назвою;
  *  різні — «ПОТРЕБУЄ ПЕРЕВІРКИ» (needsReview, обидва оригінали), нічого не вибирається. Дублікати не створюються.
  */
-export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "" }) {
+export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [] }) {
   const cur = asParams(typeof current === "string" ? jsonOr(current, []) : current);
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
@@ -612,6 +652,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], warranty: null, uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [], lexDiff: [] }, lexMerged: [], aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [], emptyDesc: [], timeFixed: [] };
   if (!schema && mode === "main") { notes.push(`немає схеми категорії ${categoryId || "?"} — підготовлені характеристики не змінено`); return unchanged; }
   const opt = { mapping, units };
+  const kit = schema ? kitInfo({ titles, texts: kitTexts(descUa, descRu) }) : null; // підтверджена комплектація (явні фрази постачальника)
   const fmt = (p) => `${p.name}: ${p.value}${p.unit ? " " + p.unit : ""}`;
   const timeFixed = new Map(); // виправлені записи тривалості в годинах (для звіту)
   const hv = (name, p, ua) => { const r = timeValue(name, p, ua); if (r !== p) timeFixed.set(`${name}${p.value}${p.unit}`, { name, from: `${p.value}${p.unit ? " " + p.unit : ""}`, to: `${r.value}${r.unit ? " " + r.unit : ""}` }); return r; };
@@ -628,7 +669,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   // kind (для звіту власнику, не для рішення): «конфлікт» — різні числа / латиниця або два значення в одному джерелі;
   // «переклад?» — числа й латиниця однакові, різняться слова; «слова різні» — чисел і латиниці немає, тож переклад
   // це чи інший зміст — не визначити. Переклад не підтверджено — нічого не вибирається.
-  const review = (name, values, reason) => needsReview.push({ name, values, reason, kind: /можливо, лише переклад/.test(reason) ? "переклад?" : /не визначити/.test(reason) ? "слова різні" : "конфлікт" });
+  const review = (name, values, reason) => needsReview.push({ name, values, reason, kind: /інформаційно/.test(reason) ? "інформаційно" : /можливо, лише переклад/.test(reason) ? "переклад?" : /не визначити/.test(reason) ? "слова різні" : "конфлікт" });
   const hint = (a, b) => { const ta = tokens(a), tb = tokens(b); return ta !== tb ? "" : ta ? " (числа й латиниця однакові — можливо, лише переклад)" : " (без чисел і латиниці — переклад чи інший зміст, не визначити)"; };
   let uaRuMerged = 0; // та сама характеристика в UA- і RU-описі з однаковим значенням → одна
   const aligned = [], gapProps = [], valueProps = [], ruOnly = [], warrantyDesc = [], lexMerged = [], lexDiff = [], emptyDesc = []; // вирівняні пари UA/RU; пропозиції словника; лише RU
@@ -673,7 +714,17 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       if (!prev) cand.set(m.attr.id, { out: m.out, src: SRC.XML, frags: { ua: [], ru: [] }, from: itemKey(p) });
     }
     const pairs = [];
-    for (const [lang, html] of [["ua", descUa], ["ru", descRu]]) for (const pr of descriptionPairs(html)) {
+    const batteryAttr = schema.attributes.some((a) => isBatteryTypeName(a.nameUK || a.nameRU) && !mapping?.blocked?.[a.id]);
+    for (const [lang, html] of [["ua", descUa], ["ru", descRu]]) for (const pr0 of descriptionPairs(html)) {
+      let pr = pr0;
+      // «Тип акумулятора: Li-ion, LXT» (власник, 25.10.2026, ТОП-50 №3): поле Prom — тип зі схеми, платформа LXT / CXT не губиться —
+      // окрема характеристика «Акумуляторна платформа». Лише коли в категорії є поле типу акумулятора.
+      const plat = batteryAttr && isBatteryTypeName(pr.key) && /^(.+?)\s*,\s*(LXT|CXT)\s*$/i.exec(cleanValue(pr.value));
+      if (plat) {
+        const pname = lang === "ua" ? "Акумуляторна платформа" : "Аккумуляторная платформа";
+        pairs.push({ lang, key: pname, value: plat[2].toUpperCase(), start: pr.start, end: pr.end, m: mapParam(schema, { name: pname, value: plat[2].toUpperCase(), unit: "" }, opt) });
+        pr = { ...pr, value: plat[1] };
+      }
       // Значення без змісту (лише невидимі символи напрямку тексту: «&lrm;&lrm») — на вітрину не передається; оригінал — у сирому описі.
       if (!cleanValue(pr.value)) { notes.push(`опис ${lang.toUpperCase()}: «${pr.key}» — значення без змісту (лише невидимі символи), не передається`); emptyDesc.push({ lang, key: pr.key, value: pr.value }); continue; }
       const one = { lang, ...pr, m: mapParam(schema, { name: pr.key, value: cleanValue(pr.value), unit: "" }, opt) };
@@ -719,6 +770,25 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       cand.set(a, { out: list[0].m.out, src: SRC.DESC, frags: { ua: list.filter((pr) => pr.lang === "ua").map((pr) => [pr.start, pr.end]), ru: list.filter((pr) => pr.lang === "ru").map((pr) => [pr.start, pr.end]) } });
     }
     for (const a of ambiguous) cand.delete(a);
+    // Підтверджена комплектація (власник, 25.10.2026): явні фрази постачальника («постачається без акумулятора та зарядного
+    // пристрою», «з АКБ 18V 2.5Ah») → поле Prom, якщо воно є в схемі й ще не заповнене з XML / опису; без впевненості — не заповнюємо.
+    if (kit) {
+      for (const at of schema.attributes) {
+        if (cand.has(at.id) || ambiguous.has(at.id) || mapping?.blocked?.[at.id]) continue;
+        const n = normName(at.nameUK || at.nameRU);
+        let value = null;
+        if (at.type === "bool" && /^акумулятор (в|у) комплекті$/.test(n) && kit.battery !== null) value = kit.battery ? "Так" : "Ні";
+        if (at.type === "bool" && /^зарядний пристрій (в|у) комплекті$/.test(n) && kit.charger !== null) value = kit.charger ? "Так" : "Ні";
+        if (at.type === "singleselect" && n === "комплектація" && kit.battery !== null && kit.battery === kit.charger) {
+          const o = (at.values || []).find((x) => normName(x.nameUK) === (kit.battery ? "з акумулятором і зарядним пристроєм" : "без акумулятора і зарядного пристрою"));
+          if (o) value = o.nameUK;
+        }
+        if (value === null) continue;
+        cand.set(at.id, { out: { name: at.nameUK || at.nameRU, value, unit: "" }, src: SRC.DESC, frags: { ua: [], ru: [] }, from: "kit" });
+        notes.push(`комплектація підтверджена назвою / описом постачальника: «${at.nameUK}: ${value}»`);
+      }
+      if (kit.conflict) notes.push("комплектація: у даних постачальника суперечливі твердження — поля комплектації не заповнено");
+    }
     // 1б. Користувацькі з опису. UA- і RU-опис — переклади одне одного: пари однієї характеристики — за підтвердженою
     // назвою (схеми Prom / погоджений словник / та сама назва); якщо назву не підтверджено — за позицією в описі
     // (вирівнювання) з тим самим значенням. Лише RU (без UA-відповідника) — передається з оригінальною назвою.
@@ -781,12 +851,38 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
           notes.push(`бренд: опис UA «${u[0].out.value}» ≠ RU «${r[0].out.value}» — передано офіційне написання «${off}»`);
           continue;
         }
+        // Пари брендів, погоджені власником для товару з підтвердженим офіційним брендом (Метабо / Металбо → Metabo тощо)
+        const ap = off && (names?.brandPairs || []).find((p) => brandEq(p.ua, u[0].out.value) && brandEq(p.ru, r[0].out.value) && brandEq(p.official, off));
+        if (ap) {
+          uaRuMerged++;
+          extra(key, { ...u[0].out, value: ap.value }, SRC.DESC, "", { lang: "ua" });
+          notes.push(`бренд: опис UA «${u[0].out.value}» ≠ RU «${r[0].out.value}» — погоджене написання «${ap.value}» (офіційний бренд «${off}»)`);
+          continue;
+        }
         review(name, orig, `бренд записано по-різному (без перекладу й транслітерації)${off ? `; офіційне написання за структурованими даними — «${off}»` : ""}`);
         hold("ПОТРЕБУЄ ПЕРЕВІРКИ: бренд записано по-різному");
         continue;
       }
       if (u.length && r.length) {
         if (!sameValueIn([key, u[0].pr.key, r[0].pr.key, nameOf(r[0].pr.key)], u[0].out, r[0].out, names)) {
+          // Комплектуючі (власник, 25.10.2026): UA і RU сформульовано по-різному, але без суперечності (ті самі числа й латиниця,
+          // однакове «немає / є») — передаємо значення постачальника UA (максимум інформації без вигадок); інформаційна позначка,
+          // якщо комплектацію не підтверджено. Суперечливі UA / RU — звичайне правило (нічого не вибираємо).
+          const sorted = (v) => (htmlText(v).toLowerCase().match(/\d+(?:[.,]\d+)?|[a-z]+/g) || []).map((x) => x.replace(",", ".")).sort().join(" ");
+          const neg = (v) => NEG_RE.test(htmlText(v).trim());
+          if (isAccessoryName(key) && sorted(u[0].out.value) === sorted(r[0].out.value) && neg(u[0].out.value) === neg(r[0].out.value)) {
+            extra(key, u[0].out, SRC.DESC, "", { lang: "ua" });
+            const battery = /акумулятор|аккумулятор|акб|батаре/.test(key);
+            const ok = battery && kit && kit.battery !== null && kit.battery === !neg(u[0].out.value);
+            if (ok) notes.push(`«${name}»: UA і RU сформульовано по-різному; комплектацію підтверджено (${kit.battery ? "у комплекті" : "не входить"}) — передано UA`);
+            else review(name, orig, "комплектуючі: UA і RU сформульовано по-різному — передано значення постачальника UA; комплектацію не підтверджено (інформаційно)");
+            continue;
+          }
+          if (isAccessoryName(key) && neg(u[0].out.value) !== neg(r[0].out.value)) {
+            review(name, orig, "комплектуючі: UA і RU суперечать одне одному («є» / «немає») — нічого не вибрано");
+            hold("ПОТРЕБУЄ ПЕРЕВІРКИ: комплектуючі — UA і RU суперечать");
+            continue;
+          }
           review(name, orig, "UA і RU значення відрізняються" + hint(u[0].out.value, r[0].out.value));
           valueProps.push({ name, ua: u[0].out.value, ru: r[0].out.value });
           hold("ПОТРЕБУЄ ПЕРЕВІРКИ: UA і RU значення відрізняються");
