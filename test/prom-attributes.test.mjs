@@ -904,9 +904,43 @@ test("погоджені 25.10.2026 відповідності: натяг ла�
   assert.equal(sameValueIn(["Тип кріплення"], P("x", "Боковой"), P("x", "Бічне"), names), false, "«Бічне = Боковой» — лише для натягу ланцюга");
   for (const [ua, ru] of [["Повітряне", "Воздушное"], ["Повітряний", "Воздушное"], ["ПОВІТРЯНЕ ОХОЛОДЖЕННЯ", "ВОЗДУШНОЕ ОХЛАЖДЕНИЕ"]]) assert.ok(sameValueIn(["Тип охолодження"], P("x", ua), P("x", ru), names), `${ua} = ${ru}`);
   assert.equal(sameValueIn(["Тип охолодження"], P("x", "примусове повітряне"), P("x", "принудительное"), names), false, "«принудительное» ≠ «примусове повітряне»");
-  assert.equal(sameValueIn(["Тип охолодження"], P("x", "повітряне примусове"), P("x", "принудительное воздушное"), names), false, "«принудительное» = «примусове» для типу охолодження не погоджено");
+  // Погоджено 25.10.2026 (друге): «примусове» = «принудительное»; «примусове повітряне» = «принудительное воздушное» у будь-якому порядку
+  assert.ok(sameValueIn(["Тип охолодження"], P("x", "повітряне примусове"), P("x", "принудительное воздушное"), names));
+  assert.ok(sameValueIn(["Тип охолодження"], P("x", "Примусове"), P("x", "Принудительное"), names));
+  assert.equal(sameValueIn(["Тип охолодження"], P("x", "Примусове"), P("x", "принудительное воздушное"), names), false, "додаткове уточнення — не те саме");
+  assert.equal(sameValueIn(["Тип кріплення"], P("x", "Примусове"), P("x", "Принудительное"), names), false, "лише для типу охолодження");
+  assert.deepEqual(B(SAW, "<p>Натягування ланцюга: За допомогою спец інструмента</p>", "<p>Натяжение цепи: С помощью спец инструмента</p>").params, [P("Натягування ланцюга", "За допомогою спец інструмента")]);
   assert.deepEqual(B(SAW, "<p>Оберти двигуна: 6000 об/хв</p>", "<p>Обороты двигателя: 6000 об/мин</p>").params, [P("Оберти двигуна", "6000 об/хв")]);
   assert.equal(B(SAW, "<p>Оберти двигуна: 6000 об/хв</p>", "<p>Обороты двигателя: 8000 об/мин</p>").needsReview.length, 1, "та сама назва, інше значення — ПОТРЕБУЄ ПЕРЕВІРКИ");
   assert.equal(charKey(S(SAW), "Уровни", { mapping: catalog.mappings.get(SAW), names }) === charKey(S(SAW), "Рівні", { mapping: catalog.mappings.get(SAW), names }), false, "«Рівні ⇄ Уровни» не погоджено (неоднозначне слово)");
   for (const [ua, ru] of [["Оберти х. х.", "Обрати х. х."], ["Країна виробництва", "Страна-производитель"], ["Оберти", "Обратить"], ["ВагаВага", "Вес"]]) assert.notEqual(charKey(S(SAW), ua, { mapping: catalog.mappings.get(SAW), names }), charKey(S(SAW), ru, { mapping: catalog.mappings.get(SAW), names }), `сумнівна пара ${ua} ⇄ ${ru} не погоджена`);
+});
+
+test("пріоритет джерел (власник, 25.10.2026): ручне → XML → опис; опис суперечить XML — XML у YML, розбіжність інформаційно; рівнопріоритетні — нічого не вибирається", () => {
+  const names = catalog.names, cat = "14400105";
+  const B = (o) => buildCharacteristics({ schema: S(cat), categoryId: cat, names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", current: [], ...o });
+  // Користувацька: XML «75 %», опис UA «80%» і RU «85%» (UA ≠ RU) — XML лишається в YML
+  const a = B({ rawParams: [P("ККД", "75 %")], descUa: "<p>Коефіцієнт корисної дії: 80%</p>", descRu: "<p>Коэффициент полезного действия: 85%</p>" });
+  assert.deepEqual(a.params, [P("Коефіцієнт корисної дії", "75 %")]);
+  // Поле категорії: XML і опис різні — поле з XML, конфлікт — лише примітка
+  const f = buildCharacteristics({ schema: S(GEN), categoryId: GEN, names, mapping: catalog.mappings.get(GEN), units: catalog.units, mode: "queue", current: [], rawParams: [P("Частота тока", "50", "Гц")], descUa: "<p>Частота струму: 60 Гц</p>" });
+  assert.deepEqual(f.params, [P("Частота струму", "50", "Гц")]);
+  assert.ok(f.conflicts.some((c) => /опис суперечить XML/.test(c)));
+  // Ручне значення власника має перевагу над XML
+  const m = B({ current: [P("Коефіцієнт корисної дії", "77 %")], provenance: { v: 1, cat, items: [] }, rawParams: [P("ККД", "75 %")] });
+  assert.ok(m.params.some((p) => p.value === "77 %") && !m.params.some((p) => p.value === "75 %"));
+  // Рівнопріоритетні (два різні значення в XML) — нічого не вибирається
+  const x = B({ rawParams: [P("ККД", "75 %"), P("ККД", "80 %")] });
+  assert.deepEqual(x.params, []); assert.equal(x.needsReview.length, 1);
+});
+
+test("технічна нормалізація (власник, 25.10.2026): «;» як десятковий роздільник між цифрами — лише для порівняння; неоднозначні записи — не зрівнюються", () => {
+  const n = catalog.names;
+  assert.ok(sameValue(P("x", "0;8 / 0;9 кг"), P("x", "0,8 / 0,9 кг"), n));
+  assert.ok(sameValue(P("x", "4;541"), P("x", "4,541"), n));
+  assert.equal(sameValue(P("x", "1005 х 130 х 170 мм"), P("x", "1,005 x 130 x 170 мм"), n), false, "1005 ≠ 1,005");
+  assert.equal(sameValue(P("x", "220 240 В"), P("x", "220-240 В"), n), false);
+  assert.ok(sameValue(P("x", "17; 19; 21; 23 мм"), P("x", "17;19;21;23 мм"), n), "перелік через «;» — не десяткові числа");
+  assert.equal(sameValue(P("x", "17;19 мм"), P("x", "17,19 мм"), n), true, "ізольована пара — десятковий роздільник");
+  assert.equal(cleanValue("0;8 / 0;9 кг"), "0;8 / 0;9 кг", "значення постачальника не змінюється");
 });
