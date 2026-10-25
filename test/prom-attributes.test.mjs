@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { categoryBlocks, parseSchemaText } from "../src/core/prom-schema.mjs";
-import { SRC, alignPairs, buildCharacteristics, buildNames, charKey, cleanDescription, cleanValue, descriptionPairs, hoursValue, hoursWord, importRisks, timeValue, yearsWord, mapParam, sameValue, sameValueIn, validateValue, wordsMatch, wordsMatchAnyOrder } from "../src/core/prom-attributes.mjs";
+import { SRC, alignPairs, brandEq, isBatteryTypeName, buildCharacteristics, buildNames, charKey, cleanDescription, cleanValue, descriptionPairs, hoursValue, hoursWord, importRisks, timeValue, yearsWord, mapParam, sameValue, sameValueIn, validateValue, wordsMatch, wordsMatchAnyOrder } from "../src/core/prom-attributes.mjs";
 import { SCHEMAS_DIR, importSchemaFiles, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
 
 const catalog = loadPromCatalog();
@@ -943,4 +943,66 @@ test("технічна нормалізація (власник, 25.10.2026): «
   assert.ok(sameValue(P("x", "17; 19; 21; 23 мм"), P("x", "17;19;21;23 мм"), n), "перелік через «;» — не десяткові числа");
   assert.equal(sameValue(P("x", "17;19 мм"), P("x", "17,19 мм"), n), true, "ізольована пара — десятковий роздільник");
   assert.equal(cleanValue("0;8 / 0;9 кг"), "0;8 / 0;9 кг", "значення постачальника не змінюється");
+});
+
+test("бренди (власник, 25.10.2026): оригінальне написання, без перекладу й транслітерації; UA ≠ RU — офіційне написання зі структурованих даних, якщо збігається з одним із варіантів; інакше ПОТРЕБУЄ ПЕРЕВІРКИ", () => {
+  const names = catalog.names;
+  const B = (o) => buildCharacteristics({ schema: S(SAW), categoryId: SAW, current: [], names, mapping: catalog.mappings.get(SAW), units: catalog.units, mode: "queue", ...o });
+  // AL-KO / АЛ-НО: офіційне «AL-KO» збігається з UA — передається «AL-KO»
+  const a = B({ brand: "AL-KO", descUa: "<p>Бренд: AL-KO</p>", descRu: "<p>Бренд: АЛ-НО</p>" });
+  assert.deepEqual(a.params, [P("Бренд", "AL-KO")]);
+  assert.deepEqual(a.needsReview, []);
+  // Einhell / Эйнхель — офіційне «Einhell»
+  assert.deepEqual(B({ brand: "Einhell", descUa: "<p>Бренд: Einhell</p>", descRu: "<p>Бренд: Эйнхель</p>" }).params, [P("Бренд", "Einhell")]);
+  // Метабо / Металбо — жодне не збігається з офіційним «Metabo»: ПОТРЕБУЄ ПЕРЕВІРКИ, не перекладаємо й не вгадуємо
+  const m = B({ brand: "Metabo", descUa: "<p>Бренд: Метабо</p>", descRu: "<p>Бренд: Металбо</p>" });
+  assert.deepEqual(m.params, []);
+  assert.match(m.needsReview[0].reason, /офіційне написання.*Metabo/);
+  // Без офіційного написання — ПОТРЕБУЄ ПЕРЕВІРКИ; схожі літери (латиниця / кирилиця) — не той самий бренд
+  assert.equal(B({ descUa: "<p>Бренд: AL-KO</p>", descRu: "<p>Бренд: АЛ-КО</p>" }).needsReview.length, 1);
+  assert.equal(brandEq("KOMA", "КОМА"), false, "латиниця ≠ кирилиця з тим самим виглядом");
+  assert.equal(B({ descUa: "<p>Бренд: KOMA</p>", descRu: "<p>Бренд: КОМА</p>" }).needsReview.length, 1, "латиниця / кирилиця — не зливаються");
+  assert.equal(B({ descUa: "<p>Бренд: Мак Аллістер</p>", descRu: "<p>Бренд: Мак Аллистер</p>" }).needsReview.length, 1, "схожі транслітерації — не зливаються");
+  assert.equal(brandEq("Grosser", "Grösser"), false);
+  // Наявне значення бренду в картці ⇄ нове з опису: лише однакове написання (інакше — ПОТРЕБУЄ ПЕРЕВІРКИ, наявне лишається)
+  const k = B({ current: [P("Бренд", "КОМА")], descUa: "<p>Бренд: KOMA</p>" });
+  assert.deepEqual(k.params, [P("Бренд", "КОМА")]); assert.equal(k.needsReview.length, 1);
+  assert.ok(brandEq("AL-KO", "al-ko ") && brandEq("Einhell", "EINHELL"));
+  assert.ok(brandEq("BIHUI (Китай) .", "BIHUI (Китай)"), "кінцева пунктуація — не частина назви");
+  assert.equal(brandEq("Мак Аллістер", "Мак Аллистер"), false, "транслітерації з різним написанням — не зливаються");
+  // Однакове написання в UA і RU — одна характеристика як є; значення одного опису не переписується офіційним
+  assert.deepEqual(B({ brand: "Grösser", descUa: "<p>Бренд: Grosser</p>", descRu: "<p>Бренд: Grosser</p>" }).params, [P("Бренд", "Grosser")]);
+  assert.deepEqual(B({ brand: "Metabo", descUa: "<p>Бренд: Метабо</p>" }).params, [P("Бренд", "Метабо")], "без перекладу й без довільного переписування");
+  // Не бренд — правило не діє («Країна реєстрації бренду»)
+  assert.ok(B({ descUa: "<p>Країна реєстрації бренду: Німеччина</p>", descRu: "<p>Страна регистрации бренда: Германия</p>" }).params.length === 1);
+});
+
+test("Li Ion = Li-Ion (власник, 25.10.2026): лише для типу акумулятора — поле Prom з варіантом схеми, у користувацьких — один параметр; довільний текст — без змін", () => {
+  const names = catalog.names;
+  // Поле категорії: «Li Ion» → допустимий варіант схеми «Li-Ion»
+  const cat = "141725";
+  const at = S(cat).attributes.find((a) => a.nameUK === "Тип акумулятора");
+  assert.ok(at, "атрибут «Тип акумулятора» у 141725");
+  const f = buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", rawParams: [P("Тип акумулятора", "Li Ion")] });
+  assert.deepEqual(f.params, [P("Тип акумулятора", "Li-Ion")]);
+  assert.equal(f.provenance.items[0].a, at.id);
+  // Порівняння: тип акумулятора — однакові; інша характеристика — ні
+  assert.ok(sameValueIn(["Тип акумулятора"], P("x", "Li Ion"), P("x", "Li-ion"), names));
+  assert.ok(sameValueIn(["Тип аккумулятора"], P("x", "літій-іонний (Li Ion)"), P("x", "літій-іонний (Li‑Ion)"), names), "нерозривний дефіс");
+  assert.equal(sameValueIn(["Напруга"], P("x", "21 В Li Ion батарея"), P("x", "21В Li-Ion батарея"), names), false, "довільний текст — не нормалізується");
+  assert.ok(isBatteryTypeName("Тип аккумулятора") && isBatteryTypeName("Тип батареї"));
+  assert.equal(isBatteryTypeName("Напруга") || isBatteryTypeName("Комплектація"), false, "правило — лише для типу акумулятора");
+  // Сирі дані не змінюються
+  const raw = [P("Тип акумулятора", "Li Ion")];
+  buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", rawParams: raw });
+  assert.deepEqual(raw, [P("Тип акумулятора", "Li Ion")]);
+});
+
+test("бренд у синхронізації таблиці: офіційне написання — з «Виробник» (структуровані дані постачальника)", async () => {
+  const { refreshMainRow } = await import("../src/core/sheet-sync.mjs");
+  const row = { "Offer ID": "1", "ID постачальника": "1", "Категорія Prom ID": SAW, "Виробник": "AL-KO", "Характеристики JSON": "[]" };
+  const offer = { id: "1", vendor: "AL-KO", sku: "", nameUa: "x", nameRu: "x", price: 100, available: true, currency: "UAH" };
+  const full = { params: [P("Колір", "зелений")], pictures: [], descriptionUa: "<p>Бренд: AL-KO</p>", descriptionRu: "<p>Бренд: АЛ-НО</p>" };
+  const res = refreshMainRow(row, offer, full, { stamp: "2026-10-25T10:00:00.000Z", catalog });
+  assert.ok(JSON.parse(res.row["Характеристики JSON"]).some((p) => p.name === "Бренд" && p.value === "AL-KO"), res.row["Характеристики JSON"]);
 });

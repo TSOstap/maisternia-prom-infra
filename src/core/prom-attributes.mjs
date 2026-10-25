@@ -81,11 +81,26 @@ export function resolveAttr(schema, name, mapping) {
   return { reason: "у категорії немає такого атрибута" };
 }
 
+// ---------- бренд і тип акумулятора (власник, 25.10.2026) ----------
+// Бренд / виробник — оригінальне написання: без перекладу, транслітерації й «схожих літер» (AL-KO ≠ АЛ-НО, Grosser ≠ Grösser).
+const BRAND_RE = /^(бренд|виробник|производитель|торгова марка|торговая марка|brand)$/;
+export const isBrandName = (n) => BRAND_RE.test(normName(n).replace(/\s*\(.*\)$/, ""));
+const brandForm = (v) => mtText(htmlText(v)).normalize("NFC").replace(/[  \s]+/g, " ").trim().replace(/[\s;.,]+$/, "").toLowerCase(); // кінцева пунктуація — не частина назви
+/** Той самий бренд: однакове написання (без урахування регістру й пробілів). */
+export const brandEq = (a, b) => brandForm(a) === brandForm(b) && brandForm(a) !== "";
+// «Li Ion» = «Li-Ion» (власник, 25.10.2026) — лише в характеристиці типу акумулятора: варіант поля Prom за схемою. У порівнянні
+// значень UA/RU ці записи й так рівні (дефіс — роздільник слів у пословному порівнянні).
+const BATTERY_TYPE_RE = /^тип (акумулятор|аккумулятор|батаре)/;
+export const isBatteryTypeName = (n) => BATTERY_TYPE_RE.test(normName(n));
+const liIon = (v) => mtText(v).replace(/\bli[\s‐‑‒–-]?ion\b/gi, "Li-Ion");
+
 /** Варіант зі списку атрибута: погоджений синонім або точна назва UK/RU (єдина). */
 function findOption(at, value, valueSynonyms) {
-  const v = normName(value);
+  const battery = isBatteryTypeName(at.nameUK || at.nameRU);
+  const v = normName(battery ? liIon(value) : value);
   const syn = valueSynonyms?.[v];
-  return syn !== undefined ? at.values.filter((x) => x.id === String(syn)) : at.values.filter((x) => normName(x.nameUK) === v || normName(x.nameRU) === v);
+  const on = (n) => normName(battery ? liIon(n) : n);
+  return syn !== undefined ? at.values.filter((x) => x.id === String(syn)) : at.values.filter((x) => on(x.nameUK) === v || on(x.nameRU) === v);
 }
 const optionName = (o) => o.nameUK || o.nameRU;
 export const MULTI_SEPARATOR = " | ";
@@ -445,6 +460,8 @@ export function sameValue(a, b, names = null) {
 }
 /** sameValue + значення, погоджені лише для цієї характеристики (keys — можливі назви характеристики: ключ, назви UA / RU). */
 export function sameValueIn(keys, a, b, names = null) {
+  const full = (p) => `${mtText(p.value)}${mtText(p.unit) ? " " + mtText(p.unit) : ""}`;
+  if (keys.some((k) => isBrandName(k))) return brandEq(full(a), full(b)); // бренд — лише однакове написання
   if (sameValue(a, b, names)) return true;
   const t = (p) => normValue(`${mtText(p.value)}${mtText(p.unit) ? " " + mtText(p.unit) : ""}`, names);
   for (const k of keys) {
@@ -587,7 +604,7 @@ export function alignPairs(U, R, score) {
  *  в UA- і RU-описі (за підтвердженою відповідністю назв): однакові значення — одна характеристика з українською назвою;
  *  різні — «ПОТРЕБУЄ ПЕРЕВІРКИ» (needsReview, обидва оригінали), нічого не вибирається. Дублікати не створюються.
  */
-export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue" }) {
+export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "" }) {
   const cur = asParams(typeof current === "string" ? jsonOr(current, []) : current);
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
@@ -629,7 +646,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       }
       return;
     }
-    if (sameValue(prev.out, out, names)) return; // та сама характеристика ще раз
+    if (isBrandName(key) ? brandEq(prev.out.value, out.value) : sameValue(prev.out, out, names)) return; // та сама характеристика ще раз
     if (prev.src === SRC.RAW && src === SRC.DESC) { conflicts.push(`опис суперечить XML для «${prev.out.name}» — взято XML`); return; }
     review(prev.out.name, [{ src: "XML", value: fmt(prev.out) }, { src: "XML", value: fmt(out) }], "постачальник передав різні значення");
     prev.blocked = true; prev.why = "ПОТРЕБУЄ ПЕРЕВІРКИ: постачальник передав різні значення";
@@ -754,6 +771,20 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       // ключ «утримується» (наявний запис лишається в підсумку; нового значення до рішення немає). Синхронізацію не блокує.
       const hold = (why) => { if (!extras.has(key)) extras.set(key, { out: (u[0] || r[0]).out, src: SRC.DESC, from: "", blocked: true, held: true, why }); };
       if (u.length > 1 || r.length > 1) { review(name, orig, "різні значення в одному описі"); hold("ПОТРЕБУЄ ПЕРЕВІРКИ: різні значення в одному описі"); continue; }
+      // Бренд (власник, 25.10.2026): UA ≠ RU — якщо одне з написань збігається з офіційним (структуровані дані постачальника:
+      // «Виробник»), передається офіційне; інакше — ПОТРЕБУЄ ПЕРЕВІРКИ (без перекладу, транслітерації й «схожих літер»).
+      if (isBrandName(key) && u.length && r.length && !brandEq(u[0].out.value, r[0].out.value)) {
+        const off = mtText(brand).trim(), hit = off && [u[0], r[0]].find((x) => brandEq(x.out.value, off));
+        if (hit) {
+          uaRuMerged++;
+          extra(key, { ...u[0].out, value: off }, SRC.DESC, "", { lang: "ua" });
+          notes.push(`бренд: опис UA «${u[0].out.value}» ≠ RU «${r[0].out.value}» — передано офіційне написання «${off}»`);
+          continue;
+        }
+        review(name, orig, `бренд записано по-різному (без перекладу й транслітерації)${off ? `; офіційне написання за структурованими даними — «${off}»` : ""}`);
+        hold("ПОТРЕБУЄ ПЕРЕВІРКИ: бренд записано по-різному");
+        continue;
+      }
       if (u.length && r.length) {
         if (!sameValueIn([key, u[0].pr.key, r[0].pr.key, nameOf(r[0].pr.key)], u[0].out, r[0].out, names)) {
           review(name, orig, "UA і RU значення відрізняються" + hint(u[0].out.value, r[0].out.value));
