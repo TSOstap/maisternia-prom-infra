@@ -49,6 +49,8 @@ export function loadPromCatalog(dir = SCHEMAS_DIR) {
   const dict = readJson(path.join(dir, "names-ua-ru.json"), {});
   out.names = buildNames([...out.schemas.values()], dict.names || {}, out.units.aliasMap, dict.values || {}, dict.valuesInContext || {}, out.units.conversions || [], dict.wordsInContext || {}, dict.restrictedContexts || null);
   out.names.brandPairs = Array.isArray(dict.brandPairs) ? dict.brandPairs : []; // погоджені пари написань бренду (лише за офіційним брендом)
+  // Комплектація, підтверджена власником для конкретних товарів (Offer ID → { battery, charger })
+  out.kitConfirmed = new Map(Object.entries(readJson(path.join(dir, "kit-confirmed.json"), {}).products || {}).map(([id, v]) => [String(id), { battery: v.battery, charger: v.charger }]));
   for (const e of pending) {
     const schema = out.schemas.get(String(e.id));
     const m = readJson(path.join(dir, "mapping", `${e.id}.json`), null);

@@ -644,7 +644,7 @@ export function alignPairs(U, R, score) {
  *  в UA- і RU-описі (за підтвердженою відповідністю назв): однакові значення — одна характеристика з українською назвою;
  *  різні — «ПОТРЕБУЄ ПЕРЕВІРКИ» (needsReview, обидва оригінали), нічого не вибирається. Дублікати не створюються.
  */
-export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [] }) {
+export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [], kitOwner = null }) {
   const cur = asParams(typeof current === "string" ? jsonOr(current, []) : current);
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
@@ -772,22 +772,37 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     for (const a of ambiguous) cand.delete(a);
     // Підтверджена комплектація (власник, 25.10.2026): явні фрази постачальника («постачається без акумулятора та зарядного
     // пристрою», «з АКБ 18V 2.5Ah») → поле Prom, якщо воно є в схемі й ще не заповнене з XML / опису; без впевненості — не заповнюємо.
-    if (kit) {
+    // Підтверджене власником рішення (kitOwner: { battery, charger }) має пріоритет над визначеним з даних постачальника.
+    const kitEff = kit && { battery: kitOwner?.battery ?? kit.battery, charger: kitOwner?.charger ?? kit.charger };
+    if (kit && kitOwner) for (const [w, label] of [["battery", "акумулятор"], ["charger", "зарядний пристрій"]]) {
+      if (kitOwner[w] !== undefined && kit[w] !== null && kit[w] !== kitOwner[w]) notes.push(`комплектація: дані постачальника про «${label}» суперечать підтвердженому рішенню власника — взято рішення власника`);
+    }
+    if (kitEff) {
+      // Поле за підтвердженням НЕ ставиться, якщо постачальник передав власний перелік «Комплектація» і той перелік потрапляє в
+      // Prom (одна назва — одна характеристика; предмети й кількості постачальника не губимо) — див. «kitYield» нижче.
+      let batteryDone = false, chargerDone = false;
       for (const at of schema.attributes) {
         if (cand.has(at.id) || ambiguous.has(at.id) || mapping?.blocked?.[at.id]) continue;
         const n = normName(at.nameUK || at.nameRU);
-        let value = null;
-        if (at.type === "bool" && /^акумулятор (в|у) комплекті$/.test(n) && kit.battery !== null) value = kit.battery ? "Так" : "Ні";
-        if (at.type === "bool" && /^зарядний пристрій (в|у) комплекті$/.test(n) && kit.charger !== null) value = kit.charger ? "Так" : "Ні";
-        if (at.type === "singleselect" && n === "комплектація" && kit.battery !== null && kit.battery === kit.charger) {
-          const o = (at.values || []).find((x) => normName(x.nameUK) === (kit.battery ? "з акумулятором і зарядним пристроєм" : "без акумулятора і зарядного пристрою"));
-          if (o) value = o.nameUK;
+        let value = null, covers = [];
+        if (at.type === "bool" && /^акумулятор (в|у) комплекті$/.test(n) && kitEff.battery !== null) { value = kitEff.battery ? "Так" : "Ні"; covers = ["b"]; }
+        if (at.type === "bool" && /^зарядний пристрій (в|у) комплекті$/.test(n) && kitEff.charger !== null) { value = kitEff.charger ? "Так" : "Ні"; covers = ["c"]; }
+        if (at.type === "singleselect" && n === "комплектація" && kitEff.battery !== null && kitEff.battery === kitEff.charger) {
+          const o = (at.values || []).find((x) => normName(x.nameUK) === (kitEff.battery ? "з акумулятором і зарядним пристроєм" : "без акумулятора і зарядного пристрою"));
+          if (o) { value = o.nameUK; covers = ["b", "c"]; }
         }
         if (value === null) continue;
         cand.set(at.id, { out: { name: at.nameUK || at.nameRU, value, unit: "" }, src: SRC.DESC, frags: { ua: [], ru: [] }, from: "kit" });
-        notes.push(`комплектація підтверджена назвою / описом постачальника: «${at.nameUK}: ${value}»`);
+        if (covers.includes("b")) batteryDone = true;
+        if (covers.includes("c")) chargerDone = true;
+        notes.push(`комплектація підтверджена ${kitOwner ? "власником" : "назвою / описом постачальника"}: «${at.nameUK}: ${value}»`);
       }
-      if (kit.conflict) notes.push("комплектація: у даних постачальника суперечливі твердження — поля комплектації не заповнено");
+      // Підтверджене власником, але в схемі категорії немає відповідного поля — користувацька характеристика.
+      if (kitOwner) {
+        if (!batteryDone && kitEff.battery !== null) extra(normName("Акумулятор у комплекті"), { name: "Акумулятор у комплекті", value: kitEff.battery ? "Так" : "Ні", unit: "" }, SRC.DESC, "", { lang: "ua" });
+        if (!chargerDone && kitEff.charger !== null) extra(normName("Зарядний пристрій у комплекті"), { name: "Зарядний пристрій у комплекті", value: kitEff.charger ? "Так" : "Ні", unit: "" }, SRC.DESC, "", { lang: "ua" });
+      }
+      if (kit.conflict && !kitOwner) notes.push("комплектація: у даних постачальника суперечливі твердження — поля комплектації не заповнено");
     }
     // 1б. Користувацькі з опису. UA- і RU-опис — переклади одне одного: пари однієї характеристики — за підтвердженою
     // назвою (схеми Prom / погоджений словник / та сама назва); якщо назву не підтверджено — за позицією в описі
@@ -864,12 +879,32 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
         continue;
       }
       if (u.length && r.length) {
+        // ТОП-50 №29 (власник, 25.10.2026): «Витрата повітря: N м³/г» (UA) = «N м³/ч» (RU), те саме число → «N м³/год». Лише ця
+        // характеристика (фізична величина — об'ємна витрата); «/г» загалом не тлумачиться як «за годину».
+        const air = normName(key) === "витрата повітря" && /^(\d+(?:[.,]\d+)?)\s*м[³3]\s*\/\s*г$/i.exec(htmlText(u[0].out.value).trim());
+        const airRu = air && /^(\d+(?:[.,]\d+)?)\s*м[³3]\s*\/\s*(ч|час)$/i.exec(htmlText(r[0].out.value).trim());
+        if (air && airRu && air[1].replace(",", ".") === airRu[1].replace(",", ".")) {
+          uaRuMerged++;
+          extra(key, { ...u[0].out, value: `${air[1]} м³/год` }, SRC.DESC, "", { lang: "ua" });
+          notes.push(`«${name}»: «${u[0].out.value}» = «${r[0].out.value}» — передано «${air[1]} м³/год» (погоджено власником)`);
+          continue;
+        }
         if (!sameValueIn([key, u[0].pr.key, r[0].pr.key, nameOf(r[0].pr.key)], u[0].out, r[0].out, names)) {
           // Комплектуючі (власник, 25.10.2026): UA і RU сформульовано по-різному, але без суперечності (ті самі числа й латиниця,
           // однакове «немає / є») — передаємо значення постачальника UA (максимум інформації без вигадок); інформаційна позначка,
           // якщо комплектацію не підтверджено. Суперечливі UA / RU — звичайне правило (нічого не вибираємо).
           const sorted = (v) => (htmlText(v).toLowerCase().match(/\d+(?:[.,]\d+)?|[a-z]+/g) || []).map((x) => x.replace(",", ".")).sort().join(" ");
           const neg = (v) => NEG_RE.test(htmlText(v).trim());
+          // Комплектацію підтвердив власник — передаємо значення постачальника (переважно UA), що їй відповідає, з технічними
+          // відомостями (тип, напруга, ємність); розбіжність UA / RU — інформаційно, рішення власника не скасовується.
+          if (isAccessoryName(key) && kitOwner?.battery !== undefined && /акумулятор|аккумулятор|акб|батаре/.test(key)) {
+            const fit = [u[0], r[0]].find((x) => neg(x.out.value) === !kitOwner.battery);
+            if (fit) {
+              extra(key, { ...fit.out, name: u[0].out.name }, SRC.DESC, "", { lang: "ua" });
+              review(name, orig, `комплектуючі: UA і RU різні — передано значення, що відповідає підтвердженій власником комплектації (акумулятор ${kitOwner.battery ? "у комплекті" : "не входить"}) (інформаційно)`);
+              continue;
+            }
+          }
           if (isAccessoryName(key) && sorted(u[0].out.value) === sorted(r[0].out.value) && neg(u[0].out.value) === neg(r[0].out.value)) {
             extra(key, u[0].out, SRC.DESC, "", { lang: "ua" });
             const battery = /акумулятор|аккумулятор|акб|батаре/.test(key);
@@ -1006,7 +1041,9 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     if (e?.blocked) { push(x.p, x.s, ""); continue; } // нове значення потребує перевірки — наявне не прибираємо
     removed.push(x.p.name);
   }
-  for (const [a, c] of cand) if (!used.has(a) && !suppressed.has(a)) push(c.out, c.src, a);
+  // kitYield: поле з підтвердженої комплектації поступається переліку постачальника з тією самою назвою, якщо той передається.
+  const kitYield = (c) => { if (c.from !== "kit") return false; const e = extras.get(normName(c.out.name)); if (!e || e.blocked) return false; notes.push(`комплектація: «${c.out.name}» — передається перелік постачальника; поле за підтвердженням не заповнюється`); return true; };
+  for (const [a, c] of cand) if (!used.has(a) && !suppressed.has(a) && !kitYield(c)) push(c.out, c.src, a);
   // 3а. Нові користувацькі: без дублікатів (та сама характеристика за ключем або те саме значення під іншою назвою).
   // Пари з опису перевіряються проти ІНШИХ джерел (XML, поля, наявні записи); пари одного опису між собою — ні
   // (постачальник сам перелічив різні характеристики, напр. матеріали різних деталей).

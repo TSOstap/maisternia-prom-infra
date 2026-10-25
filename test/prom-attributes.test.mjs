@@ -1070,8 +1070,11 @@ test("ТОП-50 (власник, 25.10.2026): погоджені пари, ти�
   assert.equal(itemsCompatible("Абразивний круг - 2 шт, захисний кожух", "Абразивный круг - 3 шт, защитный кожух"), false, "інша кількість");
   assert.equal(itemsCompatible("інструкція, колеса, трубка", "инструкция, колеса"), false, "інший склад");
   assert.ok(itemsCompatible("інструкція з експлуатації, захисний кожух, лещата", "защитный кожух, инструкция по эксплуатации, тиски"), "інший порядок — допустимо");
-  // №29: «670 м³/г» ≠ «670 м³/ч» без незалежного підтвердження
-  assert.equal(B("1250309", "<p>Витрата повітря: 670 м³/г</p>", "<p>Расход воздуха: 670 м³/ч</p>").needsReview.length, 1);
+  // №29 (погоджено 25.10.2026): «Витрата повітря: 670 м³/г» = «670 м³/ч» → одна «670 м³/год»; «/г» загалом — не «за годину»
+  const air = B("1250309", "<p>Витрата повітря: 670 м³/г</p>", "<p>Расход воздуха: 670 м³/ч</p>");
+  assert.deepEqual(air.params.filter((p) => /повітр/i.test(p.name)), [P("Витрата повітря", "670 м³/год")]); assert.deepEqual(air.needsReview, []);
+  assert.equal(B("1250309", "<p>Витрата повітря: 670 м³/г</p>", "<p>Расход воздуха: 680 м³/ч</p>").needsReview.length, 1, "інше число");
+  assert.equal(B("1250309", "<p>Продуктивність: 670 м³/г</p>", "<p>Производительность: 670 м³/ч</p>").needsReview.length, 1, "інша характеристика");
   // Відхилені №31, 40
   assert.equal(B("141711", "<p>Напруга акумулятора: 21 В</p>", "<p>Напряжение аккумулятора: 20 В</p>").needsReview.length, 1);
 });
@@ -1098,4 +1101,57 @@ test("захисні випадки ТОП-50 / комплектації (мут
   const offer = { id: "2", vendor: "GTM", sku: "", nameUa: "Газонокосарка GTM BLM42 без АКБ і ЗП", nameRu: "", price: 100, available: true, currency: "UAH" };
   const res = refreshMainRow(row, offer, { params: [P("Колір", "зелений")], pictures: [], descriptionUa: "<p>Ширина: 42 см</p>", descriptionRu: "" }, { stamp: "2026-10-25T10:00:00.000Z", catalog });
   assert.ok(JSON.parse(res.row["Характеристики JSON"]).some((p) => p.name === "Комплектація" && p.value === "Без акумулятора і зарядного пристрою"), res.row["Характеристики JSON"]);
+});
+
+test("комплектація, підтверджена власником (25.10.2026): рішення власника має пріоритет; технічні відомості «Акумулятор» зберігаються; без поля в схемі — користувацькі; на інші товари не поширюється; перелік постачальника «Комплектація» не витісняється", () => {
+  const names = catalog.names;
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  // 2528645191: каркас (власник — акумулятор НІ); RU перелічує сумісні АКБ — конфлікт інформаційно, рішення власника не скасовується
+  const frame = { titles: ["Тример Einhell GE-CT 18/33 Li E-Solo : без АКБ (3411270)"], descUa: "<p>Постачається без акумулятора і зарядного пристрою</p><p>Акумулятор: Немає, потрібен акумулятор 1 шт. - Li-ion 18В</p>", descRu: "<p>Аккумулятор: 1 шт. Li-ion 18В, 4,0 Ач, 1 шт. Li-ion 18В, 5,2 Ач, Нет, Li-ion 1 шт. - 18В</p>" };
+  const a = B("1250321", { ...frame, kitOwner: { battery: false } });
+  assert.ok(a.params.some((p) => p.name === "Акумулятор" && p.value === "Немає, потрібен акумулятор 1 шт. - Li-ion 18В"), "технічні відомості збережено");
+  assert.ok(a.params.some((p) => p.name === "Акумулятор у комплекті" && p.value === "Ні"));
+  assert.ok(a.params.some((p) => p.name === "Зарядний пристрій у комплекті" && p.value === "Ні"), "зарядний — за явною фразою постачальника");
+  assert.equal(a.needsReview.find((x) => x.name === "Акумулятор").kind, "інформаційно");
+  // Без явної фрази про зарядний — характеристики зарядного немає (не вигадуємо)
+  assert.ok(!B("1250321", { ...frame, descUa: "<p>Акумулятор: Немає, потрібен акумулятор 1 шт. - Li-ion 18В</p>", kitOwner: { battery: false } }).params.some((p) => /Зарядний/.test(p.name)));
+  // 2529879460: комплект (власник — АКБ ТАК, зарядний ТАК)
+  const kitV = B("141717", { titles: ["Einhell TE-MG 18/1 Li - Solo : з АКБ 18V 2.5Ah"], descUa: "<p>Акумулятор: PXC акумулятор Li-ion 18В, 2.5 Ah + Зарядне 3 А</p>", descRu: "<p>Аккумулятор: 1 шт. Li-ion 18В, 2,5 Ач</p>", kitOwner: { battery: true, charger: true } });
+  assert.ok(kitV.params.some((p) => p.name === "Акумулятор" && p.value === "PXC акумулятор Li-ion 18В, 2.5 Ah + Зарядне 3 А"));
+  assert.ok(kitV.params.some((p) => p.name === "Акумулятор у комплекті" && p.value === "Так") && kitV.params.some((p) => p.name === "Зарядний пристрій у комплекті" && p.value === "Так"));
+  // Ті самі дані без рішення власника — звичайні правила (конфлікт), користувацьких «у комплекті» немає
+  const n = B("1250321", frame);
+  assert.ok(!n.params.some((p) => p.name === "Акумулятор" || p.name === "Акумулятор у комплекті"));
+  // Газонокосарка з власним переліком «Комплектація» — поле за підтвердженням не заповнюється, перелік постачальника передається
+  const m = B("1250308", { titles: ["Газонокосарка GTM BLM42 без АКБ і ЗП"], descUa: "<p>Комплектація: Картонна упаковка</p>", descRu: "<p>Комплектация: Картонная упаковка</p>" });
+  assert.deepEqual(m.params.filter((p) => p.name === "Комплектація"), [P("Комплектація", "Картонна упаковка")]);
+  // Перелік постачальника UA ≠ RU (конфлікт, не передається) — поле за явною фразою не поступається (2245578988)
+  const blocked = B("1250308", { titles: ["Газонокосарка Haisser, два акумулятори і зарядний"], descUa: "<p>Постачається з акумулятором і зарядним пристроєм</p><p>Комплектація: Газонокосарка 2 Акумулятора Зарядний пристрій</p>", descRu: "<p>Комплектация: Газонокосилка Аккумулятор Зарядное устройство Травосборник</p>" });
+  assert.deepEqual(blocked.params.filter((p) => p.name === "Комплектація"), [P("Комплектація", "З акумулятором і зарядним пристроєм")], JSON.stringify(blocked.params));
+});
+
+test("захисні випадки комплектації власника (мутаційна перевірка 25.10.2026): пріоритет над постачальником, файл підтверджень, синхронізація таблиці", async () => {
+  const names = catalog.names;
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  // Постачальник «без АКБ і ЗП», власник — «так»: поле Prom за рішенням власника, суперечність — примітка
+  const o = B("1250308", { titles: ["Газонокосарка без АКБ і ЗП"], kitOwner: { battery: true, charger: true } });
+  assert.ok(o.params.some((p) => p.name === "Комплектація" && p.value === "З акумулятором і зарядним пристроєм"), JSON.stringify(o.params));
+  assert.ok(o.notes.some((n) => /суперечать/.test(n)));
+  // Рішення власника — лише для трьох товарів; зарядний для каркасних — не вказано (лише дані постачальника)
+  assert.equal(catalog.kitConfirmed.size, 3);
+  assert.deepEqual(catalog.kitConfirmed.get("2528645191"), { battery: false, charger: undefined });
+  assert.deepEqual(catalog.kitConfirmed.get("2617516831"), { battery: false, charger: undefined });
+  assert.deepEqual(catalog.kitConfirmed.get("2529879460"), { battery: true, charger: true });
+  // Синхронізація основного каталогу передає рішення власника за Offer ID; інший Offer ID — ні
+  const { refreshMainRow } = await import("../src/core/sheet-sync.mjs");
+  const full = { params: [P("Колір", "червоний")], pictures: [], descriptionUa: "<p>Акумулятор: PXC акумулятор Li-ion 18В, 2.5 Ah + Зарядне 3 А</p>", descriptionRu: "<p>Аккумулятор: 1 шт. Li-ion 18В, 2,5 Ач</p>" };
+  const run = (id) => {
+    const row = { "Offer ID": id, "ID постачальника": id, "Категорія Prom ID": "141717", "Виробник": "Einhell", "Характеристики JSON": "[]", "Назва постачальника UA": "Einhell TE-MG 18/1 Li - Solo", "Назва постачальника RU": "" };
+    const offer = { id, vendor: "Einhell", sku: "", nameUa: "Einhell TE-MG 18/1 Li - Solo", nameRu: "", price: 100, available: true, currency: "UAH" };
+    return JSON.parse(refreshMainRow(row, offer, full, { stamp: "2026-10-25T10:00:00.000Z", catalog }).row["Характеристики JSON"]);
+  };
+  const yes = run("2529879460");
+  assert.ok(yes.some((p) => p.name === "Акумулятор у комплекті" && p.value === "Так"), JSON.stringify(yes));
+  assert.ok(yes.some((p) => p.name === "Акумулятор" && p.value === "PXC акумулятор Li-ion 18В, 2.5 Ah + Зарядне 3 А"));
+  assert.ok(!run("2529879461").some((p) => /у комплекті/.test(p.name) || p.name === "Акумулятор"), "на інші товари не поширюється");
 });
