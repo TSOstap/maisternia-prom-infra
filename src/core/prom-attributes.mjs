@@ -921,6 +921,28 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     // перелік (кожне значення має підтверджену пару) або лише одна мова; без повторів і «|»; не довше FREE_MAX. Інакше —
     // ПОТРЕБУЄ ПЕРЕВІРКИ (чинна поведінка). Двійник іншою мовою під непогодженою назвою — лише якщо теж підтверджений власником.
     const owned = (k) => Boolean(multiOwner?.has(normName(k)));
+    const specOf = (k) => (typeof multiOwner?.get === "function" && multiOwner.get(normName(k))) || {};
+    const wordSet = (v) => new Set(normName(htmlText(v)).split(/[^a-zа-яіїєґё0-9]+/).filter(Boolean));
+    // split (LEX LXEIW20, власник 25.10.2026): ОДИН запис постачальника з переліком чисел («17; 19; 21; 23 мм») → окремі значення
+    // з одиницею кожне; UA і RU — той самий перелік (якщо обидва є). Лише перелік чисел з однією одиницею наприкінці.
+    const listOf = (v, sep) => {
+      const m = /^([\d.,\s]+(?:\s*[;,]\s*[\d.,\s]+)+?)\s*(мм|см|м|")?$/i.exec(htmlText(v).trim().replace(/[;.\s]+$/, ""));
+      if (!m) return null;
+      const parts = m[1].split(sep).map((x) => x.trim()).filter(Boolean);
+      return parts.length >= 2 && parts.every((x) => /^\d+(?:[.,]\d+)?$/.test(x)) ? parts.map((x) => (m[2] ? `${x} ${m[2]}` : x)) : null;
+    };
+    const splitValues = (key, u, r) => {
+      const sp = specOf(key).split;
+      if (!sp || u.length > 1 || r.length > 1) return null;
+      const a = u[0] && listOf(u[0].out.value, sp), b = r[0] && listOf(r[0].out.value, sp);
+      if ((u[0] && !a) || (r[0] && !b)) return { why: "запис не є переліком чисел з однією одиницею" };
+      if (a && b && (a.length !== b.length || a.some((x, i) => normValue(x, names) !== normValue(b[i], names)))) return { why: "перелік UA і RU різний" };
+      const parts = a || b;
+      if (new Set(parts.map((x) => normValue(x, names))).size !== parts.length) return { why: "повторені значення" };
+      const value = parts.join(MULTI_SEPARATOR);
+      if (value.length > FREE_MAX) return { why: `довше за ${FREE_MAX} символів` };
+      return { ok: true, value, both: Boolean(a && b), lang: a ? "ua" : "ru", name: (u[0] || r[0]).out.name, n: parts.length };
+    };
     const uniqOf = (l) => l.filter((x, i) => l.findIndex((y) => sameValue(y.out, x.out, names)) === i);
     const consumed = new Set();
     const multiValues = (key, u, r) => {
@@ -946,6 +968,15 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       const parts = base.map((x) => `${htmlText(x.out.value).trim()}${x.out.unit ? " " + x.out.unit : ""}`);
       if (parts.some((p) => !p || p.includes("|"))) return { why: "значення порожнє або містить «|»" };
       if (new Set(parts.map((p) => normValue(p, names))).size !== parts.length) return { why: "повторені значення" };
+      // keep (PROFI-TEC OC-100V2-3F, власник 25.10.2026): лише повніше значення, якщо кожне інше міститься в ньому за словами
+      const keep = specOf(key).keep;
+      if (keep) {
+        const kv = parts.find((p) => normValue(p, names) === normValue(keep, names));
+        if (!kv) return { why: `повніше значення «${keep}» не знайдено` };
+        const kw = wordSet(kv);
+        if (!parts.every((p) => [...wordSet(p)].every((w) => kw.has(w)))) return { why: `не всі значення містяться в «${keep}»` };
+        return { ok: true, value: kv, twin, both: Boolean(U.length && R.length), lang: U.length ? "ua" : "ru", name: base[0].out.name, n: 1, kept: true };
+      }
       const value = parts.join(MULTI_SEPARATOR);
       if (value.length > FREE_MAX) return { why: `довше за ${FREE_MAX} символів` };
       return { ok: true, value, twin, both: Boolean(U.length && R.length), lang: U.length ? "ua" : "ru", name: base[0].out.name, n: parts.length };
@@ -968,13 +999,21 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
           if (mv.twin) consumed.add(mv.twin);
           if (mv.both) uaRuMerged++;
           extra(key, { name: mv.name, value: mv.value, unit: "" }, SRC.DESC, "", { lang: mv.lang });
-          notes.push(`«${mv.name}»: ${mv.n} значення одним записом через « | » (кілька значень однієї характеристики, підтверджено власником)`);
+          notes.push(mv.kept ? `«${mv.name}»: передано повніше значення «${mv.value}»; інші записи містяться в ньому (підтверджено власником; оригінали — у сирих даних)` : `«${mv.name}»: ${mv.n} значення одним записом через « | » (кілька значень однієї характеристики, підтверджено власником)`);
           continue;
         }
         review(name, orig, "різні значення в одному описі" + (mv?.why ? `; кілька значень — умови не виконано: ${mv.why}` : ""));
         hold("ПОТРЕБУЄ ПЕРЕВІРКИ: різні значення в одному описі");
         continue;
       }
+      const sv = owned(key) ? splitValues(key, u, r) : null;
+      if (sv?.ok) {
+        if (sv.both) uaRuMerged++;
+        extra(key, { name: sv.name, value: sv.value, unit: "" }, SRC.DESC, "", { lang: sv.lang });
+        notes.push(`«${sv.name}»: перелік постачальника — ${sv.n} окремих значень через « | » (підтверджено власником)`);
+        continue;
+      }
+      if (sv?.why) notes.push(`«${name}»: перелік не розділено (${sv.why}) — передано як у постачальника`);
       // Бренд (власник, 25.10.2026): UA ≠ RU — якщо одне з написань збігається з офіційним (структуровані дані постачальника:
       // «Виробник»), передається офіційне; інакше — ПОТРЕБУЄ ПЕРЕВІРКИ (без перекладу, транслітерації й «схожих літер»).
       if (isBrandName(key) && u.length && r.length && !brandEq(u[0].out.value, r[0].out.value)) {

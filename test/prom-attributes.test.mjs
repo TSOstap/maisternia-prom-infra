@@ -1291,7 +1291,7 @@ test("кілька правильних значень однієї характ
   // Файл підтверджень: лише перелічені товари; виключений випадок — ні
   assert.ok(catalog.multiConfirmed.get("2418101030").has(normName("Функція")));
   assert.equal(catalog.multiConfirmed.has("2737283574"), false);
-  assert.equal(catalog.multiConfirmed.has("1804214680"), false);
+  assert.equal(catalog.multiConfirmed.has("2742168741"), false, "не перелічений товар");
   // Синхронізація основного каталогу передає підтвердження за Offer ID
   const { refreshMainRow } = await import("../src/core/sheet-sync.mjs");
   const run = (id) => {
@@ -1310,4 +1310,43 @@ test("кілька значень — захисні випадки (мутац�
   assert.ok(!more.params.some((p) => /^Функц/.test(p.name)), "RU має більше значень — не передається (інакше «ANTI STICK» загубилося б)");
   const lone = B("14400101", { descUa: ua2, descRu: "<p>Функция: HOT START</p><p>Функция: ARC FORCE</p>", multiOwner: new Set([normName("Функція")]) });
   assert.ok(lone.needsReview.some((x) => x.name === "Функция"), "RU-двійник без підтвердження власника — окремо, ПОТРЕБУЄ ПЕРЕВІРКИ");
+});
+
+test("погоджено 25.10.2026 (після 7684891): LEX — перелік постачальника окремими значеннями; PROFI-TEC — лише повніше значення; ТОП-50 №3 з умовами", () => {
+  const names = catalog.names;
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  // LEX: «17; 19; 21; 23 мм» → 4 окремі значення з одиницею; лише для підтвердженого запису (split)
+  const lexOwn = catalog.multiConfirmed.get("1804214680");
+  const lexD = { descUa: "<p>Гайковерт 4 головки: 17; 19; 21; 23 мм;</p>", descRu: "<p>Гайковерт 4 головки: 17;19;21;23 мм;</p>" };
+  assert.deepEqual(B("141714", { ...lexD, multiOwner: lexOwn }).params.filter((p) => /головки/.test(p.name)), [P("Гайковерт 4 головки", "17 мм | 19 мм | 21 мм | 23 мм")]);
+  assert.deepEqual(B("141714", lexD).params.filter((p) => /головки/.test(p.name)), [P("Гайковерт 4 головки", "17; 19; 21; 23 мм")], "без підтвердження — як у постачальника");
+  assert.deepEqual(B("141714", { descUa: lexD.descUa, descRu: "<p>Гайковерт 4 головки: 17;19;21;24 мм;</p>", multiOwner: lexOwn }).params.filter((p) => /головки/.test(p.name) && p.value.includes("|")), [], "інший перелік у RU — не розділяється");
+  // PROFI-TEC: «Масляний поршневий компресор» і «Поршневий» → лише повніше; без підтвердження — ПОТРЕБУЄ ПЕРЕВІРКИ
+  const pt = { descUa: "<p>Тип: Масляний поршневий компресор</p><p>Тип: Поршневий</p>", descRu: "<p>Тип: Масляный поршневой компрессор</p><p>Тип: Поршневой</p>" };
+  const k = B("141002", { ...pt, multiOwner: catalog.multiConfirmed.get("3160428321") });
+  assert.deepEqual(k.params.filter((p) => p.name === "Тип"), [P("Тип", "Масляний поршневий компресор")]);
+  assert.ok(!B("141002", pt).params.some((p) => p.name === "Тип"));
+  const notIn = B("141002", { descUa: "<p>Тип: Масляний поршневий компресор</p><p>Тип: Гвинтовий</p>", descRu: "<p>Тип: Масляный поршневой компрессор</p><p>Тип: Винтовой</p>", multiOwner: catalog.multiConfirmed.get("3160428321") });
+  assert.ok(!notIn.params.some((p) => p.name === "Тип"), "інше значення не міститься в повнішому — не скорочується");
+  // ТОП-50 №3: точні пари; №6 лише в 141711; №9 і №20 — ні; №36–37 — назва зведена, два значення лишаються на перевірці
+  const V = (v) => P("x", v);
+  assert.equal(sameValueIn(["Продуктивність"], V("810 м3/год"), V("810 м3/час"), names), true);
+  assert.equal(sameValueIn(["Кількість швидкостей"], V("2"), V("2-х скоростной"), names, "141711"), true);
+  assert.equal(sameValueIn(["Кількість швидкостей"], V("2"), V("2-х скоростной"), names, "141714"), false);
+  assert.equal(sameValueIn(["Кількість швидкостей"], V("2-х швидкісний"), V("2-х скоростной"), names), true, "№5");
+  assert.equal(sameValueIn(["Комплектація"], V("ключ,пилка,пилозбірник"), V("ключ,пила,пылесборник"), names), false, "№9 не застосовано");
+  assert.equal(sameValueIn(["Потужність"], V("180 Вт/г"), V("180 Вт/ч"), names), false, "№20 не застосовано");
+  const st = B("410402", { descUa: "<p>Система запуску: ручна</p><p>Система запуску: Ручний стартер</p>", descRu: "<p>Система запуска: ручная</p><p>Система запуска: Ручной стартер</p>" });
+  assert.ok(!st.params.some((p) => /Система запуск/.test(p.name)), "два значення — не передаються без окремого рішення");
+  assert.equal(st.needsReview.filter((x) => /Система запуск/.test(x.name)).length, 1, "одна позначка (назви UA і RU зведено)");
+});
+
+test("перелік постачальника (split) — захисні випадки (мутаційна перевірка 25.10.2026): не число й понад 255 символів — не розділяється", () => {
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names: catalog.names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  const own = new Map([[normName("Гайковерт 4 головки"), { split: ";" }]]);
+  const odd = B("141714", { descUa: "<p>Гайковерт 4 головки: 17; 19.5.1; 21 мм</p>", multiOwner: own });
+  assert.ok(!odd.params.some((p) => p.value.includes("|")), "«19.5.1» — не число");
+  const long = Array.from({ length: 30 }, (_, i) => 100 + i).join("; ") + " мм"; // 151 символ у постачальника, після розділення — понад 255
+  const lg = B("141714", { descUa: `<p>Гайковерт 4 головки: ${long}</p>`, multiOwner: own });
+  assert.ok(lg.params.some((p) => p.name === "Гайковерт 4 головки" && !p.value.includes("|")), "понад 255 символів — як у постачальника");
 });
