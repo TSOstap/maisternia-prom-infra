@@ -1137,8 +1137,9 @@ test("захисні випадки комплектації власника (�
   const o = B("1250308", { titles: ["Газонокосарка без АКБ і ЗП"], kitOwner: { battery: true, charger: true } });
   assert.ok(o.params.some((p) => p.name === "Комплектація" && p.value === "З акумулятором і зарядним пристроєм"), JSON.stringify(o.params));
   assert.ok(o.notes.some((n) => /суперечать/.test(n)));
-  // Рішення власника — лише для трьох товарів; зарядний для каркасних — не вказано (лише дані постачальника)
-  assert.equal(catalog.kitConfirmed.size, 3);
+  // Рішення власника — лише для шести товарів (3 Einhell + 3 GTM); зарядний для каркасних — не вказано (лише дані постачальника)
+  assert.equal(catalog.kitConfirmed.size, 6);
+  for (const id of ["2571161463", "2572063884", "2572081588"]) assert.deepEqual(catalog.kitConfirmed.get(id), { battery: true, charger: undefined, batteryCount: 1 });
   assert.deepEqual(catalog.kitConfirmed.get("2528645191"), { battery: false, charger: undefined });
   assert.deepEqual(catalog.kitConfirmed.get("2617516831"), { battery: false, charger: undefined });
   assert.deepEqual(catalog.kitConfirmed.get("2529879460"), { battery: true, charger: true });
@@ -1154,4 +1155,57 @@ test("захисні випадки комплектації власника (�
   assert.ok(yes.some((p) => p.name === "Акумулятор у комплекті" && p.value === "Так"), JSON.stringify(yes));
   assert.ok(yes.some((p) => p.name === "Акумулятор" && p.value === "PXC акумулятор Li-ion 18В, 2.5 Ah + Зарядне 3 А"));
   assert.ok(!run("2529879461").some((p) => /у комплекті/.test(p.name) || p.name === "Акумулятор"), "на інші товари не поширюється");
+});
+
+test("ТОП-50 №2 і 3 GTM (власник, 25.10.2026): точні пари в контексті, лише в категорії (№5, №19), «× / х» лише в розмірах, «2 кВт» ≠ «2», склад комплектації; GTM — АКБ і кількість у комплекті без вигаданого зарядного", () => {
+  const names = catalog.names;
+  const V = (v) => P("x", v);
+  const eq = (k, a, b, cat = "") => sameValueIn([k], V(a), V(b), names, cat);
+  // №3 — нестандартний переклад лише в «Реверс»
+  assert.equal(eq("Реверс", "повзунковий", "ползуночный"), true);
+  assert.equal(eq("Тип", "повзунковий", "ползуночный"), false);
+  // №5 і №19 — лише в погодженій категорії
+  assert.equal(eq("Тип", "гайкокрут", "гайковерт", "141714"), true);
+  assert.equal(eq("Тип", "гайкокрут", "гайковерт", "141711"), false);
+  assert.equal(eq("Тип", "інверторний зварювальний напівавтомат", "инверторный сварочный полуавтомат", "14400105"), true);
+  assert.equal(eq("Тип", "інверторний зварювальний напівавтомат", "инверторный сварочный полуавтомат", "141711"), false);
+  assert.equal(eq("Тип", "інверторний зварювальний напівавтомат", "инверторный сварочный автомат", "14400105"), false, "повний зміст");
+  // №38–40 — «×» = «х» / «x» лише в розмірах; числа мають збігатися
+  assert.equal(eq("Розміри в упаковці", "380 × 70 × 115 мм", "380 х 70 х 115 мм"), true);
+  assert.equal(eq("Габарити", "380 × 70 × 115 мм", "380x70x115 мм"), true);
+  assert.equal(eq("Розміри в упаковці", "380 × 70 × 115 мм", "380 х 70 х 116 мм"), false);
+  assert.equal(eq("Розміри в упаковці", "380 × 70 × 115 мм", "380 х 70 х 115 см"), false);
+  assert.equal(eq("Напруга", "2 х 18 В", "2 × 18 В"), false, "поза розмірами — ні");
+  // №46–48 — значення з одиницею і без не прирівнюються
+  assert.equal(eq("Потужність двигуна, кВт", "2 кВт", "2"), false);
+  // №6 — та сама комплектація; інша кількість або пропущений предмет — ні
+  const ua6 = "Акумулятор (2 Аг) - 2 шт Зарядний пристрій - 1 шт Валіза - 1 шт", ru6 = "✔ Аккумулятор (2 Ач) - 2 шт ✔ Зарядное устройство - 1 шт ✔ Чемодан - 1 шт";
+  assert.equal(eq("Комплектація", ua6, ru6), true);
+  assert.equal(eq("Комплектація", ua6, ru6.replace("2 шт ✔ Зарядное", "3 шт ✔ Зарядное")), false);
+  assert.equal(eq("Комплектація", ua6.replace("Валіза - 1 шт", ""), ru6), false);
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  // №5 у повному конвеєрі: категорія передається в порівняння (141714 — одна характеристика; інша категорія — ПОТРЕБУЄ ПЕРЕВІРКИ)
+  const g5 = { descUa: "<p>Тип: гайкокрут</p>", descRu: "<p>Тип: гайковерт</p>" };
+  const w = B("141714", g5);
+  assert.deepEqual(w.needsReview, []);
+  assert.ok(w.params.some((p) => p.name === "Тип" && p.value === "гайкокрут"), JSON.stringify(w.params));
+  assert.ok(B("141711", g5).needsReview.some((x) => x.name === "Тип"));
+  // Повтор розміру в одному описі з «×» і «x» — одне значення; різні розміри — ПОТРЕБУЄ ПЕРЕВІРКИ (чинна безпечна поведінка)
+  const d1 = B("1250312", { descRu: "<p>Размеры в упаковке: 198 × 77 × 237 мм</p><p>Размеры в упаковке: 198x77x237 мм</p>" });
+  assert.equal(d1.params.filter((p) => /озмір|азмер/.test(p.name)).length, 1, JSON.stringify(d1.params));
+  const d2 = B("1250312", { descRu: "<p>Размеры в упаковке: 198 × 77 × 237 мм</p><p>Размеры в упаковке: 200x77x237 мм</p>" });
+  assert.ok(d2.needsReview.some((x) => /різні значення в одному описі/.test(x.reason)));
+  // 3 GTM: АКБ у комплекті (власник), кількість у комплекті — користувацька, оригінал «Кількість акумуляторів» зберігається;
+  // зарядний — дані постачальника «без АКБ і ЗП» спростовано щодо АКБ, тож зарядний не заповнюється (ПОТРЕБУЄ ПІДТВЕРДЖЕННЯ)
+  const gtm = { titles: ["Газонокосарка акумуляторна GTM BLM42 несамохідна без АКБ і ЗП (BLM42_BARE TOOL)"], descUa: "<p>Кількість акумуляторів: 1</p>" };
+  const g = B("1250308", { ...gtm, kitOwner: { battery: true, batteryCount: 1 } });
+  assert.ok(g.params.some((p) => p.name === "Акумулятор у комплекті" && p.value === "Так"), JSON.stringify(g.params));
+  assert.ok(g.params.some((p) => p.name === "Кількість акумуляторів у комплекті" && p.value === "1"));
+  assert.ok(g.params.some((p) => p.name === "Кількість акумуляторів" && p.value === "1"), "оригінал постачальника");
+  assert.ok(!g.params.some((p) => /Зарядний/.test(p.name) || p.name === "Комплектація"), "зарядний не вигадується");
+  assert.ok(g.notes.some((n) => /ПОТРЕБУЄ ПІДТВЕРДЖЕННЯ/.test(n)));
+  // Те саме без рішення власника — за даними постачальника
+  assert.ok(B("1250308", gtm).params.some((p) => p.name === "Комплектація" && p.value === "Без акумулятора і зарядного пристрою"));
+  // Зарядний, підтверджений власником окремо, — передається
+  assert.ok(B("1250308", { ...gtm, kitOwner: { battery: true, charger: false, batteryCount: 1 } }).params.some((p) => p.name === "Зарядний пристрій у комплекті" && p.value === "Ні"));
 });

@@ -92,6 +92,11 @@ export const brandEq = (a, b) => brandForm(a) === brandForm(b) && brandForm(a) !
 // значень UA/RU ці записи й так рівні (дефіс — роздільник слів у пословному порівнянні).
 const BATTERY_TYPE_RE = /^тип (акумулятор|аккумулятор|батаре)/;
 export const isBatteryTypeName = (n) => BATTERY_TYPE_RE.test(normName(n));
+// Розміри (власник, 25.10.2026, ТОП-50 №2 №38–40): «×», латинська «x» і кирилична «х» між числами — те саме позначення, ЛИШЕ
+// в характеристиці розмірів / габаритів; числа й одиниці мають збігатися. Лише для порівняння (передається оригінал UA).
+const DIM_NAME_RE = /(^|\s)(розмір|размер|габарит)/;
+export const isDimensionName = (n) => DIM_NAME_RE.test(normName(n));
+export const dimNorm = (v) => mtText(v).replace(/(\d)\s*[xXхХ×]\s*(?=\d)/g, "$1×");
 
 // ---------- комплектація (власник, 25.10.2026) ----------
 // Перелік комплектації: той самий склад — однакова кількість елементів і ті самі числа (кількості); порядок не важить.
@@ -336,7 +341,7 @@ export function normValue(v, names = null) {
  *  варіантів значень з усіх схем Prom; 2) погоджений словник (names-ua-ru.json: names, values); 3) технічна
  *  нормалізація (normValue, синоніми одиниць). Назва / значення з різними відповідниками в різних схемах —
  *  неоднозначні й не використовуються. */
-export function buildNames(schemas, approved = {}, aliasMap = new Map(), approvedValues = {}, approvedInContext = {}, conversions = [], wordsInContext = {}, restrictedContexts = null) {
+export function buildNames(schemas, approved = {}, aliasMap = new Map(), approvedValues = {}, approvedInContext = {}, conversions = [], wordsInContext = {}, restrictedContexts = null, inCategory = {}) {
   const name = new Map(), value = new Map(), unit = new Map();
   const bad = new Set();
   const put = (m, tag, k, v) => {
@@ -372,6 +377,11 @@ export function buildNames(schemas, approved = {}, aliasMap = new Map(), approve
   // «напівавтомат» для типу зварювального апарата): { "характеристика": { "слово RU": "слово UA" } }.
   names.wordsIn = new Map(Object.entries(wordsInContext || {}).map(([ch, w]) => [normName(ch), new Map(Object.entries(w || {}).map(([ru, ua]) => [normName(ru), normName(ua)]))]));
   names.valueIn = new Map(Object.entries(approvedInContext || {}).map(([ch, vals]) => [normName(ch), new Map(Object.entries(vals || {}).flatMap(([k, v]) => { const c = normValue(v, names); return [[normValue(k, names), c], [c, c]]; }))]));
+  // Погоджене лише для категорії Prom: { "ID категорії": { values: { характеристика: { RU: UA } }, words: { характеристика: { слово RU: слово UA } } } }.
+  names.inCategory = new Map(Object.entries(inCategory || {}).map(([cat, x]) => [String(cat), {
+    values: new Map(Object.entries(x?.values || {}).map(([ch, vals]) => [normName(ch), new Map(Object.entries(vals || {}).flatMap(([k, v]) => { const c = normValue(v, names); return [[normValue(k, names), c], [c, c]]; }))])),
+    words: new Map(Object.entries(x?.words || {}).map(([ch, w]) => [normName(ch), new Map(Object.entries(w || {}).map(([ru, ua]) => [normName(ru), normName(ua)]))])),
+  }]));
   return names;
 }
 // Відповідність назв — до кінцевої форми (ланцюжок «Источник питания» → «Джерело живлення» → «Живлення»), інакше ключі
@@ -496,18 +506,26 @@ export function sameValue(a, b, names = null) {
   return wordsMatch(ta, tb, names) || wordsMatch(tb, ta, names) || wordsMatchAnyOrder(ta, tb, names);
 }
 /** sameValue + значення, погоджені лише для цієї характеристики (keys — можливі назви характеристики: ключ, назви UA / RU). */
-export function sameValueIn(keys, a, b, names = null) {
+export function sameValueIn(keys, a, b, names = null, categoryId = "") {
   const full = (p) => `${mtText(p.value)}${mtText(p.unit) ? " " + mtText(p.unit) : ""}`;
   if (keys.some((k) => isBrandName(k))) return brandEq(full(a), full(b)); // бренд — лише однакове написання
   // Комплектація (власник, 25.10.2026): той самий склад — та сама кількість елементів і ті самі числа (порядок не важить).
   if (keys.some((k) => isKitListName(k)) && !itemsCompatible(full(a), full(b))) return false;
   if (keys.some((k) => isBatteryTypeName(k)) && sameValue({ ...a, value: batteryCanon(a.value) }, { ...b, value: batteryCanon(b.value) }, names)) return true;
   if (sameValue(a, b, names)) return true;
+  if (keys.some((k) => isDimensionName(k)) && sameValue({ ...a, value: dimNorm(a.value) }, { ...b, value: dimNorm(b.value) }, names)) return true;
   const t = (p) => normValue(`${mtText(p.value)}${mtText(p.unit) ? " " + mtText(p.unit) : ""}`, names);
+  // Погоджене лише для категорії Prom (власник, 25.10.2026: №5 «гайкокрут = гайковерт» у гайковертах, №19 «напівавтомат =
+  // полуавтомат» у типі зварювального обладнання); поза категорією не діє.
+  const inCat = categoryId ? names?.inCategory?.get(String(categoryId)) : null;
   for (const k of keys) {
     // Погоджені слова в контексті характеристики: повний зміст, кожне слово має пару (жодне не суперечить).
     const w = names?.wordsIn?.get(normName(k));
     if (w && wordsMatchAnyOrder(t(a), t(b), { ...names, lex: new Map([...(names.lex || []), ...w]) })) return true;
+    const cw = inCat?.words.get(normName(k));
+    if (cw && wordsMatchAnyOrder(t(a), t(b), { ...names, lex: new Map([...(names.lex || []), ...cw]) })) return true;
+    const cv = inCat?.values.get(normName(k));
+    if (cv && (cv.get(t(a)) ?? t(a)) === (cv.get(t(b)) ?? t(b))) return true;
     const m = names?.valueIn?.get(normName(k));
     if (!m) continue;
     const ca = m.get(t(a)) ?? t(a), cb = m.get(t(b)) ?? t(b);
@@ -773,10 +791,14 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     // Підтверджена комплектація (власник, 25.10.2026): явні фрази постачальника («постачається без акумулятора та зарядного
     // пристрою», «з АКБ 18V 2.5Ah») → поле Prom, якщо воно є в схемі й ще не заповнене з XML / опису; без впевненості — не заповнюємо.
     // Підтверджене власником рішення (kitOwner: { battery, charger }) має пріоритет над визначеним з даних постачальника.
-    const kitEff = kit && { battery: kitOwner?.battery ?? kit.battery, charger: kitOwner?.charger ?? kit.charger };
+    // Власник спростував дані постачальника про акумулятор (GTM «без АКБ і ЗП», власник — АКБ у комплекті): ті самі дані про
+    // зарядний пристрій не вважаються підтвердженими — без окремого рішення власника зарядний не заповнюється.
+    const ownerRefutes = Boolean(kit && kitOwner && kitOwner.battery !== undefined && kit.battery !== null && kit.battery !== kitOwner.battery);
+    const kitEff = kit && { battery: kitOwner?.battery ?? kit.battery, charger: kitOwner?.charger ?? (ownerRefutes ? null : kit.charger) };
     if (kit && kitOwner) for (const [w, label] of [["battery", "акумулятор"], ["charger", "зарядний пристрій"]]) {
       if (kitOwner[w] !== undefined && kit[w] !== null && kit[w] !== kitOwner[w]) notes.push(`комплектація: дані постачальника про «${label}» суперечать підтвердженому рішенню власника — взято рішення власника`);
     }
+    if (ownerRefutes && kitOwner.charger === undefined && kit.charger !== null) notes.push("комплектація: дані постачальника про акумулятор спростовано власником — їхні дані про зарядний пристрій не використано (ПОТРЕБУЄ ПІДТВЕРДЖЕННЯ)");
     if (kitEff) {
       // Поле за підтвердженням НЕ ставиться, якщо постачальник передав власний перелік «Комплектація» і той перелік потрапляє в
       // Prom (одна назва — одна характеристика; предмети й кількості постачальника не губимо) — див. «kitYield» нижче.
@@ -801,6 +823,15 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       if (kitOwner) {
         if (!batteryDone && kitEff.battery !== null) extra(normName("Акумулятор у комплекті"), { name: "Акумулятор у комплекті", value: kitEff.battery ? "Так" : "Ні", unit: "" }, SRC.DESC, "", { lang: "ua" });
         if (!chargerDone && kitEff.charger !== null) extra(normName("Зарядний пристрій у комплекті"), { name: "Зарядний пристрій у комплекті", value: kitEff.charger ? "Так" : "Ні", unit: "" }, SRC.DESC, "", { lang: "ua" });
+        // Кількість акумуляторів У КОМПЛЕКТІ (власник, 25.10.2026, 3 GTM): поле Prom саме з таким змістом — якщо є в схемі;
+        // інакше користувацька. Поле «Кількість акумуляторів» постачальника (потреба чи комплект — не визначено) не змінюється.
+        if (kitOwner.batteryCount !== undefined && kitEff.battery) {
+          const at = schema.attributes.find((x) => /^кількість акумуляторів (в|у) комплекті$/.test(normName(x.nameUK || x.nameRU)) && !cand.has(x.id) && !mapping?.blocked?.[x.id]);
+          const out = { name: at ? at.nameUK || at.nameRU : "Кількість акумуляторів у комплекті", value: String(kitOwner.batteryCount), unit: "" };
+          if (at) cand.set(at.id, { out, src: SRC.DESC, frags: { ua: [], ru: [] }, from: "kit" });
+          else extra(normName(out.name), out, SRC.DESC, "", { lang: "ua" });
+          notes.push(`комплектація підтверджена власником: «${out.name}: ${out.value}»`);
+        }
       }
       if (kit.conflict && !kitOwner) notes.push("комплектація: у даних постачальника суперечливі твердження — поля комплектації не заповнено");
     }
@@ -848,7 +879,9 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     const dm = (x) => { const b = x.pr.m.blocked, su = splitValueUnit(x.out.value); return b && su && (b.wrongUnits || []).some((w) => normUnit(w) === normUnit(su.unit)) ? { unitDefect: b } : {}; };
     for (const key of new Set([...dx.ua.keys(), ...dx.ru.keys()])) {
       const ua = dx.ua.get(key) || [], ru = dx.ru.get(key) || [];
-      const uniq = (l) => l.filter((x, i) => l.findIndex((y) => sameValue(y.out, x.out, names)) === i);
+      const dim = isDimensionName(key);
+      const same = (y, x) => sameValue(y.out, x.out, names) || (dim && sameValue({ ...y.out, value: dimNorm(y.out.value) }, { ...x.out, value: dimNorm(x.out.value) }, names));
+      const uniq = (l) => l.filter((x, i) => l.findIndex((y) => same(y, x)) === i);
       const u = uniq(ua), r = uniq(ru);
       const orig = [...ua, ...ru].map((x) => label(x.pr));
       const name = (u[0] || r[0]).out.name;
@@ -889,7 +922,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
           notes.push(`«${name}»: «${u[0].out.value}» = «${r[0].out.value}» — передано «${air[1]} м³/год» (погоджено власником)`);
           continue;
         }
-        if (!sameValueIn([key, u[0].pr.key, r[0].pr.key, nameOf(r[0].pr.key)], u[0].out, r[0].out, names)) {
+        if (!sameValueIn([key, u[0].pr.key, r[0].pr.key, nameOf(r[0].pr.key)], u[0].out, r[0].out, names, categoryId)) {
           // Комплектуючі (власник, 25.10.2026): UA і RU сформульовано по-різному, але без суперечності (ті самі числа й латиниця,
           // однакове «немає / є») — передаємо значення постачальника UA (максимум інформації без вигадок); інформаційна позначка,
           // якщо комплектацію не підтверджено. Суперечливі UA / RU — звичайне правило (нічого не вибираємо).
@@ -1054,7 +1087,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     const at = usedKeys.get(key);
     if (at !== undefined) {
       const q = result[at];
-      if (sameValueIn([key, q.name, e.out.name], q, e.out, names) || numEq(q, e.out, names)) { e.taken = true; merged.push(`«${fmt(e.out)}» (${srcLabel(e.src)}) = «${fmt(q)}» — не дублюємо`); continue; }
+      if (sameValueIn([key, q.name, e.out.name], q, e.out, names, categoryId) || numEq(q, e.out, names)) { e.taken = true; merged.push(`«${fmt(e.out)}» (${srcLabel(e.src)}) = «${fmt(q)}» — не дублюємо`); continue; }
       review(q.name, [{ src: srcLabel(items[at].s), value: fmt(q) }, { src: srcLabel(e.src), value: fmt(e.out) }], "значення постачальника відрізняється від наявного — збережено наявне" + hint(q.value, e.out.value));
       e.why = `ПОТРЕБУЄ ПЕРЕВІРКИ: відрізняється від наявного «${fmt(q)}»`;
       continue;
