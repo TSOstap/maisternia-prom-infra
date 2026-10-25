@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { categoryBlocks, parseSchemaText } from "../src/core/prom-schema.mjs";
-import { SRC, alignPairs, brandEq, isBatteryTypeName, itemsCompatible, normName, normValue, buildCharacteristics, buildNames, charKey, cleanDescription, cleanValue, descriptionPairs, hoursValue, hoursWord, importRisks, timeValue, yearsWord, mapParam, sameValue, sameValueIn, validateValue, wordsMatch, wordsMatchAnyOrder } from "../src/core/prom-attributes.mjs";
+import { SRC, alignPairs, brandEq, dimEqMm, latinOriginal, isBatteryTypeName, itemsCompatible, normName, normValue, buildCharacteristics, buildNames, charKey, cleanDescription, cleanValue, descriptionPairs, hoursValue, hoursWord, importRisks, timeValue, yearsWord, mapParam, sameValue, sameValueIn, validateValue, wordsMatch, wordsMatchAnyOrder } from "../src/core/prom-attributes.mjs";
 import { SCHEMAS_DIR, importSchemaFiles, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
 
 const catalog = loadPromCatalog();
@@ -1208,4 +1208,54 @@ test("ТОП-50 №2 і 3 GTM (власник, 25.10.2026): точні пари 
   assert.ok(B("1250308", gtm).params.some((p) => p.name === "Комплектація" && p.value === "Без акумулятора і зарядного пристрою"));
   // Зарядний, підтверджений власником окремо, — передається
   assert.ok(B("1250308", { ...gtm, kitOwner: { battery: true, charger: false, batteryCount: 1 } }).params.some((p) => p.name === "Зарядний пристрій у комплекті" && p.value === "Ні"));
+});
+
+test("погоджено власником 25.10.2026: розміри см ↔ мм поелементно; латинський оригінал кодів і моделей; IP-код, двигун, час заряджання — без змін; точна пара «Патрон»", () => {
+  const names = catalog.names;
+  const V = (v) => P("x", v);
+  const eq = (k, a, b) => sameValueIn([k], V(a), V(b), names);
+  // Розміри: кожен вимір на своїй позиції після см → мм; порядок не змінюється; частковий збіг — не збіг; лише в розмірах
+  assert.equal(dimEqMm("71.7 × 45.5 × 39.3 см", "717 x 455 x 393 мм"), true);
+  assert.equal(eq("Розміри в упаковці", "177 × 156 × 81 мм", "17.7 × 15.6 × 8.1 см"), true);
+  assert.equal(eq("Розміри в упаковці", "177 × 156 × 81 мм", "15.6 × 17.7 × 8.1 см"), false, "інший порядок вимірів");
+  assert.equal(eq("Розміри в упаковці", "177 × 156 × 81 мм", "17.7 × 15.6 см"), false, "частковий збіг");
+  assert.equal(eq("Розміри в упаковці", "161x84x200 мм", "20 × 8.4 × 16.1 см"), false);
+  assert.equal(eq("Вага", "177 × 156 × 81 мм", "17.7 × 15.6 × 8.1 см"), false, "лише розміри");
+  // Коди й моделі: латинський оригінал; транслітерація кирилицею — та сама позначка; змішаний запис і різні позначення — ні
+  assert.equal(latinOriginal("TE-CD 18/50 Li-i BL Solo", "TE-CD 18/50 Li-i BL Соло", names), "TE-CD 18/50 Li-i BL Solo");
+  assert.equal(latinOriginal("РХ1000", "RH1000", names), "RH1000", "латиниця в RU — теж оригінал");
+  assert.equal(latinOriginal("18 В LXT", "18 В ЛХТ", names), "18 В LXT");
+  assert.equal(latinOriginal("RH1000", "РХ1001", names), null, "інші цифри");
+  assert.equal(latinOriginal("IР68", "ИР68", names), null, "IP-код зі змішаними літерами — без підтвердження не виправляємо");
+  assert.equal(latinOriginal("321R Арт. : 970 65 12 01", "321р Ст. №: 970 65 12-01", names), null, "різні позначення двигуна — як є");
+  assert.equal(latinOriginal("V-SERIES", "V-СЕРИЯ", names), null, "переклад, а не транслітерація");
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  const code = B("141711", { descUa: "<p>Код виробника: TE-CD 18/50 Li-i BL Solo</p>", descRu: "<p>Код производителя: TE-CD 18/50 Li-i BL Соло</p>" });
+  assert.deepEqual(code.needsReview, []);
+  assert.ok(code.params.some((p) => p.value === "TE-CD 18/50 Li-i BL Solo") && !code.params.some((p) => /Соло/.test(p.value)), JSON.stringify(code.params));
+  const ip = B("13241401", { descUa: "<p>Ступінь захисту: IР68</p>", descRu: "<p>Степень защиты: ИР68</p>" });
+  assert.ok(ip.needsReview.some((x) => /Ступінь захисту/i.test(x.name)), "IP-код — ПОТРЕБУЄ ПЕРЕВІРКИ");
+  // Час заряджання: 75 хв ≠ 90 хв, 100 хв ≠ 120 хв — лишаються на перевірку
+  assert.ok(B("5280501", { descUa: "<p>Час зарядки: 75 хвилин</p>", descRu: "<p>Время зарядки: 1 час 30 минут</p>" }).needsReview.length > 0);
+  assert.ok(B("5280501", { descUa: "<p>Час зарядки: 1 година 40хв</p>", descRu: "<p>Время зарядки: 2 часа</p>" }).needsReview.length > 0);
+  // Розміри см / мм у повному конвеєрі — одна характеристика з UA-значенням
+  const dm = B("141713", { descUa: "<p>Розміри в упаковці: 28.2 × 21.2 × 8.6 см</p>", descRu: "<p>Размеры в упаковке: 282 x 212 x 86 мм</p>" });
+  assert.deepEqual(dm.needsReview, []);
+  assert.ok(dm.params.some((p) => p.value === "28.2 × 21.2 × 8.6 см"), JSON.stringify(dm.params));
+  // Патрон: точна пара; інший тип / розмір — ні
+  assert.equal(eq("Патрон", "Швидко затискний з Auto-Lock, 10 мм", "Быстрозажимной c Auto-Lock, 10 мм"), true);
+  assert.equal(eq("Патрон", "Швидко затискний з Auto-Lock, 13 мм", "Быстрозажимной c Auto-Lock, 13 мм"), false);
+  assert.equal(eq("Патрон", "Швидко затискний з Auto-Lock, 10 мм", "Ключевой, 10 мм"), false);
+});
+
+test("латинський оригінал (25.10.2026): позначка з однієї літери не вважається підтвердженою («B» / «Б» — ПОТРЕБУЄ ПЕРЕВІРКИ)", () => {
+  assert.equal(latinOriginal("B", "Б", catalog.names), null);
+  assert.equal(latinOriginal("МІГ-300", "MIG-300", catalog.names), "MIG-300");
+  assert.equal(latinOriginal("KT-V1141", "КТ-В1141", catalog.names), "KT-V1141");
+});
+
+test("захисні випадки (мутаційна перевірка 25.10.2026): «× / х» у розмірах з текстом; транслітерація коду не приховує інших різних слів", () => {
+  const V = (v) => P("x", v);
+  assert.equal(sameValueIn(["Розміри в упаковці"], V("380 × 70 × 115 мм (Д×Ш×В)"), V("380 х 70 х 115 мм (Д×Ш×В)"), catalog.names), true);
+  assert.equal(latinOriginal("TE-CD Solo червоний", "TE-CD Соло синий", catalog.names), null);
 });

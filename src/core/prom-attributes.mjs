@@ -97,6 +97,43 @@ export const isBatteryTypeName = (n) => BATTERY_TYPE_RE.test(normName(n));
 const DIM_NAME_RE = /(^|\s)(розмір|размер|габарит)/;
 export const isDimensionName = (n) => DIM_NAME_RE.test(normName(n));
 export const dimNorm = (v) => mtText(v).replace(/(\d)\s*[xXхХ×]\s*(?=\d)/g, "$1×");
+// Розміри в см і мм (власник, 25.10.2026): лише весь запис «A × B [× C] см|мм»; кожен вимір перераховується до мм і
+// порівнюється на своїй позиції (порядок вимірів не змінюється, частковий збіг — не збіг).
+const DIM_RE = /^\s*(\d+(?:[.,]\d+)?(?:\s*[xXхХ×]\s*\d+(?:[.,]\d+)?){1,3})\s*(мм|см)\.?\s*$/i;
+const dimMm = (v) => { const m = DIM_RE.exec(htmlText(v)); if (!m) return null; const k = m[2].toLowerCase() === "см" ? 10 : 1; return m[1].split(/\s*[xXхХ×]\s*/).map((x) => round6(Number(x.replace(",", ".")) * k)); };
+export const dimEqMm = (a, b) => { const x = dimMm(a), y = dimMm(b); return Boolean(x && y && x.length === y.length && x.every((n, i) => n === y[i])); };
+// Коди й моделі (власник, 25.10.2026): оригінальне латинське написання зберігається; транслітерація кирилицею в іншій мові
+// («Solo» / «Соло», «RH1000» / «РХ1000», «LXT» / «ЛХТ») — та сама позначка, якщо кожна літера має відповідник (фонетичний або
+// однаковий на вигляд), а цифри й знаки збігаються. Змішаний запис («IР68») — не латиниця; довільно не транслітеруємо.
+const TRANSLIT = { a: ["а"], b: ["б", "в"], c: ["ц", "к", "с", "ч"], d: ["д"], e: ["е", "э", "є"], f: ["ф"], g: ["г", "ґ", "ж", "дж"], h: ["х", "г", "н"], i: ["и", "і", "ї", "й"], j: ["дж", "й", "ж"], k: ["к"], l: ["л"], m: ["м"], n: ["н"], o: ["о"], p: ["п", "р"], q: ["к"], r: ["р"], s: ["с", "з", "ш"], t: ["т"], u: ["у", "ю"], v: ["в"], w: ["в", "у"], x: ["х", "кс"], y: ["й", "и", "і", "ы", "у"], z: ["з", "ц"] };
+const translitEq = (lat, cyr) => {
+  const a = lat.toLowerCase(), b = cyr.toLowerCase();
+  const go = (i, j) => {
+    if (i === a.length) return j === b.length;
+    const ch = a[i];
+    if (!/[a-z]/.test(ch)) return b[j] === ch && go(i + 1, j + 1);
+    return (TRANSLIT[ch] || []).some((c) => b.startsWith(c, j) && go(i + 1, j + c.length));
+  };
+  return go(0, 0);
+};
+// Позначка з однієї літери («B» / «Б» — клас ізоляції) — надто слабке підтвердження: лише від 2 символів.
+const LAT_TOKEN = /^[a-z0-9][a-z0-9./+-]+$/i, CYR_TOKEN = /^[а-яіїєґё0-9][а-яіїєґё0-9./+-]*$/i;
+/** Латинський оригінал коду / моделі, якщо інша мова — його транслітерація (решта слів — ті самі); інакше null. */
+export function latinOriginal(ua, ru, names = null) {
+  const ta = htmlText(ua).trim().split(/\s+/), tb = htmlText(ru).trim().split(/\s+/);
+  if (ta.length !== tb.length) return null;
+  let lat = 0, side = null;
+  for (let i = 0; i < ta.length; i++) {
+    const x = ta[i], y = tb[i];
+    if (x === y) continue;
+    const xl = /[a-z]/i.test(x) && LAT_TOKEN.test(x), yl = /[a-z]/i.test(y) && LAT_TOKEN.test(y);
+    if (xl && !yl && CYR_TOKEN.test(y) && /[а-яіїєґё]/i.test(y) && translitEq(x, y) && side !== "ru") { lat++; side = "ua"; continue; }
+    if (yl && !xl && CYR_TOKEN.test(x) && /[а-яіїєґё]/i.test(x) && translitEq(y, x) && side !== "ua") { lat++; side = "ru"; continue; }
+    if (wordsMatch(x, y, names) || wordsMatch(y, x, names) || normValue(x, names) === normValue(y, names)) continue;
+    return null;
+  }
+  return lat ? (side === "ua" ? htmlText(ua).trim() : htmlText(ru).trim()) : null;
+}
 
 // ---------- комплектація (власник, 25.10.2026) ----------
 // Перелік комплектації: той самий склад — однакова кількість елементів і ті самі числа (кількості); порядок не важить.
@@ -514,6 +551,7 @@ export function sameValueIn(keys, a, b, names = null, categoryId = "") {
   if (keys.some((k) => isBatteryTypeName(k)) && sameValue({ ...a, value: batteryCanon(a.value) }, { ...b, value: batteryCanon(b.value) }, names)) return true;
   if (sameValue(a, b, names)) return true;
   if (keys.some((k) => isDimensionName(k)) && sameValue({ ...a, value: dimNorm(a.value) }, { ...b, value: dimNorm(b.value) }, names)) return true;
+  if (keys.some((k) => isDimensionName(k)) && dimEqMm(full(a), full(b))) return true;
   const t = (p) => normValue(`${mtText(p.value)}${mtText(p.unit) ? " " + mtText(p.unit) : ""}`, names);
   // Погоджене лише для категорії Prom (власник, 25.10.2026: №5 «гайкокрут = гайковерт» у гайковертах, №19 «напівавтомат =
   // полуавтомат» у типі зварювального обладнання); поза категорією не діє.
@@ -949,6 +987,14 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
           if (isAccessoryName(key) && neg(u[0].out.value) !== neg(r[0].out.value)) {
             review(name, orig, "комплектуючі: UA і RU суперечать одне одному («є» / «немає») — нічого не вибрано");
             hold("ПОТРЕБУЄ ПЕРЕВІРКИ: комплектуючі — UA і RU суперечать");
+            continue;
+          }
+          // Коди й моделі (власник, 25.10.2026): латинський оригінал в одній мові, транслітерація в іншій — передається оригінал.
+          const lat = !isBrandName(key) && latinOriginal(u[0].out.value, r[0].out.value, names);
+          if (lat) {
+            uaRuMerged++;
+            extra(key, { ...u[0].out, value: lat }, SRC.DESC, "", { lang: "ua" });
+            notes.push(`«${name}»: «${u[0].out.value}» / «${r[0].out.value}» — транслітерація латинського оригіналу; передано «${lat}»`);
             continue;
           }
           review(name, orig, "UA і RU значення відрізняються" + hint(u[0].out.value, r[0].out.value));
