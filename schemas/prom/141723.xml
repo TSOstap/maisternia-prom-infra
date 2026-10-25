@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141723" nameRU="Электрические строительные миксеры" nameUK="Електричні будівельні міксери">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="2500" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+<attribute id="6" nameRU="Тип патрона" type="singleselect" nameUK="Тип патрона">
+<attribute_value id="4" nameRU="Ключевой" nameUK="Ключовий"/>
+<attribute_value id="5" nameRU="Быстрозажимной" nameUK="Швидкозатискний"/>
+<attribute_value id="6" nameRU="Конус Морзе" nameUK="Конус Морзе"/>
+<attribute_value id="7" nameRU="Шестигранник" nameUK="Шестигранник"/>
+<attribute_value id="11" nameRU="M14" nameUK="M14"/>
+<attribute_value id="12" nameRU="M16" nameUK="M16"/>
+<attribute_value id="288945" nameRU="Цилиндрический" nameUK="Циліндричний"/>
+</attribute>
+<attribute id="8" nameRU="Реверс" type="bool" nameUK="Реверс"/>
+<attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+<attribute id="10" nameRU="Ограничение пускового тока" type="bool" nameUK="Обмеження пускового струму"/>
+<attribute id="12" nameRU="Поддержка постоянного количества оборотов под нагрузкой" type="bool" nameUK="Підтримка постійного числа обертів під навантаженням"/>
+<attribute id="13" nameRU="Предохранительная муфта" type="bool" nameUK="Запобіжна муфта"/>
+<attribute id="30" nameRU="Количество скоростей работы" type="singleselect" nameUK="Кількість швидкостей роботи">
+<attribute_value id="6911" nameRU="1" nameUK="1"/>
+<attribute_value id="6912" nameRU="2" nameUK="2"/>
+<attribute_value id="6913" nameRU="3" nameUK="3"/>
+<attribute_value id="6914" nameRU="4" nameUK="4"/>
+</attribute>
+<attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="1500" measureUnitUK="об/хв"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+<attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+<attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+<attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+<attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+</attribute>
+<attribute id="8196" nameRU="Максимальный крутящий момент" type="real" nameUK="Максимальний крутний момент" measureUnitRU="H*m" min="0" max="300" measureUnitUK="H*m"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+</category>
+</categories>

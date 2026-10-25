@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="143110" nameRU="Пилы циркулярные настольные" nameUK="Циркулярні настільні пилки">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="700" measureUnitUK="кг"/>
+<attribute id="79" nameRU="Диаметр посадочного отверстия" type="real" nameUK="Діаметр посадкового отвору" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+<attribute id="176" nameRU="Количество скоростей" type="real" nameUK="Кількість швидкостей" measureUnitRU="шт" min="1" max="5" measureUnitUK="шт."/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+<attribute id="613" nameRU="Высота стола" type="real" nameUK="Висота столу" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="617" nameRU="Ширина стола" type="real" nameUK="Ширина столу" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="1858" nameRU="Длина стола" type="real" nameUK="Довжина столу" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="2020" nameRU="Максимальная скорость подачи" type="real" nameUK="Максимальна швидкість подачі" measureUnitRU="м/мин" min="0" max="10" measureUnitUK="м/хв"/>
+<attribute id="2158" nameRU="Число оборотов холостого хода" type="integer" nameUK="Кількість обертів холостого ходу" measureUnitRU="об/мин" min="0" max="20000" measureUnitUK="об/хв"/>
+<attribute id="2479" nameRU="ЧПУ" type="bool" nameUK="ЧПУ"/>
+<attribute id="2523" nameRU="Тип системы ЧПУ станка" type="multiselect" nameUK="Тип системи ЧПУ верстата">
+<attribute_value id="14583" nameRU="позиционная" nameUK="позиційна"/>
+<attribute_value id="14584" nameRU="контурная" nameUK="контурна"/>
+<attribute_value id="14585" nameRU="универсальная" nameUK="універсальна"/>
+<attribute_value id="14586" nameRU="замкнутая" nameUK="замкнута"/>
+<attribute_value id="14587" nameRU="разомкнутая" nameUK="розімкнена"/>
+<attribute_value id="14588" nameRU="с абсолютным отсчетом" nameUK="з абсолютним відліком"/>
+<attribute_value id="14589" nameRU="с относительным отсчетом" nameUK="з відносним відліком"/>
+<attribute_value id="14590" nameRU="одно-координатная" nameUK="одно-координатна"/>
+<attribute_value id="14591" nameRU="двух-координатная" nameUK="двох-координатна"/>
+<attribute_value id="14592" nameRU="трех-координатная" nameUK="трьох-координатна"/>
+<attribute_value id="14593" nameRU="четырех-координатная" nameUK="чотирьох-координатна"/>
+<attribute_value id="14594" nameRU="пяти-координатная" nameUK="п'яти-координатна"/>
+</attribute>
+<attribute id="2553" nameRU="Мощность двигателя подачи" type="real" nameUK="Потужність двигуна подачі" measureUnitRU="кВт" min="0" max="100" measureUnitUK="кВт"/>
+<attribute id="4737" nameRU="Мощность" type="real" nameUK="Потужність" measureUnitRU="кВт" min="0" max="20" measureUnitUK="кВт"/>
+<attribute id="6212" nameRU="Напряжение питания" type="multiselect" nameUK="Напруга живлення">
+<attribute_value id="42681" nameRU="220 В" nameUK="220 В"/>
+<attribute_value id="42682" nameRU="380 В" nameUK="380 В"/>
+</attribute>
+<attribute id="6527" nameRU="Диаметр диска" type="real" nameUK="Діаметр диска" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="14147" nameRU="Ширина пропила" type="integer" nameUK="Ширина пропилу" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="14191" nameRU="Дополнительный сервис" type="multiselect" nameUK="Додатковий сервіс">
+<attribute_value id="144186" nameRU="Установка" nameUK="Установка"/>
+<attribute_value id="144187" nameRU="Сервисное обслуживание" nameUK="Сервісне обслуговування"/>
+<attribute_value id="157787" nameRU="Обучение" nameUK="Навчання"/>
+</attribute>
+<attribute id="14982" nameRU="Количество зубцов" type="integer" nameUK="Кількість зубців" measureUnitRU="шт" min="0" max="100" measureUnitUK="шт."/>
+<attribute id="15748" nameRU="Число оборотов диска" type="integer" nameUK="Кількість обертів диска" measureUnitRU="об/мин" min="0" max="100000" measureUnitUK="об/хв"/>
+<attribute id="15750" nameRU="Глубина пропила под 45 градусами" type="integer" nameUK="Глибина пропилу під 45 градусами" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+<attribute id="15751" nameRU="Глубина пропила под 90 градусами" type="integer" nameUK="Глибина пропилу під 90 градусами" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+</category>
+</categories>

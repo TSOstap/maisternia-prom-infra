@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201515" nameRU="Скобы, гвозди для строительных степлеров" nameUK="Скоби, цвяхи для будівельних степлерів">
+<attribute id="133" nameRU="Ширина скобы" type="real" nameUK="Ширина скоби" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+<attribute id="134" nameRU="Длина гвоздя" type="real" nameUK="Довжина цвяха" measureUnitRU="мм" min="0" max="60" measureUnitUK="мм"/>
+<attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="20" measureUnitUK="мм"/>
+<attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+<attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="61871" nameRU="Медь" nameUK="Мідь"/>
+<attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+<attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+<attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+<attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+</attribute>
+<attribute id="5692" nameRU="Покрытие" type="singleselect" nameUK="Покриття">
+<attribute_value id="111157" nameRU="Лак" nameUK="Лак"/>
+<attribute_value id="198260" nameRU="Оцинкованное" nameUK="Оцинковане"/>
+</attribute>
+<attribute id="18558" nameRU="Высота скобы" type="real" nameUK="Висота скоби" measureUnitRU="мм" min="0" max="50" measureUnitUK="мм"/>
+</category>
+</categories>

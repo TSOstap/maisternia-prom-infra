@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201612" nameRU="Электрические краскопульты" nameUK="Електричні фарбопульти">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="3000" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="30" measureUnitUK="кг"/>
+<attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+<attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+<attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+</attribute>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+<attribute id="101" nameRU="Емкость бака распылителя" type="real" nameUK="Ємність бака розпилювача" measureUnitRU="л" min="0" max="2" measureUnitUK="л"/>
+<attribute id="102" nameRU="Производительность краскопульта" type="real" nameUK="Продуктивність фарбопульта" measureUnitRU="литр/мин" min="0" max="2" measureUnitUK="літр/хв"/>
+<attribute id="103" nameRU="Диаметр сопла" type="real" nameUK="Діаметр сопла" measureUnitRU="мм" min="0" max="3" measureUnitUK="мм"/>
+<attribute id="160" nameRU="Регулировка подачи распыляемой смеси" type="bool" nameUK="Регулювання подачі розпилюваної суміші"/>
+<attribute id="161" nameRU="Регулировка ширины факела" type="bool" nameUK="Регулювання ширини факела"/>
+<attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+<attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+<attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+<attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="18574" nameRU="Максимальная вязкость жидкости по DIN" type="multiselect" nameUK="Максимальна в'язкість рідини по DIN">
+<attribute_value id="278832" nameRU="60" nameUK="60"/>
+<attribute_value id="282811" nameRU="80" nameUK="80"/>
+<attribute_value id="302373" nameRU="50" nameUK=""/>
+<attribute_value id="306036" nameRU="70" nameUK=""/>
+<attribute_value id="339630" nameRU="120" nameUK="120"/>
+</attribute>
+<attribute id="19109" nameRU="Регулировка формы распыления" type="singleselect" nameUK="Регулювання форми розпилення">
+<attribute_value id="339631" nameRU="Вертикальный" nameUK="Вертикальний"/>
+<attribute_value id="339632" nameRU="Горизонтальный" nameUK="Горизонтальний"/>
+<attribute_value id="339633" nameRU="Круглый" nameUK="Круглий"/>
+</attribute>
+</category>
+</categories>

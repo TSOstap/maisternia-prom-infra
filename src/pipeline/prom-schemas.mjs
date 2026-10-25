@@ -22,8 +22,16 @@ export function readManifest(dir = SCHEMAS_DIR) {
 }
 
 /** Схеми, словники й одиниці для синхронізації. */
-export function loadPromCatalog(dir = SCHEMAS_DIR) {
+export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "" } = {}) {
   const out = { schemas: new Map(), mappings: new Map(), units: readJson(path.join(dir, "units.json"), { conversions: [] }), problems: [] };
+  // Фактичні категорії товарів у Prom (власник, 25.10.2026) — файл ПОЗА репозиторієм (дані товарів у репозиторій не пишемо):
+  // { "date": "YYYY-MM-DD", "source": "…", "categories": { "<Offer ID>": "<ID категорії>" } }. Немає файлу — категорія таблиці.
+  out.promCategories = null;
+  if (promCategoriesFile) {
+    const pc = readJson(promCategoriesFile, null);
+    if (!pc || typeof pc.categories !== "object" || !pc.date) out.problems.push(`файл категорій Prom «${path.basename(promCategoriesFile)}»: немає date / categories`);
+    else out.promCategories = { date: String(pc.date), source: String(pc.source || ""), map: new Map(Object.entries(pc.categories).filter(([id, c]) => /^\d+$/.test(String(c))).map(([id, c]) => [String(id), String(c)])) };
+  }
   const synFile = readJson(path.join(dir, "synonyms.json"), {});
   const globalSyn = synFile.toAttribute || {};
   const pending = [];

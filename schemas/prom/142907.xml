@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142907" nameRU="Подъемники, лебедки, тали" nameUK="Підйомники, лебідки, талі">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="кВт" min="0" max="100" measureUnitUK="кВт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="2000" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="2500" measureUnitUK="мм"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+<attribute id="1280" nameRU="Грузоподъемность" type="real" nameUK="Вантажопідйомність" measureUnitRU="кг" min="0" max="50000" measureUnitUK="кг"/>
+<attribute id="1342" nameRU="Высота подъема" type="real" nameUK="Висота підйому" measureUnitRU="м" min="0" max="50" measureUnitUK="м"/>
+<attribute id="1678" nameRU="Скорость подъема-опускания груза" type="real" nameUK="Швидкість підйому-опускання вантажу" measureUnitRU="м/сек" min="0" max="1" measureUnitUK="м/сек"/>
+<attribute id="2457" nameRU="Скорость передвижения" type="real" nameUK="Швидкість пересування" measureUnitRU="м/сек" min="0" max="1" measureUnitUK="м/сек"/>
+<attribute id="2458" nameRU="Тип оборудования" type="singleselect" nameUK="Тип обладнання">
+<attribute_value id="13134" nameRU="Лебедка" nameUK="Лебідка"/>
+<attribute_value id="13135" nameRU="Таль" nameUK="Таль"/>
+<attribute_value id="13136" nameRU="Подъемник" nameUK="Підйомник"/>
+<attribute_value id="297772" nameRU="Подвески троллейные" nameUK="Підвіски тролейні"/>
+</attribute>
+<attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="2000" measureUnitUK="В"/>
+<attribute id="3817" nameRU="Мощность электродвигателя" type="real" nameUK="Потужність електродвигуна" measureUnitRU="Вт/ч" min="0" max="6000" measureUnitUK="Вт/год"/>
+<attribute id="7198" nameRU="Номинальное рабочее напряжение" type="real" nameUK="Номінальна робоча напруга" measureUnitRU="В" min="0" max="500" measureUnitUK="В"/>
+<attribute id="8023" nameRU="Привод" type="singleselect" nameUK="Привід">
+<attribute_value id="66789" nameRU="Электрический" nameUK="Електричний"/>
+<attribute_value id="66790" nameRU="Пневматический" nameUK="Пневматичний"/>
+<attribute_value id="66791" nameRU="Гидравлический" nameUK="Гідравлічний"/>
+<attribute_value id="66792" nameRU="Ручной" nameUK="Ручний"/>
+<attribute_value id="67252" nameRU="Пневмогидравлический" nameUK="Пневмогідравлічний"/>
+</attribute>
+<attribute id="9839" nameRU="Система охлаждения" type="singleselect" nameUK="Система охолодження">
+<attribute_value id="80534" nameRU="Водяная" nameUK="Водяна"/>
+<attribute_value id="80535" nameRU="Воздушная" nameUK="Повітряна"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="14191" nameRU="Дополнительный сервис" type="multiselect" nameUK="Додатковий сервіс">
+<attribute_value id="144186" nameRU="Установка" nameUK="Установка"/>
+<attribute_value id="144187" nameRU="Сервисное обслуживание" nameUK="Сервісне обслуговування"/>
+</attribute>
+<attribute id="15421" nameRU="Диаметр троса" type="real" nameUK="Діаметр троса" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+<attribute id="16240" nameRU="Минимальное рабочее усилие" type="real" nameUK="Мінімальне робоче зусилля" measureUnitRU="кН" min="0" max="100" measureUnitUK="кН"/>
+<attribute id="16241" nameRU="Максимальное рабочее усилие" type="real" nameUK="Максимальне робоче зусилля" measureUnitRU="кН" min="0" max="200" measureUnitUK="кН"/>
+<attribute id="16739" nameRU="Максимальная скорость навивки" type="real" nameUK="Максимальна швидкість навивання" measureUnitRU="м/мин" min="0" max="100" measureUnitUK="м/хв"/>
+<attribute id="16740" nameRU="Диаметр барабана" type="real" nameUK="Діаметр барабана" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+<attribute id="16741" nameRU="Минимальная скорость навивки" type="real" nameUK="Мінімальна швидкість навивання" measureUnitRU="м/мин" min="0" max="50" measureUnitUK="м/хв"/>
+<attribute id="17111" nameRU="Сила подъема при максимальной нагрузке" type="real" nameUK="Сила підйому при максимальному навантаженні" measureUnitRU="Н" min="0" max="2000" measureUnitUK="Н"/>
+<attribute id="17798" nameRU="Канатоемкость" type="real" nameUK="Канатоємкість" measureUnitRU="м" min="0" max="500" measureUnitUK="м"/>
+</category>
+</categories>

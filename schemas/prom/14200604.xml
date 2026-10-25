@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200604" nameRU="Измерительные рулетки" nameUK="Вимірювальні рулетки">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="500" measureUnitUK="г"/>
+<attribute id="34" nameRU="Наличие LCD-дисплея" type="bool" nameUK="Наявність LCD-дисплея"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+<attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+<attribute_value id="7635" nameRU="сталь" nameUK="сталь"/>
+<attribute_value id="7636" nameRU="алюминий" nameUK="Алюміній"/>
+<attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+<attribute_value id="7641" nameRU="стеклопластик" nameUK="склопластик"/>
+</attribute>
+<attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+<attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+<attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+<attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+<attribute_value id="84968" nameRU="Пластиковый блистер" nameUK="Пластиковий блістер"/>
+<attribute_value id="84969" nameRU="Полиэтиленовый пакет" nameUK="Поліетиленовий пакет"/>
+</attribute>
+<attribute id="439" nameRU="Материал рабочей части" type="singleselect" nameUK="Матеріал робочої частини">
+<attribute_value id="7792" nameRU="Пластмасса" nameUK="Пластмаса"/>
+<attribute_value id="7793" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="7794" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="8263" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+<attribute_value id="8268" nameRU="Резина" nameUK="Гума"/>
+<attribute_value id="171390" nameRU="Фиберглассовое полотно" nameUK="Фібергласове полотно"/>
+</attribute>
+<attribute id="679" nameRU="Тип измерительной рулетки" type="singleselect" nameUK="Тип вимірювальної рулетки">
+<attribute_value id="8270" nameRU="Механическая рулетка" nameUK="Механічна рулетка"/>
+<attribute_value id="8271" nameRU="Электронная рулетка" nameUK="Електронна рулетка"/>
+</attribute>
+<attribute id="680" nameRU="Шкала измерений" type="multiselect" nameUK="Шкала вимірювань">
+<attribute_value id="8272" nameRU="Метрическая система (м, см, мм)" nameUK="Метрична система (м, см, мм)"/>
+<attribute_value id="8273" nameRU="Неметрическая система (дюймы)" nameUK="Неметрична система (дюйми)"/>
+</attribute>
+<attribute id="681" nameRU="Длина полотна" type="real" nameUK="Довжина полотна" measureUnitRU="м" min="0" max="100" measureUnitUK="м"/>
+<attribute id="682" nameRU="Ширина полотна" type="real" nameUK="Ширина полотна" measureUnitRU="мм" min="0" max="35" measureUnitUK="мм"/>
+<attribute id="686" nameRU="Фиксатор ленты" type="bool" nameUK="Фіксатор стрічки"/>
+<attribute id="694" nameRU="Длина измерительной шкалы" type="real" nameUK="Довжина вимірювальної шкали" measureUnitRU="см" min="0" max="10000" measureUnitUK="см"/>
+<attribute id="1559" nameRU="Упаковка" type="singleselect" nameUK="Упаковка">
+<attribute_value id="89492" nameRU="Картонная коробка" nameUK="Картонна коробка"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="10614" nameRU="Класс точности" type="singleselect" nameUK="Клас точності">
+<attribute_value id="159715" nameRU="1" nameUK="1"/>
+<attribute_value id="159718" nameRU="2" nameUK="2"/>
+<attribute_value id="159719" nameRU="3" nameUK="3"/>
+</attribute>
+</category>
+</categories>

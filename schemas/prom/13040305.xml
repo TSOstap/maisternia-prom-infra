@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13040305" nameRU="Глубинные вибраторы" nameUK="Глибинні вібратори">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="3000" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="600" measureUnitUK="мм"/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+<attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="380" measureUnitUK="В"/>
+<attribute id="2563" nameRU="Частота вращения" type="real" nameUK="Частота обертання" measureUnitRU="об/мин" min="0" max="20000" measureUnitUK="об/хв"/>
+<attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="60" measureUnitUK="Гц"/>
+<attribute id="2565" nameRU="Статический момент" type="real" nameUK="Статичний момент" measureUnitRU="кг*см" min="0" max="1" measureUnitUK="кг*см"/>
+<attribute id="2566" nameRU="Вынуждающая сила" type="real" nameUK="Змушуюча сила" measureUnitRU="кН" min="0" max="10" measureUnitUK="кН"/>
+<attribute id="2567" nameRU="Частота колебаний синхронная" type="real" nameUK="Частота коливань синхронна" measureUnitRU="Гц" min="0" max="400" measureUnitUK="Гц"/>
+<attribute id="2568" nameRU="Диаметр вибронаконечника" type="real" nameUK="Діаметр вібронакінечника" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+<attribute id="2569" nameRU="Длина вибронаконечника" type="real" nameUK="Довжина вібронаконечника" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+<attribute id="2571" nameRU="Длина гибкого вала" type="real" nameUK="Довжина гнучкого валу" measureUnitRU="м" min="0" max="10" measureUnitUK="м"/>
+<attribute id="7786" nameRU="Защита от перегрузки" type="bool" nameUK="Захист від перевантаження"/>
+<attribute id="7846" nameRU="Длина сетевого кабеля" type="real" nameUK="Довжина мережевого кабелю" measureUnitRU="м" min="0" max="100" measureUnitUK="м"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+</category>
+</categories>

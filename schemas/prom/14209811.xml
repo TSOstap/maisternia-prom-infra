@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14209811" nameRU="Оборудование для обработки камня" nameUK="Обладнання для обробки каменю">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="кВт" min="0" max="10000" measureUnitUK="кВт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" measureUnitUK="кг"/>
+<attribute id="46" nameRU="Тип управления" type="singleselect" nameUK="Тип управління">
+<attribute_value id="6923" nameRU="Механическое" nameUK="Механічне"/>
+<attribute_value id="18603" nameRU="Ручное" nameUK="Ручне"/>
+</attribute>
+<attribute id="58" nameRU="Максимальный диаметр диска" type="real" nameUK="Максимальний діаметр диска" measureUnitRU="мм" min="0" max="600" measureUnitUK="мм"/>
+<attribute id="79" nameRU="Диаметр посадочного отверстия" type="real" nameUK="Діаметр посадкового отвору" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="176" nameRU="Количество скоростей" type="real" nameUK="Кількість швидкостей" measureUnitRU="шт" min="1" max="50" measureUnitUK="шт."/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="491" nameRU="Максимальная глубина реза" type="real" nameUK="Максимальна глибина різу" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="492" nameRU="Максимальная длина реза" type="real" nameUK="Максимальна довжина різу" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="617" nameRU="Ширина стола" type="real" nameUK="Ширина столу" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+<attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+<attribute_value id="70839" nameRU="Электрический" nameUK="Електричний"/>
+<attribute_value id="112343" nameRU="Асинхронные" nameUK="Асинхронні"/>
+</attribute>
+<attribute id="1266" nameRU="Класс" type="singleselect" nameUK="Клас">
+<attribute_value id="204573" nameRU="Профессиональный" nameUK="Професійний"/>
+</attribute>
+<attribute id="1493" nameRU="Частота" type="real" nameUK="Частота" measureUnitRU="GHz" min="0" max="300" measureUnitUK="GHz"/>
+<attribute id="1858" nameRU="Длина стола" type="real" nameUK="Довжина столу" measureUnitRU="мм" min="0" max="1250" measureUnitUK="мм"/>
+<attribute id="1906" nameRU="Потребляемый ток" type="real" nameUK="Споживаний струм" measureUnitRU="А" min="0" max="100" measureUnitUK="А"/>
+<attribute id="2158" nameRU="Число оборотов холостого хода" type="integer" nameUK="Кількість обертів холостого ходу" measureUnitRU="об/мин" min="0" max="20000" measureUnitUK="об/хв"/>
+<attribute id="2392" nameRU="Тип установки" type="multiselect" nameUK="Тип встановлення">
+<attribute_value id="12644" nameRU="Напольная" nameUK="Підлогова"/>
+</attribute>
+<attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="2000" measureUnitUK="В"/>
+<attribute id="2479" nameRU="ЧПУ" type="bool" nameUK="ЧПУ"/>
+<attribute id="2523" nameRU="Тип системы ЧПУ станка" type="multiselect" nameUK="Тип системи ЧПУ верстата">
+<attribute_value id="14583" nameRU="позиционная" nameUK="позиційна"/>
+<attribute_value id="14584" nameRU="контурная" nameUK="контурна"/>
+<attribute_value id="14585" nameRU="универсальная" nameUK="універсальна"/>
+<attribute_value id="14586" nameRU="замкнутая" nameUK="замкнута"/>
+<attribute_value id="14587" nameRU="разомкнутая" nameUK="розімкнена"/>
+<attribute_value id="14588" nameRU="с абсолютным отсчетом" nameUK="з абсолютним відліком"/>
+<attribute_value id="14589" nameRU="с относительным отсчетом" nameUK="з відносним відліком"/>
+<attribute_value id="14590" nameRU="одно-координатная" nameUK="одно-координатна"/>
+<attribute_value id="14591" nameRU="двух-координатная" nameUK="двох-координатна"/>
+<attribute_value id="14592" nameRU="трех-координатная" nameUK="трьох-координатна"/>
+<attribute_value id="14593" nameRU="четырех-координатная" nameUK="чотирьох-координатна"/>
+<attribute_value id="14594" nameRU="пяти-координатная" nameUK="п'яти-координатна"/>
+</attribute>
+<attribute id="2524" nameRU="Длина заготовки" type="real" nameUK="Довжина заготівлі" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+<attribute id="2525" nameRU="Ширина заготовки" type="real" nameUK="Ширина заготовки" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+<attribute id="2546" nameRU="Толщина заготовки" type="real" nameUK="Товщина заготовки" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+<attribute id="2552" nameRU="Расстояние от пола до стола подачи" type="real" nameUK="Відстань від підлоги до столу подачі" measureUnitRU="мм" measureUnitUK="мм"/>
+<attribute id="2913" nameRU="Емкость бака" type="real" nameUK="Ємність бака" measureUnitRU="л" min="0" max="10000" measureUnitUK="л"/>
+<attribute id="3282" nameRU="Угол реза" type="real" nameUK="Кут різу" measureUnitRU="град." measureUnitUK="град."/>
+<attribute id="6293" nameRU="Вид оборудования" type="singleselect" nameUK="Вид обладнання">
+<attribute_value id="298198" nameRU="Оборудование для колки камня" nameUK="Обладнаяння для колки каменю"/>
+<attribute_value id="298199" nameRU="Оборудование для полировки камня" nameUK="Обладнання для полірування каменю"/>
+<attribute_value id="314052" nameRU="Оборудование для резки камня" nameUK="Обладнання для різки каменю"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="10077" nameRU="Тип привода" type="singleselect" nameUK="Тип приводу">
+<attribute_value id="179456" nameRU="Электродвигатель" nameUK="Електродвигун"/>
+</attribute>
+<attribute id="10373" nameRU="Режущий механизм" type="singleselect" nameUK="Ріжучий механізм">
+<attribute_value id="345666" nameRU="Дисковая пила" nameUK="Дискова пила"/>
+<attribute_value id="347726" nameRU="Алмазный диск" nameUK="Алмазний диск"/>
+</attribute>
+<attribute id="12599" nameRU="Тип охлаждения" type="singleselect" nameUK="Тип охолодження">
+<attribute_value id="126539" nameRU="Водяной" nameUK="Водяний"/>
+<attribute_value id="289167" nameRU="Воздушный" nameUK="Повітряний"/>
+</attribute>
+<attribute id="12646" nameRU="Тип запуска" type="singleselect" nameUK="Тип запуску">
+<attribute_value id="174964" nameRU="Ручной" nameUK="Ручний"/>
+<attribute_value id="174965" nameRU="Электростартер" nameUK="Електростартер"/>
+</attribute>
+<attribute id="14191" nameRU="Дополнительный сервис" type="multiselect" nameUK="Додатковий сервіс">
+<attribute_value id="144186" nameRU="Установка" nameUK="Установка"/>
+<attribute_value id="144187" nameRU="Сервисное обслуживание" nameUK="Сервісне обслуговування"/>
+<attribute_value id="157787" nameRU="Обучение" nameUK="Навчання"/>
+</attribute>
+<attribute id="15622" nameRU="Лазерная линейка" type="bool" nameUK="Лазерна лінійка"/>
+<attribute id="18477" nameRU="Степень защиты, IP" type="multiselect" nameUK="Ступінь захисту, IP">
+<attribute_value id="273247" nameRU="IP54" nameUK="IP54"/>
+</attribute>
+</category>
+</categories>

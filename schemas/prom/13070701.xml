@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13070701" nameRU="Стремянки" nameUK="Драбини">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+<attribute_value id="8057" nameRU="Пластик" nameUK="Пластик"/>
+<attribute_value id="8059" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="8698" nameRU="Дерево" nameUK="Дерево"/>
+<attribute_value id="31381" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+<attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+<attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+<attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+</attribute>
+<attribute id="2718" nameRU="Максимальная нагрузка" type="real" nameUK="Максимальне навантаження" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+<attribute id="4923" nameRU="Тип стремянки" type="singleselect" nameUK="Тип драбини">
+<attribute_value id="31266" nameRU="Бытовая" nameUK="Побутова"/>
+<attribute_value id="31267" nameRU="Профессиональная" nameUK="Професійна"/>
+<attribute_value id="284046" nameRU="Универсальная" nameUK="Універсальна"/>
+<attribute_value id="288715" nameRU="Интерьерная" nameUK="Інтер'єрна"/>
+</attribute>
+<attribute id="4935" nameRU="Конструкция стремянки" type="singleselect" nameUK="Конструкція драбини">
+<attribute_value id="31315" nameRU="Односторонняя" nameUK="Одностороння"/>
+<attribute_value id="31316" nameRU="Двухсторонняя" nameUK="Двостороння"/>
+</attribute>
+<attribute id="4937" nameRU="Количество ступеней" type="integer" nameUK="Кількість ступенів" measureUnitRU="шт" min="0" max="25" measureUnitUK="шт."/>
+<attribute id="4940" nameRU="Высота до платформы (А)" type="real" nameUK="Висота до платформи (А)" measureUnitRU="м" min="0" max="3" measureUnitUK="м"/>
+<attribute id="4941" nameRU="Высота стремянки (В)" type="real" nameUK="Висота драбини (В)" measureUnitRU="м" min="0" max="4" measureUnitUK="м"/>
+<attribute id="4942" nameRU="Рабочая высота (С)" type="real" nameUK="Робоча висота (С)" measureUnitRU="м" min="0" max="7" measureUnitUK="м"/>
+<attribute id="4945" nameRU="Ширина стремянки (D)" type="real" nameUK="Ширина драбини (D)" measureUnitRU="м" min="0" max="1.5" measureUnitUK="м"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+</category>
+</categories>

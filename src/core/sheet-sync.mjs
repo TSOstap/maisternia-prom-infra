@@ -17,6 +17,16 @@ import { INTAKE_RULES, changedParts, rawFromOffer, rawFromQueueRow, sheetFingerp
 import { buildCharacteristics, cleanDescription } from "./prom-attributes.mjs";
 import { CATEGORY_CONFIRMED } from "./prom-categories.mjs";
 
+/** Категорія для вибору схеми характеристик (власник, 25.10.2026): фактична категорія товару в Prom (перевірений експорт;
+ *  catalog.promCategories — { date, map: Offer ID → ID категорії }) — джерело істини. Категорія таблиці — лише якщо товару
+ *  в експорті немає (не вигадуємо). Схема іншої категорії не підставляється; категорія в YML (portal_category_id) і в Prom
+ *  не змінюється. */
+export function schemaCategory(row, catalog) {
+  const table = mtText(row["Категорія Prom ID"]).trim();
+  const prom = mtText(catalog?.promCategories?.map?.get(mtText(row["Offer ID"]).trim()) ?? "").trim();
+  return { cat: prom || table, source: prom ? "prom" : "table", table, prom, differs: Boolean(prom && table && prom !== table) };
+}
+
 export const SHEET = Object.freeze({ main: "Основний каталог", queue: "Нові товари", deferred: "Відкладені товари", frozen: "Заморожені ID", groups: "Групи", journal: "Журнал", passport: "Паспорт каталогу" });
 export const QUEUE_EXTRA = Object.freeze(["Рішення", "Перевірка", "Виявлено"]);
 /** Стан даних постачальника в черзі (варіант А, погоджено 22.10.2026). До наявної черги додаються автоматично. */
@@ -137,7 +147,7 @@ export function candidateRow(offer, full, stamp, pricing, catalog = null) {
   row[RAW_PARAMS] = row["Характеристики JSON"];
   row[RAW_DESC_UA] = row["Опис UA"];
   row[RAW_DESC_RU] = row["Опис RU"];
-  const cat = mtText(row["Категорія Prom ID"]).trim();
+  const cat = schemaCategory(row, catalog).cat;
   const ch = buildCharacteristics({ schema: catalog?.schemas?.get(cat) || null, categoryId: cat, rawParams: full?.params || [], descUa: row[RAW_DESC_UA], descRu: row[RAW_DESC_RU], current: [], provenance: null, mapping: catalog?.mappings?.get(cat), units: catalog?.units, names: catalog?.names, mode: "queue", brand: row["Виробник"], titles: [row["Назва постачальника UA"], row["Назва постачальника RU"]], kitOwner: catalog?.kitConfirmed?.get(String(row["Offer ID"])) || null, multiOwner: catalog?.multiConfirmed?.get(String(row["Offer ID"])) || null });
   if (ch.changed) row["Характеристики JSON"] = clip(JSON.stringify(ch.params), notes, "Характеристики");
   row[PARAMS_ORIGIN] = JSON.stringify(ch.provenance);
@@ -292,7 +302,7 @@ export function refreshQueueRow(row, offer, full, { stamp, catalog = null, clean
       if (mtText(full.descriptionRu).trim()) r[RAW_DESC_RU] = clip(full.descriptionRu, notes, "Опис постачальника RU");
     }
     // 3б. Підготовлені характеристики для Prom: за схемою категорії, з урахуванням ручних виправлень.
-    const cat = mtText(r["Категорія Prom ID"]).trim();
+    const cat = schemaCategory(r, catalog).cat;
     ch = buildCharacteristics({ schema: catalog?.schemas?.get(cat) || null, categoryId: cat, rawParams: jsonOr(r[RAW_PARAMS], []), descUa: r[RAW_DESC_UA], descRu: r[RAW_DESC_RU], current: r["Характеристики JSON"], provenance: r[PARAMS_ORIGIN], mapping: catalog?.mappings?.get(cat), units: catalog?.units, names: catalog?.names, mode: "queue", brand: r["Виробник"], titles: [r["Назва постачальника UA"], r["Назва постачальника RU"]], kitOwner: catalog?.kitConfirmed?.get(String(r["Offer ID"])) || null, multiOwner: catalog?.multiConfirmed?.get(String(r["Offer ID"])) || null });
     const prepared = JSON.stringify(ch.params);
     if (ch.changed && prepared.length <= CELL_LIMIT) { entries.push([stamp, SHEET.queue, id, "Характеристики JSON", jv(r["Характеристики JSON"]), jv(prepared), "ХАРАКТЕРИСТИКИ (автоматично)"]); r["Характеристики JSON"] = prepared; }
@@ -392,7 +402,7 @@ export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", c
     }
   }
   // Підготовлені характеристики — за схемою категорії (без схеми: не змінюються).
-  const cat = mtText(r["Категорія Prom ID"]).trim();
+  const cat = schemaCategory(r, catalog).cat;
   const schema = catalog?.schemas?.get(cat) || null;
   if (schema && mtText(r[RAW_PARAMS]).trim()) {
     const ch = buildCharacteristics({ schema, categoryId: cat, rawParams: jsonOr(r[RAW_PARAMS], []), descUa: r[RAW_DESC_UA], descRu: r[RAW_DESC_RU], current: r["Характеристики JSON"], provenance: r[PARAMS_ORIGIN], mapping: catalog?.mappings?.get(cat), units: catalog?.units, names: catalog?.names, mode: "main", brand: r["Виробник"], titles: [r["Назва постачальника UA"], r["Назва постачальника RU"]], kitOwner: catalog?.kitConfirmed?.get(String(r["Offer ID"])) || null, multiOwner: catalog?.multiConfirmed?.get(String(r["Offer ID"])) || null });

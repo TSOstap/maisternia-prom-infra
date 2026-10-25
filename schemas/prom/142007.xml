@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142007" nameRU="Ящики, сумки для инструментов" nameUK="Ящики, сумки для інструментів">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="3500" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="3200" measureUnitUK="мм"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="3500" measureUnitUK="мм"/>
+<attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+<attribute_value id="8057" nameRU="Пластик" nameUK="Пластик"/>
+<attribute_value id="8058" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+<attribute_value id="8059" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="8696" nameRU="Пластмасса" nameUK="Пластмаса"/>
+<attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="8698" nameRU="Дерево" nameUK="Дерево"/>
+<attribute_value id="8699" nameRU="Резина" nameUK="Гума"/>
+<attribute_value id="31381" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="33402" nameRU="Ткань" nameUK="Тканина"/>
+<attribute_value id="33403" nameRU="Натуральная кожа" nameUK="Натуральна шкіра"/>
+<attribute_value id="33404" nameRU="Искусственная кожа" nameUK="Штучна шкіра"/>
+<attribute_value id="35371" nameRU="Металлопластик" nameUK="Металопластик"/>
+<attribute_value id="36534" nameRU="Полиэстер" nameUK="Поліестер"/>
+<attribute_value id="62586" nameRU="ПВХ" nameUK="ПВХ"/>
+<attribute_value id="70452" nameRU="Нейлон" nameUK="Нейлон"/>
+<attribute_value id="73174" nameRU="Полиуретан" nameUK="Поліуретан"/>
+<attribute_value id="74168" nameRU="Брезент" nameUK="Брезент"/>
+<attribute_value id="74175" nameRU="Полиамид" nameUK="Поліамід"/>
+<attribute_value id="85975" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+<attribute_value id="113215" nameRU="Поликарбонат" nameUK="Полікарбонат"/>
+<attribute_value id="185990" nameRU="Синтетика" nameUK="Синтетика"/>
+<attribute_value id="312482" nameRU="Кожа" nameUK="Шкіра"/>
+<attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+<attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+<attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+<attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+</attribute>
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="9356" nameRU="Ящик" nameUK="Шухляда"/>
+<attribute_value id="70422" nameRU="Ящик переносной" nameUK="Ящик переносний"/>
+<attribute_value id="70424" nameRU="Кейс (органайзер)" nameUK="Кейс (органайзер)"/>
+<attribute_value id="70425" nameRU="Сумка" nameUK="Сумка"/>
+<attribute_value id="70426" nameRU="Пояс монтажный" nameUK="Пояс монтажний"/>
+<attribute_value id="70427" nameRU="Чехол-скрутка" nameUK="Чохол-скрутка"/>
+<attribute_value id="70429" nameRU="Жилет / фартук монтажный" nameUK="Жилет / фартух монтажний"/>
+<attribute_value id="136041" nameRU="Кобура" nameUK="Кобура"/>
+<attribute_value id="136942" nameRU="Рюкзак" nameUK="Рюкзак"/>
+<attribute_value id="282559" nameRU="Панель на стену" nameUK="Панель на стіну"/>
+</attribute>
+<attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+<attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+<attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+<attribute_value id="30802" nameRU="Оливковый" nameUK="Оливковий"/>
+<attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+<attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+<attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+<attribute_value id="66120" nameRU="Прозрачный" nameUK="Прозорий"/>
+<attribute_value id="266267" nameRU="Койот" nameUK="Койот"/>
+<attribute_value id="269182" nameRU="Камуфляж Пиксель" nameUK="Камуфляж Піксель"/>
+<attribute_value id="292440" nameRU="Мультикам" nameUK="Мультикам"/>
+<attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+<attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+</attribute>
+<attribute id="8700" nameRU="Количество отделений/карманов" type="integer" nameUK="Кількість відділень/кишень"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+</category>
+</categories>

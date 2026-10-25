@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201636" nameRU="Ручные плиткорезы" nameUK="Ручні плиткорізи">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="35" measureUnitUK="кг"/>
+<attribute id="79" nameRU="Диаметр посадочного отверстия" type="real" nameUK="Діаметр посадкового отвору" measureUnitRU="мм" min="0" max="15" measureUnitUK="мм"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+<attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+<attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+<attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+<attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+</attribute>
+<attribute id="490" nameRU="Диаметр режущего ролика" type="real" nameUK="Діаметр різального ролика" measureUnitRU="мм" min="0" max="30" measureUnitUK="мм"/>
+<attribute id="491" nameRU="Максимальная глубина реза" type="real" nameUK="Максимальна глибина різу" measureUnitRU="мм" min="0" max="25" measureUnitUK="мм"/>
+<attribute id="492" nameRU="Максимальная длина реза" type="real" nameUK="Максимальна довжина різу" measureUnitRU="мм" min="0" max="3500" measureUnitUK="мм"/>
+<attribute id="493" nameRU="Рез круглых отверстий" type="bool" nameUK="Рез круглих отворів"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+</category>
+</categories>

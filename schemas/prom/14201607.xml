@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201607" nameRU="Сверла, буры" nameUK="Свердла, бури">
+<attribute id="112" nameRU="Тип хвостовика" type="singleselect" nameUK="Тип хвостовика">
+<attribute_value id="7041" nameRU="Шестигранный" nameUK="Шестигранний"/>
+<attribute_value id="7042" nameRU="Четырехгранный" nameUK="Чотиригранний"/>
+<attribute_value id="7043" nameRU="Цилиндрический" nameUK="Циліндричний"/>
+<attribute_value id="142626" nameRU="SDS-plus" nameUK="SDS-plus"/>
+<attribute_value id="142627" nameRU="SDS-max" nameUK="SDS-max"/>
+<attribute_value id="142628" nameRU="SDS-quick" nameUK="SDS-quick"/>
+<attribute_value id="142629" nameRU="Трехгранный" nameUK="Тригранний"/>
+<attribute_value id="142630" nameRU="Конический" nameUK="Конічний"/>
+<attribute_value id="293412" nameRU="VARIA" nameUK=""/>
+</attribute>
+<attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="120" measureUnitUK="мм"/>
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="142620" nameRU="Сверло" nameUK="Свердло"/>
+<attribute_value id="142621" nameRU="Бур" nameUK="Бур"/>
+<attribute_value id="273250" nameRU="Ступенчатое сверло" nameUK="Ступінчасте свердло"/>
+<attribute_value id="301273" nameRU="Пилотное" nameUK="Пілотне"/>
+<attribute_value id="303935" nameRU="Колун" nameUK="Колун"/>
+</attribute>
+<attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+<attribute_value id="94140" nameRU="Универсальный" nameUK="Універсальний"/>
+<attribute_value id="142622" nameRU="По дереву" nameUK="По дереву"/>
+<attribute_value id="142623" nameRU="По металлу" nameUK="По металу"/>
+<attribute_value id="142624" nameRU="По бетону/кирпичу/камню" nameUK="По бетону/цеглі/каменю"/>
+<attribute_value id="142625" nameRU="По стеклу/керамике" nameUK="По склу/кераміці"/>
+<attribute_value id="163371" nameRU="По льду" nameUK="По льоду"/>
+</attribute>
+<attribute id="6633" nameRU="Общая длина" type="real" nameUK="Загальна довжина" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+<attribute id="7618" nameRU="Длина рабочей части" type="real" nameUK="Довжина робочої частини" measureUnitRU="мм" min="0" max="1200" measureUnitUK="мм"/>
+<attribute id="7881" nameRU="Количество в наборе" type="integer" nameUK="Кількість в наборі" measureUnitRU="шт" min="1" max="1000" measureUnitUK="шт."/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="10252" nameRU="Набор" type="bool" nameUK="Набір"/>
+<attribute id="14109" nameRU="Угол заточки" type="real" nameUK="Кут заточування" measureUnitRU="град." min="0" max="180" measureUnitUK="град."/>
+<attribute id="18478" nameRU="Шаг ступенчатого сверла" type="real" nameUK="Крок ступеневої свердла" measureUnitRU="мм" min="0" max="13" measureUnitUK="мм"/>
+<attribute id="18708" nameRU="В наборе" type="multiselect" nameUK="В наборі">
+<attribute_value id="293706" nameRU="0.3 мм" nameUK="0.3 мм"/>
+<attribute_value id="293707" nameRU="0.35 мм" nameUK="0.35 мм"/>
+<attribute_value id="293708" nameRU="0.4 мм" nameUK="0.4 мм"/>
+<attribute_value id="293709" nameRU="0.45 мм" nameUK="0.45 мм"/>
+<attribute_value id="293710" nameRU="0.5 мм" nameUK="0.5 мм"/>
+<attribute_value id="293711" nameRU="0.55 мм" nameUK="0.55 мм"/>
+<attribute_value id="293712" nameRU="0.6 мм" nameUK="0.6 мм"/>
+<attribute_value id="293713" nameRU="0.65 мм" nameUK="0.65 мм"/>
+<attribute_value id="293714" nameRU="0.7 мм" nameUK="0.7 мм"/>
+<attribute_value id="293715" nameRU="0.75 мм" nameUK="0.75 мм"/>
+<attribute_value id="293716" nameRU="0.8 мм" nameUK="0.8 мм"/>
+<attribute_value id="293717" nameRU="0.85 мм" nameUK="0.85 мм"/>
+<attribute_value id="293718" nameRU="0.9 мм" nameUK="0.9 мм"/>
+<attribute_value id="293719" nameRU="0.95 мм" nameUK="0.95 мм"/>
+<attribute_value id="293720" nameRU="1 мм" nameUK=""/>
+<attribute_value id="293721" nameRU="1.1 мм" nameUK=""/>
+<attribute_value id="293722" nameRU="1.2 мм" nameUK=""/>
+<attribute_value id="293723" nameRU="1.3 мм" nameUK=""/>
+<attribute_value id="293724" nameRU="1.4 мм" nameUK=""/>
+<attribute_value id="293725" nameRU="1.5 мм" nameUK=""/>
+<attribute_value id="293726" nameRU="1.6 мм" nameUK=""/>
+<attribute_value id="293727" nameRU="1.7 мм" nameUK=""/>
+<attribute_value id="293728" nameRU="1.75 мм" nameUK=""/>
+<attribute_value id="293729" nameRU="1.8 мм" nameUK=""/>
+<attribute_value id="293730" nameRU="1.9 мм" nameUK=""/>
+<attribute_value id="293731" nameRU="10 мм" nameUK=""/>
+<attribute_value id="293732" nameRU="10.1 мм" nameUK="10.1 мм"/>
+<attribute_value id="293733" nameRU="10.2 мм" nameUK="10.2 мм"/>
+<attribute_value id="293734" nameRU="10.3 мм" nameUK="10.3 мм"/>
+<attribute_value id="293735" nameRU="10.4 мм" nameUK=""/>
+<attribute_value id="293736" nameRU="10.5 мм" nameUK=""/>
+<attribute_value id="293737" nameRU="10.6 мм" nameUK=""/>
+<attribute_value id="293738" nameRU="10.7 мм" nameUK=""/>
+<attribute_value id="293739" nameRU="10.8 мм" nameUK=""/>
+<attribute_value id="293740" nameRU="10.9 мм" nameUK=""/>
+<attribute_value id="293741" nameRU="101 мм" nameUK="101 мм"/>
+<attribute_value id="293742" nameRU="102 мм" nameUK="102 мм"/>
+<attribute_value id="293743" nameRU="103 мм" nameUK="103 мм"/>
+<attribute_value id="293744" nameRU="11 мм" nameUK=""/>
+<attribute_value id="293745" nameRU="11.1 мм" nameUK=""/>
+<attribute_value id="293746" nameRU="11.2 мм" nameUK=""/>
+<attribute_value id="293747" nameRU="11.3 мм" nameUK=""/>
+<attribute_value id="293748" nameRU="11.4 мм" nameUK=""/>
+<attribute_value id="293749" nameRU="11.5 мм" nameUK=""/>
+<attribute_value id="293750" nameRU="11.7 мм" nameUK=""/>
+<attribute_value id="293751" nameRU="11.8 мм" nameUK=""/>
+<attribute_value id="293752" nameRU="11.9 мм" nameUK=""/>
+<attribute_value id="293753" nameRU="110 мм" nameUK=""/>
+<attribute_value id="293754" nameRU="12 мм" nameUK=""/>
+<attribute_value id="293755" nameRU="12.1 мм" nameUK=""/>
+<attribute_value id="293756" nameRU="12.2 мм" nameUK=""/>
+<attribute_value id="293757" nameRU="12.4 мм" nameUK=""/>
+<attribute_value id="293758" nameRU="12.5 мм" nameUK=""/>
+<attribute_value id="293759" nameRU="12.6 мм" nameUK=""/>
+<attribute_value id="293760" nameRU="12.7 мм" nameUK=""/>
+<attribute_value id="293761" nameRU="12.9 мм" nameUK=""/>
+<attribute_value id="293762" nameRU="13 мм" nameUK=""/>
+<attribute_value id="293763" nameRU="13.5 мм" nameUK=""/>
+<attribute_value id="293764" nameRU="14 мм" nameUK=""/>
+<attribute_value id="293765" nameRU="14.5 мм" nameUK=""/>
+<attribute_value id="293766" nameRU="14.75 мм" nameUK=""/>
+<attribute_value id="293767" nameRU="15 мм" nameUK=""/>
+<attribute_value id="293768" nameRU="15.5 мм" nameUK=""/>
+<attribute_value id="293769" nameRU="16 мм" nameUK=""/>
+<attribute_value id="293770" nameRU="16.5 мм" nameUK=""/>
+<attribute_value id="293771" nameRU="17 мм" nameUK=""/>
+<attribute_value id="293772" nameRU="17.5 мм" nameUK=""/>
+<attribute_value id="293773" nameRU="18 мм" nameUK=""/>
+<attribute_value id="293774" nameRU="18.5 мм" nameUK=""/>
+<attribute_value id="293775" nameRU="19 мм" nameUK=""/>
+<attribute_value id="293776" nameRU="2 мм" nameUK=""/>
+<attribute_value id="293777" nameRU="2.1 мм" nameUK=""/>
+<attribute_value id="293778" nameRU="2.2 мм" nameUK=""/>
+<attribute_value id="293779" nameRU="2.25 мм" nameUK=""/>
+<attribute_value id="293780" nameRU="2.3 мм" nameUK=""/>
+<attribute_value id="293781" nameRU="2.35 мм" nameUK=""/>
+<attribute_value id="293782" nameRU="2.4 мм" nameUK=""/>
+<attribute_value id="293783" nameRU="2.5 мм" nameUK=""/>
+<attribute_value id="293784" nameRU="2.6 мм" nameUK=""/>
+<attribute_value id="293785" nameRU="2.7 мм" nameUK=""/>
+<attribute_value id="293786" nameRU="2.75 мм" nameUK=""/>
+<attribute_value id="293787" nameRU="2.8 мм" nameUK=""/>
+<attribute_value id="293788" nameRU="2.9 мм" nameUK=""/>
+<attribute_value id="293789" nameRU="20 мм" nameUK=""/>
+<attribute_value id="293790" nameRU="20.5 мм" nameUK=""/>
+<attribute_value id="293791" nameRU="21 мм" nameUK=""/>
+<attribute_value id="293792" nameRU="22 мм" nameUK=""/>
+<attribute_value id="293793" nameRU="23 мм" nameUK=""/>
+<attribute_value id="293794" nameRU="24 мм" nameUK=""/>
+<attribute_value id="293795" nameRU="25 мм" nameUK=""/>
+<attribute_value id="293796" nameRU="26 мм" nameUK=""/>
+<attribute_value id="293797" nameRU="27 мм" nameUK=""/>
+<attribute_value id="293798" nameRU="28 мм" nameUK=""/>
+<attribute_value id="293799" nameRU="29 мм" nameUK=""/>
+<attribute_value id="293800" nameRU="3 мм" nameUK=""/>
+<attribute_value id="293801" nameRU="3.1 мм" nameUK=""/>
+<attribute_value id="293802" nameRU="3.2 мм" nameUK=""/>
+<attribute_value id="293803" nameRU="3.25 мм" nameUK=""/>
+<attribute_value id="293804" nameRU="3.3 мм" nameUK=""/>
+<attribute_value id="293805" nameRU="3.4 мм" nameUK=""/>
+<attribute_value id="293806" nameRU="3.5 мм" nameUK=""/>
+<attribute_value id="293807" nameRU="3.6 мм" nameUK=""/>
+<attribute_value id="293808" nameRU="3.7 мм" nameUK=""/>
+<attribute_value id="293809" nameRU="3.75 мм" nameUK=""/>
+<attribute_value id="293810" nameRU="3.8 мм" nameUK=""/>
+<attribute_value id="293811" nameRU="3.9 мм" nameUK=""/>
+<attribute_value id="293812" nameRU="30 мм" nameUK=""/>
+<attribute_value id="293813" nameRU="32 мм" nameUK=""/>
+<attribute_value id="293814" nameRU="33 мм" nameUK=""/>
+<attribute_value id="293815" nameRU="35 мм" nameUK=""/>
+<attribute_value id="293816" nameRU="38 мм" nameUK=""/>
+<attribute_value id="293817" nameRU="4 мм" nameUK=""/>
+<attribute_value id="293818" nameRU="4.1 мм" nameUK=""/>
+<attribute_value id="293819" nameRU="4.2 мм" nameUK=""/>
+<attribute_value id="293820" nameRU="4.3 мм" nameUK=""/>
+<attribute_value id="293821" nameRU="4.4 мм" nameUK=""/>
+<attribute_value id="293822" nameRU="4.5 мм" nameUK=""/>
+<attribute_value id="293823" nameRU="4.6 мм" nameUK=""/>
+<attribute_value id="293824" nameRU="4.7 мм" nameUK=""/>
+<attribute_value id="293825" nameRU="4.8 мм" nameUK=""/>
+<attribute_value id="293826" nameRU="4.9 мм" nameUK=""/>
+<attribute_value id="293827" nameRU="40 мм" nameUK=""/>
+<attribute_value id="293828" nameRU="44 мм" nameUK=""/>
+<attribute_value id="293829" nameRU="45 мм" nameUK=""/>
+<attribute_value id="293830" nameRU="49 мм" nameUK=""/>
+<attribute_value id="293831" nameRU="5 мм" nameUK=""/>
+<attribute_value id="293832" nameRU="5.1 мм" nameUK=""/>
+<attribute_value id="293833" nameRU="5.2 мм" nameUK=""/>
+<attribute_value id="293834" nameRU="5.25 мм" nameUK=""/>
+<attribute_value id="293835" nameRU="5.3 мм" nameUK=""/>
+<attribute_value id="293836" nameRU="5.4 мм" nameUK=""/>
+<attribute_value id="293837" nameRU="5.5 мм" nameUK=""/>
+<attribute_value id="293838" nameRU="5.6 мм" nameUK=""/>
+<attribute_value id="293839" nameRU="5.7 мм" nameUK=""/>
+<attribute_value id="293840" nameRU="5.75 мм" nameUK=""/>
+<attribute_value id="293841" nameRU="5.8 мм" nameUK=""/>
+<attribute_value id="293842" nameRU="5.9 мм" nameUK=""/>
+<attribute_value id="293843" nameRU="50 мм" nameUK=""/>
+<attribute_value id="293844" nameRU="51 мм" nameUK=""/>
+<attribute_value id="293845" nameRU="53 мм" nameUK=""/>
+<attribute_value id="293846" nameRU="6 мм" nameUK=""/>
+<attribute_value id="293847" nameRU="6.2 мм" nameUK=""/>
+<attribute_value id="293848" nameRU="6.25 мм" nameUK=""/>
+<attribute_value id="293849" nameRU="6.3 мм" nameUK=""/>
+<attribute_value id="293850" nameRU="6.35 мм" nameUK=""/>
+<attribute_value id="293851" nameRU="6.4 мм" nameUK=""/>
+<attribute_value id="293852" nameRU="6.5 мм" nameUK=""/>
+<attribute_value id="293853" nameRU="6.6 мм" nameUK=""/>
+<attribute_value id="293854" nameRU="6.7 мм" nameUK=""/>
+<attribute_value id="293855" nameRU="6.75 мм" nameUK=""/>
+<attribute_value id="293856" nameRU="6.8 мм" nameUK=""/>
+<attribute_value id="293857" nameRU="60 мм" nameUK=""/>
+<attribute_value id="293858" nameRU="64 мм" nameUK=""/>
+<attribute_value id="293859" nameRU="65 мм" nameUK=""/>
+<attribute_value id="293860" nameRU="67 мм" nameUK=""/>
+<attribute_value id="293861" nameRU="7 мм" nameUK=""/>
+<attribute_value id="293862" nameRU="7.1 мм" nameUK=""/>
+<attribute_value id="293863" nameRU="7.2 мм" nameUK=""/>
+<attribute_value id="293864" nameRU="7.3 мм" nameUK=""/>
+<attribute_value id="293865" nameRU="7.4 мм" nameUK=""/>
+<attribute_value id="293866" nameRU="7.5 мм" nameUK=""/>
+<attribute_value id="293867" nameRU="7.6 мм" nameUK=""/>
+<attribute_value id="293868" nameRU="7.7 мм" nameUK=""/>
+<attribute_value id="293869" nameRU="7.8 мм" nameUK=""/>
+<attribute_value id="293870" nameRU="7.9 мм" nameUK=""/>
+<attribute_value id="293871" nameRU="70 мм" nameUK=""/>
+<attribute_value id="293872" nameRU="73 мм" nameUK=""/>
+<attribute_value id="293873" nameRU="75 мм" nameUK=""/>
+<attribute_value id="293874" nameRU="8 мм " nameUK=""/>
+<attribute_value id="293875" nameRU="8.3 мм" nameUK=""/>
+<attribute_value id="293876" nameRU="8.5 мм" nameUK=""/>
+<attribute_value id="293877" nameRU="8.6 мм" nameUK=""/>
+<attribute_value id="293878" nameRU="8.7 мм" nameUK=""/>
+<attribute_value id="293879" nameRU="8.8 мм" nameUK=""/>
+<attribute_value id="293880" nameRU="83 мм" nameUK=""/>
+<attribute_value id="293881" nameRU="9 мм" nameUK="9 мм"/>
+<attribute_value id="293882" nameRU="9.2 мм" nameUK=""/>
+<attribute_value id="293883" nameRU="9.25 мм" nameUK=""/>
+<attribute_value id="293884" nameRU="9.3 мм" nameUK=""/>
+<attribute_value id="293885" nameRU="9.4 мм" nameUK="9.4 мм"/>
+<attribute_value id="293886" nameRU="9.5 мм" nameUK="9.5 мм"/>
+<attribute_value id="293887" nameRU="9.6 мм" nameUK="9.6 мм"/>
+<attribute_value id="293888" nameRU="9.7 мм" nameUK="9.7 мм"/>
+<attribute_value id="293889" nameRU="9.8 мм" nameUK="9.8 мм"/>
+<attribute_value id="293890" nameRU="90 мм" nameUK=""/>
+<attribute_value id="293891" nameRU="93 мм" nameUK=""/>
+<attribute_value id="293892" nameRU="95 мм" nameUK="95 мм"/>
+<attribute_value id="300179" nameRU="8.1 мм" nameUK=""/>
+<attribute_value id="303572" nameRU="42 мм" nameUK=""/>
+</attribute>
+</category>
+</categories>

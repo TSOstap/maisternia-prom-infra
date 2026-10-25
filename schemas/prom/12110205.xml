@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="12110205" nameRU="Автомобильные насосы, компрессоры и манометры" nameUK="Автомобільні насоси, компресори та манометри">
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="191646" nameRU="Однопоршневый" nameUK="Однопоршневий"/>
+<attribute_value id="191647" nameRU="Двухпоршневой" nameUK="Двопоршневий"/>
+<attribute_value id="263080" nameRU="диафрагменный" nameUK="діафрагмовий"/>
+</attribute>
+<attribute id="877" nameRU="Тип насоса" type="multiselect" nameUK="Тип насосу">
+<attribute_value id="8972" nameRU="Ручной" nameUK="Ручний"/>
+<attribute_value id="9962" nameRU="Электрический (от сети)" nameUK="Електричний (від мережі)"/>
+<attribute_value id="9963" nameRU="Электрический (от прикуривателя)" nameUK="Електричний (від прикурювача)"/>
+<attribute_value id="9967" nameRU="аккумуляторный" nameUK="акумуляторний"/>
+<attribute_value id="71142" nameRU="Ножной" nameUK="Ножний"/>
+<attribute_value id="220281" nameRU="Электрический (от клемм)" nameUK="Електричний (від клем)"/>
+</attribute>
+<attribute id="2049" nameRU="Максимальное давление" type="real" nameUK="Максимальний тиск" measureUnitRU="атм" min="0" max="300" measureUnitUK="атм"/>
+<attribute id="3474" nameRU="Количество в упаковке" type="integer" nameUK="Кількість в упаковці" measureUnitRU="шт" min="1" max="5" measureUnitUK="шт."/>
+<attribute id="5073" nameRU="Производительность" type="real" nameUK="Продуктивність" measureUnitRU="литр/мин" min="0" max="300" measureUnitUK="літр/хв"/>
+<attribute id="6212" nameRU="Напряжение питания" type="multiselect" nameUK="Напруга живлення">
+<attribute_value id="42681" nameRU="220 В" nameUK="220 В"/>
+<attribute_value id="125714" nameRU="12 В" nameUK="12 В"/>
+<attribute_value id="125715" nameRU="24 В" nameUK="24 В"/>
+<attribute_value id="278484" nameRU="18 В" nameUK="18 В"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="18319" nameRU="Артикул производителя" type="free" nameUK="Артикул виробника"/>
+</category>
+</categories>

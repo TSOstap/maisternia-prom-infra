@@ -176,6 +176,11 @@ function findOption(at, value, valueSynonyms) {
   return syn !== undefined ? at.values.filter((x) => x.id === String(syn)) : at.values.filter((x) => on(x.nameUK) === v || on(x.nameRU) === v);
 }
 const optionName = (o) => o.nameUK || o.nameRU;
+// Варіант / атрибут схеми Prom без української назви (власник, 25.10.2026: 4305 «Матеріал столу» — лише «Алюминий»): офіційного
+// перекладу не вигадуємо й російський текст в українське поле не підставляємо — поле не заповнюється, значення постачальника
+// йде користувацькою (оригінал). Після перевіреного офіційного зіставлення значення можна буде перенести в поле.
+const noUK = (o) => !String(o?.nameUK ?? "").trim();
+const NO_UK_OPTION = "варіант схеми Prom без української назви — поле не заповнюється";
 export const MULTI_SEPARATOR = " | ";
 
 /** Значення під тип атрибута. { value, unit } або { reason }.
@@ -183,6 +188,7 @@ export const MULTI_SEPARATOR = " | ";
 export function validateValue(at, rawValue, rawUnit, units, valueSynonyms = null) {
   let value = mtText(rawValue).trim(), unit = mtText(rawUnit).trim();
   if (!value) return { reason: "порожнє значення" };
+  if (noUK(at)) return { reason: "атрибут схеми Prom без української назви — поле не заповнюється" };
   switch (at.type) {
     case "real": case "integer": {
       if (!unit) { const s = splitValueUnit(value); if (s) { value = s.num; unit = s.unit; } }
@@ -207,13 +213,14 @@ export function validateValue(at, rawValue, rawUnit, units, valueSynonyms = null
       if (unit) return { reason: "одиниця для варіанта зі списку" };
       const hits = findOption(at, value, valueSynonyms);
       if (hits.length !== 1) return { reason: hits.length ? "кілька варіантів з такою назвою" : `«${value}» немає серед допустимих значень` };
+      if (noUK(hits[0])) return { reason: NO_UK_OPTION };
       return { value: optionName(hits[0]), unit: "" };
     }
     case "multiselect": {
       // Одне значення — варіант цілком; кілька — кожна частина (роздільники | ; , /) має бути допустимим варіантом.
       if (unit) return { reason: "одиниця для варіантів зі списку" };
       const one = findOption(at, value, valueSynonyms);
-      if (one.length === 1) return { value: optionName(one[0]), unit: "" };
+      if (one.length === 1) return noUK(one[0]) ? { reason: NO_UK_OPTION } : { value: optionName(one[0]), unit: "" };
       if (one.length > 1) return { reason: "кілька варіантів з такою назвою" };
       const parts = value.split(/\s*[|;,/]\s*/).filter(Boolean);
       if (parts.length < 2) return { reason: `«${value}» немає серед допустимих значень` };
@@ -221,6 +228,7 @@ export function validateValue(at, rawValue, rawUnit, units, valueSynonyms = null
       for (const p of parts) {
         const h = findOption(at, p, valueSynonyms);
         if (h.length !== 1) return { reason: h.length ? `«${p}»: кілька варіантів з такою назвою` : `«${p}» немає серед допустимих значень` };
+        if (noUK(h[0])) return { reason: NO_UK_OPTION };
         if (!picked.includes(h[0])) picked.push(h[0]);
       }
       return { value: picked.map(optionName).join(MULTI_SEPARATOR), unit: "" };
@@ -955,6 +963,15 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
         if (tw.length === 1) { twin = tw[0]; const t = uniqOf(other.get(twin)); if (U.length) R = t; else U = t; }
       }
       const base = U.length ? U : R;
+      // only (FOGO F3001, власник 25.10.2026): передається лише це значення постачальника (UA) — інші записи з тією самою назвою
+      // (описове речення) лишаються в описі; кількість записів UA і RU має збігатися (той самий опис двома мовами).
+      const only = specOf(key).only;
+      if (only) {
+        const hit = U.find((x) => normValue(htmlText(x.out.value), names) === normValue(only, names));
+        if (!hit) return { why: `значення «${only}» не знайдено` };
+        if (R.length && R.length !== U.length) return { why: `в UA ${U.length}, в RU ${R.length} записів` };
+        return { ok: true, value: htmlText(hit.out.value).trim(), twin, both: Boolean(R.length), lang: "ua", name: hit.out.name, n: 1, only: true };
+      }
       if (base.length < 2) return { why: "менше двох значень" };
       if (U.length && R.length) {
         if (U.length !== R.length) return { why: `в UA ${U.length}, в RU ${R.length} значень` };
@@ -999,7 +1016,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
           if (mv.twin) consumed.add(mv.twin);
           if (mv.both) uaRuMerged++;
           extra(key, { name: mv.name, value: mv.value, unit: "" }, SRC.DESC, "", { lang: mv.lang });
-          notes.push(mv.kept ? `«${mv.name}»: передано повніше значення «${mv.value}»; інші записи містяться в ньому (підтверджено власником; оригінали — у сирих даних)` : `«${mv.name}»: ${mv.n} значення одним записом через « | » (кілька значень однієї характеристики, підтверджено власником)`);
+          notes.push(mv.only ? `«${mv.name}»: передано значення з характеристик постачальника «${mv.value}»; описове речення лишається в описі (рішення власника)` : mv.kept ? `«${mv.name}»: передано повніше значення «${mv.value}»; інші записи містяться в ньому (підтверджено власником; оригінали — у сирих даних)` : `«${mv.name}»: ${mv.n} значення одним записом через « | » (кілька значень однієї характеристики, підтверджено власником)`);
           continue;
         }
         review(name, orig, "різні значення в одному описі" + (mv?.why ? `; кілька значень — умови не виконано: ${mv.why}` : ""));

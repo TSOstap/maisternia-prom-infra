@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="125031801" nameRU="Мотоблоки и культиваторы" nameUK="Мотоблоки та культиватори">
+<attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="5000" measureUnitUK="Вт"/>
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="400" measureUnitUK="кг"/>
+<attribute id="8" nameRU="Реверс" type="bool" nameUK="Реверс"/>
+<attribute id="82" nameRU="Объем масляного бака" type="real" nameUK="Об'єм масляного бака" measureUnitRU="л" min="0" max="5" measureUnitUK="л"/>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="36" measureUnitUK="А. г"/>
+<attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="36" measureUnitUK="В"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="116" nameRU="Количество цилиндров" type="singleselect" nameUK="Кількість циліндрів">
+<attribute_value id="7047" nameRU="1" nameUK="1"/>
+<attribute_value id="7048" nameRU="2" nameUK="2"/>
+<attribute_value id="7049" nameRU="3" nameUK="3"/>
+<attribute_value id="7050" nameRU="4" nameUK="4"/>
+</attribute>
+<attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+<attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+<attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="1000" measureUnitUK="куб. см"/>
+<attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="л. с." min="0" max="50" measureUnitUK="к. с."/>
+<attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="10" measureUnitUK="л/год"/>
+<attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="2300" measureUnitUK="мм"/>
+<attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+<attribute_value id="152315" nameRU="Мотоблок" nameUK="Мотоблок"/>
+<attribute_value id="152316" nameRU="Культиватор" nameUK="Культиватор"/>
+<attribute_value id="344624" nameRU="Мотокультиватор" nameUK="Мотокультиватор"/>
+</attribute>
+<attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+<attribute_value id="9284" nameRU="Бензиновый" nameUK="Бензиновий"/>
+<attribute_value id="9285" nameRU="Дизельный" nameUK="Дизельний"/>
+<attribute_value id="70839" nameRU="Электрический" nameUK="Електричний"/>
+<attribute_value id="344625" nameRU="Аккумуляторный" nameUK="Акумуляторний"/>
+</attribute>
+<attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+<attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+<attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+</attribute>
+<attribute id="1079" nameRU="Марка двигателя" type="free" nameUK="Марка двигуна"/>
+<attribute id="1192" nameRU="Скорость движения (транспортная)" type="real" nameUK="Швидкість руху (транспортна)" measureUnitRU="км/ч" min="0" max="30" measureUnitUK="км/год"/>
+<attribute id="1266" nameRU="Класс" type="singleselect" nameUK="Клас">
+<attribute_value id="204573" nameRU="Профессиональный" nameUK="Професійний"/>
+<attribute_value id="349378" nameRU="Домашние" nameUK="Домашні"/>
+</attribute>
+<attribute id="1900" nameRU="Система охлаждения двигателя" type="singleselect" nameUK="Система охолодження двигуна">
+<attribute_value id="11954" nameRU="Воздушная" nameUK="Повітряна"/>
+<attribute_value id="11955" nameRU="Водяная" nameUK="Водяна"/>
+<attribute_value id="198757" nameRU="Гибридная" nameUK="Гібридна"/>
+</attribute>
+<attribute id="1980" nameRU="Тип питания" type="multiselect" nameUK="Тип живлення">
+<attribute_value id="11692" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+<attribute_value id="345989" nameRU="Бензиновый" nameUK="Бензиновий"/>
+<attribute_value id="345990" nameRU="Дизельный" nameUK="Дизельний"/>
+<attribute_value id="345991" nameRU="Электрический" nameUK="Електричний"/>
+</attribute>
+<attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+<attribute id="2658" nameRU="Регулировка высоты" type="bool" nameUK="Регулювання висоти"/>
+<attribute id="2935" nameRU="Время зарядки аккумулятора" type="real" nameUK="Час зарядки акумулятора" measureUnitRU="час" min="0" max="20" measureUnitUK="годин"/>
+<attribute id="3137" nameRU="Количество оборотов двигателя" type="real" nameUK="Кількість обертів двигуна" measureUnitRU="об/мин" min="0" max="5000" measureUnitUK="об/хв"/>
+<attribute id="5576" nameRU="Диаметр колес" type="real" nameUK="Діаметр коліс" measureUnitRU="дюйм" min="0" max="40" measureUnitUK="дюйм"/>
+<attribute id="8648" nameRU="Количество ножей" type="integer" nameUK="Кількість ножів" measureUnitRU="шт" min="0" max="30" measureUnitUK="шт."/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="10157" nameRU="Трансмиссия" type="singleselect" nameUK="Трансмісія">
+<attribute_value id="152338" nameRU="Червячный редуктор" nameUK="Черв'ячний редуктор"/>
+<attribute_value id="152339" nameRU="Шестеренчатый редуктор" nameUK="Шестерний редуктор"/>
+<attribute_value id="152340" nameRU="Шестеренчато-цепной редуктор" nameUK="Шестеренчато-ланцюговий редуктор"/>
+<attribute_value id="152341" nameRU="Цепной редуктор" nameUK="Ланцюговий редуктор"/>
+</attribute>
+<attribute id="10867" nameRU="Система запуска" type="singleselect" nameUK="Система запуску">
+<attribute_value id="99186" nameRU="Электростартер" nameUK="Електростартер"/>
+<attribute_value id="99187" nameRU="Механический стартер" nameUK="Механічний стартер"/>
+<attribute_value id="99188" nameRU="Электростартер и механический стартер" nameUK="Електростартер і механічний стартер"/>
+</attribute>
+<attribute id="11247" nameRU="Датчик уровня масла" type="bool" nameUK="Датчик рівня мастила"/>
+<attribute id="12094" nameRU="В комплекте оборудования" type="multiselect" nameUK="В комплекте оборудования">
+<attribute_value id="152349" nameRU="Фрезы" nameUK="Фрези"/>
+<attribute_value id="152350" nameRU="Плуг" nameUK="Плуг"/>
+<attribute_value id="152351" nameRU="Адаптер" nameUK="Адаптер"/>
+<attribute_value id="152352" nameRU="Передняя подпорка" nameUK="Передня підпора"/>
+<attribute_value id="152354" nameRU="Сиденье" nameUK="Сидіння"/>
+<attribute_value id="152355" nameRU="Колеса пневматические" nameUK="Колеса пневматичні"/>
+<attribute_value id="152356" nameRU="Транспортировочное колесо" nameUK="Транспортувальне колесо"/>
+<attribute_value id="152357" nameRU="Боковые диски" nameUK="Бічні диски"/>
+<attribute_value id="152358" nameRU="Сцепка" nameUK="Зчіпка"/>
+<attribute_value id="152364" nameRU="Культиватор" nameUK="Культиватор"/>
+<attribute_value id="152365" nameRU="Грунтозацепы" nameUK="Грунтозацепи"/>
+<attribute_value id="152367" nameRU="Диски защиты растений" nameUK="Диски захисту рослин"/>
+<attribute_value id="152368" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+<attribute_value id="152369" nameRU="Клиновидные ремни" nameUK="Клиновидні ремені"/>
+<attribute_value id="152371" nameRU="Защитные крылья" nameUK="Захисні крила"/>
+<attribute_value id="152373" nameRU="Картофелекопалка" nameUK="Картоплекопалка"/>
+</attribute>
+<attribute id="12646" nameRU="Тип запуска" type="singleselect" nameUK="Тип запуску">
+<attribute_value id="174964" nameRU="Ручной" nameUK="Ручний"/>
+<attribute_value id="174965" nameRU="Электростартер" nameUK="Електростартер"/>
+</attribute>
+<attribute id="14586" nameRU="Максимальная ширина обработки" type="real" nameUK="Максимальна ширина обробки" measureUnitRU="см" min="0" max="200" measureUnitUK="см"/>
+<attribute id="14587" nameRU="Минимальная ширина обработки" type="real" nameUK="Мінімальна ширина обробки" measureUnitRU="см" min="0" max="150" measureUnitUK="см"/>
+<attribute id="14588" nameRU="Максимальная глубина обработки" type="real" nameUK="Максимальна глибина обробки" measureUnitRU="см" min="0" max="50" measureUnitUK="см"/>
+<attribute id="14589" nameRU="Количество передач" type="singleselect" nameUK="Кількість передач">
+<attribute_value id="152329" nameRU="1 вперед" nameUK="1 вперед"/>
+<attribute_value id="152330" nameRU="1 вперед/1 назад" nameUK="1 вперед/1 назад"/>
+<attribute_value id="152331" nameRU="2 вперед/1 назад" nameUK="2 вперед/1 назад"/>
+<attribute_value id="152332" nameRU="3 вперед/1 назад" nameUK="3 вперед/1 назад"/>
+<attribute_value id="152333" nameRU="4 вперед/1 назад" nameUK="4 вперед/1 назад"/>
+<attribute_value id="152334" nameRU="4 вперед/2 назад" nameUK="4 вперед/2 назад"/>
+<attribute_value id="152335" nameRU="6 вперед/1 назад" nameUK="6 вперед/1 назад"/>
+<attribute_value id="152336" nameRU="6 вперед/2 назад" nameUK="6 вперед/2 назад"/>
+<attribute_value id="152337" nameRU="6 вперед/3 назад" nameUK="6 вперед/3 назад"/>
+<attribute_value id="181240" nameRU="2 вперед/2 назад" nameUK="2 вперед/2 назад"/>
+<attribute_value id="347137" nameRU="3 вперед/ 2 назад" nameUK="3 вперед/ 2 назад"/>
+</attribute>
+<attribute id="14590" nameRU="Сцепление" type="singleselect" nameUK="Зчеплення">
+<attribute_value id="152344" nameRU="Ременное" nameUK="Пасове"/>
+<attribute_value id="152345" nameRU="Дисковое" nameUK="Дискове"/>
+<attribute_value id="263808" nameRU="Муфта" nameUK="Муфта"/>
+</attribute>
+<attribute id="14591" nameRU="Скорость вращения фрез" type="real" nameUK="Швидкість обертання фрез" measureUnitRU="об/мин" min="0" max="1500" measureUnitUK="об/хв"/>
+<attribute id="14592" nameRU="Вал отбора мощности" type="bool" nameUK="Вал відбору потужності"/>
+<attribute id="16120" nameRU="Количество фрез" type="integer" nameUK="Кількість фрез" measureUnitRU="шт" min="0" max="32" measureUnitUK="шт."/>
+<attribute id="18886" nameRU="Страна регистрации бренда" type="singleselect" nameUK="Країна реєстрації бренда">
+<attribute_value id="309627" nameRU="Австралия" nameUK="Австралія"/>
+<attribute_value id="309628" nameRU="Австрия" nameUK="Австрія"/>
+<attribute_value id="309629" nameRU="Азербайджан" nameUK="Азербайджан"/>
+<attribute_value id="309630" nameRU="Албания" nameUK="Албанія"/>
+<attribute_value id="309631" nameRU="Алжир" nameUK="Алжир"/>
+<attribute_value id="309632" nameRU="Ангола" nameUK="Ангола"/>
+<attribute_value id="309633" nameRU="Андорра" nameUK="Андора"/>
+<attribute_value id="309634" nameRU="Антигуа и Барбуда" nameUK="Антигуа та Барбуда"/>
+<attribute_value id="309635" nameRU="Аргентина" nameUK="Аргентина"/>
+<attribute_value id="309636" nameRU="Армения" nameUK="Арменія"/>
+<attribute_value id="309637" nameRU="Афганистан" nameUK="Афганістан"/>
+<attribute_value id="309638" nameRU="Багамские острова" nameUK="Багамські острови"/>
+<attribute_value id="309639" nameRU="Бангладеш" nameUK="Бангладеш"/>
+<attribute_value id="309640" nameRU="Барбадос" nameUK="Барбадос"/>
+<attribute_value id="309641" nameRU="Бахрейн" nameUK="Бахрейн"/>
+<attribute_value id="309642" nameRU="Беларусь" nameUK="Білорусь"/>
+<attribute_value id="309643" nameRU="Белиз" nameUK="Беліз"/>
+<attribute_value id="309644" nameRU="Бельгия" nameUK="Бельгія"/>
+<attribute_value id="309645" nameRU="Бенин" nameUK="Бенін"/>
+<attribute_value id="309646" nameRU="Болгария" nameUK="Болгарія"/>
+<attribute_value id="309647" nameRU="Боливия" nameUK=""/>
+<attribute_value id="309648" nameRU="Босния и Герцеговина" nameUK="Боснія і Герцеговина"/>
+<attribute_value id="309649" nameRU="Ботсвана" nameUK="Ботсвана"/>
+<attribute_value id="309650" nameRU="Бразилия" nameUK="Бразилія"/>
+<attribute_value id="309651" nameRU="Бруней-Даруссалам" nameUK="Бруней-Даруссалам"/>
+<attribute_value id="309652" nameRU="Буркина-Фасо" nameUK="Буркина-Фасо"/>
+<attribute_value id="309653" nameRU="Бурунди" nameUK="Бурунди"/>
+<attribute_value id="309654" nameRU="Бутан" nameUK="Бутан"/>
+<attribute_value id="309655" nameRU="Вануату" nameUK="Вануату"/>
+<attribute_value id="309656" nameRU="Венгрия" nameUK="Угорщина"/>
+<attribute_value id="309657" nameRU="Венесуэла" nameUK="Венесуела"/>
+<attribute_value id="309658" nameRU="Вьетнам" nameUK="В'єтнам"/>
+<attribute_value id="309659" nameRU="Габон" nameUK="Габон"/>
+<attribute_value id="309660" nameRU="Гаити" nameUK="Гаїті"/>
+<attribute_value id="309661" nameRU="Гайана" nameUK="Гайана"/>
+<attribute_value id="309662" nameRU="Гамбия" nameUK="Гамбія"/>
+<attribute_value id="309663" nameRU="Гана" nameUK="Гана"/>
+<attribute_value id="309664" nameRU="Гватемала" nameUK="Гватемала"/>
+<attribute_value id="309665" nameRU="Гвинея" nameUK="Гвінея"/>
+<attribute_value id="309666" nameRU="Гвинея-Бисау" nameUK="Гвінея-Бісау"/>
+<attribute_value id="309667" nameRU="Германия" nameUK="Німеччина"/>
+<attribute_value id="309668" nameRU="Гондурас" nameUK="Гондурас"/>
+<attribute_value id="309669" nameRU="Гренада" nameUK="Гренада"/>
+<attribute_value id="309670" nameRU="Греция" nameUK="Греція"/>
+<attribute_value id="309671" nameRU="Грузия" nameUK="Грузія"/>
+<attribute_value id="309672" nameRU="Дания" nameUK="Данія"/>
+<attribute_value id="309673" nameRU="Демократическая Республика Конго" nameUK="Демократична Республіка Конго"/>
+<attribute_value id="309674" nameRU="Джибути" nameUK="Джібуті"/>
+<attribute_value id="309675" nameRU="Доминика" nameUK="Домініка"/>
+<attribute_value id="309676" nameRU="Доминиканская Республика" nameUK="Домініканська республіка"/>
+<attribute_value id="309677" nameRU="Египет" nameUK="Єгипет"/>
+<attribute_value id="309678" nameRU="Замбия" nameUK="Замбія"/>
+<attribute_value id="309679" nameRU="Зимбабве" nameUK="Зімбабве"/>
+<attribute_value id="309680" nameRU="Израиль" nameUK="Ізраїль"/>
+<attribute_value id="309681" nameRU="Индия" nameUK="Індія"/>
+<attribute_value id="309682" nameRU="Индонезия" nameUK="Індонезія"/>
+<attribute_value id="309683" nameRU="Иордания" nameUK="Йорданія"/>
+<attribute_value id="309684" nameRU="Ирак" nameUK="Ірак"/>
+<attribute_value id="309685" nameRU="Иран" nameUK="Іран"/>
+<attribute_value id="309686" nameRU="Ирландия" nameUK="Ірландія"/>
+<attribute_value id="309687" nameRU="Исландия" nameUK=""/>
+<attribute_value id="309688" nameRU="Испания" nameUK="Іспанія"/>
+<attribute_value id="309689" nameRU="Италия" nameUK="Італія"/>
+<attribute_value id="309690" nameRU="Йемен" nameUK="Йемен"/>
+<attribute_value id="309691" nameRU="Кабо-Верде" nameUK="Кабо-Верде"/>
+<attribute_value id="309692" nameRU="Казахстан" nameUK="Казахстан"/>
+<attribute_value id="309693" nameRU="Камбоджа" nameUK="Камбоджа"/>
+<attribute_value id="309694" nameRU="Камерун" nameUK="Камерун"/>
+<attribute_value id="309695" nameRU="Канада" nameUK="Канада"/>
+<attribute_value id="309696" nameRU="Катар" nameUK="Катар"/>
+<attribute_value id="309697" nameRU="Кения" nameUK="Кенія"/>
+<attribute_value id="309698" nameRU="Кипр" nameUK="Кіпр"/>
+<attribute_value id="309699" nameRU="Кирибати" nameUK="Кірібаті"/>
+<attribute_value id="309700" nameRU="Китай" nameUK="Китай"/>
+<attribute_value id="309701" nameRU="Колумбия" nameUK="Колумбія"/>
+<attribute_value id="309702" nameRU="Коморские Острова" nameUK="Коморські острови"/>
+<attribute_value id="309703" nameRU="Конго" nameUK="Конго"/>
+<attribute_value id="309704" nameRU="Корейская Народно-Демократическая Республика" nameUK="Корейська Народно-Демократична Республіка"/>
+<attribute_value id="309705" nameRU="Коста-Рика" nameUK="Коста-Ріка"/>
+<attribute_value id="309706" nameRU="Кот-д’Ивуар" nameUK="Кот-д’Івуар"/>
+<attribute_value id="309707" nameRU="Куба" nameUK="Куба"/>
+<attribute_value id="309708" nameRU="Кувейт" nameUK="Кувейт"/>
+<attribute_value id="309709" nameRU="Кыргызстан" nameUK="Киргизстан"/>
+<attribute_value id="309710" nameRU="Лаосская Народно-Демократическая Республика" nameUK="Лаоська Народно-Демократична Республіка"/>
+<attribute_value id="309711" nameRU="Латвия" nameUK="Латвія"/>
+<attribute_value id="309712" nameRU="Лесото" nameUK="Лесото"/>
+<attribute_value id="309713" nameRU="Либерия" nameUK="Ліберія"/>
+<attribute_value id="309714" nameRU="Ливан" nameUK="Ліван"/>
+<attribute_value id="309715" nameRU="Ливия" nameUK="Лівія"/>
+<attribute_value id="309716" nameRU="Литва" nameUK="Литва"/>
+<attribute_value id="309717" nameRU="Лихтенштейн" nameUK="Ліхтенштейн"/>
+<attribute_value id="309718" nameRU="Люксембург" nameUK="Люксембург"/>
+<attribute_value id="309719" nameRU="Маврикий" nameUK="Маврікій"/>
+<attribute_value id="309720" nameRU="Мавритания" nameUK="Мавританія"/>
+<attribute_value id="309721" nameRU="Мадагаскар" nameUK="Мадагаскар"/>
+<attribute_value id="309722" nameRU="Малави" nameUK="Малаві"/>
+<attribute_value id="309723" nameRU="Малайзия" nameUK="Малайзія"/>
+<attribute_value id="309724" nameRU="Мали" nameUK="Малі"/>
+<attribute_value id="309725" nameRU="Мальдивы" nameUK="Мальдиви"/>
+<attribute_value id="309726" nameRU="Мальта" nameUK="Мальта"/>
+<attribute_value id="309727" nameRU="Марокко" nameUK="Марокко"/>
+<attribute_value id="309728" nameRU="Маршалловы Острова" nameUK="Маршаллові острови"/>
+<attribute_value id="309729" nameRU="Мексика" nameUK="Мексика"/>
+<attribute_value id="309730" nameRU="Мозамбик" nameUK="Мозамбік"/>
+<attribute_value id="309731" nameRU="Монако" nameUK="Монако"/>
+<attribute_value id="309732" nameRU="Монголия" nameUK="Монголія"/>
+<attribute_value id="309733" nameRU="Мьянма" nameUK="Мьянма"/>
+<attribute_value id="309734" nameRU="Намибия" nameUK="Намібія"/>
+<attribute_value id="309735" nameRU="Науру" nameUK="Науру"/>
+<attribute_value id="309736" nameRU="Непал" nameUK="Непал"/>
+<attribute_value id="309737" nameRU="Нигер" nameUK="Республіка Нігер"/>
+<attribute_value id="309738" nameRU="Нигерия" nameUK="Нігерія"/>
+<attribute_value id="309739" nameRU="Нидерланды" nameUK="Нідерланди"/>
+<attribute_value id="309740" nameRU="Никарагуа" nameUK="Нікарагуа"/>
+<attribute_value id="309741" nameRU="Ниуэ" nameUK="Ніуе"/>
+<attribute_value id="309742" nameRU="Новая Зеландия" nameUK="Нова Зеландія"/>
+<attribute_value id="309743" nameRU="Норвегия" nameUK="Норвегія"/>
+<attribute_value id="309744" nameRU="Объединенная Республика Танзания" nameUK="Об'єднана Республіка Танзанія"/>
+<attribute_value id="309745" nameRU="Объединенные Арабские Эмираты" nameUK="Об'єднані Арабські Емірати"/>
+<attribute_value id="309746" nameRU="Оман" nameUK="Оман"/>
+<attribute_value id="309747" nameRU="Острова Кука" nameUK="Острови Кука"/>
+<attribute_value id="309748" nameRU="Пакистан" nameUK="Пакистан"/>
+<attribute_value id="309749" nameRU="Панама" nameUK="Панама"/>
+<attribute_value id="309750" nameRU="Папуа — Новая Гвинея" nameUK="Папуа Нова Гвінея"/>
+<attribute_value id="309751" nameRU="Парагвай" nameUK="Парагвай"/>
+<attribute_value id="309752" nameRU="Перу" nameUK="Перу"/>
+<attribute_value id="309753" nameRU="Польша" nameUK="Польща"/>
+<attribute_value id="309754" nameRU="Португалия" nameUK="Португалія"/>
+<attribute_value id="309755" nameRU="Республика Корея" nameUK="Республіка Корея"/>
+<attribute_value id="309756" nameRU="Республика Молдова" nameUK="Республіка Молдова"/>
+<attribute_value id="309757" nameRU="Руанда" nameUK="Руанда"/>
+<attribute_value id="309758" nameRU="Румыния" nameUK="Румунія"/>
+<attribute_value id="309759" nameRU="Сальвадор" nameUK="Сальвадор"/>
+<attribute_value id="309760" nameRU="Самоа" nameUK="Самоа"/>
+<attribute_value id="309761" nameRU="Сан-Марино" nameUK="Сан-Маріно"/>
+<attribute_value id="309762" nameRU="Сан-Томе и Принсипи" nameUK="Сан-Томе та Прінсіпі"/>
+<attribute_value id="309763" nameRU="Саудовская Аравия" nameUK="Саудівська Аравія"/>
+<attribute_value id="309764" nameRU="Святой Престол" nameUK="Святий Престол"/>
+<attribute_value id="309765" nameRU="Северная Македония" nameUK="Північна Македонія"/>
+<attribute_value id="309766" nameRU="Сейшельские Острова" nameUK="Сейшельські острови"/>
+<attribute_value id="309767" nameRU="Сенегал" nameUK="Сенегал"/>
+<attribute_value id="309768" nameRU="Сент-Винсент и Гренадины" nameUK="Сент-Вінсент та Гренадини"/>
+<attribute_value id="309769" nameRU="Сент-Китс и Невис" nameUK="Сент-Кітс і Невіс"/>
+<attribute_value id="309770" nameRU="Сент-Люсия" nameUK="Сент-Люсія"/>
+<attribute_value id="309771" nameRU="Сербия" nameUK="Сербія"/>
+<attribute_value id="309772" nameRU="Сингапур" nameUK="Сингапур"/>
+<attribute_value id="309773" nameRU="Сирийская Арабская Республика" nameUK="Сирійська Арабська Республіка"/>
+<attribute_value id="309774" nameRU="Словакия" nameUK="Словакія"/>
+<attribute_value id="309775" nameRU="Словения" nameUK="Словенія"/>
+<attribute_value id="309776" nameRU="Соединенные Штаты Америки" nameUK="Сполучені Штати Америки"/>
+<attribute_value id="309777" nameRU="Соломоновы Острова" nameUK="Соломонові острови"/>
+<attribute_value id="309778" nameRU="Сомали" nameUK="Сомалі"/>
+<attribute_value id="309779" nameRU="Судан" nameUK="Судан"/>
+<attribute_value id="309780" nameRU="Суринам" nameUK="Сурінам"/>
+<attribute_value id="309781" nameRU="Сьерра-Леоне" nameUK="Сьєрра-Леоне"/>
+<attribute_value id="309782" nameRU="Таджикистан" nameUK="Таджикістан"/>
+<attribute_value id="309783" nameRU="Таиланд" nameUK="Таїланд"/>
+<attribute_value id="309784" nameRU="Тимор-Лешти" nameUK="Тимор-Лешті"/>
+<attribute_value id="309785" nameRU="Того" nameUK="Того"/>
+<attribute_value id="309786" nameRU="Тонга" nameUK="Тонга"/>
+<attribute_value id="309787" nameRU="Тринидад и Тобаго" nameUK="Трінідад і Тобаго"/>
+<attribute_value id="309788" nameRU="Тувалу" nameUK="Тувалу"/>
+<attribute_value id="309789" nameRU="Тунис" nameUK="Туніс"/>
+<attribute_value id="309790" nameRU="Туркменистан" nameUK="Туркменістан"/>
+<attribute_value id="309791" nameRU="Турция" nameUK="Туреччина"/>
+<attribute_value id="309792" nameRU="Уганда" nameUK="Уганда"/>
+<attribute_value id="309793" nameRU="Узбекистан" nameUK="Узбекистан"/>
+<attribute_value id="309794" nameRU="Украина" nameUK="Україна"/>
+<attribute_value id="309795" nameRU="Уругвай" nameUK="Уругвай"/>
+<attribute_value id="309796" nameRU="Фиджи" nameUK="Фіджи"/>
+<attribute_value id="309797" nameRU="Филиппины" nameUK="Філіппіни"/>
+<attribute_value id="309798" nameRU="Финляндия" nameUK="Фінляндія"/>
+<attribute_value id="309799" nameRU="Франция" nameUK="Франція"/>
+<attribute_value id="309800" nameRU="Хорватия" nameUK="Хорватія"/>
+<attribute_value id="309801" nameRU="Центральноафриканская Республика" nameUK="Центральноафриканська Республіка"/>
+<attribute_value id="309802" nameRU="Чад" nameUK="Чад"/>
+<attribute_value id="309803" nameRU="Черногория" nameUK="Черногорія"/>
+<attribute_value id="309804" nameRU="Чешская Республика" nameUK="Чеська Республіка"/>
+<attribute_value id="309805" nameRU="Чили" nameUK="Чілі"/>
+<attribute_value id="309806" nameRU="Швейцария" nameUK="Швейцарія"/>
+<attribute_value id="309807" nameRU="Швеция" nameUK="Швеція"/>
+<attribute_value id="309808" nameRU="Шри-Ланка" nameUK="Шрі-Ланка"/>
+<attribute_value id="309809" nameRU="Эквадор" nameUK="Еквадор"/>
+<attribute_value id="309810" nameRU="Экваториальная Гвинея" nameUK="Екваторіальна Гвінея"/>
+<attribute_value id="309811" nameRU="Эритрея" nameUK="Еритрея"/>
+<attribute_value id="309812" nameRU="Эсватини" nameUK="Есватині"/>
+<attribute_value id="309813" nameRU="Эстония" nameUK="Естонія"/>
+<attribute_value id="309814" nameRU="Эфиопия" nameUK="Ефіопія"/>
+<attribute_value id="309815" nameRU="Южная Африка" nameUK="Південна Африка"/>
+<attribute_value id="309816" nameRU="Ямайка" nameUK="Ямайка"/>
+<attribute_value id="309817" nameRU="Япония" nameUK="Японія"/>
+</attribute>
+</category>
+</categories>

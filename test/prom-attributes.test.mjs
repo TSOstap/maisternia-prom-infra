@@ -15,9 +15,13 @@ const GRIND = "141717", SAW = "1250302", GEN = "410402"; // Шліфувальн
 const attrOf = (id, name) => S(id).attributes.find((a) => a.nameUK === name);
 const P = (name, value, unit = "") => ({ name, value, unit });
 
-test("схеми: 48 категорій із MANIFEST завантажено без помилок; порожні «…, загальне» — коректні, без атрибутів", () => {
+test("схеми: 65 категорій із MANIFEST завантажено без помилок (48 + 17 валідних від 25.10.2026); порожні «…, загальне» — коректні, без атрибутів", () => {
   assert.deepEqual(catalog.problems, []);
-  assert.equal(catalog.schemas.size, 48);
+  assert.equal(catalog.schemas.size, 65);
+  // 25.10.2026: підключено лише строго валідні XML; 142001, 14200332, 14200504 (неекрановані лапки) і запитану 13070703 (не надано) — ні
+  for (const id of ["12110205", "1250304", "125031801", "13040305", "13070701", "141723", "141734", "14200604", "142007", "14201515", "14201612", "14201636", "14201607", "14209811", "142907", "143110", "4305"]) assert.ok(S(id).attributes.length > 0, id);
+  for (const id of ["142001", "14200332", "14200504", "13070703"]) assert.equal(S(id, true), undefined, id);
+  assert.equal(S("13070701").nameUK, "Драбини");
   assert.equal(S("141714").nameUK, "Електричні гайковерти");
   assert.equal(S("12110201").attributes.length, 16, "повна схема (обірваний фрагмент раніше не імпортовано)");
   assert.equal(S("410499").empty, true);
@@ -549,7 +553,7 @@ test("синоніми атрибутів (власник, 24.10.2026): №43–
 test("заборонені відповідності №47–50 ніколи не застосовуються — ні напряму, ні через словники / ланцюжки синонімів", () => {
   const forbidden = JSON.parse(fs.readFileSync(path.join(SCHEMAS_DIR, "synonyms.json"), "utf8")).forbidden;
   assert.deepEqual(forbidden, [["Вага брутто", "Вага"], ["Потужність", "Споживана потужність"], ["Вес без аккумулятора", "Вага"], ["Частота", "Частота струму"]]);
-  // У жодній із 48 категорій — не один ключ
+  // У жодній із 65 категорій — не один ключ
   for (const [id, schema] of catalog.schemas) for (const [x, y] of forbidden) {
     const opt = { mapping: catalog.mappings.get(id), names: catalog.names };
     assert.notEqual(charKey(schema, x, opt), charKey(schema, y, opt), `${id}: «${x}» = «${y}»`);
@@ -1349,4 +1353,139 @@ test("перелік постачальника (split) — захисні ви�
   const long = Array.from({ length: 30 }, (_, i) => 100 + i).join("; ") + " мм"; // 151 символ у постачальника, після розділення — понад 255
   const lg = B("141714", { descUa: `<p>Гайковерт 4 головки: ${long}</p>`, multiOwner: own });
   assert.ok(lg.params.some((p) => p.name === "Гайковерт 4 головки" && !p.value.includes("|")), "понад 255 символів — як у постачальника");
+});
+
+test("варіант / атрибут схеми Prom без української назви (власник, 25.10.2026): поле не заповнюється, перекладу не вигадуємо — значення постачальника користувацькою як є", () => {
+  const ss = { id: "s", nameUK: "С", type: "singleselect", values: [{ id: "1", nameUK: "", nameRU: "Алюминий" }, { id: "2", nameUK: "Сталь", nameRU: "Сталь" }] };
+  assert.match(validateValue(ss, "Алюминий", "", catalog.units).reason, /без української назви/);
+  assert.deepEqual(validateValue(ss, "Сталь", "", catalog.units), { value: "Сталь", unit: "" });
+  const ms = { ...ss, type: "multiselect" };
+  assert.match(validateValue(ms, "Алюминий", "", catalog.units).reason, /без української назви/, "одне значення");
+  assert.match(validateValue(ms, "Сталь, Алюминий", "", catalog.units).reason, /без української назви/, "частина переліку");
+  assert.deepEqual(validateValue({ ...ms, values: [...ms.values, { id: "3", nameUK: "Мідь", nameRU: "Медь" }] }, "Сталь, Мідь", "", catalog.units), { value: "Сталь | Мідь", unit: "" });
+  assert.match(validateValue({ id: "t", nameUK: "", nameRU: "Тип", type: "text" }, "x", "", catalog.units).reason, /атрибут схеми Prom без української назви/);
+  // 4305 «Матеріал столу»: у схемі лише «Алюминий» без UA — поле 15401 не заповнюється; постачальник — користувацькою, оригінал
+  const names = catalog.names;
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  assert.equal(attrOf("4305", "Матеріал столу").values.length, 1);
+  const r = B("4305", { rawParams: [P("Материал стола", "Алюминий")], descUa: "<p>Матеріал столу: алюміній</p>", descRu: "<p>Материал стола: алюминий</p>" });
+  const mat = r.params.map((p, i) => [p, r.provenance.items[i]]).filter(([p]) => /матер/i.test(p.name));
+  assert.equal(mat.length, 1, "без мовних дублів");
+  assert.equal(mat[0][1].a, "", "не поле Prom");
+  assert.ok(["Алюминий", "алюміній"].includes(mat[0][0].value), "значення постачальника без вигаданого перекладу");
+  assert.ok(!r.params.some((p) => p.value === "Алюміній"), "переклад не вигадано");
+});
+
+test("вада одиниці «GHz» (атрибут 1493) — захист розширено на 4305 і 14209811 (власник, 25.10.2026): «Частота мережі: 50 Гц» користувацькою; сирі дані не змінюються", () => {
+  const names = catalog.names;
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  const known = catalog.knownIssues.find((k) => k.id === "1493");
+  assert.deepEqual(known.categories, ["14209803", "143109", "4305", "14209811"]);
+  for (const cat of ["4305", "14209811"]) {
+    assert.equal(S(cat).attributes.find((a) => a.id === "1493").unitUK, "GHz", cat);
+    const raw = [P("Частота", "50", "GHz")];
+    const r = B(cat, { rawParams: raw, descUa: "<p>Частота: 50 Гц</p>", descRu: "<p>Частота: 50 Гц</p>" });
+    assert.deepEqual(r.params, [P("Частота мережі", "50 Гц")], cat);
+    assert.equal(r.provenance.items[0].a, "");
+    assert.deepEqual(raw, [P("Частота", "50", "GHz")], "сирі дані постачальника не змінено");
+    const u = B(cat, { rawParams: [P("Частота", "50", "GHz")] });
+    assert.deepEqual(u.params, [], "лише «50 GHz» — не передається");
+    assert.match(u.rawOnly[0].reason, /вада довідника Prom/);
+  }
+});
+
+test("одиниці постачальника не перераховуються (власник, 25.10.2026, 142907 «Потужність електродвигуна», Вт/год): «Вт/ч» → поле 3817 як є; «Вт» / «кВт» — не в поле 3817", () => {
+  const names = catalog.names;
+  const B = (o) => buildCharacteristics({ schema: S("142907"), categoryId: "142907", current: [], names, mapping: catalog.mappings.get("142907"), units: catalog.units, mode: "queue", ...o });
+  assert.equal(S("142907").attributes.find((a) => a.id === "3817").unitUK, "Вт/год");
+  const at = (r, a) => r.params.filter((p, i) => r.provenance.items[i].a === a);
+  // Forte FPA 250: XML «Мощность электродвигателя 540 Вт/ч», «Потребляемая мощность 0.54 кВт»
+  const f = B({ rawParams: [P("Мощность электродвигателя", "540", "Вт/ч"), P("Потребляемая мощность", "0.54", "кВт")] });
+  assert.deepEqual(at(f, "3817"), [P("Потужність електродвигуна", "540", "Вт/год")]);
+  assert.deepEqual(at(f, "4"), [P("Споживана потужність", "0.54", "кВт")], "споживана — окремо, типи потужності не змішуються");
+  // «540 Вт» / «0.54 кВт» (без «/год») — у поле 3817 не перераховується
+  for (const [v, u] of [["540", "Вт"], ["0.54", "кВт"]]) {
+    const w = B({ rawParams: [P("Мощность электродвигателя", v, u)] });
+    assert.deepEqual(at(w, "3817"), [], `${v} ${u}`);
+    assert.ok(!w.params.some((p) => p.unit === "Вт/год" || /Вт\/год/.test(p.value)), "без перерахунку в Вт/год");
+  }
+  // LEX H1000TW: опис «Потужність двигуна: 2000 Вт» поруч із полем 2000 Вт/год — користувацькою з оригіналом
+  const lex = B({ rawParams: [P("Мощность электродвигателя", "2000", "Вт/ч")], descUa: "<p>Потужність двигуна: 2000 Вт</p>", descRu: "<p>Мощность двигателя: 2000 Вт</p>" });
+  assert.deepEqual(at(lex, "3817"), [P("Потужність електродвигуна", "2000", "Вт/год")]);
+  assert.deepEqual(lex.params.filter((p, i) => !lex.provenance.items[i].a), [P("Потужність двигуна", "2000 Вт")]);
+});
+
+test("FOGO F3001 (власник, 25.10.2026): «Призначення» — лише значення з характеристик постачальника (only); описове речення лишається в описі; Д1–Д2 не застосовуються", () => {
+  const names = catalog.names;
+  const B = (o) => buildCharacteristics({ schema: S(GEN), categoryId: GEN, current: [], names, mapping: catalog.mappings.get(GEN), units: catalog.units, mode: "queue", ...o });
+  const sentUa = "призначений для відновлення подачі електрики в разі збоїв роботи електромережі або відсутності інших джерел живлення.";
+  const sentRu = "предназначен для возобновления подачи электричества в случае сбоев работы электросети или отсутствия других источников питания.";
+  const d = { descUa: `<p>Призначення: ${sentUa}</p><p>Призначення: для квартири, для будинку, для дачі, для гаража</p>`, descRu: `<p>Назначение: ${sentRu}</p><p>Назначение: для квартиры, для дома, для дачи, для гаража</p>` };
+  const own = catalog.multiConfirmed.get("1727403273");
+  assert.equal(own.get(normName("Призначення")).only, "для квартири, для будинку, для дачі, для гаража");
+  const r = B({ ...d, multiOwner: own });
+  assert.deepEqual(r.params.filter((p) => /^(Призначення|Назначение)$/.test(p.name)), [P("Призначення", "для квартири, для будинку, для дачі, для гаража")]);
+  assert.ok(!r.params.some((p) => p.value.includes("відновлення подачі")), "речення не переноситься в характеристики");
+  assert.ok(!r.params.some((p) => p.value.includes("|")), "не зводиться через « | »");
+  assert.deepEqual(r.needsReview.filter((x) => /Призначення|Назначение/.test(x.name)), []);
+  assert.ok(r.notes.some((n) => /описове речення лишається в описі/.test(n)));
+  // Без підтвердження — як раніше: ПОТРЕБУЄ ПЕРЕВІРКИ, нічого не передається
+  const no = B(d);
+  assert.ok(!no.params.some((p) => /^Призначення$/.test(p.name)));
+  assert.equal(no.needsReview.filter((x) => /Призначення/.test(x.name)).length, 1);
+  // Значення only не знайдено в описі / у RU інша кількість записів — не передається
+  const miss = B({ descUa: `<p>Призначення: ${sentUa}</p><p>Призначення: для квартири</p>`, multiOwner: own });
+  assert.ok(!miss.params.some((p) => /^Призначення$/.test(p.name)));
+  assert.match(miss.needsReview.find((x) => /Призначення/.test(x.name)).reason, /не знайдено/);
+  const cnt = B({ descUa: d.descUa, descRu: `${d.descRu}<p>Назначение: для офиса</p>`, multiOwner: own });
+  assert.ok(!cnt.params.some((p) => /^(Призначення|Назначение)$/.test(p.name)), "RU має більше записів — не передається");
+});
+
+test("категорія схеми — фактична категорія товару в Prom (власник, 25.10.2026): файл експорту поза репозиторієм; категорія таблиці — лише якщо товару в експорті немає", async () => {
+  const { schemaCategory, refreshMainRow, candidateRow, refreshQueueRow, PARAMS_ORIGIN } = await import("../src/core/sheet-sync.mjs");
+  const pc = { date: "2026-10-23", map: new Map([["1", "410402"]]) };
+  assert.deepEqual(schemaCategory({ "Offer ID": "1", "Категорія Prom ID": "141714" }, { promCategories: pc }), { cat: "410402", source: "prom", table: "141714", prom: "410402", differs: true });
+  assert.deepEqual(schemaCategory({ "Offer ID": "2", "Категорія Prom ID": "141714" }, { promCategories: pc }), { cat: "141714", source: "table", table: "141714", prom: "", differs: false });
+  assert.equal(schemaCategory({ "Offer ID": "1", "Категорія Prom ID": "141714" }, {}).cat, "141714", "без файлу — як раніше");
+  assert.equal(schemaCategory({ "Offer ID": "1", "Категорія Prom ID": "410402" }, { promCategories: pc }).differs, false);
+  // Завантаження файлу: немає / зіпсований — попередження, категорія таблиці; правильний — мапа (лише числові ID категорій)
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mm-promcat-"));
+  assert.equal(loadPromCatalog(SCHEMAS_DIR, { promCategoriesFile: "" }).promCategories, null);
+  const miss = loadPromCatalog(SCHEMAS_DIR, { promCategoriesFile: path.join(dir, "нема.json") });
+  assert.equal(miss.promCategories, null);
+  assert.match(miss.problems.at(-1), /файл категорій Prom/);
+  fs.writeFileSync(path.join(dir, "bad.json"), JSON.stringify({ categories: { 1: "410402" } }));
+  assert.match(loadPromCatalog(SCHEMAS_DIR, { promCategoriesFile: path.join(dir, "bad.json") }).problems.at(-1), /немає date/);
+  fs.writeFileSync(path.join(dir, "ok.json"), JSON.stringify({ date: "2026-10-23", source: "експорт", categories: { 1: "410402", 2: "", 3: "abc", 4: 141714 } }));
+  const ok = loadPromCatalog(SCHEMAS_DIR, { promCategoriesFile: path.join(dir, "ok.json") });
+  assert.deepEqual([...ok.promCategories.map], [["1", "410402"], ["4", "141714"]]);
+  assert.equal(ok.promCategories.date, "2026-10-23");
+  assert.equal(ok.schemas.size, catalog.schemas.size);
+  fs.rmSync(dir, { recursive: true, force: true });
+  // Синхронізація: схема за категорією Prom; колонка «Категорія Prom ID» (YML portal_category_id) не змінюється
+  const c = { ...catalog, promCategories: { date: "2026-10-23", map: new Map([["77", GEN]]) } };
+  const row = { "Offer ID": "77", "ID постачальника": "77", "Категорія Prom ID": "52807", "Виробник": "Fogo", "Характеристики JSON": "[]", "Назва постачальника UA": "Генератор", "Назва постачальника RU": "" };
+  const offer = { id: "77", vendor: "Fogo", sku: "", nameUa: "Генератор", nameRu: "", price: 100, available: true, currency: "UAH" };
+  const full = { params: [P("Номинальная мощность", "3", "кВт")], pictures: [], descriptionUa: "", descriptionRu: "" };
+  const res = refreshMainRow({ ...row }, offer, full, { stamp: "2026-10-25T10:00:00.000Z", catalog: c });
+  const out = JSON.parse(res.row["Характеристики JSON"]);
+  assert.ok(out.some((p) => p.name === "Номінальна потужність" && p.value === "3" && p.unit === "кВт"), JSON.stringify(out));
+  assert.deepEqual(JSON.parse(res.row[PARAMS_ORIGIN]).items.map((i) => [i.s, i.a]), [["XML", "426"]], "поле схеми категорії Prom");
+  assert.equal(JSON.parse(res.row[PARAMS_ORIGIN]).cat, GEN);
+  assert.equal(res.row["Категорія Prom ID"], "52807", "категорія в таблиці / YML не змінюється");
+  const noMap = refreshMainRow({ ...row }, offer, full, { stamp: "2026-10-25T10:00:00.000Z", catalog });
+  assert.deepEqual(JSON.parse(noMap.row[PARAMS_ORIGIN]).items.map((i) => [i.s, i.a]), [["XML БЕЗ ЗІСТАВЛЕННЯ", ""]], "без файлу категорій — схема таблиці (52807), поле генератора не застосовується");
+  assert.equal(JSON.parse(noMap.row[PARAMS_ORIGIN]).cat, "52807");
+  // Новий товар і черга «Нові товари» — та сама категорія Prom
+  const pricing = JSON.parse(fs.readFileSync(path.join(SCHEMAS_DIR, "../../config/default.json"), "utf8")).pricing;
+  const qOffer = { ...offer, nameRu: "Генератор", url: "https://market-tools.com.ua/p77.html", quantity: "" };
+  const origin = (r) => JSON.parse(r[PARAMS_ORIGIN]);
+  const cand = candidateRow(qOffer, full, "2026-10-25T10:00:00.000Z", pricing, c);
+  assert.deepEqual([origin(cand).cat, origin(cand).items[0].a], [GEN, "426"], "новий товар — схема категорії Prom");
+  assert.equal(cand["Категорія Prom ID"], "", "категорію в черзі не заповнено автоматично");
+  assert.equal(origin(candidateRow(qOffer, full, "2026-10-25T10:00:00.000Z", pricing, catalog)).items[0].a, "", "без файлу — як раніше");
+  const q = refreshQueueRow({ ...cand, "Категорія Prom ID": "52807" }, qOffer, full, { stamp: "2026-10-25T11:00:00.000Z", catalog: c });
+  assert.deepEqual([origin(q.row).cat, origin(q.row).items[0].a], [GEN, "426"], "черга — схема категорії Prom");
+  assert.equal(q.row["Категорія Prom ID"], "52807");
+  assert.equal(origin(refreshQueueRow({ ...cand, "Категорія Prom ID": "52807" }, qOffer, full, { stamp: "2026-10-25T11:00:00.000Z", catalog }).row).cat, "52807");
 });

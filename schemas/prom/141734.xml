@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141734" nameRU="Приспособления для инструментов" nameUK="Пристосування для інструментів">
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="12" measureUnitUK="міс"/>
+<attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="300" measureUnitUK="мм"/>
+<attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+<attribute_value id="281687" nameRU="Заточной" nameUK="Заточний"/>
+<attribute_value id="291810" nameRU="Под конфирмат" nameUK="Під конфірмат"/>
+<attribute_value id="344385" nameRU="Очищение" nameUK="Очищення"/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="14505" nameRU="Количество" type="integer" nameUK="Кількість"/>
+</category>
+</categories>
