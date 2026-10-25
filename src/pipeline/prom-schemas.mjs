@@ -50,6 +50,8 @@ export function loadPromCatalog(dir = SCHEMAS_DIR) {
   out.names = buildNames([...out.schemas.values()], dict.names || {}, out.units.aliasMap, dict.values || {}, dict.valuesInContext || {}, out.units.conversions || [], dict.wordsInContext || {}, dict.restrictedContexts || null, dict.inCategory || {});
   out.names.brandPairs = Array.isArray(dict.brandPairs) ? dict.brandPairs : []; // погоджені пари написань бренду (лише за офіційним брендом)
   // Комплектація, підтверджена власником для конкретних товарів (Offer ID → { battery, charger })
+  // Кілька значень однієї характеристики, підтверджені власником для конкретних товарів (Offer ID → назви характеристик)
+  out.multiConfirmed = new Map(Object.entries(readJson(path.join(dir, "multi-value-confirmed.json"), {}).products || {}).map(([id, v]) => [String(id), new Set(Object.keys(v || {}).map((n) => normName(n)))]));
   out.kitConfirmed = new Map(Object.entries(readJson(path.join(dir, "kit-confirmed.json"), {}).products || {}).map(([id, v]) => [String(id), { battery: v.battery, charger: v.charger, ...(v.batteryCount !== undefined ? { batteryCount: v.batteryCount } : {}) }]));
   for (const e of pending) {
     const schema = out.schemas.get(String(e.id));

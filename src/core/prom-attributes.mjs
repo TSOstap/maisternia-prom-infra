@@ -700,7 +700,7 @@ export function alignPairs(U, R, score) {
  *  в UA- і RU-описі (за підтвердженою відповідністю назв): однакові значення — одна характеристика з українською назвою;
  *  різні — «ПОТРЕБУЄ ПЕРЕВІРКИ» (needsReview, обидва оригінали), нічого не вибирається. Дублікати не створюються.
  */
-export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [], kitOwner = null }) {
+export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [], kitOwner = null, multiOwner = null }) {
   const cur = asParams(typeof current === "string" ? jsonOr(current, []) : current);
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
@@ -915,7 +915,43 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     }
     // Значення опису з одиницею з вадою довідника («Частота: 50 GHz» у самому описі) — без підтвердження не передається.
     const dm = (x) => { const b = x.pr.m.blocked, su = splitValueUnit(x.out.value); return b && su && (b.wrongUnits || []).some((w) => normUnit(w) === normUnit(su.unit)) ? { unitDefect: b } : {}; };
+    // Кілька правильних значень однієї характеристики (власник, 25.10.2026) — ЛИШЕ для випадків, підтверджених власником для
+    // цього товару (multi-value-confirmed.json): один користувацький <param> зі значеннями через « | » (формат підтверджено двома
+    // реальними імпортами; Prom може змінити порядок значень). Умови: усі значення — з опису цього товару; UA і RU — той самий
+    // перелік (кожне значення має підтверджену пару) або лише одна мова; без повторів і «|»; не довше FREE_MAX. Інакше —
+    // ПОТРЕБУЄ ПЕРЕВІРКИ (чинна поведінка). Двійник іншою мовою під непогодженою назвою — лише якщо теж підтверджений власником.
+    const owned = (k) => Boolean(multiOwner?.has(normName(k)));
+    const uniqOf = (l) => l.filter((x, i) => l.findIndex((y) => sameValue(y.out, x.out, names)) === i);
+    const consumed = new Set();
+    const multiValues = (key, u, r) => {
+      if (!owned(key)) return null;
+      let U = u, R = r, twin = null;
+      if (!U.length || !R.length) {
+        const other = U.length ? dx.ru : dx.ua, mine = U.length ? dx.ua : dx.ru;
+        const tw = [...other.keys()].filter((k) => k !== key && owned(k) && !mine.has(k));
+        if (tw.length > 1) return { why: "кілька можливих двійників іншою мовою" };
+        if (tw.length === 1) { twin = tw[0]; const t = uniqOf(other.get(twin)); if (U.length) R = t; else U = t; }
+      }
+      const base = U.length ? U : R;
+      if (base.length < 2) return { why: "менше двох значень" };
+      if (U.length && R.length) {
+        if (U.length !== R.length) return { why: `в UA ${U.length}, в RU ${R.length} значень` };
+        const used = new Set();
+        for (const x of U) {
+          const j = R.findIndex((y, i) => !used.has(i) && sameValueIn([key, x.pr.key, y.pr.key], x.out, y.out, names, categoryId));
+          if (j < 0) return { why: `«${fmt(x.out)}» не має підтвердженої пари іншою мовою` };
+          used.add(j);
+        }
+      }
+      const parts = base.map((x) => `${htmlText(x.out.value).trim()}${x.out.unit ? " " + x.out.unit : ""}`);
+      if (parts.some((p) => !p || p.includes("|"))) return { why: "значення порожнє або містить «|»" };
+      if (new Set(parts.map((p) => normValue(p, names))).size !== parts.length) return { why: "повторені значення" };
+      const value = parts.join(MULTI_SEPARATOR);
+      if (value.length > FREE_MAX) return { why: `довше за ${FREE_MAX} символів` };
+      return { ok: true, value, twin, both: Boolean(U.length && R.length), lang: U.length ? "ua" : "ru", name: base[0].out.name, n: parts.length };
+    };
     for (const key of new Set([...dx.ua.keys(), ...dx.ru.keys()])) {
+      if (consumed.has(key)) continue;
       const ua = dx.ua.get(key) || [], ru = dx.ru.get(key) || [];
       const dim = isDimensionName(key);
       const same = (y, x) => sameValue(y.out, x.out, names) || (dim && sameValue({ ...y.out, value: dimNorm(y.out.value) }, { ...x.out, value: dimNorm(x.out.value) }, names));
@@ -926,7 +962,19 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       // Конфлікт значень (власник, 25.10.2026): нічого не вибираємо, але й наявне підготовлене значення картки не прибираємо —
       // ключ «утримується» (наявний запис лишається в підсумку; нового значення до рішення немає). Синхронізацію не блокує.
       const hold = (why) => { if (!extras.has(key)) extras.set(key, { out: (u[0] || r[0]).out, src: SRC.DESC, from: "", blocked: true, held: true, why }); };
-      if (u.length > 1 || r.length > 1) { review(name, orig, "різні значення в одному описі"); hold("ПОТРЕБУЄ ПЕРЕВІРКИ: різні значення в одному описі"); continue; }
+      if (u.length > 1 || r.length > 1) {
+        const mv = multiValues(key, u, r);
+        if (mv?.ok) {
+          if (mv.twin) consumed.add(mv.twin);
+          if (mv.both) uaRuMerged++;
+          extra(key, { name: mv.name, value: mv.value, unit: "" }, SRC.DESC, "", { lang: mv.lang });
+          notes.push(`«${mv.name}»: ${mv.n} значення одним записом через « | » (кілька значень однієї характеристики, підтверджено власником)`);
+          continue;
+        }
+        review(name, orig, "різні значення в одному описі" + (mv?.why ? `; кілька значень — умови не виконано: ${mv.why}` : ""));
+        hold("ПОТРЕБУЄ ПЕРЕВІРКИ: різні значення в одному описі");
+        continue;
+      }
       // Бренд (власник, 25.10.2026): UA ≠ RU — якщо одне з написань збігається з офіційним (структуровані дані постачальника:
       // «Виробник»), передається офіційне; інакше — ПОТРЕБУЄ ПЕРЕВІРКИ (без перекладу, транслітерації й «схожих літер»).
       if (isBrandName(key) && u.length && r.length && !brandEq(u[0].out.value, r[0].out.value)) {

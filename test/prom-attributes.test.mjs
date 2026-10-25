@@ -1259,3 +1259,55 @@ test("захисні випадки (мутаційна перевірка 25.10
   assert.equal(sameValueIn(["Розміри в упаковці"], V("380 × 70 × 115 мм (Д×Ш×В)"), V("380 х 70 х 115 мм (Д×Ш×В)"), catalog.names), true);
   assert.equal(latinOriginal("TE-CD Solo червоний", "TE-CD Соло синий", catalog.names), null);
 });
+
+test("кілька правильних значень однієї характеристики (власник, 25.10.2026): лише підтверджені випадки — один користувацький <param> через « | »; умови; пріоритет XML і ручних; синхронізація", async () => {
+  const names = catalog.names;
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  const ua = "<p>Функція: HOT START</p><p>Функція: ARC FORCE</p><p>Функція: ANTI STICK</p>", ru = "<p>Функция: HOT START</p><p>Функция: ARC FORCE</p><p>Функция: ANTI STICK</p>";
+  const own = new Set([normName("Функція"), normName("Функция")]);
+  const ok = B("14400101", { descUa: ua, descRu: ru, multiOwner: own });
+  assert.deepEqual(ok.params.filter((p) => /^Функц/.test(p.name)), [P("Функція", "HOT START | ARC FORCE | ANTI STICK")], "одна характеристика, RU-двійник зведено");
+  assert.ok(!ok.needsReview.some((x) => /^Функц/.test(x.name)));
+  // Без підтвердження власника — чинна поведінка (ПОТРЕБУЄ ПЕРЕВІРКИ, нічого не передано)
+  const no = B("14400101", { descUa: ua, descRu: ru });
+  assert.ok(!no.params.some((p) => /^Функц/.test(p.name)) && no.needsReview.some((x) => /різні значення в одному описі/.test(x.reason)));
+  // Різна кількість значень UA / RU — ні
+  const cnt = B("14400101", { descUa: ua, descRu: "<p>Функция: HOT START</p><p>Функция: ARC FORCE</p>", multiOwner: own });
+  assert.ok(!cnt.params.some((p) => /^Функц/.test(p.name)) && cnt.needsReview.some((x) => /умови не виконано/.test(x.reason)));
+  // Переклад значення не підтверджено — ні
+  const tr = B("410201", { descUa: "<p>Призначення: Для акумуляторів RIKER</p><p>Призначення: Заряджання акумуляторних батарей</p>", descRu: "<p>Назначение: Для аккумуляторов RIKER</p><p>Назначение: Зарядка аккумуляторных батарей</p>", multiOwner: new Set([normName("Призначення")]) });
+  assert.ok(!tr.params.some((p) => p.name === "Призначення") && tr.needsReview.some((x) => /не має підтвердженої пари/.test(x.reason)));
+  // Лише одна мова — передається; «|» у значенні або понад 255 символів — ні
+  const one = B("14400101", { descUa: "<p>Функція: HOT START</p><p>Функція: ARC FORCE</p>", multiOwner: own });
+  assert.deepEqual(one.params.filter((p) => /^Функц/.test(p.name)), [P("Функція", "HOT START | ARC FORCE")]);
+  assert.ok(!B("14400101", { descUa: "<p>Функція: HOT START</p><p>Функція: ARC | FORCE</p>", multiOwner: own }).params.some((p) => /^Функц/.test(p.name)));
+  const long = "x".repeat(140);
+  assert.ok(!B("14400101", { descUa: `<p>Функція: ${long}</p><p>Функція: ${long}y</p>`, multiOwner: own }).params.some((p) => /^Функц/.test(p.name)));
+  // Пріоритет: XML і ручне значення не замінюються
+  const xmlP = B("14400101", { rawParams: [P("Функція", "HOT START")], descUa: ua, descRu: ru, multiOwner: own });
+  assert.deepEqual(xmlP.params.filter((p) => /^Функц/.test(p.name)), [P("Функція", "HOT START")]);
+  const man = B("14400101", { current: [P("Функція", "ручне значення")], descUa: ua, descRu: ru, multiOwner: own });
+  assert.deepEqual(man.params.filter((p) => /^Функц/.test(p.name)), [P("Функція", "ручне значення")]);
+  // Файл підтверджень: лише перелічені товари; виключений випадок — ні
+  assert.ok(catalog.multiConfirmed.get("2418101030").has(normName("Функція")));
+  assert.equal(catalog.multiConfirmed.has("2737283574"), false);
+  assert.equal(catalog.multiConfirmed.has("1804214680"), false);
+  // Синхронізація основного каталогу передає підтвердження за Offer ID
+  const { refreshMainRow } = await import("../src/core/sheet-sync.mjs");
+  const run = (id) => {
+    const row = { "Offer ID": id, "ID постачальника": id, "Категорія Prom ID": "14400101", "Виробник": "Zegor", "Характеристики JSON": "[]", "Назва постачальника UA": "Зварювальний інвертор", "Назва постачальника RU": "" };
+    const offer = { id, vendor: "Zegor", sku: "", nameUa: "Зварювальний інвертор", nameRu: "", price: 100, available: true, currency: "UAH" };
+    return JSON.parse(refreshMainRow(row, offer, { params: [P("Колір", "синій")], pictures: [], descriptionUa: ua, descriptionRu: ru }, { stamp: "2026-10-25T10:00:00.000Z", catalog }).row["Характеристики JSON"]);
+  };
+  assert.ok(run("2418101030").some((p) => p.name === "Функція" && p.value === "HOT START | ARC FORCE | ANTI STICK"));
+  assert.ok(!run("2418101031").some((p) => /^Функц/.test(p.name)), "на інші товари не поширюється");
+});
+
+test("кілька значень — захисні випадки (мутаційна перевірка 25.10.2026): зайве значення в RU не губиться; непідтверджений двійник не зводиться", () => {
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names: catalog.names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  const ua2 = "<p>Функція: HOT START</p><p>Функція: ARC FORCE</p>", ru3 = "<p>Функция: HOT START</p><p>Функция: ARC FORCE</p><p>Функция: ANTI STICK</p>";
+  const more = B("14400101", { descUa: ua2, descRu: ru3, multiOwner: new Set([normName("Функція"), normName("Функция")]) });
+  assert.ok(!more.params.some((p) => /^Функц/.test(p.name)), "RU має більше значень — не передається (інакше «ANTI STICK» загубилося б)");
+  const lone = B("14400101", { descUa: ua2, descRu: "<p>Функция: HOT START</p><p>Функция: ARC FORCE</p>", multiOwner: new Set([normName("Функція")]) });
+  assert.ok(lone.needsReview.some((x) => x.name === "Функция"), "RU-двійник без підтвердження власника — окремо, ПОТРЕБУЄ ПЕРЕВІРКИ");
+});
