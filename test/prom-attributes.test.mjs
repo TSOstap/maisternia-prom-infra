@@ -15,12 +15,20 @@ const GRIND = "141717", SAW = "1250302", GEN = "410402"; // Шліфувальн
 const attrOf = (id, name) => S(id).attributes.find((a) => a.nameUK === name);
 const P = (name, value, unit = "") => ({ name, value, unit });
 
-test("схеми: 66 категорій із MANIFEST завантажено без помилок (48 + 17 валідних від 25.10.2026 + 13070703 від 26.10.2026); порожні «…, загальне» — коректні, без атрибутів", () => {
+test("схеми: 69 категорій із MANIFEST завантажено без помилок (48 + 17 від 25.10.2026 + 13070703 і 3 відновлені 26.10.2026); порожні «…, загальне» — коректні, без атрибутів", () => {
   assert.deepEqual(catalog.problems, []);
-  assert.equal(catalog.schemas.size, 66);
-  // 25.10.2026: підключено лише строго валідні XML; 142001, 14200332, 14200504 (неекрановані лапки) і запитану 13070703 (не надано) — ні
+  assert.equal(catalog.schemas.size, 69);
   for (const id of ["12110205", "1250304", "125031801", "13040305", "13070701", "141723", "141734", "14200604", "142007", "14201515", "14201612", "14201636", "14201607", "14209811", "142907", "143110", "4305"]) assert.ok(S(id).attributes.length > 0, id);
-  for (const id of ["142001", "14200332", "14200504"]) assert.equal(S(id, true), undefined, id + ": невалідний XML — лише пропозиція відновлення, не підключено");
+  // 26.10.2026 (погоджено власником): 142001, 14200332, 14200504 — синтаксис відновлено (лише `"` → `&quot;` у значеннях);
+  // файли проходять строгий парсер, розбір = розбір оригіналу; неекранованих лапок у репозиторних файлах немає.
+  for (const [id, attrs, vals] of [["142001", 19, 161], ["14200332", 12, 70], ["14200504", 15, 12]]) {
+    const [p] = parseSchemaText(fs.readFileSync(path.join(SCHEMAS_DIR, `${id}.xml`), "utf8"));
+    assert.deepEqual([p.schema.id, p.schema.attributes.length, p.schema.attributes.reduce((n, a) => n + a.values.length, 0), p.problems], [id, attrs, vals, []], id);
+    assert.ok(!p.warnings.some((w) => /неекрановані лапки/.test(w)), id + ": лапки екрановано");
+  }
+  assert.deepEqual(attrOf("14200332", "Квадрат").values.slice(0, 2).map((v) => [v.nameRU, v.nameUK]), [['1/2"', '1/2"'], ['1/4"', '1/4"']]);
+  assert.equal(attrOf("14200504", "Діаметр вхідного штуцера").values.find((v) => v.id === "7025").nameUK, '1/2"');
+  assert.equal(attrOf("142001", "Крок ланцюга").values.find((v) => v.id === "310626").nameRU, '1/4"');
   // 13070703 «Будівельні та садові драбини» (26.10.2026) — окремо від 13070701 «Драбини»; варіант «Неопреновые» без UA-назви
   assert.equal(S("13070703").nameUK, "Будівельні та садові драбини");
   assert.equal(S("13070703").attributes.length, 12);
@@ -558,7 +566,7 @@ test("синоніми атрибутів (власник, 24.10.2026): №43–
 test("заборонені відповідності №47–50 ніколи не застосовуються — ні напряму, ні через словники / ланцюжки синонімів", () => {
   const forbidden = JSON.parse(fs.readFileSync(path.join(SCHEMAS_DIR, "synonyms.json"), "utf8")).forbidden;
   assert.deepEqual(forbidden, [["Вага брутто", "Вага"], ["Потужність", "Споживана потужність"], ["Вес без аккумулятора", "Вага"], ["Частота", "Частота струму"]]);
-  // У жодній із 66 категорій — не один ключ
+  // У жодній із 69 категорій — не один ключ
   for (const [id, schema] of catalog.schemas) for (const [x, y] of forbidden) {
     const opt = { mapping: catalog.mappings.get(id), names: catalog.names };
     assert.notEqual(charKey(schema, x, opt), charKey(schema, y, opt), `${id}: «${x}» = «${y}»`);
@@ -1594,9 +1602,16 @@ test("кілька чисел одного параметра (власник, 2
 });
 
 test("13070703 «Тип сходів» — варіанти не є словником перекладів (known-issues noLexicon, 26.10.2026): підтверджені пари інших категорій не зникають; поле категорії працює", () => {
-  const k = catalog.knownIssues.find((x) => x.action === "noLexicon");
+  const k = catalog.knownIssues.find((x) => x.action === "noLexicon" && x.categories.includes("13070703"));
   assert.deepEqual([k.categories, k.id], [["13070703"], "4962"]);
   const names = catalog.names;
+  // «Универсальная» → «Універсальна» (13070701 «Тип драбини») лишається — захист не зачіпає інші драбини
+  assert.equal(names.lex.get("универсальная"), "універсальна");
+  for (const id of ["4923", "4935"]) for (const o of S("13070701").attributes.find((a) => a.id === id).values) assert.equal(names.value.get(normValue(o.nameRU, names)), normValue(o.nameUK, names), `13070701 ${id}: ${o.nameRU}`);
+  // мовних дублів немає: UA і RU того самого значення в іншій категорії — одна характеристика
+  const tr = buildCharacteristics({ schema: S("1250321"), categoryId: "1250321", current: [], names, mapping: catalog.mappings.get("1250321"), units: catalog.units, mode: "queue", descUa: "<ul><li>Тип штанги: телескопічна</li><li>Телескопічна штанга: Так</li></ul>", descRu: "<ul><li>Тип штанги: телескопическая</li><li>Телескопическая штанга: Да</li></ul>" });
+  assert.deepEqual(tr.params.filter((p) => /штанг/i.test(p.name)).map((p) => p.name), ["Тип штанги", "Телескопічна штанга"]);
+  assert.deepEqual(tr.needsReview, []);
   // «Телескопическая» → «Телескопічна» (інші схеми) лишається; «Телескопічні» (13070703, множина) не підставляється
   assert.equal(names.value.get(normValue("Телескопическая", names)), normValue("Телескопічна", names));
   assert.equal(sameValueIn(["Тип штанги"], P("x", "телескопічна"), P("x", "телескопическая"), names, "1250321"), true);
@@ -1606,4 +1621,24 @@ test("13070703 «Тип сходів» — варіанти не є словни
   const r = buildCharacteristics({ schema: S("13070703"), categoryId: "13070703", current: [], names, mapping: catalog.mappings.get("13070703"), units: catalog.units, mode: "queue", rawParams: [P("Тип лестницы", "Телескопическая")] });
   assert.deepEqual(r.params, [P("Тип сходів", "Телескопічні")]);
   assert.deepEqual(importRisks({ params: r.params, provenance: r.provenance, categoryId: "13070703", knownIssues: catalog.knownIssues }), []);
+});
+
+test("142001 (відновлена схема, 26.10.2026): «Тип запчастини» і «Призначення інструменту» — не словник перекладів (noLexicon); поле категорії працює; пари інших категорій не зникають", () => {
+  const names = catalog.names;
+  const no = catalog.knownIssues.filter((x) => x.action === "noLexicon" && x.categories.includes("142001")).map((x) => x.id).sort();
+  assert.deepEqual(no, ["11250", "15323"]);
+  for (const [ru, ua] of [["выключатель", "вимикач"], ["поплавковый", "поплавковий"], ["масляной", "масляної"], ["сучкорез", "гілкоріз"]]) assert.equal(names.lex.get(ru), ua, ru);
+  assert.equal(names.value.get(normValue("Сучкорез", names)), normValue("Гілкоріз", names));
+  assert.deepEqual(validateValue(attrOf("142001", "Тип запчастини"), "Выключатель поплавковый", "", catalog.units), { value: "Поплавковий вимикач", unit: "" });
+  assert.deepEqual(validateValue(attrOf("142001", "Призначення інструменту"), "Сучкорез", "", catalog.units), { value: "Сучкоріз", unit: "" });
+  assert.match(validateValue(attrOf("142001", "Крок ланцюга"), '1/4"', "", catalog.units).reason, /без української назви/, "варіант без UA — поле не заповнюється");
+  const r = buildCharacteristics({ schema: S("142001"), categoryId: "142001", current: [], names, mapping: catalog.mappings.get("142001"), units: catalog.units, mode: "queue", rawParams: [P("Тип запчасти", "Выключатель поплавковый")] });
+  assert.deepEqual(importRisks({ params: r.params, provenance: r.provenance, categoryId: "142001", knownIssues: catalog.knownIssues }), []);
+});
+
+test("підпис розділу замість значення («Драбина трансформер: переваги») — не характеристика; таблиця не зачіпається", () => {
+  const D = (key, value, via = "p") => descriptionNonCharacteristic({ key, value, via });
+  for (const v of ["переваги", "Особливості", "преимущества", "особенности:", "Характеристики"]) assert.equal(D("Драбина трансформер", v).kind, "заголовок", v);
+  assert.equal(D("Особливості", "переваги", "table"), null);
+  assert.equal(D("Тип", "переваги та недоліки"), null, "не підпис розділу");
 });

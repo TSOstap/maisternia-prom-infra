@@ -332,12 +332,15 @@ const SERVICE_VALUE_RE = /(рекомендуємо|рекомендуем)\s+(�
 const WARNING_KEY_RE = /^(важливо|важно|увага|внимание|зверніть увагу|обратите внимание|примітка|примечание)( (пам'ятати|помнить))?( ?!.*)?$/i;
 const KIT_TEXT_RE = /акумулятор|аккумулятор|акб|батаре|зарядн|комплект|solo|соло/i;
 const LABEL_KEYS = new Set(["опис", "описание"]);
+const SECTION_VALUES = new Set(["переваги", "особливості", "преимущества", "особенности", "достоинства", "характеристики", "опис", "описание"]);
 export function descriptionNonCharacteristic(pr) {
   const key = htmlText(pr.key).trim(), value = htmlText(pr.value).trim(), nk = normName(key);
   if (SERVICE_KEY_RE.test(nk) || SERVICE_VALUE_RE.test(value)) return { kind: "службовий", why: "службовий / навігаційний текст магазину" };
   if (pr.via === "table") return null;
   if (WARNING_KEY_RE.test(nk)) return KIT_TEXT_RE.test(value) || /\d/.test(value) ? null : { kind: "попередження", why: "попередження / інструкція" };
   if (LABEL_KEYS.has(nk)) return { kind: "опис", why: "підпис «Опис» — назва товару, не характеристика" };
+  // Підпис розділу замість значення («Драбина трансформер: переваги», власник 26.10.2026) — не характеристика
+  if (SECTION_VALUES.has(normName(value).replace(/[.:;!]+$/, ""))) return { kind: "заголовок", why: "підпис розділу опису, не характеристика" };
   if (/\d/.test(value) || /\d/.test(key) || /комплект|в наборі|набір|наборе|сумісн|совместим/i.test(key) || KIT_TEXT_RE.test(value)) return null;
   const words = value.match(/[a-zа-яіїєґё'’]+/gi) || [];
   const segs = value.split(/\s*[,;/|]\s*/).filter(Boolean);

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200332" nameRU="Торцевые головки" nameUK="Торцеві головки">
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+<attribute_value id="69919" nameRU="торцевая головка" nameUK="Торцева голівка"/>
+<attribute_value id="69920" nameRU="удлинитель" nameUK="Подовжувач"/>
+<attribute_value id="69921" nameRU="набор торцевых головок" nameUK="набір торцевих головок"/>
+<attribute_value id="241557" nameRU="кардан" nameUK="кардан"/>
+<attribute_value id="241558" nameRU="переходник" nameUK="перехідник"/>
+<attribute_value id="329514" nameRU="Соеденитель" nameUK="З'єднувач"/>
+<attribute_value id="344483" nameRU="Шпилькокрут" nameUK="Шпилькокрут"/>
+</attribute>
+<attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1200" measureUnitUK="мм"/>
+<attribute id="7881" nameRU="Количество в наборе" type="integer" nameUK="Кількість в наборі" measureUnitRU="шт" min="0" max="1000" measureUnitUK="шт."/>
+<attribute id="8271" nameRU="Омедненный инструмент" type="bool" nameUK="Оміднений інструмент"/>
+<attribute id="8502" nameRU="Размер max" type="real" nameUK="Розмір max" measureUnitRU="мм" min="0" max="400" measureUnitUK="мм"/>
+<attribute id="8503" nameRU="Размер min" type="real" nameUK="Розмір min" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+<attribute id="8595" nameRU="Квадрат" type="singleselect" nameUK="Квадрат">
+<attribute_value id="69924" nameRU="1/2&quot;" nameUK="1/2&quot;"/>
+<attribute_value id="69925" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+<attribute_value id="69926" nameRU="3/4&quot;" nameUK="3/4&quot;"/>
+<attribute_value id="69927" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+<attribute_value id="220071" nameRU="1/4&quot;, 3/8&quot;, 1/2&quot;" nameUK="1/4&quot;, 3/8&quot;, 1/2&quot;"/>
+<attribute_value id="220072" nameRU="1/4&quot;, 1/2&quot;" nameUK="1/4&quot;, 1/2&quot;"/>
+<attribute_value id="220073" nameRU="1/4&quot;, 1/2&quot;, 3/8&quot;" nameUK="1/4&quot;, 1/2&quot;, 3/8&quot;"/>
+<attribute_value id="273099" nameRU="1&quot;" nameUK="1&quot;"/>
+<attribute_value id="277810" nameRU="3/8&quot;В - 1/4&quot;Н" nameUK="3/8&quot;В - 1/4&quot;Н"/>
+<attribute_value id="277811" nameRU="3/8&quot;Н - 1/2&quot;В" nameUK="3/8&quot;Н - 1/2&quot;В"/>
+<attribute_value id="277812" nameRU="1/2&quot;В - 3/8&quot;Н" nameUK="1/2&quot;В - 3/8&quot;Н"/>
+<attribute_value id="281728" nameRU="1/2&quot;Н - 3/8&quot;В" nameUK="1/2&quot;Н - 3/8&quot;У"/>
+<attribute_value id="281729" nameRU="3/8&quot;Н - 1/4&quot;В" nameUK="3/8&quot;Н - 1/4&quot;В"/>
+<attribute_value id="288809" nameRU="1-1/2&quot;" nameUK=""/>
+<attribute_value id="288810" nameRU="2-1/2&quot;" nameUK=""/>
+<attribute_value id="288836" nameRU="1&quot;В - 3/4&quot;Н" nameUK=""/>
+<attribute_value id="288837" nameRU="1/2&quot;В - 3/4&quot;Н" nameUK=""/>
+<attribute_value id="288838" nameRU="3/4&quot;В - 1&quot;Н" nameUK=""/>
+<attribute_value id="288839" nameRU="3/4&quot;В - 1/2&quot;Н" nameUK=""/>
+<attribute_value id="288840" nameRU="2-1/2&quot;В - 1-1/2&quot;Н" nameUK=""/>
+<attribute_value id="288894" nameRU="32 мм" nameUK=""/>
+<attribute_value id="288895" nameRU="40 мм" nameUK="40 мм"/>
+<attribute_value id="348772" nameRU="23" nameUK=""/>
+<attribute_value id="349608" nameRU="3/8В-1/2Н" nameUK=""/>
+<attribute_value id="349611" nameRU="1/4В-3/8Н" nameUK=""/>
+<attribute_value id="360318" nameRU="1-1/2&quot; В х 1&quot; Н" nameUK=""/>
+</attribute>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="17689" nameRU="Рабочий профиль" type="singleselect" nameUK="Робочий профіль">
+<attribute_value id="219956" nameRU="Шестигранник" nameUK="Шестигранник"/>
+<attribute_value id="219957" nameRU="Двенадцатигранник" nameUK="Дванадцятигранник"/>
+<attribute_value id="219958" nameRU="Квадрат" nameUK="Квадрат"/>
+<attribute_value id="219959" nameRU="Пятигранник" nameUK="Пятигранник"/>
+<attribute_value id="219960" nameRU="Звезда (Е-профиль)" nameUK="Зірка (Е-профіль)"/>
+<attribute_value id="219961" nameRU="Spline" nameUK="Spline"/>
+<attribute_value id="219962" nameRU="Surface" nameUK="Surface"/>
+<attribute_value id="233507" nameRU="Flank" nameUK="Flank"/>
+<attribute_value id="273195" nameRU="Восьмигранник" nameUK="Восьмигранник"/>
+<attribute_value id="294840" nameRU="Cпиpaльный" nameUK="Спіральний"/>
+<attribute_value id="340177" nameRU="Torx plus" nameUK=""/>
+<attribute_value id="347264" nameRU="EP" nameUK=""/>
+<attribute_value id="347265" nameRU="EPR" nameUK=""/>
+<attribute_value id="349571" nameRU="TS20" nameUK=""/>
+<attribute_value id="349956" nameRU="Torx" nameUK=""/>
+</attribute>
+<attribute id="19415" nameRU="Размер болта" type="multiselect" nameUK="Розмір болта">
+<attribute_value id="349581" nameRU="Е4" nameUK=""/>
+<attribute_value id="349582" nameRU="Е5" nameUK=""/>
+<attribute_value id="349583" nameRU="Е6" nameUK=""/>
+<attribute_value id="349584" nameRU="Е" nameUK=""/>
+<attribute_value id="349585" nameRU=", Е8" nameUK=""/>
+<attribute_value id="349586" nameRU="Е10" nameUK=""/>
+<attribute_value id="349587" nameRU="Е11" nameUK=""/>
+<attribute_value id="349588" nameRU="Е12" nameUK=""/>
+<attribute_value id="349589" nameRU="Е14" nameUK=""/>
+<attribute_value id="349590" nameRU="Е16" nameUK=""/>
+<attribute_value id="349591" nameRU="Е18" nameUK=""/>
+<attribute_value id="349592" nameRU="Е20" nameUK=""/>
+<attribute_value id="349593" nameRU="Е22" nameUK=""/>
+<attribute_value id="349594" nameRU="Е24" nameUK=""/>
+</attribute>
+<attribute id="19464" nameRU="Присоединительный профиль" type="singleselect" nameUK="Приєднувальний профіль">
+<attribute_value id="350834" nameRU="Квадрат" nameUK="Квадрат"/>
+<attribute_value id="350835" nameRU="Шестигранник" nameUK="Шестигранник"/>
+<attribute_value id="350836" nameRU="Отверстие" nameUK="Отвір"/>
+<attribute_value id="350837" nameRU="Spline" nameUK=""/>
+<attribute_value id="350838" nameRU="SDS-Plus" nameUK=""/>
+<attribute_value id="350839" nameRU="SDS-Max" nameUK=""/>
+</attribute>
+</category>
+</categories>

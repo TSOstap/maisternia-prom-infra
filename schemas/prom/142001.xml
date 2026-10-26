@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142001" nameRU="Комплектующие и запчасти для инструмента" nameUK="Комплектуючі та запчастини для інструменту">
+<attribute id="80" nameRU="Длина шины" type="real" nameUK="Довжина шини" measureUnitRU="дюймов" min="0" max="100" measureUnitUK="дюймів"/>
+<attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="20" measureUnitUK="А. г"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+<attribute_value id="8057" nameRU="Пластик" nameUK="Пластик"/>
+<attribute_value id="8059" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="31381" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+<attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+<attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+<attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+</attribute>
+<attribute id="845" nameRU="Внутренний диаметр" type="real" nameUK="Внутрішній діаметр" measureUnitRU="мм" min="0" max="120" measureUnitUK="мм"/>
+<attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="220" measureUnitUK="В"/>
+<attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+<attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+<attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+<attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+<attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+<attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+<attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+<attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+</attribute>
+<attribute id="5444" nameRU="Диаметр вала" type="integer" nameUK="Діаметр вала" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+<attribute id="6350" nameRU="Количество в комплекте" type="integer" nameUK="Кількість в комплекті" measureUnitRU="шт" min="0" max="50" measureUnitUK="шт."/>
+<attribute id="7140" nameRU="Наружный диаметр" type="real" nameUK="Зовнішній діаметр" measureUnitRU="мм" min="0" max="150" measureUnitUK="мм"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+<attribute id="11250" nameRU="Тип запчасти" type="singleselect" nameUK="Тип запчастини">
+<attribute_value id="164290" nameRU="Статор" nameUK="Статор"/>
+<attribute_value id="164291" nameRU="Стартер" nameUK="Стартер"/>
+<attribute_value id="164292" nameRU="Кривошипно-шатунный механизм" nameUK="Кривошипно-шатунний механізм"/>
+<attribute_value id="164293" nameRU="Cобачка" nameUK="Собачка"/>
+<attribute_value id="164297" nameRU="Свеча" nameUK="Свічка"/>
+<attribute_value id="164298" nameRU="Зажигание" nameUK="Запалювання"/>
+<attribute_value id="164299" nameRU="Прокладка" nameUK="Прокладка"/>
+<attribute_value id="164300" nameRU="Звездочка" nameUK="Зірочка"/>
+<attribute_value id="164301" nameRU="Шестерня" nameUK="Шестерня"/>
+<attribute_value id="164302" nameRU="Подшипник" nameUK="Підшипник"/>
+<attribute_value id="164303" nameRU="Тарелка" nameUK="Тарілка"/>
+<attribute_value id="164305" nameRU="Чашка" nameUK="Чашка"/>
+<attribute_value id="164306" nameRU="Якорь" nameUK="Якір"/>
+<attribute_value id="164307" nameRU="Щетка" nameUK="Щітка"/>
+<attribute_value id="164309" nameRU="Втулка" nameUK="Втулка"/>
+<attribute_value id="164310" nameRU="Патрон" nameUK="Патрон"/>
+<attribute_value id="164311" nameRU="Сцепление" nameUK="Зчеплення"/>
+<attribute_value id="164312" nameRU="Маслонасос" nameUK="Маслонасос"/>
+<attribute_value id="164316" nameRU="Корпус" nameUK="Корпус"/>
+<attribute_value id="164317" nameRU="Шина" nameUK="Шина"/>
+<attribute_value id="164318" nameRU="Масляной датчик" nameUK="Масляний датчик"/>
+<attribute_value id="164319" nameRU="Замок зажигания" nameUK="Замок запалювання"/>
+<attribute_value id="164320" nameRU="Амортизатор" nameUK="Амортизатор"/>
+<attribute_value id="164322" nameRU="Карбюратор" nameUK="Карбюратор"/>
+<attribute_value id="164323" nameRU="Компрессионное кольцо" nameUK="Компресійне кільце"/>
+<attribute_value id="164324" nameRU="Конденсатор" nameUK="Конденсатор"/>
+<attribute_value id="164325" nameRU="Пара" nameUK="Пара"/>
+<attribute_value id="164326" nameRU="Ремень" nameUK="Ремінь"/>
+<attribute_value id="164327" nameRU="Ротор" nameUK="Ротор"/>
+<attribute_value id="164328" nameRU="Вал" nameUK="Вал"/>
+<attribute_value id="164330" nameRU="Коленвал" nameUK="Колінвал"/>
+<attribute_value id="164331" nameRU="Маховик" nameUK="Маховик"/>
+<attribute_value id="164332" nameRU="Гайка" nameUK="Гайка"/>
+<attribute_value id="164333" nameRU="Голова" nameUK="Голова"/>
+<attribute_value id="164334" nameRU="Блочок" nameUK="Блочок"/>
+<attribute_value id="164335" nameRU="Подушка" nameUK="Подушка"/>
+<attribute_value id="164336" nameRU="Поршень" nameUK="Поршень"/>
+<attribute_value id="164337" nameRU="Кольцо" nameUK="Кільце"/>
+<attribute_value id="164338" nameRU="Шатун" nameUK="Шатун"/>
+<attribute_value id="164339" nameRU="Щеткодержатель" nameUK="Щіткотримач"/>
+<attribute_value id="164340" nameRU="Ключ" nameUK="Ключ"/>
+<attribute_value id="164341" nameRU="Кнопка" nameUK="Кнопка"/>
+<attribute_value id="164342" nameRU="Автоматика" nameUK="Автоматика"/>
+<attribute_value id="164343" nameRU="Плавный пуск" nameUK="Плавний пуск"/>
+<attribute_value id="164344" nameRU="Регулятор оборотов" nameUK="Регулятор обертів"/>
+<attribute_value id="164345" nameRU="Головка цилиндра" nameUK="Головка циліндра"/>
+<attribute_value id="184319" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+<attribute_value id="218154" nameRU="Фильтр" nameUK="Фільтр"/>
+<attribute_value id="266028" nameRU="Шкив для культиватора" nameUK="Шків для культиватора"/>
+<attribute_value id="266029" nameRU="Шкив для мотоблока " nameUK="Шків для мотоблока"/>
+<attribute_value id="268550" nameRU="Термоэлемент" nameUK="Термоелемент"/>
+<attribute_value id="274912" nameRU="Редуктор" nameUK="Редуктор"/>
+<attribute_value id="275089" nameRU="Бачок" nameUK="Бачок"/>
+<attribute_value id="275584" nameRU="Лубрикатор" nameUK="Лубрикатор"/>
+<attribute_value id="275586" nameRU="Колесо режущее" nameUK="Колесо ріжуче"/>
+<attribute_value id="275675" nameRU="Минимасленка" nameUK="Минимасленка"/>
+<attribute_value id="275693" nameRU="Комплект форсунки" nameUK="Комплект форсунки"/>
+<attribute_value id="276742" nameRU="Переходник" nameUK="Перехідник"/>
+<attribute_value id="277857" nameRU="Наконечник к пистолету" nameUK="Наконечник до пістолета"/>
+<attribute_value id="277860" nameRU="Шланг" nameUK="Шланг"/>
+<attribute_value id="279270" nameRU="Клапан предохранительный" nameUK="Клапан запобіжний"/>
+<attribute_value id="279271" nameRU="Регулятор давления" nameUK="Регулятор тиску"/>
+<attribute_value id="279355" nameRU="Форсунка" nameUK="Форсунка"/>
+<attribute_value id="281388" nameRU="Минифильтр" nameUK="Мініфільтр"/>
+<attribute_value id="282240" nameRU="Выключатель поплавковый" nameUK="Поплавковий вимикач"/>
+<attribute_value id="282447" nameRU="Клапан обратный" nameUK="Клапан зворотний"/>
+<attribute_value id="282506" nameRU="Насадка-культиватор" nameUK="Насадка-культиватор"/>
+<attribute_value id="283458" nameRU="Зарядное устройство" nameUK="Зарядний пристрій"/>
+<attribute_value id="285521" nameRU="Насадка-заклепочник" nameUK="Насадка-заклепочник"/>
+<attribute_value id="288528" nameRU="Мотор" nameUK="Мотор"/>
+<attribute_value id="288974" nameRU="Шпиндель" nameUK="Шпіндель"/>
+<attribute_value id="288975" nameRU="Винт" nameUK="Гвинт"/>
+<attribute_value id="288976" nameRU="Кулачки ударного механизма" nameUK="Кулачки ударного механізму"/>
+<attribute_value id="288977" nameRU="Лопатка ротора" nameUK="Лопатка ротора"/>
+<attribute_value id="289003" nameRU="Цанга" nameUK="Цанга"/>
+<attribute_value id="293604" nameRU="Пружина" nameUK="Пружина"/>
+<attribute_value id="295672" nameRU="Лезвие" nameUK="Лезо"/>
+<attribute_value id="295678" nameRU="Рукоять" nameUK="Руківʼя"/>
+<attribute_value id="298693" nameRU="Болт" nameUK="Болт"/>
+<attribute_value id="300164" nameRU="Насадка-ножницы" nameUK=" Насадка-ножиці"/>
+<attribute_value id="300884" nameRU="Ремкомплект" nameUK="Ремкомплект"/>
+<attribute_value id="300894" nameRU="Струна" nameUK="Струна"/>
+<attribute_value id="308097" nameRU="Диск" nameUK="Диск"/>
+<attribute_value id="310257" nameRU="Насадка" nameUK="Насадка"/>
+<attribute_value id="311078" nameRU="Цепь" nameUK="Ланцюг"/>
+<attribute_value id="313633" nameRU="Контрлезвие" nameUK="Контрлезо"/>
+<attribute_value id="320666" nameRU="Поршневая группа" nameUK="Поршнева група"/>
+<attribute_value id="320837" nameRU="Сальник" nameUK="Сальник"/>
+<attribute_value id="322114" nameRU="Тяга" nameUK="Тяга"/>
+<attribute_value id="329456" nameRU="Подставка" nameUK="Підставка"/>
+<attribute_value id="330482" nameRU="Шайба" nameUK="Шайба"/>
+<attribute_value id="341616" nameRU="Ручка" nameUK="Ручка"/>
+<attribute_value id="344311" nameRU="Стопорное кольцо" nameUK="Стопорне кільце"/>
+</attribute>
+<attribute id="11865" nameRU="Количество звеньев" type="real" nameUK="Кількість ланок"/>
+<attribute id="12646" nameRU="Тип запуска" type="singleselect" nameUK="Тип запуску">
+<attribute_value id="174964" nameRU="Ручной" nameUK="Ручний"/>
+<attribute_value id="174965" nameRU="Электростартер" nameUK="Електростартер"/>
+</attribute>
+<attribute id="14982" nameRU="Количество зубцов" type="integer" nameUK="Кількість зубців"/>
+<attribute id="15323" nameRU="Назначение инструмента" type="multiselect" nameUK="Призначення інструменту">
+<attribute_value id="164347" nameRU="Бензопила" nameUK="Бензопила"/>
+<attribute_value id="164348" nameRU="Электропила" nameUK="Електропила"/>
+<attribute_value id="164349" nameRU="Шлифовальная машина" nameUK="Шліфувальна машина"/>
+<attribute_value id="164350" nameRU="Дрель" nameUK="Дриль"/>
+<attribute_value id="164351" nameRU="Компрессор" nameUK="Компресор"/>
+<attribute_value id="164352" nameRU="Лобзик" nameUK="Лобзик"/>
+<attribute_value id="164353" nameRU="Отбойный молоток" nameUK="Відбійний молоток"/>
+<attribute_value id="164354" nameRU="Перфоратор" nameUK="Перфоратор"/>
+<attribute_value id="164355" nameRU="Мотокоса/Триммер" nameUK="Мотокоса/Тример"/>
+<attribute_value id="164356" nameRU="Шуруповерт" nameUK="Шуруповерт"/>
+<attribute_value id="164357" nameRU="Фен" nameUK="Фен"/>
+<attribute_value id="164358" nameRU="Рубанок" nameUK="Рубанок"/>
+<attribute_value id="164359" nameRU="Гайковерт" nameUK="Гайковерт"/>
+<attribute_value id="164360" nameRU="Штроборез" nameUK="Штроборез"/>
+<attribute_value id="218156" nameRU="Краскопульт" nameUK="Фарбопульт"/>
+<attribute_value id="220312" nameRU="Генератор" nameUK="Генератор"/>
+<attribute_value id="220313" nameRU="Воздуходувка" nameUK="Повітродувка"/>
+<attribute_value id="220314" nameRU="Гравер" nameUK="Гравер"/>
+<attribute_value id="220315" nameRU="Вибратор" nameUK="Вібратор"/>
+<attribute_value id="220316" nameRU="Дисковая пила" nameUK="Дискова пила"/>
+<attribute_value id="220317" nameRU="Торцовочная пила" nameUK="Торцювальна пила"/>
+<attribute_value id="220318" nameRU="Рейсмус" nameUK="Рейсмус"/>
+<attribute_value id="220319" nameRU="Фрезер" nameUK="Фрезер"/>
+<attribute_value id="275585" nameRU="Плиткорез" nameUK="Плиткоріз"/>
+<attribute_value id="277858" nameRU="Пневматические пистолеты" nameUK="Пневматичні пістолети"/>
+<attribute_value id="282241" nameRU="Насос" nameUK="Насос"/>
+<attribute_value id="293015" nameRU="Ножницы" nameUK="Ножиці"/>
+<attribute_value id="293016" nameRU="Пила" nameUK=""/>
+<attribute_value id="293017" nameRU="Сучкорез" nameUK="Сучкоріз"/>
+<attribute_value id="293018" nameRU="Секатор" nameUK=""/>
+<attribute_value id="300891" nameRU="Аэрозольный баллон" nameUK="Аерозольний балон"/>
+<attribute_value id="300893" nameRU="Монтажный пистолет" nameUK="Монтажний пістолет"/>
+<attribute_value id="310684" nameRU="Болгарка" nameUK="Болгарка"/>
+<attribute_value id="322115" nameRU="Высоторез" nameUK="Висоторіз"/>
+<attribute_value id="332657" nameRU="Для заточки сверл" nameUK="Для заточування свердел"/>
+</attribute>
+<attribute id="15324" nameRU="Вид привода инструмента" type="multiselect" nameUK="Вид приводу інструменту">
+<attribute_value id="164366" nameRU="Электрический" nameUK="Електричний"/>
+<attribute_value id="164367" nameRU="Пневматический" nameUK="Пневматичний"/>
+<attribute_value id="164368" nameRU="Гидравлический" nameUK="Гідравлічний"/>
+<attribute_value id="164369" nameRU="ДВС" nameUK="ДВС"/>
+<attribute_value id="300892" nameRU="Механический" nameUK="Механічний"/>
+</attribute>
+<attribute id="18174" nameRU="Ширина для цепи" type="singleselect" nameUK="Ширина для ланцюга">
+<attribute_value id="250414" nameRU="1,3 мм" nameUK="1,3 мм"/>
+<attribute_value id="250415" nameRU="1,5 мм" nameUK="1,5 мм"/>
+<attribute_value id="250416" nameRU="1,6 мм" nameUK="1,6 мм"/>
+<attribute_value id="310625" nameRU="1,1 мм" nameUK=""/>
+<attribute_value id="312560" nameRU="1 мм" nameUK="1 мм"/>
+</attribute>
+<attribute id="18175" nameRU="Шаг для цепи" type="singleselect" nameUK="Крок ланцюга">
+<attribute_value id="250417" nameRU="0,325''" nameUK="0,325''"/>
+<attribute_value id="250418" nameRU="3/8''" nameUK="3/8''"/>
+<attribute_value id="310626" nameRU="1/4&quot;" nameUK=""/>
+<attribute_value id="310627" nameRU="0,404&quot;" nameUK=""/>
+</attribute>
+</category>
+</categories>
