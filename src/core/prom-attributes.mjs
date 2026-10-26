@@ -181,6 +181,7 @@ const optionName = (o) => o.nameUK || o.nameRU;
 // йде користувацькою (оригінал). Після перевіреного офіційного зіставлення значення можна буде перенести в поле.
 const noUK = (o) => !String(o?.nameUK ?? "").trim();
 const NO_UK_OPTION = "варіант схеми Prom без української назви — поле не заповнюється";
+const XML_DESC_DIFF = "XML і опис постачальника різні — передано XML (інформаційно)";
 export const MULTI_SEPARATOR = " | ";
 
 /** Значення під тип атрибута. { value, unit } або { reason }.
@@ -288,7 +289,8 @@ const HEADER_KEYS = new Set(["характеристика", "характери
 const HEADER_VALUES = new Set(["значення", "значение", "опис", "описание"]);
 const KV_RE = /^([A-ZА-ЯІЇЄҐ][^:]{0,60}?)\s*:\s*(\S.{0,200})$/u;
 /** Пари «назва — значення» з опису: рядки таблиць із двома клітинками; абзаци, пункти списку й рядки (між <br>
- *  або переносами) виду «Назва: значення». Кожна пара — з точними межами фрагмента (start, end) для очищення. */
+ *  або переносами) виду «Назва: значення». Кожна пара — з точними межами фрагмента (start, end) для очищення
+ *  і місцем в описі (via: "table" — рядок таблиці, "list" — пункт списку, "p" — абзац, "text" — рядок тексту). */
 export function descriptionPairs(html) {
   const s = mtText(html);
   const out = [];
@@ -297,9 +299,9 @@ export function descriptionPairs(html) {
   for (const m of s.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)) {
     const cells = [...m[1].matchAll(/<t([dh])\b[^>]*>([\s\S]*?)<\/t\1>/gi)].map((c) => textOf(c[2]));
     if (cells.length === 2 && HEADER_KEYS.has(normName(cells[0])) && HEADER_VALUES.has(normName(cells[1]))) continue; // заголовок таблиці
-    if (cells.length === 2 && cells[0] && cells[1]) out.push({ key: cells[0].replace(/[:\s]+$/, ""), value: cells[1], start: m.index, end: m.index + m[0].length });
+    if (cells.length === 2 && cells[0] && cells[1]) out.push({ key: cells[0].replace(/[:\s]+$/, ""), value: cells[1], start: m.index, end: m.index + m[0].length, via: "table" });
   }
-  const segments = (from, inner) => {
+  const segments = (from, inner, via) => {
     // Рядки між <br> / переносами всередині елемента.
     const parts = [];
     const re = /<br\s*\/?>|\r?\n/gi;
@@ -308,17 +310,40 @@ export function descriptionPairs(html) {
     parts.push([last, inner.length, inner.length]);
     for (const [a, b, sepEnd] of parts) {
       const kv = KV_RE.exec(textOf(inner.slice(a, b)));
-      if (kv && !(HEADER_KEYS.has(normName(kv[1])) && HEADER_VALUES.has(normName(kv[2])))) out.push({ key: kv[1].trim(), value: kv[2].trim(), start: from + a, end: from + (sepEnd > b ? sepEnd : b) });
+      if (kv && !(HEADER_KEYS.has(normName(kv[1])) && HEADER_VALUES.has(normName(kv[2])))) out.push({ key: kv[1].trim(), value: kv[2].trim(), start: from + a, end: from + (sepEnd > b ? sepEnd : b), via });
     }
   };
   const blocks = [...s.matchAll(/<(p|li)\b[^>]*>([\s\S]*?)<\/\1>/gi)].filter((m) => !inTable(m.index));
   for (const m of blocks) {
-    const inner = m[2];
-    if (/<br\s*\/?>|\n/i.test(inner)) segments(m.index + m[0].indexOf(inner, m[0].indexOf(">") + 1), inner);
-    else { const kv = KV_RE.exec(textOf(inner)); if (kv && !(HEADER_KEYS.has(normName(kv[1])) && HEADER_VALUES.has(normName(kv[2])))) out.push({ key: kv[1].trim(), value: kv[2].trim(), start: m.index, end: m.index + m[0].length }); }
+    const inner = m[2], via = m[1].toLowerCase() === "li" ? "list" : "p";
+    if (/<br\s*\/?>|\n/i.test(inner)) segments(m.index + m[0].indexOf(inner, m[0].indexOf(">") + 1), inner, via);
+    else { const kv = KV_RE.exec(textOf(inner)); if (kv && !(HEADER_KEYS.has(normName(kv[1])) && HEADER_VALUES.has(normName(kv[2])))) out.push({ key: kv[1].trim(), value: kv[2].trim(), start: m.index, end: m.index + m[0].length, via }); }
   }
-  if (!/<[a-z][^>]*>/i.test(s)) segments(0, s); // опис без розмітки — рядки тексту
+  if (!/<[a-z][^>]*>/i.test(s)) segments(0, s, "text"); // опис без розмітки — рядки тексту
   return out.sort((a, b) => a.start - b.start);
+}
+
+/** Запис опису виду «Назва: текст», який НЕ є характеристикою (власник, 26.10.2026: характеристики — лише структуровані
+ *  пари з блоку характеристик; пояснення, переваги, реклама, службовий текст, інструкції й попередження лишаються лише в
+ *  описі). Повертає { kind, why } або null. Лише однозначні випадки; неоднозначні (числа, перелік, комплектація) — null,
+ *  тобто передаються як раніше. Опис не змінюється; таблиці характеристик — лише службовий текст. */
+const SERVICE_KEY_RE = /^((також|также) )?(рекомендуємо|рекомендуем)(?= |$)|^(купити|купіть|купуйте|купить|купите)(?= |$)|^(обмін|обмен) (і|та|й|и|или|або) (повернення|возврат)|^(повернення|возврат) товар|^(доставка|оплата)( (і|и) (оплата|доставка))?$/i;
+const SERVICE_VALUE_RE = /(рекомендуємо|рекомендуем)\s+(переглянути|посмотреть|ознакомиться)|доступн[іы]\s+для\s+(замовлення|заказа)/i;
+const WARNING_KEY_RE = /^(важливо|важно|увага|внимание|зверніть увагу|обратите внимание|примітка|примечание)( (пам'ятати|помнить))?( ?!.*)?$/i;
+const KIT_TEXT_RE = /акумулятор|аккумулятор|акб|батаре|зарядн|комплект|solo|соло/i;
+const LABEL_KEYS = new Set(["опис", "описание"]);
+export function descriptionNonCharacteristic(pr) {
+  const key = htmlText(pr.key).trim(), value = htmlText(pr.value).trim(), nk = normName(key);
+  if (SERVICE_KEY_RE.test(nk) || SERVICE_VALUE_RE.test(value)) return { kind: "службовий", why: "службовий / навігаційний текст магазину" };
+  if (pr.via === "table") return null;
+  if (WARNING_KEY_RE.test(nk)) return KIT_TEXT_RE.test(value) || /\d/.test(value) ? null : { kind: "попередження", why: "попередження / інструкція" };
+  if (LABEL_KEYS.has(nk)) return { kind: "опис", why: "підпис «Опис» — назва товару, не характеристика" };
+  if (/\d/.test(value) || /\d/.test(key) || /комплект|в наборі|набір|наборе|сумісн|совместим/i.test(key) || KIT_TEXT_RE.test(value)) return null;
+  const words = value.match(/[a-zа-яіїєґё'’]+/gi) || [];
+  const segs = value.split(/\s*[,;/|]\s*/).filter(Boolean);
+  if (segs.length >= 3 && words.length / segs.length <= 3.5) return null; // перелік, не речення
+  if ((words.length >= 8 && /[.!?…]$/.test(value)) || words.length >= 12) return { kind: "речення", why: "пояснювальне / рекламне речення без технічних даних" };
+  return null;
 }
 
 /** Прибрати фрагменти (лише перенесені пари) з сирої копії опису; порожні таблиці теж прибираються. */
@@ -713,7 +738,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
   const notes = [];
-  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], warranty: null, uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [], lexDiff: [] }, lexMerged: [], aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [], emptyDesc: [], timeFixed: [] };
+  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], warranty: null, uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [], lexDiff: [] }, lexMerged: [], aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [], emptyDesc: [], descText: [], timeFixed: [] };
   if (!schema && mode === "main") { notes.push(`немає схеми категорії ${categoryId || "?"} — підготовлені характеристики не змінено`); return unchanged; }
   const opt = { mapping, units };
   const kit = schema ? kitInfo({ titles, texts: kitTexts(descUa, descRu) }) : null; // підтверджена комплектація (явні фрази постачальника)
@@ -736,7 +761,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const review = (name, values, reason) => needsReview.push({ name, values, reason, kind: /інформаційно/.test(reason) ? "інформаційно" : /можливо, лише переклад/.test(reason) ? "переклад?" : /не визначити/.test(reason) ? "слова різні" : "конфлікт" });
   const hint = (a, b) => { const ta = tokens(a), tb = tokens(b); return ta !== tb ? "" : ta ? " (числа й латиниця однакові — можливо, лише переклад)" : " (без чисел і латиниці — переклад чи інший зміст, не визначити)"; };
   let uaRuMerged = 0; // та сама характеристика в UA- і RU-описі з однаковим значенням → одна
-  const aligned = [], gapProps = [], valueProps = [], ruOnly = [], warrantyDesc = [], lexMerged = [], lexDiff = [], emptyDesc = []; // вирівняні пари UA/RU; пропозиції словника; лише RU
+  const aligned = [], gapProps = [], valueProps = [], ruOnly = [], warrantyDesc = [], lexMerged = [], lexDiff = [], emptyDesc = [], descText = []; // вирівняні пари UA/RU; пропозиції словника; лише RU
   const extras = new Map(); // ключ → { out, src, from, blocked, why }
   const extra = (key, out, src, from, more = {}) => {
     if (!key) return;
@@ -752,7 +777,11 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       return;
     }
     if (isBrandName(key) ? brandEq(prev.out.value, out.value) : sameValue(prev.out, out, names)) return; // та сама характеристика ще раз
-    if (prev.src === SRC.RAW && src === SRC.DESC) { conflicts.push(`опис суперечить XML для «${prev.out.name}» — взято XML`); return; }
+    if (prev.src === SRC.RAW && src === SRC.DESC) {
+      conflicts.push(`опис суперечить XML для «${prev.out.name}» — взято XML`);
+      review(prev.out.name, [{ src: "XML", value: fmt(prev.out) }, { src: `опис${more.lang ? " " + more.lang.toUpperCase() : ""}`, value: fmt(out) }], XML_DESC_DIFF + hint(prev.out.value, out.value));
+      return;
+    }
     review(prev.out.name, [{ src: "XML", value: fmt(prev.out) }, { src: "XML", value: fmt(out) }], "постачальник передав різні значення");
     prev.blocked = true; prev.why = "ПОТРЕБУЄ ПЕРЕВІРКИ: постачальник передав різні значення";
   };
@@ -791,12 +820,26 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       }
       // Значення без змісту (лише невидимі символи напрямку тексту: «&lrm;&lrm») — на вітрину не передається; оригінал — у сирому описі.
       if (!cleanValue(pr.value)) { notes.push(`опис ${lang.toUpperCase()}: «${pr.key}» — значення без змісту (лише невидимі символи), не передається`); emptyDesc.push({ lang, key: pr.key, value: pr.value }); continue; }
-      const one = { lang, ...pr, m: mapParam(schema, { name: pr.key, value: cleanValue(pr.value), unit: "" }, opt) };
+      // Не характеристика (пояснення, реклама, службовий текст, попередження) — лишається лише в описі (власник, 26.10.2026).
+      const nc = descriptionNonCharacteristic(pr);
+      if (nc && nc.kind !== "речення") { descText.push({ lang, key: pr.key, value: cleanValue(pr.value), via: pr.via, kind: nc.kind, why: nc.why, start: pr.start }); continue; }
+      const one = { lang, ...pr, m: mapParam(schema, { name: pr.key, value: cleanValue(pr.value), unit: "" }, opt), ...(nc ? { nc } : {}) };
       // Гарантійний термін — лише зі структурованих характеристик (XML, підготовлені, ручні), НЕ з тексту опису
       // (власник, 24.10.2026). Пара з опису не заповнює й не створює гарантію; розбіжність — лише інформаційно.
       if (isWarrantyName(one.m.attr ? one.m.attr.nameUK || one.m.attr.nameRU : nameOf(pr.key)) || isWarrantyName(pr.key)) { warrantyDesc.push(one); continue; }
       pairs.push(one);
     }
+    // Речення лишається поза характеристиками, лише якщо поруч немає однойменного запису поза таблицею (будь-якою мовою):
+    // інакше (список переваг, у якому речення і короткий текст під тією самою назвою; UA — речення, RU — ні) — як раніше.
+    const ncKey = (pr) => normName(pr.m.blocked ? pr.m.blocked.customName : pr.m.attr ? pr.m.attr.nameUK || pr.m.attr.nameRU : nameOf(pr.key));
+    const plainKeys = new Set(pairs.filter((pr) => !pr.nc && pr.via !== "table").map(ncKey));
+    for (let i = pairs.length - 1; i >= 0; i--) {
+      const pr = pairs[i];
+      if (!pr.nc || plainKeys.has(ncKey(pr))) continue;
+      descText.push({ lang: pr.lang, key: pr.key, value: cleanValue(pr.value), via: pr.via, kind: pr.nc.kind, why: pr.nc.why, start: pr.start });
+      pairs.splice(i, 1);
+    }
+    descText.sort((a, b) => (a.lang === b.lang ? a.start - b.start : a.lang === "ua" ? -1 : 1));
     const label = (pr) => ({ src: `опис ${pr.lang.toUpperCase()}`, value: `${pr.key}: ${pr.value}` });
     // 1а-0. Фізична сумісність одиниць (власник, 24.10.2026, «50 GHz» у GTM ZJ5132): поле з XML і пара опису того самого
     // атрибута з ТИМ САМИМ числом, але одиницями однієї величини різного масштабу («50 GHz» ↔ «50 Гц», «50 мм» ↔ «50 см»), —
@@ -821,6 +864,9 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       if (x && x.src === SRC.XML) {
         for (const pr of list) if (itemKey(x.out) === itemKey(pr.m.out)) x.frags[pr.lang].push([pr.start, pr.end]);
         else conflicts.push(`опис суперечить XML для «${pr.m.out.name}» — взято XML`);
+        // Розбіжність XML і опису не приховується (власник, 26.10.2026): передається XML, обидва оригінали — інформаційно.
+        const diff = list.filter((pr) => itemKey(x.out) !== itemKey(pr.m.out));
+        if (diff.length) review(x.out.name, [{ src: "XML", value: fmt(x.out) }, ...diff.map(label)], XML_DESC_DIFF + hint(x.out.value, diff[0].m.out.value));
         continue;
       }
       if (ambiguous.has(a)) continue;
@@ -1010,7 +1056,8 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       // Конфлікт значень (власник, 25.10.2026): нічого не вибираємо, але й наявне підготовлене значення картки не прибираємо —
       // ключ «утримується» (наявний запис лишається в підсумку; нового значення до рішення немає). Синхронізацію не блокує.
       const hold = (why) => { if (!extras.has(key)) extras.set(key, { out: (u[0] || r[0]).out, src: SRC.DESC, from: "", blocked: true, held: true, why }); };
-      if (u.length > 1 || r.length > 1) {
+      // only — рішення власника для товару діє й тоді, коли описове речення вже не є характеристикою (один запис у кожній мові).
+      if (u.length > 1 || r.length > 1 || (owned(key) && specOf(key).only)) {
         const mv = multiValues(key, u, r);
         if (mv?.ok) {
           if (mv.twin) consumed.add(mv.twin);
@@ -1309,11 +1356,12 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   // як користувацькі — позначаємо для контрольованого імпорту.
   const customAttrNames = schema ? result.filter((p, i) => !items[i].a && attrOf(p.name)).map(fmt) : [];
   const conflictsU = [...new Set(conflicts)]; // те саме з UA- і RU-опису — один раз
+  if (descText.length) notes.push(`опис: ${descText.length} записів «назва: текст» не є характеристиками (${[...new Set(descText.map((x) => x.kind))].join(", ")}) — лишаються лише в описі`);
   if (overflow.length) notes.push(`не додано через ліміти Prom: ${overflow.length}`);
   const reviewNotes = needsReview.map((r) => `ПОТРЕБУЄ ПЕРЕВІРКИ «${r.name}»: ${r.values.map((v) => `${v.src} «${v.value}»`).join(" / ")} — ${r.reason}`);
   const provenanceOut = { v: 1, cat: String(categoryId || ""), items, x: [...suppressed], notes: [...reviewNotes, ...conflictsU, ...notes].slice(0, 30) };
   return {
-    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, warranty, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps, lexDiff }, lexMerged, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped, emptyDesc, timeFixed: [...timeFixed.values()],
+    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, warranty, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps, lexDiff }, lexMerged, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped, emptyDesc, descText, timeFixed: [...timeFixed.values()],
     changed: JSON.stringify(result) !== JSON.stringify(cur),
   };
 }
@@ -1334,7 +1382,7 @@ export function importRisks({ params = [], provenance = null, categoryId = "", k
   const items = provenance?.items || [];
   params.forEach((p, i) => {
     const a = items[i]?.a || "";
-    for (const k of knownIssues) if (a && String(k.id) === String(a) && (k.categories || []).map(String).includes(String(categoryId))) out.push({ kind: "вада довідника Prom", param: `${p.name}: ${p.value}${p.unit ? " " + p.unit : ""}`, issue: k.issue });
+    for (const k of knownIssues) if (a && k.action !== "noLexicon" && String(k.id) === String(a) && (k.categories || []).map(String).includes(String(categoryId))) out.push({ kind: "вада довідника Prom", param: `${p.name}: ${p.value}${p.unit ? " " + p.unit : ""}`, issue: k.issue });
     const ru = /[ыэъё]/i.test(p.name) || (!/[іїєґ]/i.test(p.name) && /(^|[\s(])(время|работы|нагрузк|питани|мощност|количеств|длина|вес)/i.test(p.name));
     if (!a && ru && /\d\s*(ч|час|часа|часов|год)(?![a-zа-яіїєґё])/i.test(htmlText(p.value))) out.push({ kind: "ризик автоперекладу Prom", param: `${p.name}: ${p.value}`, issue: "російська користувацька з «ч/год» — Prom може перекласти як «рік/років»" });
   });

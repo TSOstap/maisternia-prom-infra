@@ -32,7 +32,7 @@ export function auditSchemaUnits(schemas, units, knownIssues = []) {
     const unit = a.unitUK || a.unitRU || nameUnit(a);
     if (!unit) continue;
     const sc = scale(unit), exp = expectedDim(a.nameUK || a.nameRU);
-    const known = knownIssues.some((k) => String(k.id) === String(a.id) && (k.categories || []).map(String).includes(String(s.id)));
+    const known = knownIssues.some((k) => k.action !== "noLexicon" && String(k.id) === String(a.id) && (k.categories || []).map(String).includes(String(s.id)));
     let finding = "";
     if (exp && sc && sc.dim !== exp) finding = "інша величина";
     else if (exp === "частота" && sc && sc.f >= 1e3) finding = "масштаб частоти";

@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { categoryBlocks, parseSchemaText } from "../src/core/prom-schema.mjs";
-import { SRC, alignPairs, brandEq, dimEqMm, latinOriginal, isBatteryTypeName, itemsCompatible, normName, normValue, buildCharacteristics, buildNames, charKey, cleanDescription, cleanValue, descriptionPairs, hoursValue, hoursWord, importRisks, timeValue, yearsWord, mapParam, sameValue, sameValueIn, validateValue, wordsMatch, wordsMatchAnyOrder } from "../src/core/prom-attributes.mjs";
+import { SRC, alignPairs, brandEq, dimEqMm, latinOriginal, isBatteryTypeName, itemsCompatible, normName, normValue, buildCharacteristics, buildNames, charKey, cleanDescription, cleanValue, descriptionNonCharacteristic, descriptionPairs, hoursValue, hoursWord, importRisks, timeValue, yearsWord, mapParam, sameValue, sameValueIn, validateValue, wordsMatch, wordsMatchAnyOrder } from "../src/core/prom-attributes.mjs";
 import { SCHEMAS_DIR, importSchemaFiles, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
 
 const catalog = loadPromCatalog();
@@ -15,12 +15,17 @@ const GRIND = "141717", SAW = "1250302", GEN = "410402"; // Шліфувальн
 const attrOf = (id, name) => S(id).attributes.find((a) => a.nameUK === name);
 const P = (name, value, unit = "") => ({ name, value, unit });
 
-test("схеми: 65 категорій із MANIFEST завантажено без помилок (48 + 17 валідних від 25.10.2026); порожні «…, загальне» — коректні, без атрибутів", () => {
+test("схеми: 66 категорій із MANIFEST завантажено без помилок (48 + 17 валідних від 25.10.2026 + 13070703 від 26.10.2026); порожні «…, загальне» — коректні, без атрибутів", () => {
   assert.deepEqual(catalog.problems, []);
-  assert.equal(catalog.schemas.size, 65);
+  assert.equal(catalog.schemas.size, 66);
   // 25.10.2026: підключено лише строго валідні XML; 142001, 14200332, 14200504 (неекрановані лапки) і запитану 13070703 (не надано) — ні
   for (const id of ["12110205", "1250304", "125031801", "13040305", "13070701", "141723", "141734", "14200604", "142007", "14201515", "14201612", "14201636", "14201607", "14209811", "142907", "143110", "4305"]) assert.ok(S(id).attributes.length > 0, id);
-  for (const id of ["142001", "14200332", "14200504", "13070703"]) assert.equal(S(id, true), undefined, id);
+  for (const id of ["142001", "14200332", "14200504"]) assert.equal(S(id, true), undefined, id + ": невалідний XML — лише пропозиція відновлення, не підключено");
+  // 13070703 «Будівельні та садові драбини» (26.10.2026) — окремо від 13070701 «Драбини»; варіант «Неопреновые» без UA-назви
+  assert.equal(S("13070703").nameUK, "Будівельні та садові драбини");
+  assert.equal(S("13070703").attributes.length, 12);
+  assert.equal(attrOf("13070703", "Матеріал").values.find((v) => v.nameRU === "Неопреновые").nameUK, "");
+  assert.notEqual(S("13070703"), S("13070701"));
   assert.equal(S("13070701").nameUK, "Драбини");
   assert.equal(S("141714").nameUK, "Електричні гайковерти");
   assert.equal(S("12110201").attributes.length, 16, "повна схема (обірваний фрагмент раніше не імпортовано)");
@@ -553,7 +558,7 @@ test("синоніми атрибутів (власник, 24.10.2026): №43–
 test("заборонені відповідності №47–50 ніколи не застосовуються — ні напряму, ні через словники / ланцюжки синонімів", () => {
   const forbidden = JSON.parse(fs.readFileSync(path.join(SCHEMAS_DIR, "synonyms.json"), "utf8")).forbidden;
   assert.deepEqual(forbidden, [["Вага брутто", "Вага"], ["Потужність", "Споживана потужність"], ["Вес без аккумулятора", "Вага"], ["Частота", "Частота струму"]]);
-  // У жодній із 65 категорій — не один ключ
+  // У жодній із 66 категорій — не один ключ
   for (const [id, schema] of catalog.schemas) for (const [x, y] of forbidden) {
     const opt = { mapping: catalog.mappings.get(id), names: catalog.names };
     assert.notEqual(charKey(schema, x, opt), charKey(schema, y, opt), `${id}: «${x}» = «${y}»`);
@@ -1488,4 +1493,117 @@ test("категорія схеми — фактична категорія то
   assert.deepEqual([origin(q.row).cat, origin(q.row).items[0].a], [GEN, "426"], "черга — схема категорії Prom");
   assert.equal(q.row["Категорія Prom ID"], "52807");
   assert.equal(origin(refreshQueueRow({ ...cand, "Категорія Prom ID": "52807" }, qOffer, full, { stamp: "2026-10-25T11:00:00.000Z", catalog }).row).cat, "52807");
+});
+
+test("опис: місце пари в описі (via) — таблиця, список, абзац, рядок тексту; межі й значення не змінюються", () => {
+  const html = "<p>Вступ.</p><p><strong>Призначення:</strong> текст абзацу</p><ul><li>Вага: 2 кг</li><li>Напруга: 18 В</li></ul><table><tr><td>Потужність</td><td>800 Вт</td></tr></table><p>Колір: червоний<br>Матеріал: пластик</p>";
+  assert.deepEqual(descriptionPairs(html).map((p) => [p.key, p.value, p.via]), [["Призначення", "текст абзацу", "p"], ["Вага", "2 кг", "list"], ["Напруга", "18 В", "list"], ["Потужність", "800 Вт", "table"], ["Колір", "червоний", "p"], ["Матеріал", "пластик", "p"]]);
+  assert.deepEqual(descriptionPairs("Вага: 2 кг\nКолір: синій").map((p) => p.via), ["text", "text"]);
+});
+
+test("не характеристики в описі (власник, 26.10.2026): службовий текст, попередження, підпис «Опис», пояснювальне речення без технічних даних — лише однозначні випадки", () => {
+  const D = (key, value, via = "list") => descriptionNonCharacteristic({ key, value, via });
+  // службовий / навігаційний текст — навіть у таблиці
+  assert.equal(D("Також рекомендуємо переглянути категорії", "будівельні пилососи , промислові пилососи", "p").kind, "службовий");
+  assert.equal(D("Обмін і повернення товару", "Обмін або повернення протягом 14 днів після покупки", "table").kind, "службовий");
+  assert.equal(D("Робота від мережі 110 V", "доступні для замовлення", "table").kind, "службовий");
+  assert.equal(D("Доставка", "За рахунок покупця", "table").kind, "службовий");
+  assert.equal(D("Рекомендована потужність генератора", "3 кВт"), null, "«рекомендована» — характеристика, не службовий текст");
+  // попередження / інструкції: без чисел і без комплектації — не характеристика; інакше — неоднозначно, як раніше
+  assert.equal(D("Увага", "у зв'язку з тим, що відпрацьовані гази нікуди не виводяться, приміщення потрібно провітрювати", "p").kind, "попередження");
+  assert.equal(D("Важливо! Ця система «два в одному»", "знімаються помпові присоски", "p").kind, "попередження");
+  assert.equal(D("Зверніть увагу", "для роботи необхідно залити 1,5 л спеціальної оливи", "p"), null, "з числом — неоднозначно");
+  assert.equal(D("Увага", "акумулятор і зарядний пристрій до комплекту не входять!", "p"), null, "комплектація — неоднозначно");
+  assert.equal(D("Увага", "текст попередження без чисел", "table"), null, "у таблиці характеристик — лише службовий текст");
+  // підпис «Опис» — назва товару
+  assert.equal(D("Опис", "Заглибна дискова пила MAKITA SP6000J", "p").kind, "опис");
+  // речення без технічних даних поза таблицею
+  assert.equal(D("Призначення", "призначений для відновлення подачі електрики в разі збоїв роботи електромережі або відсутності інших джерел живлення.", "p").kind, "речення");
+  assert.equal(D("Ергономіка", "Ручка з м'якими елементами з гуми розроблена з урахуванням анатомії руки, забезпечуючи комфортне зчеплення").kind, "речення");
+  assert.equal(D("Призначення", "призначений для відновлення подачі електрики в разі збоїв роботи електромережі або відсутності інших джерел живлення.", "table"), null, "таблиця — структурований блок");
+  assert.equal(D("Висока потужність", "максимальна потужність 250 Вт дозволяє впоратися з навіть найвимогливішими завданнями"), null, "є число — неоднозначно");
+  assert.equal(D("Мощность 16V", "обеспечивает достаточную силу для работы с разными материалами – от древесины до нетолстого металла."), null, "число в назві — неоднозначно");
+  assert.equal(D("Комплектація", "пила, ключ, інструкція, гарантійний талон, картонна упаковка та захисний кожух для шини"), null, "комплектація — не речення");
+  assert.equal(D("Режими прибирання", "Для сухого прибирання/ Вологе прибирання/ Комбіноване прибирання/ Автоматичний режим/ Локальний режим"), null, "перелік через «/»");
+  assert.equal(D("Призначення", "для квартири, для будинку, для дачі, для гаража"), null, "перелік — характеристика");
+  assert.equal(D("Застосування", "метал, плитка, камінь, пластик, гіпсокартон, фіброцемент, дерево, ламінат, МДФ, ДСП, оргскло, полікарбонат."), null, "довгий перелік із крапкою — не речення");
+  assert.equal(D("Інноваційний дизайн", "міцний і жорсткий."), null, "коротке — неоднозначно, як раніше");
+  assert.equal(D("Кейс", "поставляється без акумулятора та зарядного пристрою, у зручному кейсі для зберігання."), null, "про комплектацію — неоднозначно");
+});
+
+test("опис ≠ характеристики: пояснення / службовий текст не передаються, опис не змінюється; речення поруч з однойменним записом поза таблицею — як раніше", () => {
+  const names = catalog.names;
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  // FOGO F3001 (структура реального опису): абзац «Призначення: речення» + таблиця «Призначення | перелік» — лише таблиця
+  const ua = "<p><strong>Призначення: </strong>призначений для відновлення подачі електрики в разі збоїв роботи електромережі або відсутності інших джерел живлення.</p><h3>Характеристики</h3><table><tr><td>Номінальна потужність, кВт</td><td>2.4</td></tr><tr><td>Призначення</td><td>для квартири, для будинку, для дачі, для гаража</td></tr></table><p>Також рекомендуємо переглянути категорії: генератори , стабілізатори , зварювальні апарати .</p>";
+  const before = String(ua);
+  const r = B(GEN, { descUa: ua });
+  assert.deepEqual(r.params.filter((p) => /Призначення|рекомендуємо/i.test(p.name)), [P("Призначення", "для квартири, для будинку, для дачі, для гаража")]);
+  assert.deepEqual(r.descText.map((x) => [x.key, x.kind, x.via]), [["Призначення", "речення", "p"], ["Також рекомендуємо переглянути категорії", "службовий", "p"]]);
+  assert.deepEqual(r.needsReview, []);
+  assert.ok(r.notes.some((n) => /не є характеристиками/.test(n)));
+  assert.equal(ua, before, "опис не змінено");
+  assert.ok(!r.descRanges.ua.some(([a, b]) => ua.slice(a, b).includes("відновлення")), "речення не позначене для очищення");
+  // UA і RU у реальній структурі: таблиця UA ≠ RU без підтвердженої пари — лише за рішенням власника (only) для цього товару
+  const ru = "<p><strong>Назначение: </strong>предназначен для возобновления подачи электричества в случае сбоев работы электросети или отсутствия других источников питания.</p><table><tr><td>Назначение</td><td>для квартиры, для дома, для дачи, для гаража</td></tr></table>";
+  const own = B(GEN, { descUa: ua, descRu: ru, multiOwner: catalog.multiConfirmed.get("1727403273") });
+  assert.deepEqual(own.params.filter((p) => /^(Призначення|Назначение)$/.test(p.name)), [P("Призначення", "для квартири, для будинку, для дачі, для гаража")]);
+  assert.deepEqual(own.needsReview.filter((x) => /Призначення|Назначение/.test(x.name)), []);
+  const noOwn = B(GEN, { descUa: ua, descRu: ru });
+  assert.ok(!noOwn.params.some((p) => /^(Призначення|Назначение)$/.test(p.name)), "без рішення власника — UA ≠ RU, не передається");
+  assert.equal(noOwn.needsReview.filter((x) => /Призначення/.test(x.name)).length, 1);
+  // Список переваг: речення і короткий текст під тією самою назвою — нічого не відкидається, як раніше (ПОТРЕБУЄ ПЕРЕВІРКИ)
+  const adv = B("14400105", { descUa: "<ul><li>Єврорукав: Забезпечує просту та швидку заміну витратних матеріалів</li><li>Інше: так</li></ul><ul><li>Єврорукав: Забезпечує просту та швидку заміну витратних матеріалів, що дозволяє швидко адаптувати апарат до різних видів робіт і зварювальних дротів.</li></ul>" });
+  assert.ok(!adv.params.some((p) => p.name === "Єврорукав"));
+  assert.equal(adv.needsReview.filter((x) => x.name === "Єврорукав").length, 1);
+  assert.deepEqual(adv.descText, []);
+  // UA — речення, RU — ні (та сама назва): обидві мови як раніше, без однобічного відкидання
+  const two = B("14200377", { descUa: "<ul><li>Присоски: спеціальний поліуретановий склад з адгезійними каналами на поверхні воронки та ручкою.</li></ul>", descRu: "<ul><li>Присоски: специальный полиуретановый состав с адгезионными каналами</li></ul>" });
+  assert.deepEqual(two.descText, []);
+});
+
+test("розбіжність XML і опису не приховується (власник, 26.10.2026): передається XML, обидва оригінали — ПОТРЕБУЄ ПЕРЕВІРКИ (інформаційно); і поле Prom, і користувацька", () => {
+  const names = catalog.names;
+  const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
+  // користувацька: Felisatti — IPX4 (XML; варіант схеми без UA-назви) ≠ IP24 (опис)
+  const ip = B("147002", { rawParams: [P("Класс защиты", "IPX4")], descUa: "<p>Клас захисту: IP24</p>" });
+  assert.deepEqual(ip.params.filter((p) => /захист/.test(p.name)), [P("Клас захисту", "IPX4")]);
+  const rv = ip.needsReview.find((x) => x.name === "Клас захисту");
+  assert.match(rv.reason, /XML і опис постачальника різні — передано XML/);
+  assert.equal(rv.kind, "інформаційно");
+  assert.deepEqual(rv.values.map((v) => v.value), ["Клас захисту: IPX4", "Клас захисту: IP24"]);
+  // поле Prom: «Вага» з XML 2 кг, опис 2,5 кг — поле з XML, розбіжність інформаційно
+  const w = B(GRIND, { rawParams: [P("Вес", "2", "кг")], descUa: "<p>Вага: 2,5 кг</p>" });
+  assert.deepEqual(w.params.filter((p) => p.name === "Вага"), [P("Вага", "2", "кг")]);
+  const wr = w.needsReview.find((x) => x.name === "Вага");
+  assert.match(wr.reason, /XML і опис постачальника різні/);
+  assert.deepEqual(wr.values.map((v) => v.value), ["Вага: 2 кг", "Вага: 2,5 кг"]);
+  // те саме значення (інший запис або одиниця) — без позначки
+  assert.deepEqual(B(GRIND, { rawParams: [P("Вес", "2", "кг")], descUa: "<p>Вага: 2000 г</p>" }).needsReview, []);
+  assert.deepEqual(B("147002", { rawParams: [P("Класс защиты", "IPX4")], descUa: "<p>Клас захисту: IPX4</p>" }).needsReview, []);
+});
+
+test("кілька чисел одного параметра (власник, 26.10.2026): поле Prom не бере одне число з переліку / діапазону; повний запис постачальника — користувацькою, без перерахунку", () => {
+  const units = catalog.units;
+  for (const type of ["real", "integer"]) for (const v of ["10 / 5", "500/1000", "14, 16, 19, 23", "1000-3000", "0-3000", "до 1000", "2000 (макс. 2200)", "1000; 2000"]) {
+    assert.match(validateValue({ id: "1", nameUK: "Швидкість", type, unitUK: "м/хв", unitRU: "м/мин", min: 0, max: 10000 }, v, "м/хв", units).reason, /не одне число/, `${type} «${v}»`);
+  }
+  const names = catalog.names;
+  const r = buildCharacteristics({ schema: S("142907"), categoryId: "142907", current: [], names, mapping: catalog.mappings.get("142907"), units, mode: "queue", descUa: "<ul><li>Швидкість підйому: 10 / 5 м/хв</li><li>Вантажопідйомність без блока: 500 кг</li><li>Вантажопідйомність з блоком: 1000 кг</li></ul>" });
+  assert.deepEqual(r.params.filter((p) => /Швидкість|Вантажопідйомність/.test(p.name)).map((p) => `${p.name}: ${p.value}${p.unit ? " " + p.unit : ""}`), ["Швидкість підйому: 10 / 5 м/хв", "Вантажопідйомність без блока: 500 кг", "Вантажопідйомність з блоком: 1000 кг"]);
+});
+
+test("13070703 «Тип сходів» — варіанти не є словником перекладів (known-issues noLexicon, 26.10.2026): підтверджені пари інших категорій не зникають; поле категорії працює", () => {
+  const k = catalog.knownIssues.find((x) => x.action === "noLexicon");
+  assert.deepEqual([k.categories, k.id], [["13070703"], "4962"]);
+  const names = catalog.names;
+  // «Телескопическая» → «Телескопічна» (інші схеми) лишається; «Телескопічні» (13070703, множина) не підставляється
+  assert.equal(names.value.get(normValue("Телескопическая", names)), normValue("Телескопічна", names));
+  assert.equal(sameValueIn(["Тип штанги"], P("x", "телескопічна"), P("x", "телескопическая"), names, "1250321"), true);
+  // поле самої категорії — за варіантами схеми, як звичайно
+  assert.deepEqual(validateValue(attrOf("13070703", "Тип сходів"), "Телескопическая", "", catalog.units), { value: "Телескопічні", unit: "" });
+  // ризики імпорту — лише справжні вади довідника
+  const r = buildCharacteristics({ schema: S("13070703"), categoryId: "13070703", current: [], names, mapping: catalog.mappings.get("13070703"), units: catalog.units, mode: "queue", rawParams: [P("Тип лестницы", "Телескопическая")] });
+  assert.deepEqual(r.params, [P("Тип сходів", "Телескопічні")]);
+  assert.deepEqual(importRisks({ params: r.params, provenance: r.provenance, categoryId: "13070703", knownIssues: catalog.knownIssues }), []);
 });

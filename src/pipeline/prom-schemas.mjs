@@ -55,7 +55,11 @@ export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = proces
   for (const [dim, list] of Object.entries(out.units.scales || {})) for (const [u, f] of list) for (const k of [normUnit(u), out.units.aliasMap.get(normUnit(u))]) if (k && !out.units.scale.has(k)) out.units.scale.set(k, { dim, f });
   out.knownIssues = readJson(path.join(dir, "known-issues.json"), {}).attributes || []; // відомі вади довідника Prom (importRisks)
   const dict = readJson(path.join(dir, "names-ua-ru.json"), {});
-  out.names = buildNames([...out.schemas.values()], dict.names || {}, out.units.aliasMap, dict.values || {}, dict.valuesInContext || {}, out.units.conversions || [], dict.wordsInContext || {}, dict.restrictedContexts || null, dict.inCategory || {});
+  // Варіанти, які НЕ є перекладом (known-issues.json, action «noLexicon»: напр. 13070703 «Тип сходів» — UA у множині для RU в
+  // однині), не беруть участі у словнику UA/RU інших категорій; поле самої категорії заповнюється як звичайно.
+  const noLex = out.knownIssues.filter((k) => k.action === "noLexicon");
+  const lexSchemas = [...out.schemas.values()].map((s) => (noLex.some((k) => (k.categories || []).map(String).includes(String(s.id))) ? { ...s, attributes: s.attributes.map((a) => (noLex.some((k) => (k.categories || []).map(String).includes(String(s.id)) && String(k.id) === a.id) ? { ...a, values: [] } : a)) } : s));
+  out.names = buildNames(lexSchemas, dict.names || {}, out.units.aliasMap, dict.values || {}, dict.valuesInContext || {}, out.units.conversions || [], dict.wordsInContext || {}, dict.restrictedContexts || null, dict.inCategory || {});
   out.names.brandPairs = Array.isArray(dict.brandPairs) ? dict.brandPairs : []; // погоджені пари написань бренду (лише за офіційним брендом)
   // Комплектація, підтверджена власником для конкретних товарів (Offer ID → { battery, charger })
   // Кілька значень однієї характеристики, підтверджені власником для конкретних товарів (Offer ID → назви характеристик)

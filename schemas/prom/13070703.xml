@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13070703" nameRU="Строительные и садовые лестницы" nameUK="Будівельні та садові драбини">
+<attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+<attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+<attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+<attribute_value id="8057" nameRU="Пластик" nameUK="Пластик"/>
+<attribute_value id="8059" nameRU="Алюминий" nameUK="Алюміній"/>
+<attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+<attribute_value id="31381" nameRU="Металл" nameUK="Метал"/>
+<attribute_value id="36099" nameRU="Стеклопластик" nameUK="Склопластик"/>
+<attribute_value id="274404" nameRU="Сборный железобетон" nameUK="Збірний залізобетон"/>
+<attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+<attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+<attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+<attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+</attribute>
+<attribute id="807" nameRU="Количество секций" type="integer" nameUK="Кількість секцій"/>
+<attribute id="2718" nameRU="Максимальная нагрузка" type="real" nameUK="Максимальне навантаження" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+<attribute id="2840" nameRU="Высота секции" type="real" nameUK="Висота секції" measureUnitRU="м" min="0" max="10" measureUnitUK="м"/>
+<attribute id="4937" nameRU="Количество ступеней" type="integer" nameUK="Кількість ступенів" measureUnitRU="шт" min="1" max="100" measureUnitUK="шт."/>
+<attribute id="4962" nameRU="Тип лестницы" type="singleselect" nameUK="Тип сходів">
+<attribute_value id="31541" nameRU="Приставная" nameUK="Приставні"/>
+<attribute_value id="31542" nameRU="Трансформер (универсальная)" nameUK="Трансформер (універсальні)"/>
+<attribute_value id="263510" nameRU="Лестницы диэлектрические" nameUK="Сходи діелектричні"/>
+<attribute_value id="274403" nameRU="Сборные железобетонные конструкции" nameUK="Збірні залізобетонні конструкції"/>
+<attribute_value id="289921" nameRU="Телескопическая" nameUK="Телескопічні"/>
+</attribute>
+<attribute id="4963" nameRU="Высота лестницы" type="real" nameUK="Висота драбини" measureUnitRU="м" min="0" max="20" measureUnitUK="м"/>
+<attribute id="4967" nameRU="Ширина лестницы" type="real" nameUK="Ширина сходів" measureUnitRU="м" min="0" max="1.5" measureUnitUK="м"/>
+<attribute id="6208" nameRU="Максимальная рабочая высота" type="real" nameUK="Максимальна робоча висота" measureUnitRU="м" min="0" max="25" measureUnitUK="м"/>
+<attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+<attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+<attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+</attribute>
+</category>
+</categories>
