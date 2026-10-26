@@ -40,9 +40,10 @@ const fmt = (p) => `${p.name}: ${p.value}${p.unit ? " " + p.unit : ""}`;
  * План для однієї картки.
  *  prom — характеристики картки в Prom (promExportChars); prepared — новий підготовлений набір (buildCharacteristics().params);
  *  items — його походження (provenance.items: s, a); review — назви з ПОТРЕБУЄ ПЕРЕВІРКИ нового набору;
- *  manual — додаткові ручні характеристики власника (якщо ведуться окремо).
+ *  manual — додаткові ручні характеристики власника (якщо ведуться окремо);
+ *  owner — підтверджені рішення власника нового набору (buildCharacteristics().owner: keys / attrs застосованих рішень).
  */
-export function planStaleCleanup({ prom = [], prepared = [], items = [], review = [], manual = [], schema = null, mapping = null, names = null, units = null } = {}) {
+export function planStaleCleanup({ prom = [], prepared = [], items = [], review = [], manual = [], owner = [], schema = null, mapping = null, names = null, units = null } = {}) {
   const opt = { mapping, names };
   const key = (n) => charKey(schema, fixHomo(n), opt);
   const v = (p) => ({ value: cleanValue(p.value), unit: cleanValue(p.unit) });
@@ -57,6 +58,8 @@ export function planStaleCleanup({ prom = [], prepared = [], items = [], review 
   };
   const manualAll = [...manual, ...prepared.filter((p, i) => items[i]?.s === SRC.MANUAL)];
   const reviewKeys = new Set(review.map(key));
+  const ownKeys = new Set(owner.filter((o) => o?.applied).flatMap((o) => o.keys || []));
+  const ownAttrs = new Set(owner.filter((o) => o?.applied).flatMap((o) => (o.attrs || []).map(String)));
   const prepKeys = prepared.map((p) => key(p.name));
   const exactName = (q, p) => normName(fixHomo(q.name)) === normName(fixHomo(p.name)) && normName(q.name) === normName(p.name);
   const present = new Set(prepared.map((p, i) => (prom.some((q) => exactName(q, p)) ? i : -1)).filter((i) => i >= 0)); // точний запис уже в картці
@@ -81,6 +84,9 @@ export function planStaleCleanup({ prom = [], prepared = [], items = [], review 
     }
     // 4. Поле категорії, яке є в новому наборі, — імпорт оновить значення; не видаляємо.
     if (isField && items.some((it) => it?.a === at.id)) { row(ACTION.KEEP, "поле категорії — значення оновить імпорт", prepared[items.findIndex((it) => it?.a === at.id)]); continue; }
+    // 4а. Характеристика під підтвердженим рішенням власника, якої в новому наборі немає (поле замінене користувацькою, «не
+    // передавати», стара назва постачальника) — застаріле значення постачальника: імпорт його не прибере (власник, 26.10.2026).
+    if ((at && ownAttrs.has(String(at.id))) || ownKeys.has(key(q.name))) { row(ACTION.REMOVE, "застаріле значення постачальника — характеристику замінено підтвердженим рішенням власника"); continue; }
     // 5. Відповідник у новому наборі: підтверджена назва (схеми, словник) або пословна відповідність (як у генераторі).
     const kq = key(q.name);
     const twins = prepared.map((p, i) => ({ p, i })).filter(({ p, i }) => prepKeys[i] === kq || wordsMatch(fixHomo(p.name), fixHomo(q.name), names) || wordsMatch(fixHomo(q.name), fixHomo(p.name), names));

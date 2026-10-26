@@ -21,9 +21,58 @@ export function readManifest(dir = SCHEMAS_DIR) {
   return readJson(path.join(dir, "MANIFEST.json"), { version: 1, categories: [] });
 }
 
+/** Підтверджені рішення власника щодо окремих характеристик (власник, 26.10.2026) — файл ПОЗА репозиторієм (товарні дані в
+ *  репозиторій не пишемо), до запуску аркуша «Ручні характеристики» в таблиці:
+ *  { "v": 1, "date": "YYYY-MM-DD", "products": { "<Offer ID>": { "model": "…", "title": "…", "items": [ { "name", "field"?, "value",
+ *    "unit"?, "action": "set" | "drop", "replaces"?: [назви], "supplier"?: [значення], "source", "date", "priority": 1–3,
+ *    "autoUpdate": false } ] } } }.
+ *  Запис без назви, значення (для set), джерела чи дати, з невідомою дією або пріоритетом — не застосовується (лише попередження).
+ *  Повертає { map: Map(Offer ID → { model, title, items }), date, items, problems }. */
+export function loadOwnerValues(file) {
+  const res = { map: new Map(), date: "", items: 0, problems: [] };
+  if (!fs.existsSync(file)) { res.problems.push(`файл рішень власника «${path.basename(file)}» не знайдено`); return res; }
+  let j = null;
+  try { j = readJson(file, null); } catch { res.problems.push(`файл рішень власника «${path.basename(file)}»: некоректний JSON`); return res; }
+  if (!j || j.v !== 1 || typeof j.products !== "object" || !j.products || !/^\d{4}-\d{2}-\d{2}$/.test(String(j.date || ""))) { res.problems.push(`файл рішень власника «${path.basename(file)}»: немає v=1 / date / products`); return res; }
+  res.date = String(j.date);
+  const str = (v) => (typeof v === "string" ? v.trim() : "");
+  for (const [id, p] of Object.entries(j.products)) {
+    if (!/^\d+$/.test(id) || !p || !Array.isArray(p.items)) { res.problems.push(`рішення власника ${id}: немає items`); continue; }
+    const items = [];
+    p.items.forEach((o, i) => {
+      const bad = [];
+      if (!o || typeof o !== "object") bad.push("не об'єкт");
+      else {
+        if (!str(o.name)) bad.push("name");
+        if (!["set", "drop"].includes(o.action ?? "set")) bad.push("action");
+        if ((o.action ?? "set") === "set" && !str(String(o.value ?? ""))) bad.push("value");
+        if (!str(o.source)) bad.push("source");
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(str(o.date))) bad.push("date");
+        if (o.priority !== undefined && ![1, 2, 3].includes(o.priority)) bad.push("priority");
+        if (o.autoUpdate !== undefined && typeof o.autoUpdate !== "boolean") bad.push("autoUpdate");
+        if (o.field !== undefined && !/^\d+$/.test(String(o.field))) bad.push("field");
+        for (const k of ["replaces", "supplier"]) if (o[k] !== undefined && !(Array.isArray(o[k]) && o[k].every((x) => typeof x === "string"))) bad.push(k);
+      }
+      if (bad.length) { res.problems.push(`рішення власника ${id} №${i + 1}: неправильне ${bad.join(", ")} — не застосовано`); return; }
+      items.push({ ...o, action: o.action ?? "set", value: String(o.value ?? ""), unit: str(o.unit), priority: o.priority ?? 1, autoUpdate: o.autoUpdate === true, ...(o.field !== undefined ? { field: String(o.field) } : {}) });
+    });
+    res.items += items.length;
+    if (items.length) res.map.set(String(id), { model: str(p.model), title: str(p.title), items });
+  }
+  return res;
+}
+
 /** Схеми, словники й одиниці для синхронізації. */
-export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "" } = {}) {
+export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "", ownerValuesFile = process.env.MM_OWNER_VALUES || "" } = {}) {
   const out = { schemas: new Map(), mappings: new Map(), units: readJson(path.join(dir, "units.json"), { conversions: [] }), problems: [] };
+  // Рішення власника щодо окремих характеристик (Offer ID → { model, items }); немає файлу — не застосовуються.
+  out.ownerValues = null;
+  if (ownerValuesFile) {
+    const ov = loadOwnerValues(ownerValuesFile);
+    out.problems.push(...ov.problems);
+    out.ownerValues = ov.map;
+    out.ownerValuesInfo = { file: path.basename(ownerValuesFile), date: ov.date, products: ov.map.size, items: ov.items };
+  }
   // Фактичні категорії товарів у Prom (власник, 25.10.2026) — файл ПОЗА репозиторієм (дані товарів у репозиторій не пишемо):
   // { "date": "YYYY-MM-DD", "source": "…", "categories": { "<Offer ID>": "<ID категорії>" } }. Немає файлу — категорія таблиці.
   out.promCategories = null;
@@ -65,6 +114,21 @@ export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = proces
   // Кілька значень однієї характеристики, підтверджені власником для конкретних товарів (Offer ID → назви характеристик)
   out.multiConfirmed = new Map(Object.entries(readJson(path.join(dir, "multi-value-confirmed.json"), {}).products || {}).map(([id, v]) => [String(id), new Map(Object.entries(v || {}).map(([n, spec]) => [normName(n), typeof spec === "object" && spec ? spec : {}]))]));
   out.kitConfirmed = new Map(Object.entries(readJson(path.join(dir, "kit-confirmed.json"), {}).products || {}).map(([id, v]) => [String(id), { battery: v.battery, charger: v.charger, ...(v.batteryCount !== undefined ? { batteryCount: v.batteryCount } : {}) }]));
+  // Перелік рішень власника (репозиторій, БЕЗ значень; значення — у файлі поза репозиторієм): без файлу рішень ці характеристики
+  // утримуються (значення постачальника не передається), а не повертаються до даних постачальника непомітно.
+  out.ownerIndex = new Map(Object.entries(readJson(path.join(dir, "owner-values-index.json"), {}).products || {}).map(([id, p]) => [String(id), {
+    model: String(p?.model || ""),
+    items: (Array.isArray(p?.items) ? p.items : []).filter((x) => x && typeof x.name === "string" && x.name.trim()).map((x) => ({ name: x.name.trim(), ...(x.field !== undefined ? { field: String(x.field) } : {}), ...(Array.isArray(x.replaces) ? { replaces: x.replaces.map(String) } : {}) })),
+  }]));
+  if (out.ownerValues && out.ownerIndex.size) {
+    const same = (a, b) => normName(a.name) === normName(b.name) && String(a.field || "") === String(b.field || "");
+    for (const [id, p] of out.ownerIndex) {
+      const f = out.ownerValues.get(id);
+      if (f && normName(f.model) !== normName(p.model)) out.problems.push(`рішення власника ${id}: модель у файлі «${f.model}» ≠ у переліку «${p.model}»`);
+      for (const it of p.items) if (!(f?.items || []).some((o) => same(o, it))) out.problems.push(`рішення власника ${id} «${it.name}»: є в переліку репозиторію, але немає у файлі рішень — характеристику утримано`);
+    }
+    for (const [id, p] of out.ownerValues) for (const o of p.items) if (!(out.ownerIndex.get(id)?.items || []).some((it) => same(o, it))) out.problems.push(`рішення власника ${id} «${o.name}»: є у файлі рішень, але немає в переліку репозиторію — застосовано; оновіть перелік (node tools/owner-values.mjs index)`);
+  }
   for (const e of pending) {
     const schema = out.schemas.get(String(e.id));
     const m = readJson(path.join(dir, "mapping", `${e.id}.json`), null);

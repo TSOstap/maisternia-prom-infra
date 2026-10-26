@@ -13,6 +13,9 @@ import { loadPromCatalog } from "./prom-schemas.mjs";
 function catalogFor(catalog, warnings) {
   const c = catalog ?? loadPromCatalog();
   for (const p of c.problems || []) warnings.push("схема Prom: " + p);
+  // Підтверджені рішення власника щодо характеристик (файл поза репозиторієм, MM_OWNER_VALUES): без файлу не застосовуються —
+  // попередження, щоб синхронізація без них не пройшла непомітно (не блокує).
+  if (c.schemas?.size && !c.ownerValues) warnings.push(`рішення власника щодо характеристик не підключено (MM_OWNER_VALUES) — підтверджені виправлення не застосовуються${c.ownerIndex?.size ? `; характеристики ${c.ownerIndex.size} товарів з переліку рішень утримано (значення постачальника не передано)` : ""}`);
   return c;
 }
 

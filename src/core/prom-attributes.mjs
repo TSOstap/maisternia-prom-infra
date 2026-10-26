@@ -21,7 +21,7 @@
  *   { v, cat, items: [{ k, s, a }], x: [приховані власником], notes }  (k — ключ запису, s — джерело, a — id атрибута Prom). */
 import { mtDecode, mtText } from "./text.mjs";
 
-export const SRC = Object.freeze({ XML: "XML", DESC: "ОПИС", RAW: "XML БЕЗ ЗІСТАВЛЕННЯ", MANUAL: "ВРУЧНУ", UNKNOWN: "НЕВІДОМО" });
+export const SRC = Object.freeze({ XML: "XML", DESC: "ОПИС", RAW: "XML БЕЗ ЗІСТАВЛЕННЯ", MANUAL: "ВРУЧНУ", UNKNOWN: "НЕВІДОМО", OWNER: "ВЛАСНИК" });
 const AUTO = new Set([SRC.XML, SRC.DESC, SRC.RAW]);
 export const MAX_PARAMS = 100;
 const FREE_MAX = 255; // власний запобіжник для типу free (ліміт Prom не підтверджено)
@@ -695,6 +695,11 @@ export const timeValue = (name, p, ua) => yearsValue(name, hoursValue(name, p, u
 const HOUR_TOKEN_RE = /\d\s*(ч|час|год)\.?(?![a-zа-яіїєґё])/i;
 export const timeAmbiguous = (name, p) => !isDurationName(name) && !isYearName(name) && htmlText(p.value).length <= 60 && HOUR_TOKEN_RE.test(`${htmlText(p.value)} ${htmlText(p.unit)}`);
 
+// Модель у назві товару (рішення власника — лише для «однозначно зіставленого за Offer ID і моделлю» товару, власник 26.10.2026):
+// кожне слово моделі є окремим словом назви («LXCM305» ≠ «LXCM305i»; регістр і розділові знаки не важать).
+const modelWords = (s) => normName(htmlText(s)).split(/[\s,;:()«»"“”/]+/).map((w) => w.replace(/[.]+$/, "")).filter(Boolean);
+export const modelInTitle = (model, title) => { const t = new Set(modelWords(title)), m = modelWords(model); return m.length > 0 && m.every((w) => t.has(w)); };
+
 /** Вирівнювання пар UA- і RU-опису (описи — переклади одне одного, порядок пар однаковий). Найкраще впорядковане
  *  зіставлення: 2 — та сама підтверджена назва, 1 — те саме значення (після нормалізації); між сусідніми
  *  зіставленими парами рівні за довжиною проміжки зіставляються по порядку (0 — «за позицією», значення різні).
@@ -735,13 +740,20 @@ export function alignPairs(U, R, score) {
  *  назва атрибута або підтверджена українська відповідність). Достовірність значень не оцінюється. Та сама характеристика
  *  в UA- і RU-описі (за підтвердженою відповідністю назв): однакові значення — одна характеристика з українською назвою;
  *  різні — «ПОТРЕБУЄ ПЕРЕВІРКИ» (needsReview, обидва оригінали), нічого не вибирається. Дублікати не створюються.
+ *
+ *  ownerValues — підтверджені рішення власника для цього товару ({ model, items } або масив items; див. «1в»); ownerIndex — перелік
+ *  цих рішень з репозиторію (назви характеристик без значень: без файлу рішень характеристики утримуються); cardTitles — назви
+ *  картки (UA / RU) для звірки моделі разом із назвами постачальника (titles).
  */
-export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [], kitOwner = null, multiOwner = null }) {
+export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [], kitOwner = null, multiOwner = null, ownerValues = null, ownerIndex = null, cardTitles = [] }) {
   const cur = asParams(typeof current === "string" ? jsonOr(current, []) : current);
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
   const notes = [];
-  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], warranty: null, uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [], lexDiff: [] }, lexMerged: [], aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [], emptyDesc: [], descText: [], timeFixed: [] };
+  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], warranty: null, uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [], lexDiff: [] }, lexMerged: [], aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [], emptyDesc: [], descText: [], timeFixed: [], owner: [] };
+  const ownSpec = ownerValues && (Array.isArray(ownerValues) ? { items: ownerValues } : ownerValues);
+  const ownIdx = ownerIndex && (Array.isArray(ownerIndex) ? { items: ownerIndex } : ownerIndex); // перелік рішень (без значень)
+  if ((ownSpec || ownIdx) && !schema) notes.push("рішення власника не застосовано: немає схеми категорії");
   if (!schema && mode === "main") { notes.push(`немає схеми категорії ${categoryId || "?"} — підготовлені характеристики не змінено`); return unchanged; }
   const opt = { mapping, units };
   const kit = schema ? kitInfo({ titles, texts: kitTexts(descUa, descRu) }) : null; // підтверджена комплектація (явні фрази постачальника)
@@ -909,7 +921,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
           if (o) { value = o.nameUK; covers = ["b", "c"]; }
         }
         if (value === null) continue;
-        cand.set(at.id, { out: { name: at.nameUK || at.nameRU, value, unit: "" }, src: SRC.DESC, frags: { ua: [], ru: [] }, from: "kit" });
+        cand.set(at.id, { out: { name: at.nameUK || at.nameRU, value, unit: "" }, src: SRC.DESC, frags: { ua: [], ru: [] }, from: "kit", covers, ...(kitOwner ? { kitOwned: { b: kitEff.battery, c: kitEff.charger } } : {}) });
         if (covers.includes("b")) batteryDone = true;
         if (covers.includes("c")) chargerDone = true;
         notes.push(`комплектація підтверджена ${kitOwner ? "власником" : "назвою / описом постачальника"}: «${at.nameUK}: ${value}»`);
@@ -1177,6 +1189,119 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   } else {
     for (const p of raw) extra(normName(p.name), p, SRC.RAW, itemKey(p)); // без схеми — сира копія як є
   }
+  // 1в. Підтверджені рішення власника (власник, 26.10.2026). Пріоритет: 1 — рішення власника, 2 — структурований XML
+  // постачальника, 3 — блок характеристик опису. Рішення стосується ОДНІЄЇ характеристики й не блокує решти. Запис:
+  //  { name, field?, value, unit, action: set | drop, replaces?, supplier?, source, date, priority, autoUpdate }.
+  //  set — передати значення власника: поле Prom (field або назва атрибута категорії), якщо значення проходить схему, інакше
+  //        користувацька з назвою власника; drop — не передавати значення постачальника (оригінал — в описі й сирих даних).
+  //  replaces — назви тієї самої характеристики в постачальника (UA / RU, інше написання), які рішення замінює;
+  //  supplier — значення постачальника, відомі на момент рішення. Постачальник передає інше (нове) значення: autoUpdate=false —
+  //  рішення не перезаписується, розбіжність інформаційно; autoUpdate=true — передається нове значення постачальника.
+  //  priority 2 — значення власника лише без значення XML; 3 — лише коли постачальник нічого не передає.
+  //  model — товар зіставлено за Offer ID і моделлю: модель має бути в назві картки або постачальника, інакше рішення не діє.
+  const ownerReport = [], ownCover = { attrs: new Map(), keys: new Map() };
+  const fmtV = (p) => `${mtText(p.value).trim()}${mtText(p.unit).trim() ? " " + mtText(p.unit).trim() : ""}`;
+  const valOf = (s) => { const t = String(s ?? ""); const i = t.indexOf(":"); return (i >= 0 ? t.slice(i + 1) : t).trim(); };
+  const nameOfVal = (s) => { const t = String(s ?? ""); const i = t.indexOf(":"); return i >= 0 ? t.slice(0, i).trim() : ""; };
+  const ownKnown = (o, v) => (o.supplier || []).some((s) => normValue(s, names) === normValue(v, names) || sameValue({ value: s, unit: "" }, { value: v, unit: "" }, names));
+  if ((ownSpec || ownIdx) && schema) {
+    const model = mtText(ownSpec?.model || ownIdx?.model).trim();
+    if (model && ![...cardTitles, ...titles].some((t) => modelInTitle(model, t))) {
+      review("Рішення власника", [{ src: "рішення власника", value: `модель: ${model}` }], `модель «${model}» не знайдено в назві товару — рішення власника не застосовано (перевірте Offer ID)`);
+      for (const o of [...(ownSpec?.items || []), ...(ownIdx?.items || [])]) ownerReport.push({ name: mtText(o.name).trim(), action: o.action === "drop" ? "drop" : "set", value: fmtV(o), applied: false, why: `модель «${model}» не знайдено в назві товару`, keys: [], attrs: [] });
+    } else {
+      const prio = (o) => (Number.isInteger(o.priority) && o.priority >= 1 && o.priority <= 3 ? o.priority : 1);
+      const items = (ownSpec?.items || []).map((o, i) => ({ o, i })).sort((a, b) => prio(a.o) - prio(b.o) || a.i - b.i);
+      for (const { o } of items) {
+        const name = mtText(o.name).trim(), action = o.action === "drop" ? "drop" : "set";
+        const rep = { name, field: String(o.field || ""), action, value: action === "set" ? fmtV(o) : "", applied: false, target: "", supplier: [], why: "", keys: [], attrs: [] };
+        ownerReport.push(rep);
+        if (!name || (action === "set" && !mtText(o.value).trim())) { rep.why = "запис без назви або значення"; continue; }
+        const fat = o.field ? schema.attributes.find((a) => a.id === String(o.field)) || null : attrByName(name);
+        if (o.field && !fat) { rep.why = `поля ${o.field} немає в схемі категорії ${categoryId}`; notes.push(`рішення власника «${name}»: ${rep.why} — не застосовано`); continue; }
+        let out = null, target = "";
+        if (action === "set") {
+          const v = fat && !mapping?.blocked?.[fat.id] ? validateValue(fat, o.value, o.unit || "", units, mapping?.values?.[fat.id]) : null;
+          if (v && !v.reason) { out = { name: fat.nameUK || fat.nameRU, value: v.value, unit: v.unit }; target = fat.id; }
+          else {
+            out = { name, value: mtText(o.value).trim(), unit: mtText(o.unit).trim() };
+            if (fat) notes.push(`рішення власника «${name}: ${fmtV(o)}»: поле Prom «${fat.nameUK || fat.nameRU}» не приймає значення (${v?.reason || "вада довідника Prom"}) — передано користувацькою`);
+          }
+        }
+        // Охоплення: поле й ключ рішення + назви тієї самої характеристики в постачальника.
+        const attrs = new Set(fat ? [fat.id] : []), keys = new Set([keyOf(name)]);
+        if (fat) keys.add(normName(fat.nameUK || fat.nameRU));
+        const ckey = out ? keyOf(out.name, target ? fat : null) : "";
+        if (ckey) keys.add(ckey);
+        for (const r of o.replaces || []) { const rn = mtText(r).trim(); if (!rn) continue; keys.add(keyOf(rn)); const ra = attrByName(rn); if (ra) attrs.add(ra.id); }
+        if ([...attrs].some((a) => ownCover.attrs.has(a)) || [...keys].some((k) => ownCover.keys.has(k))) { rep.why = "та сама характеристика вже має рішення з вищим пріоритетом"; notes.push(`рішення власника «${name}»: ${rep.why} — не застосовано`); continue; }
+        const covered = (n) => { const s = mtText(n).trim(); return Boolean(s) && (keys.has(keyOf(s)) || attrs.has(attrByName(s)?.id)); };
+        // Значення постачальника цієї характеристики: поля, користувацькі й записи ПОТРЕБУЄ ПЕРЕВІРКИ (конфлікти джерел).
+        const sup = [];
+        for (const a of attrs) { const c = cand.get(a); if (c) sup.push({ v: fmtV(c.out), src: c.src }); }
+        for (const k of keys) { const e = extras.get(k); if (e) sup.push({ v: fmtV(e.out), src: e.src }); }
+        const revs = needsReview.filter((r) => covered(r.name) || r.values.some((x) => covered(nameOfVal(x.value))));
+        for (const r of revs) for (const x of r.values) if (covered(nameOfVal(x.value)) || covered(r.name)) sup.push({ v: valOf(x.value), src: /^XML/.test(x.src) ? SRC.XML : SRC.DESC });
+        const supVals = [...new Set(sup.map((x) => x.v).filter(Boolean))];
+        const same = (v) => Boolean(out) && (normValue(v, names) === normValue(fmtV(out), names) || sameValue({ value: v, unit: "" }, { value: fmtV(out), unit: "" }, names));
+        const fresh = supVals.filter((v) => !same(v) && !ownKnown(o, v));
+        const p = prio(o);
+        if ((p === 2 && sup.some((x) => x.src === SRC.XML || x.src === SRC.RAW)) || (p === 3 && sup.length)) { rep.why = p === 2 ? "пріоритет 2: є значення XML постачальника — передано XML" : "пріоритет 3: постачальник передає значення — передано значення постачальника"; continue; }
+        const shown = out ? fmt(out) : `${name}: не передавати`;
+        if (o.autoUpdate === true && fresh.length) {
+          rep.why = "автооновлення дозволено: постачальник змінив значення — передано значення постачальника";
+          review(name, [{ src: "рішення власника", value: shown }, ...fresh.map((v) => ({ src: "постачальник", value: `${name}: ${v}` }))], "постачальник змінив значення після рішення власника — автооновлення дозволено, передано значення постачальника (інформаційно)");
+          continue;
+        }
+        // Застосування: значення постачальника цієї характеристики не передаються; конфлікти джерел вирішено рішенням власника.
+        const shownNames = new Set([name, ...(o.replaces || []).map((r) => mtText(r).trim())]);
+        for (const a of attrs) { const c = cand.get(a), at = schema.attributes.find((x) => x.id === a); if (c) shownNames.add(c.out.name); if (at) shownNames.add(at.nameUK || at.nameRU); cand.delete(a); ambiguous.delete(a); unitScale.delete(a); }
+        for (const k of keys) { const e = extras.get(k); if (e) { shownNames.add(e.out.name); extras.delete(k); } }
+        for (const r of revs) needsReview.splice(needsReview.indexOf(r), 1);
+        for (let i = conflicts.length - 1; i >= 0; i--) if ([...shownNames].some((n) => n && (conflicts[i].includes(`«${n}»`) || conflicts[i].includes(`«${n}:`)))) conflicts.splice(i, 1);
+        if (out && target) cand.set(target, { out, src: SRC.OWNER, frags: { ua: [], ru: [] }, from: "owner" });
+        else if (out) extras.set(ckey, { out, src: SRC.OWNER, from: "owner", lang: "ua" });
+        const cov = { o, out, target, ckey, action, rep, pushed: false };
+        for (const a of attrs) ownCover.attrs.set(a, cov);
+        for (const k of keys) ownCover.keys.set(k, cov);
+        if (fresh.length) review(out ? out.name : name, [{ src: "рішення власника", value: shown }, ...fresh.map((v) => ({ src: "постачальник", value: `${name}: ${v}` }))], action === "drop" ? "постачальник передає значення, яке власник вирішив не передавати — рішення збережено (інформаційно)" : "постачальник передає інше значення — передано підтверджене рішення власника (інформаційно)");
+        notes.push(action === "drop" ? `рішення власника: «${name}» постачальника не передається` : `рішення власника: «${fmt(out)}» (${target ? "поле Prom" : "користувацька"})`);
+        Object.assign(rep, { applied: true, target: action === "drop" ? "не передається" : target ? `поле ${target}` : "користувацька", supplier: supVals, keys: [...keys], attrs: [...attrs] });
+      }
+      // Перелік рішень у репозиторії (ownerIndex — назви характеристик без значень): рішення недоступне (файл рішень відсутній,
+      // пошкоджений або без цього запису) — захист не зникає непомітно: значення постачальника не передається, наявне значення
+      // картки зберігається; ПОТРЕБУЄ ПЕРЕВІРКИ (не інформаційно).
+      const settled = (it) => ownerReport.some((r) => normName(r.name) === normName(it.name) && r.field === String(it.field || "") && (r.applied || /^(пріоритет|автооновлення)/.test(r.why)));
+      for (const it of ownIdx?.items || []) {
+        const name = mtText(it.name).trim();
+        if (!name || settled(it)) continue;
+        const fat = it.field ? schema.attributes.find((a) => a.id === String(it.field)) || null : attrByName(name);
+        const attrs = new Set(fat ? [fat.id] : []), keys = new Set([keyOf(name)]);
+        if (fat) keys.add(normName(fat.nameUK || fat.nameRU));
+        for (const r of it.replaces || []) { const rn = mtText(r).trim(); if (!rn) continue; keys.add(keyOf(rn)); const ra = attrByName(rn); if (ra) attrs.add(ra.id); }
+        const rep = { name, field: String(it.field || ""), action: "hold", value: "", applied: false, held: true, target: "утримано", supplier: [], why: "рішення власника недоступне — характеристику утримано", keys: [...keys], attrs: [...attrs] };
+        ownerReport.push(rep);
+        if ([...attrs].some((a) => ownCover.attrs.has(a)) || [...keys].some((k) => ownCover.keys.has(k))) continue;
+        const covered = (n) => { const s = mtText(n).trim(); return Boolean(s) && (keys.has(keyOf(s)) || attrs.has(attrByName(s)?.id)); };
+        const sup = [];
+        for (const a of attrs) { const c = cand.get(a); if (c) sup.push(fmtV(c.out)); }
+        for (const k of keys) { const e = extras.get(k); if (e) sup.push(fmtV(e.out)); }
+        const revs = needsReview.filter((r) => covered(r.name) || r.values.some((x) => covered(nameOfVal(x.value))));
+        for (const r of revs) for (const x of r.values) sup.push(valOf(x.value));
+        const shownNames = new Set([name, ...(it.replaces || []).map((r) => mtText(r).trim())]);
+        for (const a of attrs) { const c = cand.get(a); if (c) shownNames.add(c.out.name); cand.delete(a); ambiguous.delete(a); unitScale.delete(a); }
+        for (const k of keys) { const e = extras.get(k); if (e) { shownNames.add(e.out.name); extras.delete(k); } }
+        for (const r of revs) needsReview.splice(needsReview.indexOf(r), 1);
+        for (let i = conflicts.length - 1; i >= 0; i--) if ([...shownNames].some((n) => n && (conflicts[i].includes(`«${n}»`) || conflicts[i].includes(`«${n}:`)))) conflicts.splice(i, 1);
+        const cov = { o: it, out: null, target: "", ckey: "", action: "hold", rep, pushed: false, hold: true };
+        for (const a of attrs) ownCover.attrs.set(a, cov);
+        for (const k of keys) ownCover.keys.set(k, cov);
+        rep.supplier = [...new Set(sup.filter(Boolean))];
+        review(name, [{ src: "рішення власника", value: `${name}: недоступне` }, ...rep.supplier.map((v) => ({ src: "постачальник", value: `${name}: ${v}` }))], "рішення власника недоступне (файл рішень відсутній, пошкоджений або без цього запису) — значення постачальника не передано, наявне значення картки збережено");
+        notes.push(`рішення власника «${name}» недоступне — характеристику утримано (перевірте файл рішень)`);
+      }
+    }
+  }
   const candByKey = new Map([...cand].map(([a, c]) => [itemKey(c.out), { a, c }]));
   const rawByName = new Map(raw.map((p) => [normName(p.name), p]));
   const rawKeys = new Set(raw.map(itemKey));
@@ -1222,7 +1347,29 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const merge = (x, a) => { const c = cand.get(a); merged.push(`«${fmt(x.p)}» → поле Prom «${fmt(c.out)}»`); if (!used.has(a)) push(c.out, c.src, a); };
   const catChanged = Boolean(prov?.cat && categoryId && prov.cat !== String(categoryId));
   const srcLabel = (s) => (s === SRC.DESC ? "опис" : s === SRC.RAW ? "XML" : s);
+  // Значення власника — на місці наявного запису тієї самої характеристики (порядок картки зберігається).
+  const pushOwner = (ow) => {
+    if (!ow.out) return;
+    if (ow.target) { if (!used.has(ow.target)) push(ow.out, SRC.OWNER, ow.target); return; }
+    if (ow.pushed) return;
+    ow.pushed = true;
+    const e = extras.get(ow.ckey); if (e) e.taken = true;
+    push(ow.out, SRC.OWNER, "", "ua");
+  };
   for (const x of classified) {
+    // Характеристика під рішенням власника: наявний запис (будь-якого походження) не передається — передається рішення.
+    const ow = (x.a && ownCover.attrs.get(x.a)) || ownCover.keys.get(keyOf(x.p.name));
+    if (ow?.hold) { push(x.p, x.s, x.a); continue; } // рішення недоступне — наявне значення картки без змін
+    if (ow) {
+      const same = Boolean(ow.out) && (itemKey(x.p) === itemKey(ow.out) || equivalent(x.p, ow.out) || sameValue(x.p, ow.out, names));
+      const shown = ow.out ? fmt(ow.out) : `${ow.o.name}: не передавати`;
+      if (!same && x.s === SRC.MANUAL) review(ow.out?.name || ow.o.name, [{ src: "рішення власника", value: shown }, { src: "ручна правка картки", value: fmt(x.p) }], "ручна правка картки відрізняється від підтвердженого рішення власника — передано рішення власника; перевірте, яке з них актуальне");
+      else if (!same && x.s === SRC.UNKNOWN && !ownKnown(ow.o, fmtV(x.p))) review(ow.out?.name || ow.o.name, [{ src: "рішення власника", value: shown }, { src: "наявне значення картки", value: fmt(x.p) }], "наявне значення картки відрізняється від рішення власника — передано рішення власника (інформаційно)");
+      if (!same && x.s !== SRC.OWNER) ow.rep.card = [...(ow.rep.card || []), fmt(x.p)];
+      pushOwner(ow);
+      continue;
+    }
+    if (x.s === SRC.OWNER) { removed.push(x.p.name); notes.push(`«${fmt(x.p)}»: рішення власника для цієї характеристики більше немає — запис прибрано`); continue; }
     if (x.s === SRC.MANUAL || x.s === SRC.UNKNOWN) {
       if (x.a && cand.has(x.a) && itemKey(cand.get(x.a).out) !== x.k) {
         const c = cand.get(x.a).out;
@@ -1275,14 +1422,36 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     removed.push(x.p.name);
   }
   // kitYield: поле з підтвердженої комплектації поступається переліку постачальника з тією самою назвою, якщо той передається.
-  const kitYield = (c) => { if (c.from !== "kit") return false; const e = extras.get(normName(c.out.name)); if (!e || e.blocked) return false; notes.push(`комплектація: «${c.out.name}» — передається перелік постачальника; поле за підтвердженням не заповнюється`); return true; };
-  for (const [a, c] of cand) if (!used.has(a) && !suppressed.has(a) && !kitYield(c)) push(c.out, c.src, a);
+  const kitYield = (c) => {
+    if (c.from !== "kit") return false;
+    const e = extras.get(normName(c.out.name));
+    if (!e || e.blocked) return false;
+    notes.push(`комплектація: «${c.out.name}» — передається перелік постачальника; поле за підтвердженням не заповнюється`);
+    // Підтверджене власником «у комплекті / не входить» не губиться (власник, 26.10.2026, GTM BLM48-SP / BLM48H-SP): поле
+    // поступилося переліку постачальника — окремими користувацькими характеристиками.
+    for (const [w, n] of [["b", "Акумулятор у комплекті"], ["c", "Зарядний пристрій у комплекті"]]) {
+      const v = c.kitOwned?.[w];
+      if (!(c.covers || []).includes(w) || typeof v !== "boolean" || extras.has(normName(n))) continue;
+      extras.set(normName(n), { out: { name: n, value: v ? "Так" : "Ні", unit: "" }, src: SRC.DESC, from: "", lang: "ua" });
+      notes.push(`комплектація підтверджена власником: «${n}: ${v ? "Так" : "Ні"}»`);
+    }
+    return true;
+  };
+  for (const [a, c] of cand) if (!used.has(a) && (c.src === SRC.OWNER || !suppressed.has(a)) && !kitYield(c)) push(c.out, c.src, a);
   // 3а. Нові користувацькі: без дублікатів (та сама характеристика за ключем або те саме значення під іншою назвою).
   // Пари з опису перевіряються проти ІНШИХ джерел (XML, поля, наявні записи); пари одного опису між собою — ні
   // (постачальник сам перелічив різні характеристики, напр. матеріали різних деталей).
   const descIdx = new Set(), synProps = [];
-  for (const [key, e] of extras) {
+  // Рішення власника — першими (пріоритет при лімітах Prom); дублі не шукаються: записи постачальника цієї характеристики вже
+  // не передаються.
+  for (const [key, e] of [...extras].sort(([, a], [, b]) => Number(b.src === SRC.OWNER) - Number(a.src === SRC.OWNER))) {
     if (e.taken || e.blocked) continue;
+    if (e.src === SRC.OWNER) {
+      if (items.filter((i) => !i.a).length >= MAX_CUSTOM) { overflow.push({ p: e.out, reason: `ліміт Prom ${MAX_CUSTOM} користувацьких характеристик` }); e.why = `ліміт Prom ${MAX_CUSTOM} користувацьких характеристик`; continue; }
+      const cov = ownCover.keys.get(key); if (cov) cov.pushed = true;
+      if (push(e.out, e.src, "", e.lang)) e.taken = true; else e.why = `ліміт Prom ${MAX_PARAMS} характеристик на товар`;
+      continue;
+    }
     if (suppressed.has("n:" + key)) { e.why = "користувацьку характеристику прибрав власник"; continue; }
     const at = usedKeys.get(key);
     if (at !== undefined) {
@@ -1340,6 +1509,8 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     if (at !== undefined && (sameValue(result[at], p, names) || numEq(result[at], p, names) || equivalent(p, result[at]))) continue;
     const pa = schema && attrOfItem(p);
     if (pa && items.some((i, j) => i.a === pa && equivalent(p, result[j]))) continue;
+    const ow = (pa && ownCover.attrs.get(pa)) || ownCover.keys.get(keyOf(p.name));
+    if (ow) { rawOnly.push({ name: p.name, value: p.value, unit: p.unit, reason: ow.hold ? "утримано: рішення власника недоступне" : ow.out ? `замінено підтвердженим рішенням власника «${fmt(ow.out)}»` : "не передається за підтвердженим рішенням власника" }); continue; }
     let reason = e?.why;
     if (!reason) {
       const m = schema ? mapParam(schema, p, opt) : { ok: false };
@@ -1364,7 +1535,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const reviewNotes = needsReview.map((r) => `ПОТРЕБУЄ ПЕРЕВІРКИ «${r.name}»: ${r.values.map((v) => `${v.src} «${v.value}»`).join(" / ")} — ${r.reason}`);
   const provenanceOut = { v: 1, cat: String(categoryId || ""), items, x: [...suppressed], notes: [...reviewNotes, ...conflictsU, ...notes].slice(0, 30) };
   return {
-    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, warranty, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps, lexDiff }, lexMerged, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped, emptyDesc, descText, timeFixed: [...timeFixed.values()],
+    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, warranty, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps, lexDiff }, lexMerged, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped, emptyDesc, descText, timeFixed: [...timeFixed.values()], owner: ownerReport,
     changed: JSON.stringify(result) !== JSON.stringify(cur),
   };
 }

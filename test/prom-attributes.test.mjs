@@ -1154,9 +1154,11 @@ test("захисні випадки комплектації власника (�
   const o = B("1250308", { titles: ["Газонокосарка без АКБ і ЗП"], kitOwner: { battery: true, charger: true } });
   assert.ok(o.params.some((p) => p.name === "Комплектація" && p.value === "З акумулятором і зарядним пристроєм"), JSON.stringify(o.params));
   assert.ok(o.notes.some((n) => /суперечать/.test(n)));
-  // Рішення власника — лише для шести товарів (3 Einhell + 3 GTM); зарядний для каркасних — не вказано (лише дані постачальника)
+  // Рішення власника — лише для шести товарів (3 Einhell + 3 GTM); зарядний для каркасних — не вказано (лише дані постачальника).
+  // GTM BLM48-SP і BLM48H-SP (власник, 26.10.2026, перевірено в Prom): без АКБ і зарядного — рішення 25.10 скасовано; BLM42 — без змін.
   assert.equal(catalog.kitConfirmed.size, 6);
-  for (const id of ["2571161463", "2572063884", "2572081588"]) assert.deepEqual(catalog.kitConfirmed.get(id), { battery: true, charger: undefined, batteryCount: 1 });
+  assert.deepEqual(catalog.kitConfirmed.get("2571161463"), { battery: true, charger: undefined, batteryCount: 1 });
+  for (const id of ["2572063884", "2572081588"]) assert.deepEqual(catalog.kitConfirmed.get(id), { battery: false, charger: false });
   assert.deepEqual(catalog.kitConfirmed.get("2528645191"), { battery: false, charger: undefined });
   assert.deepEqual(catalog.kitConfirmed.get("2617516831"), { battery: false, charger: undefined });
   assert.deepEqual(catalog.kitConfirmed.get("2529879460"), { battery: true, charger: true });

@@ -87,3 +87,11 @@ C2-C завершено (PASS). Повторні живі запуски — л�
 - Архів 16.10: contentSha `0d95ba85…a9e5` (= tools-catalog/Yml.gs); YML 47 808 343 Б
 - C2-B (Sheets API, 21.10 17:40 UTC): main = LIVE MTY, new92 = NEW92 Codex; YML main 49 061 893 Б, new92 915 267 Б
 - Свіжий 21.10: main = LIVE MTY; queue idsSha `cec25787…17ae`, contentSha `03db82f9…c239` (= NEW92 Codex); YML main 49 062 107 Б, sourceDigest `743379b6…0817`; new92 915 267 Б
+
+## 8. Характеристики Prom — стан 26.10.2026 (лише локально)
+
+- Деталі — S1-PLAN.md (розділ 14, «Після 810ea21»), TESTS.md, PROGRESS.md.
+- **Рішення власника щодо окремих характеристик:** джерело «ВЛАСНИК»; значення — `E:\Prom Maisternia Market\Матеріали\Рішення власника\owner-values.json` (поза репозиторієм; **для запусків задавати `MM_OWNER_VALUES`**), перелік без значень — `schemas/prom/owner-values-index.json` (`node tools/owner-values.mjs index|check <файл>`). Без файлу — утримання за переліком + попередження синхронізації.
+- Категорії Prom — `MM_PROM_CATEGORIES=…\Матеріали\Вигрузки\prom-categories-2026-10-23.json`.
+- **Перевірки:** `npm test` 329/329 + 2 локальні; мутації 259/260 (1 рівнозначна); dry-run 5 029 — змінились лише 8 цільових карток.
+- **NEXT TASK:** власник заповнює `Матеріали\Аудит\2026-10-26\Спірні товари — рішення власника.txt` (71 товар / 78 питань + 5 групових) → перенести відповіді в owner-values.json / правила → тести → dry-run. Імпорт у Prom, Google Sheets, Apps Script, push — лише з окремого погодження.
