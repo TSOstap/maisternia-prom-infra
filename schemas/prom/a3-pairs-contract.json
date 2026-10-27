@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "rev": 2,
+  "date": "2026-10-27",
+  "source": "А3: повні точні контекстні пари UA / RU; самі пари (Offer ID, значення) — лише у файлі поза репозиторієм (MM_A3_PAIRS)",
+  "count": 329,
+  "fingerprint": "sha256:9ce1ad9858fadf58d8133dabac57a830465b3d5181c2ebf3f8e452864fb3a198",
+  "history": [
+    {
+      "rev": 1,
+      "date": "2026-10-27",
+      "count": 325,
+      "fingerprint": "sha256:80f5b272e20f477d73b5af11bb6001dea1f55fa6229a090e907558acace6424f",
+      "note": "325 пар (рецензія Hermes msg_4db177bc1b95)"
+    }
+  ]
+}

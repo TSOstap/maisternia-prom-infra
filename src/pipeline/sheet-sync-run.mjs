@@ -18,6 +18,7 @@ function catalogFor(catalog, warnings) {
   if (c.schemas?.size && !c.ownerValues) warnings.push(`рішення власника щодо характеристик не підключено (MM_OWNER_VALUES) — підтверджені виправлення не застосовуються${c.ownerIndex?.size ? `; характеристики ${c.ownerIndex.size} товарів з переліку рішень утримано (значення постачальника не передано)` : ""}`);
   // Технічні нормалізації (пакет А1 і далі) — лише з валідним переліком захищених товарів (MM_FREEZE_IDS); інакше вимкнено для всіх.
   if (c.schemas?.size && !c.freezeInfo?.valid) warnings.push("технічні нормалізації (A1, A2) не активні: немає валідного переліку захищених товарів (MM_FREEZE_IDS) — характеристики як до пакетів А1 / А2");
+  if (c.schemas?.size && c.freezeInfo?.valid && !c.a3Info?.valid) warnings.push("точні пари А3 не активні: немає валідного переліку пар (MM_A3_PAIRS) — переклади як до пакета А3");
   return c;
 }
 

@@ -8,9 +8,9 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { a1Equivalent, buildCharacteristics } from "../src/core/prom-attributes.mjs";
-import { TECH_RULES, freezeFingerprint, loadFreeze, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
+import { TECH_RULES, a3Fingerprint, freezeFingerprint, loadFreeze, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
 
-const catalog = loadPromCatalog(undefined, { freezeFile: "" });
+const catalog = loadPromCatalog(undefined, { freezeFile: "", a3PairsFile: "" }); // ізольовано від MM_FREEZE_IDS / MM_A3_PAIRS
 const P = (name, value, unit = "") => ({ name, value, unit });
 const SAW = "1250302";
 const B = (o) => buildCharacteristics({ schema: catalog.schemas.get(SAW), categoryId: SAW, current: [], names: catalog.names, mapping: catalog.mappings.get(SAW), units: catalog.units, mode: "main", ...o });
@@ -142,12 +142,12 @@ const freezeEnv = (ids, file = fileOf(ids), contract = contractOf(ids)) => {
   const f = path.join(dir, "freeze.json"), k = path.join(dir, "freeze-contract.json");
   fs.writeFileSync(f, typeof file === "string" ? file : JSON.stringify(file));
   if (contract) fs.writeFileSync(k, typeof contract === "string" ? contract : JSON.stringify(contract));
-  return { dir, f, k, cat: loadPromCatalog(undefined, { freezeFile: f, freezeContractFile: k }) };
+  return { dir, f, k, cat: loadPromCatalog(undefined, { freezeFile: f, freezeContractFile: k, a3PairsFile: "" }) };
 };
 
 test("перелік захищених товарів (fail-closed): без файлу / пошкоджений / неузгоджений — режим вимкнено для всіх; валідний — лише в області дії, крім захищених", () => {
   assert.deepEqual(TECH_RULES, ["A1", "A2"]);
-  const none = loadPromCatalog(undefined, { freezeFile: "" });
+  const none = loadPromCatalog(undefined, { freezeFile: "", a3PairsFile: "" });
   assert.deepEqual([none.techRulesFor("111"), none.freezeInfo.valid], [[], false]);
   const ok = freezeEnv(["111", "112"]);
   assert.deepEqual([ok.cat.techRulesFor("111"), ok.cat.techRulesFor("222"), ok.cat.techRulesFor("333"), ok.cat.techRulesFor(""), ok.cat.freezeInfo], [[], [...TECH_RULES], [], [], { valid: true, file: "freeze.json", rev: 1, date: "2026-10-27", count: 2, scope: 4, source: "тест", parts: null }], "поза областю дії (новий / черга) — як у 83206c4");
@@ -155,7 +155,7 @@ test("перелік захищених товарів (fail-closed): без ф�
   // кожен файл — з правильною ревізією, щоб відсікала саме його вада (count / ID / дата / дублікати), а не ревізія
   for (const bad of ["{ зламаний", JSON.stringify({ v: 1, rev: 1, date: "2026-10-27", count: 3, ids: ["111", "112"], scope: sco }), JSON.stringify({ v: 1, rev: 1, date: "2026-10-27", count: 1, ids: ["x"], scope: sco }), JSON.stringify({ v: 1, rev: 1, count: 1, ids: ["111"], scope: sco }), JSON.stringify({ v: 1, rev: 1, date: "2026-10-27", count: 2, ids: ["111", "111"], scope: sco })]) {
     fs.writeFileSync(ok.f, bad);
-    const c = loadPromCatalog(undefined, { freezeFile: ok.f, freezeContractFile: ok.k });
+    const c = loadPromCatalog(undefined, { freezeFile: ok.f, freezeContractFile: ok.k, a3PairsFile: "" });
     assert.deepEqual([c.techRulesFor("222"), c.freezeInfo.valid], [[], false], bad);
     assert.ok(c.problems.some((p) => /переліку захищених/.test(p)), bad);
   }
@@ -195,7 +195,7 @@ test("перелік захищених товарів: порожній, неп
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "freeze-"));
   const f = path.join(dir, "freeze.json");
   fs.writeFileSync(f, JSON.stringify(fileOf(two)));
-  const real = loadPromCatalog(undefined, { freezeFile: f });
+  const real = loadPromCatalog(undefined, { freezeFile: f, a3PairsFile: "" });
   assert.deepEqual([real.techRulesFor("222"), real.freezeInfo.valid], [[], false]);
   fs.rmSync(dir, { recursive: true, force: true });
   assert.equal(freezeFingerprint(["2", "1"]), freezeFingerprint(["1", "2"]), "відбиток не залежить від порядку");
@@ -340,4 +340,91 @@ test("В: заперечення, порівняння, межі, допуски
   // через генератор: «до 8 бар» робочого тиску — конфлікт
   const r = B({ current: [P("Робочий тиск", "8 бар")], descUa: "<p>Робочий тиск: до 8 бар</p>", ...A1 });
   assert.equal(hard(r).length, 1, JSON.stringify(r.needsReview));
+});
+
+// Пакет А3 (власник через Hermes, 27.10.2026): точні контекстні переклади UA / RU. Доказ — ПОВНА пара в контексті
+// (Offer ID + ключ + повне UA + повне RU), перевірена Hermes; жодних правил для окремих слів чи позицій. Перелік — файл поза
+// репозиторієм (MM_A3_PAIRS) з контрактом у репозиторії; fail-closed; лише основний каталог в області дії, крім захищених.
+const A3_KEY = "Особливість тестова";
+const a3Pair = (id, ua, ru, pass) => ({ id, key: A3_KEY.toLowerCase(), ua, ru, ...(pass ? { pass } : {}) });
+const a3File = (pairs, more = {}) => ({ v: 1, rev: 1, date: "2026-10-27", source: "тест", count: pairs.length, fingerprint: a3Fingerprint(pairs), pairs, ...more });
+const a3Contract = (pairs, more = {}) => ({ v: 1, rev: 1, date: "2026-10-27", source: "тест", count: pairs.length, fingerprint: a3Fingerprint(pairs), ...more });
+const a3Env = (pairs, file = a3File(pairs), contract = a3Contract(pairs), freezeIds = ["91"]) => {
+  const fz = freezeEnv(freezeIds);
+  const f = path.join(fz.dir, "a3.json"), k = path.join(fz.dir, "a3-contract.json");
+  fs.writeFileSync(f, typeof file === "string" ? file : JSON.stringify(file));
+  if (contract) fs.writeFileSync(k, typeof contract === "string" ? contract : JSON.stringify(contract));
+  const cat = loadPromCatalog(undefined, { freezeFile: fz.f, freezeContractFile: fz.k, a3PairsFile: f, a3ContractFile: k });
+  return { ...fz, a3: f, a3k: k, cat };
+};
+
+test("А3: лише точна повна пара (ключ + повне UA + повне RU) — передається UA; інший запис або без пари — як раніше", () => {
+  const desc = (ua, ru) => ({ descUa: `<p>${A3_KEY}: ${ua}</p>`, descRu: `<p>${A3_KEY}: ${ru}</p>` });
+  const pairs = [a3Pair("90", "стрічково-дисковий", "ленточно-дисковый"), a3Pair("90", "900 Вт — забезпечує високу продуктивність.", "900 Вт — обеспечивает высокую производительность.", "900 Вт")];
+  const r = B({ ...desc("стрічково-дисковий", "ленточно-дисковый"), exactPairs: pairs });
+  assert.ok(has(r, A3_KEY, "стрічково-дисковий"), JSON.stringify(r.params));
+  assert.deepEqual(hard(r), [], JSON.stringify(r.needsReview));
+  assert.ok(r.notes.some((n) => /точний переклад/.test(n)));
+  assert.equal(hard(B(desc("стрічково-дисковий", "ленточно-дисковый"))).length, 1, "без переліку пар — як раніше");
+  assert.equal(hard(B({ ...desc("стрічково-дисковий", "ленточно-дисковый станок"), exactPairs: pairs })).length, 1, "інший RU — не та пара");
+  assert.equal(hard(B({ ...desc("стрічковий", "ленточный"), exactPairs: pairs })).length, 1, "окремі слова пари — не правило");
+  assert.equal(hard(B({ descUa: `<p>Інша назва: стрічково-дисковий</p>`, descRu: `<p>Інша назва: ленточно-дисковый</p>`, exactPairs: pairs })).length, 1, "інший ключ");
+  // вузьке технічне ядро без рекламного хвоста — лише якщо задано в переліку для цієї пари
+  const c = B({ ...desc("900 Вт — забезпечує високу продуктивність.", "900 Вт — обеспечивает высокую производительность."), exactPairs: pairs });
+  assert.ok(has(c, A3_KEY, "900 Вт"), JSON.stringify(c.params));
+  assert.ok(!c.params.some((p) => /продуктивн/.test(p.value)), "рекламний хвіст не передається");
+  // рішення власника — вище
+  const own = B({ ...desc("стрічково-дисковий", "ленточно-дисковый"), exactPairs: pairs, ownerValues: [{ name: A3_KEY, value: "дисковий", action: "set", source: "тест", date: "2026-10-27", priority: 1, autoUpdate: false }] });
+  assert.deepEqual(own.params.filter((p) => p.name === A3_KEY), [P(A3_KEY, "дисковий")]);
+});
+
+test("А3: перелік пар поза репозиторієм — fail-closed; лише свій товар в області дії, крім захищених; без глобальних правил", () => {
+  const pairs = [a3Pair("90", "стрічково-дисковий", "ленточно-дисковый"), a3Pair("91", "стрічково-дисковий", "ленточно-дисковый")];
+  const ok = a3Env(pairs);
+  assert.equal(ok.cat.a3Info.valid, true, JSON.stringify(ok.cat.problems));
+  assert.equal(ok.cat.a3PairsFor("90").length, 1);
+  assert.deepEqual([ok.cat.a3PairsFor("91"), ok.cat.a3PairsFor("222"), ok.cat.a3PairsFor("95")], [[], [], []], "захищений / інший товар / поза областю");
+  fs.rmSync(ok.dir, { recursive: true, force: true });
+  for (const [what, e] of [
+    ["пошкоджений файл", a3Env(pairs, "{ зламаний")],
+    ["count не збігається", a3Env(pairs, a3File(pairs, { count: 3 }))],
+    ["інший набір пар", a3Env(pairs, a3File(pairs.slice(0, 1)), a3Contract(pairs))],
+    ["відбиток у файлі не збігається", a3Env(pairs, a3File(pairs, { fingerprint: a3Fingerprint(pairs.slice(0, 1)) }))],
+    ["інша ревізія", a3Env(pairs, undefined, a3Contract(pairs, { rev: 2 }))],
+    ["немає контракту", a3Env(pairs, undefined, null)],
+    ["порожній перелік", a3Env([], a3File([]), a3Contract([]))],
+    ["пара без UA", a3Env(pairs, a3File([{ ...pairs[0], ua: "" }, pairs[1]]), a3Contract([{ ...pairs[0], ua: "" }, pairs[1]]))],
+    ["повтор «товар + ключ» з іншими значеннями", a3Env(pairs, a3File([pairs[0], { ...pairs[0], ua: "дисковий", ru: "дисковый" }]), a3Contract([pairs[0], { ...pairs[0], ua: "дисковий", ru: "дисковый" }]))],
+    ["перелік захищених недійсний", a3Env(pairs, undefined, undefined, [])],
+  ]) {
+    assert.deepEqual([e.cat.a3PairsFor("90"), e.cat.a3Info.valid], [[], false], what);
+    fs.rmSync(e.dir, { recursive: true, force: true });
+  }
+  assert.equal(a3Fingerprint([...pairs].reverse()), a3Fingerprint(pairs), "відбиток не залежить від порядку");
+});
+
+test("А3: синхронізація — лише refreshMainRow і лише пари свого товару; черга й нові — як у 83206c4", async () => {
+  const { refreshMainRow, candidateRow, refreshQueueRow } = await import("../src/core/sheet-sync.mjs");
+  const pairs = [a3Pair("90", "стрічково-дисковий", "ленточно-дисковый")];
+  const e = a3Env(pairs);
+  const full = { params: [P("Состояние", "Новое")], pictures: [], descriptionUa: `<p>${A3_KEY}: стрічково-дисковий</p>`, descriptionRu: `<p>${A3_KEY}: ленточно-дисковый</p>` };
+  const run = (id, c = e.cat) => JSON.parse(refreshMainRow({ "Offer ID": id, "ID постачальника": id, "Категорія Prom ID": SAW, "Виробник": "Test", "Характеристики JSON": "[]", "Назва постачальника UA": "Пила тестова", "Назва постачальника RU": "" }, { id, vendor: "Test", sku: "", nameUa: "Пила тестова", nameRu: "", price: 100, available: true, currency: "UAH" }, full, { stamp: "2026-10-27T10:00:00.000Z", catalog: c }).row["Характеристики JSON"]);
+  assert.ok(run("90").some((p) => p.name === A3_KEY && p.value === "стрічково-дисковий"));
+  assert.ok(!run("222").some((p) => p.name === A3_KEY), "той самий текст в іншому товарі — пари немає");
+  assert.ok(!run("91").some((p) => p.name === A3_KEY), "захищений");
+  const pricing = JSON.parse(fs.readFileSync(new URL("../config/default.json", import.meta.url), "utf8")).pricing;
+  const pc = { date: "2026-10-27", map: new Map([["90", SAW]]) };
+  const on = { ...e.cat, promCategories: pc }, off = { ...catalog, promCategories: pc };
+  const qo = { id: "90", vendor: "Test", sku: "", nameUa: "Пила тестова", nameRu: "Пила", url: "https://example.com/p.html", quantity: "", price: 100, available: true, currency: "UAH" };
+  const ca = candidateRow(qo, full, "2026-10-27T10:00:00.000Z", pricing, on), cb = candidateRow(qo, full, "2026-10-27T10:00:00.000Z", pricing, off);
+  assert.deepEqual(ca, cb, "новий товар");
+  const qa = refreshQueueRow({ ...ca, "Категорія Prom ID": SAW }, qo, full, { stamp: "2026-10-27T11:00:00.000Z", catalog: on }).row;
+  assert.deepEqual(qa, refreshQueueRow({ ...cb, "Категорія Prom ID": SAW }, qo, full, { stamp: "2026-10-27T11:00:00.000Z", catalog: off }).row, "черга");
+  assert.ok(!JSON.parse(qa["Характеристики JSON"]).some((p) => p.name === A3_KEY && p.value === "стрічково-дисковий"), "черга — без А3");
+  // попередження: перелік захищених валідний, а переліку пар немає
+  const { WatchSim } = await import("./helpers/watch-sim.mjs");
+  const noA3 = loadPromCatalog(undefined, { freezeFile: e.f, freezeContractFile: e.k, a3PairsFile: "" }); // явно без переліку пар (не з MM_A3_PAIRS)
+  const w = await new WatchSim({ catalog: noA3 }).start();
+  assert.ok(w.warnings.some((x) => /точні пари А3 не активні/.test(x)), JSON.stringify(w.warnings));
+  fs.rmSync(e.dir, { recursive: true, force: true });
 });

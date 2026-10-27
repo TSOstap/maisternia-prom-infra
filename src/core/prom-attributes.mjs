@@ -868,7 +868,7 @@ export function alignPairs(U, R, score) {
  *  цих рішень з репозиторію (назви характеристик без значень: без файлу рішень характеристики утримуються); cardTitles — назви
  *  картки (UA / RU) для звірки моделі разом із назвами постачальника (titles).
  */
-export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [], kitOwner = null, multiOwner = null, ownerValues = null, ownerIndex = null, cardTitles = [], techRules = [] }) {
+export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [], kitOwner = null, multiOwner = null, ownerValues = null, ownerIndex = null, cardTitles = [], techRules = [], exactPairs = [] }) {
   const cur = asParams(typeof current === "string" ? jsonOr(current, []) : current);
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
@@ -1293,6 +1293,14 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
             uaRuMerged++;
             extra(key, { ...u[0].out, value: lat }, SRC.DESC, "", { lang: "ua" });
             notes.push(`«${name}»: «${u[0].out.value}» / «${r[0].out.value}» — транслітерація латинського оригіналу; передано «${lat}»`);
+            continue;
+          }
+          // А3: точна повна пара цього товару (ключ + повне UA + повне RU), перевірена Hermes; pass — технічне ядро без реклами
+          const xp = (exactPairs || []).find((p) => p.key === key && p.ua === cleanValue(u[0].out.value) && p.ru === cleanValue(r[0].out.value));
+          if (xp) {
+            uaRuMerged++;
+            extra(key, { ...u[0].out, value: xp.pass || u[0].out.value }, SRC.DESC, "", { lang: "ua" });
+            notes.push(`«${name}»: UA «${u[0].out.value}» = RU «${r[0].out.value}» — точний переклад (перелік пар А3)${xp.pass ? `; передано технічне ядро «${xp.pass}»` : ""}`);
             continue;
           }
           const eq = tech.has("A1") && a1Equivalent(key, u[0].out.value, r[0].out.value);

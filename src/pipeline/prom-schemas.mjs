@@ -12,7 +12,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { sha256 } from "../core/text.mjs";
 import { parseCategory, parseSchemaText } from "../core/prom-schema.mjs";
-import { buildNames, charKey, normName, normUnit, unitAliasMap } from "../core/prom-attributes.mjs";
+import { buildNames, charKey, cleanValue, normName, normUnit, unitAliasMap } from "../core/prom-attributes.mjs";
 
 export const SCHEMAS_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../schemas/prom");
 const readJson = (f, d) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : d);
@@ -110,8 +110,38 @@ export function loadFreeze(file, contract = null) {
   return { valid: true, ids: new Set(ids), scope: inScope, rev: k.rev, date: String(j.date), source: String(j.source || k.source || ""), parts, problems: [] };
 }
 
+/** Відбиток переліку точних пар А3 (не залежить від порядку): у репозиторії — лише він, самі пари — поза репозиторієм. */
+export const a3Fingerprint = (pairs) => "sha256:" + sha256(JSON.stringify([...pairs].map((p) => [String(p.id), normName(p.key), cleanValue(p.ua), cleanValue(p.ru), p.pass === undefined ? "" : String(p.pass)]).sort((x, y) => x.join("\u0001").localeCompare(y.join("\u0001")))));
+
+/** Точні контекстні пари UA / RU (пакет А3, перевірені Hermes) — файл ПОЗА репозиторієм (змінна MM_A3_PAIRS):
+ *  { "v": 1, "rev": R, "date", "source", "count": N, "fingerprint"?: "sha256:…", "pairs": [{ "id": "<Offer ID>", "key", "ua", "ru", "pass"? }] }.
+ *  Доказ — ПОВНА пара в контексті (товар + ключ + повне UA + повне RU), не словник слів; pass — підтверджене технічне ядро без
+ *  рекламного хвоста. Контракт у репозиторії (schemas/prom/a3-pairs-contract.json: { v, rev, date, count, fingerprint }) — без пар.
+ *  Fail-closed: без файлу, без контракту, з будь-якою невідповідністю — пари не діють для жодного товару. */
+export function loadA3Pairs(file, contract = null) {
+  const res = { valid: false, map: new Map(), count: 0, rev: 0, problems: [] };
+  if (!file) return res;
+  const name = `файл точних пар А3 «${path.basename(file)}»`, off = " — точні пари А3 вимкнено";
+  const fail = (why) => { res.problems.push(why + off); return res; };
+  if (!fs.existsSync(file)) return fail(`${name} не знайдено`);
+  let j = null;
+  try { j = readJson(file, null); } catch { return fail(`${name}: некоректний JSON`); }
+  const pairs = Array.isArray(j?.pairs) ? j.pairs : null;
+  const okPair = (p) => Boolean(p) && /^\d+$/.test(String(p.id)) && Boolean(normName(p.key)) && Boolean(cleanValue(p.ua)) && Boolean(cleanValue(p.ru)) && (p.pass === undefined || Boolean(cleanValue(p.pass)));
+  if (!j || j.v !== 1 || !Number.isInteger(j.rev) || !/^\d{4}-\d{2}-\d{2}$/.test(String(j.date || "")) || !pairs || !pairs.length || !pairs.every(okPair) || j.count !== pairs.length) return fail(`${name}: немає v=1 / rev / date / pairs / count, перелік порожній або пара неповна`);
+  const ids = pairs.map((p) => String(p.id) + "|" + normName(p.key));
+  if (new Set(ids).size !== ids.length) return fail(`${name}: повторена пара (товар + ключ)`);
+  const fp = a3Fingerprint(pairs);
+  if (j.fingerprint !== undefined && j.fingerprint !== fp) return fail(`${name}: відбиток у файлі не збігається з парами`);
+  const k = contract;
+  if (!k || k.v !== 1 || !Number.isInteger(k.rev) || !Number.isInteger(k.count) || k.count < 1 || !FP.test(String(k.fingerprint || ""))) return fail("контракт точних пар А3 у репозиторії відсутній або некоректний");
+  if (k.rev !== j.rev || k.count !== pairs.length || k.fingerprint !== fp) return fail(`${name} не відповідає контракту (ревізія ${j.rev} / ${k.rev}, пар ${pairs.length} / ${k.count}, відбиток ${k.fingerprint === fp ? "збігається" : "інший"})`);
+  for (const p of pairs) { const id = String(p.id); res.map.set(id, [...(res.map.get(id) || []), { key: normName(p.key), ua: cleanValue(p.ua), ru: cleanValue(p.ru), ...(p.pass === undefined ? {} : { pass: cleanValue(p.pass) }) }]); }
+  return { ...res, valid: true, count: pairs.length, rev: j.rev, problems: [] };
+}
+
 /** Схеми, словники й одиниці для синхронізації. */
-export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "", ownerValuesFile = process.env.MM_OWNER_VALUES || "", freezeFile = process.env.MM_FREEZE_IDS || "", freezeContractFile = path.join(dir, "freeze-contract.json") } = {}) {
+export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "", ownerValuesFile = process.env.MM_OWNER_VALUES || "", freezeFile = process.env.MM_FREEZE_IDS || "", freezeContractFile = path.join(dir, "freeze-contract.json"), a3PairsFile = process.env.MM_A3_PAIRS || "", a3ContractFile = path.join(dir, "a3-pairs-contract.json") } = {}) {
   const out = { schemas: new Map(), mappings: new Map(), units: readJson(path.join(dir, "units.json"), { conversions: [] }), problems: [] };
   // Технічні нормалізації (TECH_RULES) — лише з валідним переліком захищених товарів, що точно відповідає контракту; для захищених — не діють.
   let contract = null;
@@ -219,6 +249,13 @@ export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = proces
     }
   }
   out.problems.push(...fz.problems); // проблеми переліку — після проблем схем (порядок попереджень як до А1)
+  // Точні пари А3 — лише разом із валідним переліком захищених і лише для товарів, яким діють технічні нормалізації.
+  let a3c = null;
+  if (a3PairsFile) { try { a3c = readJson(a3ContractFile, null); } catch { a3c = null; } }
+  const a3 = loadA3Pairs(a3PairsFile, a3c);
+  out.problems.push(...a3.problems);
+  out.a3Info = { valid: fz.valid && a3.valid, pairsValid: a3.valid, file: a3PairsFile ? path.basename(a3PairsFile) : "", rev: a3.rev, count: a3.count };
+  out.a3PairsFor = (id) => (out.a3Info.valid && out.techRulesFor(id).length ? a3.map.get(String(id)) || [] : []);
   return out;
 }
 
