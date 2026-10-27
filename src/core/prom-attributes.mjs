@@ -323,6 +323,118 @@ export function descriptionPairs(html) {
   return out.sort((a, b) => a.start - b.start);
 }
 
+/** Пакет N1-1 (Hermes, 27.10.2026): таблиця опису з ЯВНИМ заголовком «назва | значення | умова» («Параметр | Значення |
+ *  Примітка») першим рядком. Рядок придатний лише з порожньою умовою (назва й значення); інакше — причина (лишається в описі):
+ *  рядок з умовою (значення залежить від неї), не з 3 клітинок, без назви / значення, числа лише через пробіл («5 160 А»,
+ *  «230 400 В», «3 000» — діапазон, кілька значень чи тисячі не визначити), невідома HTML-сутність, не характеристика (реклама,
+ *  речення, службовий текст). Таблицю не розбирають зовсім: вкладена таблиця (або таблиця всередині іншої), об'єднані клітинки
+ *  (rowspan / colspan), додатковий рядок заголовка (режими, підзаголовки) — варіанти не зливаються й умови не підмінюються.
+ *  Інший або невідомий заголовок — без розбору (як раніше). Лише з техправилом N1; спільний descriptionPairs не змінюється. */
+const COND_HEAD = [
+  new Set(["параметр", "параметри", "параметры", "характеристика", "назва", "название"]),
+  new Set(["значення", "значение"]),
+  new Set(["примітка", "примечание", "умова", "умови", "условие", "условия"]),
+];
+const SPACED_NUMBERS_RE = /\d\s+[-+]?\d/; // «5 160», «230 400 В», «3 000»: числа поспіль лише через пробіл — неоднозначно
+const ENTITY_LEFT_RE = /&(#x[0-9a-f]+|#\d+|[a-z][a-z0-9]*);/i;
+const isCondHead = (t) => t.length === 3 && t.every((x, i) => COND_HEAD[i].has(normName(x)));
+const nonChar = (key, value) => { const nc = descriptionNonCharacteristic({ key, value, via: "p" }); return nc ? "не характеристика: " + nc.why : ""; };
+function conditionTables(html) {
+  const s = mtText(html), out = [];
+  for (const tb of s.matchAll(/<table\b[\s\S]*?<\/table>/gi)) {
+    // Таблиця, у якій усередині є ще <table> (вкладена або сама — обгортка): збіг до першого </table> — не межі однієї таблиці.
+    const nested = /<table\b/i.test(tb[0].slice(6));
+    const rows = [...tb[0].matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map((m) => ({ m, cells: [...m[1].matchAll(/<t([dh])\b([^>]*)>([\s\S]*?)<\/t\1>/gi)] }));
+    if (!isCondHead((rows[0]?.cells || []).map((c) => textOf(c[3])))) continue;
+    const t = { rows: [] };
+    out.push(t);
+    if (nested) { t.why = "вкладена таблиця — не розібрано"; continue; }
+    if (rows.some((r) => r.cells.some((c) => /\b(rowspan|colspan)\s*=/i.test(c[2])))) { t.why = "таблиця з об'єднаними клітинками (rowspan / colspan) — не розібрано"; continue; }
+    if (rows.slice(1).some((r) => r.cells.some((c) => c[1].toLowerCase() === "h") && !isCondHead(r.cells.map((c) => textOf(c[3]))))) { t.why = "додатковий рядок заголовка (режими / підзаголовки) — не розібрано"; continue; }
+    for (const { m, cells } of rows.slice(1)) {
+      const raw = cells.map((c) => textOf(c[3])), v = raw.map(cleanValue); // сутність перевіряється до cleanValue (вона знімає кінцеву «;»)
+      if (!v.some(Boolean) || isCondHead(v)) continue; // порожній рядок / повтор заголовка
+      const [key = "", value = "", cond = ""] = v, start = tb.index + m.index;
+      const why = v.length !== 3 ? `рядок з ${v.length} клітинками — не розібрано`
+        : !key || !value ? "порожня назва або значення"
+        : cond ? "значення з умовою з колонки «Примітка» — лишається в описі"
+        : ENTITY_LEFT_RE.test(raw[0]) || ENTITY_LEFT_RE.test(raw[1]) ? "невідома HTML-сутність у назві або значенні"
+        : SPACED_NUMBERS_RE.test(value) ? "числа лише через пробіл (діапазон, кілька значень чи тисячі — не визначити) — неоднозначно"
+        : nonChar(key, value);
+      t.rows.push({ key, value, ...(cond ? { cond } : {}), start, end: start + m[0].length, ...(why ? { why } : {}) });
+    }
+  }
+  return out;
+}
+const condPair = (r) => ({ key: r.key.replace(/[:\s]+$/, ""), value: r.value, start: r.start, end: r.end, via: "table" });
+const condSkip = (r, why, lang) => ({ ...(lang ? { lang } : {}), key: r?.key || "", value: r?.value || "", ...(r?.cond ? { cond: r.cond } : {}), why });
+/** Одна мова (розбір): пари придатних рядків і поіменні причини решти. */
+export function conditionTablePairs(html) {
+  const pairs = [], skipped = [];
+  for (const t of conditionTables(html)) {
+    if (t.why) { skipped.push(condSkip(null, t.why)); continue; }
+    for (const r of t.rows) if (r.why) skipped.push(condSkip(r, r.why)); else pairs.push(condPair(r));
+  }
+  return { pairs, skipped };
+}
+/** Повні пари назв UA ↔ RU для таблиць N1-1, перевірені Hermes (27.10.2026, msg_0b3e9c427024, msg_cc0eeb83e778 — за фактичними
+ *  таблицями джерела): ціле поле разом з одиницею й уточненням, точне написання джерела (зокрема латинська «B»), без нечіткого
+ *  збігу й без обрізання хвостів (макс. / мін. / режим / мережа). Інших способів підтвердити ключ N1-1 немає: той самий атрибут
+ *  схеми чи запис словника назв не доводить ту саму одиницю й уточнення (В ≠ кВ, msg_49a57420a856) — такі рядки лише в аудиті.
+ *  Це назви полів (технічний словник), не дані товарів. */
+const N1_KEY_PAIRS = Object.freeze([
+  ["Струм холостого ходу генератора, А", "Ток холостого хода генератора, А"],
+  ["Робочий діапазон температур навколишнього середовища, °С", "Рабочий диапазон температур окружающей среды, °С"],
+  ["Номінальна напруга живлення, В", "Номинальное напряжение питания, B"],
+  ["Максимальний струм короткого замикання, А", "Максимальный ток короткого замыкания, А"],
+  ["ККД, %, не менше", "КПД, %, не менее"],
+  ["Габаритні розміри (Д×Ш×В), мм", "Габаритные размеры (Д×Ш×В), мм"],
+  ["Потужність холостого ходу, Вт, не більше", "Потребляемая мощность холостого хода, Вт, не более"],
+  ["Споживана потужність, кВА, не більше", "Потребляемая мощность, кВА, не более"],
+  ["Номінальний струм автоматичного вимикача, А", "Номинальный ток автоматического выключателя, А"],
+  ["Опір ізоляції за напруги 2,5 кВ, МОм, не менше", "Сопротивление изоляции, при напряжении 2,5 кВ, МОм, не менее"],
+  ["Режими роботи", "Режимы работы"],
+  ["Ступінь захисту", "Степень защиты"],
+]);
+// Код IP (лише ключ ступеня захисту; Hermes msg_cc0eeb83e778): «IP» латиницею або кириличними двійниками «І» / «Р» + рівно дві
+// цифри; цифри не змінюються. «IR23», «IP23X», «ІР 2З» — не код; інший ключ — без нормалізації.
+const IP_KEY_RE = /(^|\s)(ступінь захисту|степень защиты)$/;
+const IP_CODE_RE = /^[IІ][PР]\s?(\d{2})$/;
+const ipCode = (v) => { const m = IP_CODE_RE.exec(cleanValue(v)); return m ? "IP" + m[1] : null; };
+const keyForm = (k) => cleanValue(k).replace(/\s+/g, " ");
+const valForm = (v) => cleanValue(v).toLowerCase().replace(/\s+/g, " ");
+/** UA + RU (генератор): UA-рядок передається лише якщо RU-рядок ТОГО САМОГО місця паралельної таблиці має ПІДТВЕРДЖЕНИЙ ключ
+ *  (погоджена повна пара N1_KEY_PAIRS — ціле поле з одиницею й уточненням) і той самий запис значення (або доказова
+ *  рівнозначність sameVal генератора — лише після підтвердженого ключа). Позиція — лише додатковий запобіжник після ключа: однакові числа на тих самих
+ *  місцях нічого не підтверджують. Підтверджений ключ з різними значеннями — conflicts (справжній конфлікт, генератор робить
+ *  жорстку позначку); невідомий / непідтверджений ключ — лише аудит (skipped). RU-рядки окремо не передаються ніколи (до N1 ці
+ *  таблиці не розбиралися). Інша кількість таблиць / рядків, причина в таблиці чи рядку — UA не передається (поіменно). */
+export function conditionTablePairsUaRu(ua, ru, { sameVal = () => false } = {}) {
+  const U = conditionTables(ua), Q = conditionTables(ru), pairs = [], skipped = [], conflicts = [];
+  const keyOk = (u, r) => N1_KEY_PAIRS.some(([x, y]) => keyForm(u) === x && keyForm(r) === y);
+  if (!U.length && Q.length) skipped.push(condSkip(null, "таблиця «Параметр | Значення | Примітка» лише в RU-описі — окремо не передається", "ru"));
+  U.forEach((t, i) => {
+    const q = Q[i];
+    if (t.why) { skipped.push(condSkip(null, t.why, "ua")); return; }
+    const all = (why) => { for (const r of t.rows) skipped.push(condSkip(r, r.why || why, "ua")); };
+    if (U.length !== Q.length || !q) return all("у RU-описі немає паралельної таблиці «Параметр | Значення | Примітка» — значення не підтверджено");
+    if (q.why) return all("RU-таблиця: " + q.why);
+    if (q.rows.length !== t.rows.length) return all(`кількість рядків UA ${t.rows.length} ≠ RU ${q.rows.length} — значення не підтверджено`);
+    t.rows.forEach((r, j) => {
+      const x = q.rows[j];
+      if (r.why) skipped.push(condSkip(r, r.why, "ua"));
+      else if (!keyOk(r.key, x.key)) skipped.push(condSkip(r, q.rows.some((y) => keyOk(r.key, y.key)) ? "ключ RU-рядка підтверджено в іншому місці таблиці — порядок UA / RU різний, не підтверджено" : `пара ключів «${r.key}» / «${x.key}» не погоджена (лише явні повні пари N1-1) — лише аудит`, "ua"));
+      else if (x.why) skipped.push(condSkip(r, "RU-рядок: " + x.why, "ua"));
+      else if (IP_KEY_RE.test(normName(r.key)) && ipCode(r.value) && ipCode(x.value)) {
+        if (ipCode(r.value) === ipCode(x.value)) pairs.push({ ...condPair(r), value: ipCode(r.value) });
+        else conflicts.push({ lang: "ua", key: r.key, ruKey: x.key, ua: r.value, ru: x.value });
+      } else if (valForm(r.value) !== valForm(x.value) && !sameVal(r.value, x.value, r.key, x.key)) conflicts.push({ lang: "ua", key: r.key, ruKey: x.key, ua: r.value, ru: x.value });
+      else pairs.push(condPair(r));
+    });
+  });
+  return { pairs, skipped, conflicts };
+}
+
 /** Запис опису виду «Назва: текст», який НЕ є характеристикою (власник, 26.10.2026: характеристики — лише структуровані
  *  пари з блоку характеристик; пояснення, переваги, реклама, службовий текст, інструкції й попередження лишаються лише в
  *  описі). Повертає { kind, why } або null. Лише однозначні випадки; неоднозначні (числа, перелік, комплектація) — null,
@@ -900,7 +1012,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const review = (name, values, reason) => needsReview.push({ name, values, reason, kind: /інформаційно/.test(reason) ? "інформаційно" : /можливо, лише переклад/.test(reason) ? "переклад?" : /не визначити/.test(reason) ? "слова різні" : "конфлікт" });
   const hint = (a, b) => { const ta = tokens(a), tb = tokens(b); return ta !== tb ? "" : ta ? " (числа й латиниця однакові — можливо, лише переклад)" : " (без чисел і латиниці — переклад чи інший зміст, не визначити)"; };
   let uaRuMerged = 0; // та сама характеристика в UA- і RU-описі з однаковим значенням → одна
-  const aligned = [], gapProps = [], valueProps = [], ruOnly = [], warrantyDesc = [], lexMerged = [], lexDiff = [], emptyDesc = [], descText = []; // вирівняні пари UA/RU; пропозиції словника; лише RU
+  const aligned = [], gapProps = [], valueProps = [], ruOnly = [], warrantyDesc = [], lexMerged = [], lexDiff = [], emptyDesc = [], descText = [], tableSkipped = [], tableConflicts = []; // вирівняні пари UA/RU; пропозиції словника; лише RU; N1-1: рядки таблиці, лишені в описі, і справжні конфлікти UA / RU
   const extras = new Map(); // ключ → { out, src, from, blocked, why }
   const extra = (key, out, src, from, more = {}) => {
     if (!key) return;
@@ -947,7 +1059,19 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     }
     const pairs = [];
     const batteryAttr = schema.attributes.some((a) => isBatteryTypeName(a.nameUK || a.nameRU) && !mapping?.blocked?.[a.id]);
-    for (const [lang, html] of [["ua", descUa], ["ru", descRu]]) for (const pr0 of descriptionPairs(html)) {
+    // N1-1: таблиця «Параметр | Значення | Примітка» — лише з техправилом N1 (когорта N0): UA-рядки, підтверджені паралельною
+    // RU-таблицею; RU окремо не передається. Рядки, що лишаються в описі, — поіменно (tableSkipped / notes).
+    // Ключ — лише погоджені повні пари (N1_KEY_PAIRS); значення після підтвердженого ключа — доказові рівнозначності генератора
+    // (sameValueIn; А1, якщо діє).
+    const n1Val = (a, b, ku, kr) => sameValueIn([ku, kr], { value: a, unit: "" }, { value: b, unit: "" }, names, categoryId) || (tech.has("A1") && Boolean(a1Equivalent(ku, a, b)));
+    const n1 = tech.has("N1") ? conditionTablePairsUaRu(descUa, descRu, { sameVal: n1Val }) : null;
+    for (const c of n1?.conflicts || []) {
+      tableConflicts.push(c);
+      review(nameOf(c.key), [{ src: "опис UA", value: `${c.key}: ${c.ua}` }, { src: "опис RU", value: `${c.ruKey}: ${c.ru}` }], "UA і RU значення відрізняються");
+      conflicts.push(`опис UA / RU: таблиця «Параметр | Значення | Примітка» — «${c.key}»: «${c.ua}» ≠ «${c.ru}», не передано`);
+    }
+    for (const x of n1?.skipped || []) { tableSkipped.push(x); notes.push(`опис ${x.lang.toUpperCase()}: таблиця «Параметр | Значення | Примітка»${x.key ? ` — «${x.key}»` : ""}: ${x.why}`); }
+    for (const [lang, html] of [["ua", descUa], ["ru", descRu]]) for (const pr0 of [...descriptionPairs(html), ...(lang === "ua" ? n1?.pairs || [] : [])].sort((a, b) => a.start - b.start)) {
       let pr = pr0;
       // «Тип акумулятора: Li-ion, LXT» (власник, 25.10.2026, ТОП-50 №3): поле Prom — тип зі схеми, платформа LXT / CXT не губиться —
       // окрема характеристика «Акумуляторна платформа». Лише коли в категорії є поле типу акумулятора.
@@ -1688,7 +1812,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const reviewNotes = needsReview.map((r) => `ПОТРЕБУЄ ПЕРЕВІРКИ «${r.name}»: ${r.values.map((v) => `${v.src} «${v.value}»`).join(" / ")} — ${r.reason}`);
   const provenanceOut = { v: 1, cat: String(categoryId || ""), items, x: [...suppressed], notes: [...reviewNotes, ...conflictsU, ...notes].slice(0, 30) };
   return {
-    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, warranty, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps, lexDiff }, lexMerged, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped, emptyDesc, descText, timeFixed: [...timeFixed.values()], owner: ownerReport,
+    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, warranty, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps, lexDiff }, lexMerged, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped, emptyDesc, descText, tableSkipped, tableConflicts, timeFixed: [...timeFixed.values()], owner: ownerReport,
     changed: JSON.stringify(result) !== JSON.stringify(cur),
   };
 }

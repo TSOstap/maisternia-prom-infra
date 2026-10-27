@@ -65,6 +65,9 @@ export function loadOwnerValues(file) {
 /** Технічні нормалізації, увімкнені в генераторі (пакети після 83206c4). Діють лише з валідним переліком захищених товарів
  *  і лише для основного каталогу (refreshMainRow): нові кандидати й черга «Нові товари» — як у 83206c4. */
 export const TECH_RULES = Object.freeze(["A1", "A2"]); // A2 — картки без <param> у XML: характеристики з опису (лише refreshMainRow)
+/** Правила пакетів N — лише для стабільної когорти N0 (loadCohort) в області дії, крім захищених. N1 — таблиця «Параметр |
+ *  Значення | Примітка» (conditionTablePairs). */
+export const N1_RULES = Object.freeze(["N1"]);
 
 /** Відбиток набору Offer ID (не залежить від порядку): у репозиторії зберігається лише він, самі ID — поза репозиторієм. */
 export const freezeFingerprint = (ids) => "sha256:" + sha256([...new Set([...ids].map(String))].sort().join("\n"));
@@ -140,16 +143,54 @@ export function loadA3Pairs(file, contract = null) {
   return { ...res, valid: true, count: pairs.length, rev: j.rev, problems: [] };
 }
 
+/** Відбиток когорти N0 (не залежить від порядку): у репозиторії — лише він, самі Offer ID — поза репозиторієм. */
+export const cohortFingerprint = (ids) => freezeFingerprint(ids);
+
+/** Когорта пакетів N (Hermes, 27.10.2026, msg_47d547bfb269): стабільний перелік карток аудиту N0 — 678 «лише технічних» +
+ *  212 порожніх (890) — файл ПОЗА репозиторієм (змінна MM_N0_COHORT):
+ *  { "v": 1, "rev": R, "date", "source", "count": N, "fingerprint"?: "sha256:…", "ids": ["<Offer ID>", …] }.
+ *  Контракт у репозиторії (schemas/prom/n0-cohort-contract.json: { v, rev, date, count, fingerprint }) — без ID. Умова не
+ *  залежить від поточного стану картки (порожня / поточні характеристики), тож повторний прогін стабільний. Fail-closed: без
+ *  файлу, без контракту, з будь-якою невідповідністю — правила N1 не діють для жодного товару (A1 / A2 / А3 — як раніше). */
+export function loadCohort(file, contract = null) {
+  const res = { valid: false, ids: new Set(), count: 0, rev: 0, date: "", problems: [] };
+  if (!file) return res;
+  const name = `файл когорти N0 «${path.basename(file)}»`, off = " — правила N1 вимкнено";
+  const fail = (why) => { res.problems.push(why + off); return res; };
+  if (!fs.existsSync(file)) return fail(`${name} не знайдено`);
+  let j = null;
+  try { j = readJson(file, null); } catch { return fail(`${name}: некоректний JSON`); }
+  const ids = idList(j?.ids);
+  if (!j || j.v !== 1 || !Number.isInteger(j.rev) || j.rev < 1 || !/^\d{4}-\d{2}-\d{2}$/.test(String(j.date || "")) || !ids || j.count !== ids.length) return fail(`${name}: немає v=1 / rev / date / ids / count, перелік порожній або ids неунікальні`);
+  const fp = cohortFingerprint(ids);
+  if (j.fingerprint !== undefined && j.fingerprint !== fp) return fail(`${name}: відбиток у файлі не збігається з ids`);
+  const k = contract;
+  if (!k || k.v !== 1 || !Number.isInteger(k.rev) || k.rev < 1 || !/^\d{4}-\d{2}-\d{2}$/.test(String(k.date || "")) || !Number.isInteger(k.count) || k.count < 1 || !FP.test(String(k.fingerprint || ""))) return fail("контракт когорти N0 у репозиторії відсутній або некоректний");
+  if (k.rev !== j.rev || k.date !== j.date || k.count !== ids.length || k.fingerprint !== fp) return fail(`${name} не відповідає контракту (ревізія ${j.rev} / ${k.rev}, дата ${j.date} / ${k.date}, карток ${ids.length} / ${k.count}, відбиток ${k.fingerprint === fp ? "збігається" : "інший"})`);
+  return { valid: true, ids: new Set(ids), count: ids.length, rev: j.rev, date: String(j.date), problems: [] };
+}
+
 /** Схеми, словники й одиниці для синхронізації. */
-export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "", ownerValuesFile = process.env.MM_OWNER_VALUES || "", freezeFile = process.env.MM_FREEZE_IDS || "", freezeContractFile = path.join(dir, "freeze-contract.json"), a3PairsFile = process.env.MM_A3_PAIRS || "", a3ContractFile = path.join(dir, "a3-pairs-contract.json") } = {}) {
+export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "", ownerValuesFile = process.env.MM_OWNER_VALUES || "", freezeFile = process.env.MM_FREEZE_IDS || "", freezeContractFile = path.join(dir, "freeze-contract.json"), a3PairsFile = process.env.MM_A3_PAIRS || "", a3ContractFile = path.join(dir, "a3-pairs-contract.json"), n0CohortFile = process.env.MM_N0_COHORT || "", n0CohortContractFile = path.join(dir, "n0-cohort-contract.json") } = {}) {
   const out = { schemas: new Map(), mappings: new Map(), units: readJson(path.join(dir, "units.json"), { conversions: [] }), problems: [] };
   // Технічні нормалізації (TECH_RULES) — лише з валідним переліком захищених товарів, що точно відповідає контракту; для захищених — не діють.
   let contract = null;
   if (freezeFile) { try { contract = readJson(freezeContractFile, null); } catch { contract = null; } }
   const fz = loadFreeze(freezeFile, contract);
   out.freezeInfo = { valid: fz.valid, file: freezeFile ? path.basename(freezeFile) : "", rev: fz.rev, date: fz.date, count: fz.ids.size, scope: fz.scope.size, source: fz.source, parts: fz.parts };
-  // Лише товари погодженої області (знімок основного каталогу), крім захищених; поза областю — як у 83206c4.
-  out.techRulesFor = (id) => (fz.valid && fz.scope.has(String(id)) && !fz.ids.has(String(id)) ? [...TECH_RULES] : []);
+  // Когорта N0 (правила N1) — лише з валідним переліком захищених; уся когорта має бути в області дії.
+  let n0c = null;
+  if (n0CohortFile) { try { n0c = readJson(n0CohortContractFile, null); } catch { n0c = null; } }
+  const co = loadCohort(n0CohortFile, n0c);
+  // Захищені в когорті (нове питання власника з 678 → новий перелік захищених) — очікувано: N1 вимикається лише їм (!fz.ids у
+  // techRulesFor), решта когорти — як була. Товар когорти поза областю дії — когорта не з того знімка: N1 вимкнено для всіх.
+  if (co.valid && fz.valid) {
+    const outScope = [...co.ids].filter((x) => !fz.scope.has(x)).length;
+    if (outScope) { co.valid = false; co.problems.push(`когорта N0: ${outScope} товарів поза областю дії переліку захищених — правила N1 вимкнено`); }
+  }
+  out.cohortInfo = { valid: fz.valid && co.valid, file: n0CohortFile ? path.basename(n0CohortFile) : "", rev: co.rev, date: co.date, count: co.count };
+  // Лише товари погодженої області (знімок основного каталогу), крім захищених; поза областю — як у 83206c4. N1 — лише когорта N0.
+  out.techRulesFor = (id) => (fz.valid && fz.scope.has(String(id)) && !fz.ids.has(String(id)) ? [...TECH_RULES, ...(out.cohortInfo.valid && co.ids.has(String(id)) ? N1_RULES : [])] : []);
   // Рішення власника щодо окремих характеристик (Offer ID → { model, items }); немає файлу — не застосовуються.
   out.ownerValues = null;
   if (ownerValuesFile) {
@@ -249,6 +290,7 @@ export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = proces
     }
   }
   out.problems.push(...fz.problems); // проблеми переліку — після проблем схем (порядок попереджень як до А1)
+  out.problems.push(...co.problems);
   // Точні пари А3 — лише разом із валідним переліком захищених і лише для товарів, яким діють технічні нормалізації.
   let a3c = null;
   if (a3PairsFile) { try { a3c = readJson(a3ContractFile, null); } catch { a3c = null; } }
