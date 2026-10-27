@@ -62,9 +62,64 @@ export function loadOwnerValues(file) {
   return res;
 }
 
+/** Технічні нормалізації, увімкнені в генераторі (пакети після 83206c4). Діють лише з валідним переліком захищених товарів
+ *  і лише для основного каталогу (refreshMainRow): нові кандидати й черга «Нові товари» — як у 83206c4. */
+export const TECH_RULES = Object.freeze(["A1"]);
+
+/** Відбиток набору Offer ID (не залежить від порядку): у репозиторії зберігається лише він, самі ID — поза репозиторієм. */
+export const freezeFingerprint = (ids) => "sha256:" + sha256([...new Set([...ids].map(String))].sort().join("\n"));
+const idList = (x) => { const ids = Array.isArray(x) ? x.map(String) : null; return ids && ids.length && ids.every((v) => /^\d+$/.test(v)) && new Set(ids).size === ids.length ? ids : null; };
+const FP = /^sha256:[0-9a-f]{64}$/;
+
+/** Перелік захищених товарів (з незавершеними рішеннями власника) і область дії — файл ПОЗА репозиторієм (змінна MM_FREEZE_IDS):
+ *  { "v": 1, "rev": R, "date": "YYYY-MM-DD", "source": "…", "count": N, "ids": ["<Offer ID>", …], "fingerprint"?: "sha256:…",
+ *    "scope": { "count": M, "ids": [...], "fingerprint"?: "sha256:…" } }
+ *  ids — захищені (непорожній, унікальні, count = кількість); scope — знімок основного каталогу, якому погоджено зміни (захищені
+ *  входять у нього). Контракт актуального знімка — у репозиторії, без ID (schemas/prom/freeze-contract.json:
+ *  { v: 1, rev, date, source, count, fingerprint, scope: { count, fingerprint }, parts?: { initial, added } }): файл має точно йому
+ *  відповідати (та сама ревізія, дата,
+ *  кількості й відбитки наборів), щоб випадковий порожній / неповний / інший перелік не знімав захист і не розширював область.
+ *  Fail-closed: без файлу, без контракту або з будь-якою невідповідністю нові технічні нормалізації не діють ДЛЯ ЖОДНОГО товару;
+ *  товари поза scope (нові, черга, поза YML) їх не отримують навіть з валідним файлом. */
+export function loadFreeze(file, contract = null) {
+  const res = { valid: false, ids: new Set(), scope: new Set(), rev: 0, date: "", source: "", parts: null, problems: [] };
+  if (!file) return res;
+  const name = `файл переліку захищених товарів «${path.basename(file)}»`, off = " — технічні нормалізації вимкнено";
+  const fail = (why) => { res.problems.push(why + off); return res; };
+  if (!fs.existsSync(file)) return fail(`${name} не знайдено`);
+  let j = null;
+  try { j = readJson(file, null); } catch { return fail(`${name}: некоректний JSON`); }
+  const date = /^\d{4}-\d{2}-\d{2}$/;
+  const ids = idList(j?.ids), scope = idList(j?.scope?.ids);
+  if (!j || j.v !== 1 || !date.test(String(j.date || "")) || !ids || j.count !== ids.length) return fail(`${name}: немає v=1 / date / ids / count, перелік порожній або ids неунікальні`);
+  if (!scope || j.scope.count !== scope.length) return fail(`${name}: немає області дії (scope: count / ids), вона порожня або ids неунікальні`);
+  const fp = freezeFingerprint(ids), sfp = freezeFingerprint(scope);
+  if ((j.fingerprint !== undefined && j.fingerprint !== fp) || (j.scope.fingerprint !== undefined && j.scope.fingerprint !== sfp)) return fail(`${name}: відбиток у файлі не збігається з ids`);
+  const inScope = new Set(scope);
+  if (ids.some((x) => !inScope.has(x))) return fail(`${name}: захищені товари поза областю дії`);
+  const k = contract;
+  if (!k || k.v !== 1 || !date.test(String(k.date || "")) || !Number.isInteger(k.count) || k.count < 1 || !FP.test(String(k.fingerprint || "")) || !Number.isInteger(k.scope?.count) || k.scope.count < 1 || !FP.test(String(k.scope?.fingerprint || "")) || !Number.isInteger(k.rev) || k.rev < 1) {
+    return fail("контракт переліку захищених товарів у репозиторії відсутній або некоректний");
+  }
+  if (j.rev !== k.rev) return fail(`${name}: ревізія ${j.rev ?? "—"} не відповідає контракту (ревізія ${k.rev})`);
+  if (k.date !== j.date || k.count !== ids.length || k.fingerprint !== fp || k.scope.count !== scope.length || k.scope.fingerprint !== sfp) {
+    return fail(`${name} не відповідає контракту актуального знімка (дата ${j.date} / ${k.date}, захищених ${ids.length} / ${k.count}, відбиток ${k.fingerprint === fp ? "збігається" : "інший"}; область ${scope.length} / ${k.scope.count}, відбиток ${k.scope.fingerprint === sfp ? "збігається" : "інший"})`);
+  }
+  // parts — довідково (склад переліку: початкові + нові питання), сума має дорівнювати count
+  const parts = k.parts && Number.isInteger(k.parts.initial) && Number.isInteger(k.parts.added) && k.parts.initial + k.parts.added === k.count ? { initial: k.parts.initial, added: k.parts.added } : null;
+  return { valid: true, ids: new Set(ids), scope: inScope, rev: k.rev, date: String(j.date), source: String(j.source || k.source || ""), parts, problems: [] };
+}
+
 /** Схеми, словники й одиниці для синхронізації. */
-export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "", ownerValuesFile = process.env.MM_OWNER_VALUES || "" } = {}) {
+export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "", ownerValuesFile = process.env.MM_OWNER_VALUES || "", freezeFile = process.env.MM_FREEZE_IDS || "", freezeContractFile = path.join(dir, "freeze-contract.json") } = {}) {
   const out = { schemas: new Map(), mappings: new Map(), units: readJson(path.join(dir, "units.json"), { conversions: [] }), problems: [] };
+  // Технічні нормалізації (TECH_RULES) — лише з валідним переліком захищених товарів, що точно відповідає контракту; для захищених — не діють.
+  let contract = null;
+  if (freezeFile) { try { contract = readJson(freezeContractFile, null); } catch { contract = null; } }
+  const fz = loadFreeze(freezeFile, contract);
+  out.freezeInfo = { valid: fz.valid, file: freezeFile ? path.basename(freezeFile) : "", rev: fz.rev, date: fz.date, count: fz.ids.size, scope: fz.scope.size, source: fz.source, parts: fz.parts };
+  // Лише товари погодженої області (знімок основного каталогу), крім захищених; поза областю — як у 83206c4.
+  out.techRulesFor = (id) => (fz.valid && fz.scope.has(String(id)) && !fz.ids.has(String(id)) ? [...TECH_RULES] : []);
   // Рішення власника щодо окремих характеристик (Offer ID → { model, items }); немає файлу — не застосовуються.
   out.ownerValues = null;
   if (ownerValuesFile) {
@@ -163,6 +218,7 @@ export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = proces
       if (charKey(schema, x, opt) === charKey(schema, y, opt)) out.problems.push(`${e.id}: заборонена відповідність «${x}» = «${y}» виникла через словники — перевірте names-ua-ru.json / synonyms.json`);
     }
   }
+  out.problems.push(...fz.problems); // проблеми переліку — після проблем схем (порядок попереджень як до А1)
   return out;
 }
 

@@ -700,6 +700,95 @@ export const timeAmbiguous = (name, p) => !isDurationName(name) && !isYearName(n
 const modelWords = (s) => normName(htmlText(s)).split(/[\s,;:()«»"“”/]+/).map((w) => w.replace(/[.]+$/, "")).filter(Boolean);
 export const modelInTitle = (model, title) => { const t = new Set(modelWords(title)), m = modelWords(model); return m.length > 0 && m.every((w) => t.has(w)); };
 
+// ---------- пакет А1 (власник через Hermes, 27.10.2026): достовірні технічні рівнозначності ----------
+// Діють лише з techRules ["A1"] (валідний зовнішній перелік захищених товарів; для захищених — ні). Жодних перекладів слів,
+// збігу за позицією чи «схожими» числами: лише точні рівнозначності нижче.
+const A1_YES = /^(є|есть|так|да|имеется|присутній|присутствует)\.?$/i;
+const A1_ONE = /^1\s*шт\.?$/i;
+const A1_NOT_PRESENCE = /кількість|количество|комплект|набір|набор|акумулятор|аккумулятор|акб|батаре|заряд|кейс|валіз|чемодан|упаков/;
+const A1_UNITS = [[/^(мм|mm)$/, "len", 1], [/^(см|cm)$/, "len", 10], [/^(м|m)$/, "len", 1000], [/^(г|g|гр)$/, "mass", 1], [/^(кг|kg)$/, "mass", 1000], [/^(т|t)$/, "mass", 1e6],
+  [/^(мл|ml)$/, "vol", 1], [/^(л|l)$/, "vol", 1000], [/^(мач|маг|mah|ма·год)$/, "cap", 1], [/^(ач|аг|ah|а·год|агод|а·ч|а\*ч)$/, "cap", 1000], [/^(вт|w)$/, "pow", 1], [/^(квт|kw)$/, "pow", 1000],
+  [/^(хв|хвилин|хвилини|хвилина|мин|минут|минуты|min)$/, "time", 1], [/^(год|година|години|годин|час|часа|часов|ч|h)$/, "time", 60],
+  [/^(в|v)$/, "volt", 1], [/^(кв|kv)$/, "volt", 1000], [/^(гц|hz)$/, "freq", 1], [/^(атм|атм\.)$/, "atm", 1], [/^(бар|bar)$/, "bar", 1]]; // атм ≠ бар: різні одиниці, без приблизного коефіцієнта
+const a1Unit = (u) => { const k = A1_UNITS.find(([re]) => re.test(String(u || "").toLowerCase())); return k ? { dim: k[1], f: k[2] } : null; };
+const A1_APPROX = /^(близько|около|приблизно|примерно|~|≈)\s*/i;
+const a1Qty = (v) => { let s = cleanValue(v).replace(/\.$/, ""); const approx = A1_APPROX.test(s); s = s.replace(A1_APPROX, ""); const m = /^(\d+(?:[.,]\d+)?)\s*([a-zа-яіїєґ·*]+)\.?$/iu.exec(s); if (!m) return null; const u = a1Unit(m[2]); return u ? { n: round6(Number(m[1].replace(",", ".")) * u.f), dim: u.dim, approx } : null; };
+const a1Dims = (v) => { const m = /^(\d+(?:[.,]\d+)?)\s*[xхX×*]\s*(\d+(?:[.,]\d+)?)(?:\s*[xхX×*]\s*(\d+(?:[.,]\d+)?))?\s*(мм|см|м|mm|cm)\.?$/i.exec(cleanValue(v)); if (!m) return null; const f = /^(см|cm)$/i.test(m[4]) ? 10 : /^м$/i.test(m[4]) ? 1000 : 1; return [m[1], m[2], m[3]].filter(Boolean).map((x) => round6(Number(x.replace(",", ".")) * f)); }; // порядок вимірів зберігається (без доказу орієнтації не переставляємо)
+// Г:ХХ — хвилини лише 00–59; «Г год ХХ хв» — так само.
+const a1Minutes = (v) => { const t = cleanValue(v).toLowerCase(); let m = /^(\d+)\s*:\s*([0-5]\d)$/.exec(t); if (m) return Number(m[1]) * 60 + Number(m[2]); m = /^(\d+(?:[.,]\d+)?)\s*(год|година|години|годин|час|часа|часов|ч)\.?(?:\s+([0-5]?\d)\s*(хв|хвилин|мин|минут)\.?)?$/.exec(t); if (m) return Number(m[1].replace(",", ".")) * 60 + (m[3] ? Number(m[3]) : 0); m = /^(\d+)\s*(хв|хвилин|хвилини|мин|минут|минуты)\.?$/.exec(t); return m ? Number(m[1]) : null; };
+// Знак множення — лише між числами («161х84»), щоб не зачепити кириличну «х» у «хв»; «/мин» після числа — лише для обертів.
+const a1Form = (v, key = "") => {
+  let s = cleanValue(v).toLowerCase().replace(/ё/g, "е").replace(/(\d)\s*[xх×]\s*(?=\d)/g, "$1x").replace(/li[\s-]?ion/g, "li-ion").replace(/л\.\s*с\./g, "л.с.").replace(/(^|[^a-zа-яіїєґ])мин(?=$|[^a-zа-яіїєґ])/g, "$1хв");
+  if (/оберт|оборот/.test(normName(key))) s = s.replace(/(\d)\s*(?:об\.?\s*)?\/\s*хв(?=$|[^a-zа-яіїєґ])/g, "$1об/хв");
+  return s.replace(/\s+/g, "");
+};
+// Крапка як роздільник тисяч («35.000») — лише якщо інша мова має те саме ціле число («35000»); кома — завжди десяткова.
+const a1Thou = (x, other) => x.replace(/(?<![\d.,])([1-9]\d{0,2})\.(\d{3})(?!\d)/g, (m, p, q) => (other.includes(p + q) ? p + q : m));
+// …і лише з доказовим контекстом (Hermes, 27.10.2026): кількість обертів / ударів / ходів / коливань, частота за хвилину в обох
+// записах або лічильне поле без одиниці. Маса, діаметр, тиск, напруга тощо — ні («1.475 кг» може бути десятковим).
+const A1_THOU_KEY = /обертів|оборотов|ударів|ударов|ходів|ходов|коливань|колебаний/;
+const a1ThouOk = (key, fx, fy) => {
+  const k = normName(key);
+  if (A1_THOU_KEY.test(k)) return true;
+  if ([fx, fy].every((s) => /\d(?:об|уд|ход)?\.?\/хв(?![a-zа-яіїєґ])|rpm/.test(s))) return true;
+  return /^(кількість|количество|число)(?=\s|$)/.test(k) && [fx, fy].every((s) => /^[\d.]+(шт\.?)?$/.test(s));
+};
+/** UA і RU записано по-різному, але технічно це те саме: { value, why } або null. */
+export function a1Equivalent(key, a, b) {
+  const x = cleanValue(a), y = cleanValue(b);
+  if (!x || !y || x === y) return null;
+  if (!A1_NOT_PRESENCE.test(normName(key)) && ((A1_ONE.test(x) && A1_YES.test(y)) || (A1_ONE.test(y) && A1_YES.test(x)))) return { value: A1_ONE.test(x) ? x : y, why: "наявність: «1 шт.» = «є»" };
+  const da = a1Dims(x), db = a1Dims(y);
+  if (da && db) return da.length === db.length && da.every((v, i) => v === db[i]) ? { value: x, why: "ті самі розміри в мм / см" } : null;
+  const qa = a1Qty(x), qb = a1Qty(y);
+  if (qa && qb) return qa.dim === qb.dim && qa.approx === qb.approx && qa.n === qb.n ? { value: x, why: "та сама величина (з урахуванням одиниці)" } : null;
+  const ma = a1Minutes(x), mb = a1Minutes(y);
+  if (ma !== null && mb !== null) return ma === mb ? { value: x, why: "той самий час" } : null;
+  const fx = a1Form(x, key), fy = a1Form(y, key);
+  // UA передається як є, тому крапку-роздільник приймаємо лише в RU («35.000»): UA «1.500» читалося б як 1,5.
+  const gy = a1ThouOk(key, fx, fy) && a1Thou(fx, fy) === fx ? a1Thou(fy, fx) : fy;
+  return fx === gy ? { value: x, why: "той самий запис (формат чисел і одиниць)" } : null;
+}
+// В: поле / наявне значення передано, а запис опису лише сумісно уточнює його → інформаційна позначка (обидва значення).
+const A1_MAINS = /мереж|сет[ьиі]|сетев|електромереж|электросет/i, A1_BAT = /акум|аккум|li-?ion|батар/i;
+const a1Tokens = (s) => [...String(s).matchAll(/(?<![a-zа-яіїєґ\d.,])(\d+(?:[.,]\d+)?)(?:\s*[-–—]\s*(\d+(?:[.,]\d+)?))?(\s*)([a-zа-яіїєґ°·]+)?/giu)].map((m) => ({ n: Number(m[1].replace(",", ".")), n2: m[2] ? Number(m[2].replace(",", ".")) : null, glued: !m[3] && Boolean(m[4]), unit: (m[4] || "").toLowerCase() }));
+/** Сумісне уточнення: назва правила або null. Лише для запису опису проти наявного значення тієї самої характеристики. */
+export function a1Refinement(key, have, sup) {
+  const h = cleanValue(`${mtText(have?.value)}${mtText(have?.unit) ? " " + mtText(have.unit) : ""}`), d = cleanValue(`${mtText(sup?.value)}${mtText(sup?.unit) ? " " + mtText(sup.unit) : ""}`), k = normName(key);
+  if (!h || !d) return null;
+  if (/живлен|питани|джерело живлення|источник питания/.test(k)) {
+    const toks = a1Tokens(d), volts = toks.filter((t) => a1Unit(t.unit)?.dim === "volt"), others = toks.filter((t) => !["volt", "freq"].includes(a1Unit(t.unit)?.dim));
+    if (/^мережа/i.test(h) && A1_MAINS.test(d) || /^мережа/i.test(h) && volts.length && !A1_BAT.test(d)) {
+      if (A1_BAT.test(d) || others.length) return null;
+      const v0 = a1Tokens(h).find((t) => a1Unit(t.unit)?.dim === "volt" || !t.unit)?.n ?? null;
+      if (v0 === null || !volts.length) return "живлення від мережі";
+      const lo = Math.min(...volts.map((t) => t.n)), hi = Math.max(...volts.map((t) => t.n2 ?? t.n));
+      return v0 >= lo && v0 <= hi ? "живлення від мережі, напруга в межах" : null;
+    }
+    if (/^батарейки/i.test(h) && /\baaa?\b|lr6|lr03|батарейк/i.test(d) && !A1_MAINS.test(d)) return "живлення від батарейок";
+    if (/^акумулятор/i.test(h) && (A1_BAT.test(d) || (volts.length && !others.length)) && !A1_MAINS.test(d)) return "живлення від акумулятора";
+    return null;
+  }
+  // В4: одне число поля з одиницею (або лічильне без одиниці) — у записі опису є та сама величина; решта чисел — інший вимір
+  // (з одиницею) або позначка, приклеєна до літер («4D»). Інше значення того самого виміру або число без одиниці — не доведено.
+  const ht = a1Tokens(h);
+  if (ht.length !== 1 || ht[0].n2 !== null) return null;
+  const hu = ht[0].unit ? a1Unit(ht[0].unit) : null;
+  if (ht[0].unit && !hu) return null;
+  if (cleanValue(h).replace(/[\d.,\s]/g, "").replace(new RegExp(ht[0].unit, "i"), "").replace(/[.]/g, "") !== "") return null;
+  const hv = hu ? round6(ht[0].n * hu.f) : ht[0].n, hdim = hu ? hu.dim : "count";
+  let same = 0;
+  for (const t of a1Tokens(d)) {
+    const u = t.unit ? a1Unit(t.unit) : null;
+    if (t.n2 !== null) return null;
+    if (hdim === "count" ? !u && t.n === hv && (!t.unit || !t.glued) : u?.dim === hdim && round6(t.n * u.f) === hv) { same++; continue; }
+    if (u && u.dim !== hdim) continue; // інший вимір (Гц, В тощо)
+    if (t.glued && /^[a-z]/i.test(t.unit)) continue; // позначка «4D»
+    return null;
+  }
+  return same ? "та сама величина, опис уточнює" : null;
+}
+
 /** Вирівнювання пар UA- і RU-опису (описи — переклади одне одного, порядок пар однаковий). Найкраще впорядковане
  *  зіставлення: 2 — та сама підтверджена назва, 1 — те саме значення (після нормалізації); між сусідніми
  *  зіставленими парами рівні за довжиною проміжки зіставляються по порядку (0 — «за позицією», значення різні).
@@ -745,7 +834,7 @@ export function alignPairs(U, R, score) {
  *  цих рішень з репозиторію (назви характеристик без значень: без файлу рішень характеристики утримуються); cardTitles — назви
  *  картки (UA / RU) для звірки моделі разом із назвами постачальника (titles).
  */
-export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [], kitOwner = null, multiOwner = null, ownerValues = null, ownerIndex = null, cardTitles = [] }) {
+export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [], kitOwner = null, multiOwner = null, ownerValues = null, ownerIndex = null, cardTitles = [], techRules = [] }) {
   const cur = asParams(typeof current === "string" ? jsonOr(current, []) : current);
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
@@ -753,6 +842,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], warranty: null, uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [], lexDiff: [] }, lexMerged: [], aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [], emptyDesc: [], descText: [], timeFixed: [], owner: [] };
   const ownSpec = ownerValues && (Array.isArray(ownerValues) ? { items: ownerValues } : ownerValues);
   const ownIdx = ownerIndex && (Array.isArray(ownerIndex) ? { items: ownerIndex } : ownerIndex); // перелік рішень (без значень)
+  const tech = new Set(techRules || []); // технічні нормалізації пакетів (лише з валідним переліком захищених товарів)
   if ((ownSpec || ownIdx) && !schema) notes.push("рішення власника не застосовано: немає схеми категорії");
   if (!schema && mode === "main") { notes.push(`немає схеми категорії ${categoryId || "?"} — підготовлені характеристики не змінено`); return unchanged; }
   const opt = { mapping, units };
@@ -885,6 +975,14 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
         continue;
       }
       if (ambiguous.has(a)) continue;
+      const uaL = list.filter((pr) => pr.lang === "ua"), ruL = list.filter((pr) => pr.lang === "ru");
+      const feq = tech.has("A1") && uaL.length === 1 && ruL.length === 1 && new Set(list.map((pr) => itemKey(pr.m.out))).size > 1 && a1Equivalent(uaL[0].key, uaL[0].value, ruL[0].value);
+      if (feq) {
+        uaRuMerged++;
+        cand.set(a, { out: uaL[0].m.out, src: SRC.DESC, frags: { ua: [[uaL[0].start, uaL[0].end]], ru: [[ruL[0].start, ruL[0].end]] } });
+        notes.push(`«${uaL[0].m.out.name}»: UA «${cleanValue(uaL[0].value)}» = RU «${cleanValue(ruL[0].value)}» — ${feq.why}; одне значення поля — UA`);
+        continue;
+      }
       if (new Set(list.map((pr) => itemKey(pr.m.out))).size > 1) {
         ambiguous.add(a); conflicts.push(`опис: різні значення для «${list[0].m.out.name}»`);
         const langs = new Set(list.map((pr) => pr.lang));
@@ -1161,6 +1259,13 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
             uaRuMerged++;
             extra(key, { ...u[0].out, value: lat }, SRC.DESC, "", { lang: "ua" });
             notes.push(`«${name}»: «${u[0].out.value}» / «${r[0].out.value}» — транслітерація латинського оригіналу; передано «${lat}»`);
+            continue;
+          }
+          const eq = tech.has("A1") && a1Equivalent(key, u[0].out.value, r[0].out.value);
+          if (eq) {
+            uaRuMerged++;
+            extra(key, { ...u[0].out, value: eq.value }, SRC.DESC, "", { lang: "ua" });
+            notes.push(`«${name}»: UA «${u[0].out.value}» = RU «${r[0].out.value}» — ${eq.why}; одне значення «${eq.value}» (далі звіряється з наявним, як звичайне значення опису)`);
             continue;
           }
           review(name, orig, "UA і RU значення відрізняються" + hint(u[0].out.value, r[0].out.value));
@@ -1457,6 +1562,12 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
     if (at !== undefined) {
       const q = result[at];
       if (sameValueIn([key, q.name, e.out.name], q, e.out, names, categoryId) || numEq(q, e.out, names)) { e.taken = true; merged.push(`«${fmt(e.out)}» (${srcLabel(e.src)}) = «${fmt(q)}» — не дублюємо`); continue; }
+      const ref = tech.has("A1") && e.src === SRC.DESC && a1Refinement(key, q, e.out);
+      if (ref) {
+        review(q.name, [{ src: srcLabel(items[at].s), value: fmt(q) }, { src: srcLabel(e.src), value: fmt(e.out) }], `уточнення опису сумісне з наявним значенням (${ref}) — передано наявне, повний запис лишається в описі (інформаційно)`);
+        e.why = `інформаційно: ${ref}`;
+        continue;
+      }
       review(q.name, [{ src: srcLabel(items[at].s), value: fmt(q) }, { src: srcLabel(e.src), value: fmt(e.out) }], "значення постачальника відрізняється від наявного — збережено наявне" + hint(q.value, e.out.value));
       e.why = `ПОТРЕБУЄ ПЕРЕВІРКИ: відрізняється від наявного «${fmt(q)}»`;
       continue;
