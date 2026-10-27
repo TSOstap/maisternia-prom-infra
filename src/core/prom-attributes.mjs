@@ -435,6 +435,107 @@ export function conditionTablePairsUaRu(ua, ru, { sameVal = () => false } = {}) 
   return { pairs, skipped, conflicts };
 }
 
+/** Пакет N1-2 (Hermes, 27.10.2026; план N0-00): запасні структуровані записи опису, яких не розбирає descriptionPairs, — лише для
+ *  картки когорти N0 без <param>, у якої звичайні пари не дають жодної характеристики (рішення — у генераторі):
+ *  (1) однорідний список ul / ol: ≥ 3 пунктів, ≥ 2/3 з них — «Назва␠[–—-]␠значення» (тире з пробілами з обох боків; дефіс у слові /
+ *      моделі не розділяє); пункт із вкладеним списком або <br> — список без розбору;
+ *  (2) рядок «• / · / * / - / – / — Назва: значення» (маркер на початку рядка — лише знімається);
+ *  (3) «Назва: значення» у p / li таблиці-обгортки (рядок з однією клітинкою).
+ *  Не передаються й повертаються поіменно з причиною: діапазон (назва закінчується числом: «Обороти 800 – 3 000 об/хв»), тире на
+ *  початку значення, «N шт» під назвою складової / склад набору (окремий аудит — не загальна характеристика; під ключем кількості —
+ *  характеристика), одиниця не тієї величини («Напруга – 230 Вт»), числа лише через пробіл, невідома HTML-сутність, не
+ *  характеристика (речення, реклама, службовий текст). Кінцева крапка знімається лише після числа або одиниці («1200Вт.» → «1200Вт»;
+ *  «5.5 л. с.» і «Німеччина.» — як є). */
+const N12_DASH_RE = /^(.{2,60}?)\s[–—-]\s(.+)$/;
+const N12_MARK_RE = /^\s*[•·*\-–—]\s+(.+)$/;
+const N12_COUNT_KEY_RE = /^(кількість|количество|к-сть|кол-во)(\s|$)/;
+const N12_PIECES_RE = /^\d+\s*шт\.?$/i;
+const N12_KIT_KEY_RE = /\d+\s*шт(?![а-яіїєґa-z])/i; // \b у JS — лише для латиниці
+// Величина ключа → допустимі одиниці (нормалізовано: без крапок і пробілів, нижній регістр). Лише якщо в ключі є слово величини
+// і значення починається з числа з одиницею; інакше — без перевірки.
+const N12_QTY = [
+  [/(^|\s)(напруга|напряжение)(\s|,|$)/, /^(в|кв|мв|v|kv)$/],
+  [/(^|\s)(потужність|мощность)(\s|,|$)/, /^(вт|квт|мвт|w|kw|кс|лс|ква|ва|hp)$/],
+  [/(^|\s)(частота)(\s|,|$)/, /^(гц|кгц|мгц|hz|об|уд)$/],
+  [/(^|\s)(струм|ток)(\s|,|$)/, /^(а|ма|ка|a|ma)$/],
+  [/(^|\s)(вага|вес|маса|масса)(\s|,|$)/, /^(кг|г|т|мг|kg|g|грам\S*)$/],
+  [/(^|\s)(розмір\S*|размер\S*|габарит\S*|довжина|ширина|висота|глибина|діаметр|товщина|длина|высота|глубина|диаметр|толщина)(\s|,|$)/, /^(мм|см|м|дм|км|дюйм\S*|mm|cm|m)$/],
+];
+// Значення без чисел: ≥ 6 слів — опис / перелік переваг; ≥ 3 слів і крапка в кінці — «перевага» (для оцінки списку).
+const n12Words = (v) => (v.match(/[a-zа-яіїєґё'’]+/gi) || []).length;
+const n12Benefit = (key, value) => !/\d/.test(value) && n12Words(value) >= 3 && (/\.$/.test(value) || /\d/.test(key));
+// Одиниця першого числа (розміри «131х88х78 мм»: знак множення між числами — не одиниця).
+const n12Unit = (v) => { const m = /^[~≈]?\s*[-+]?\d+(?:[.,]\d+)?(?:\s*[xXхХ×*]\s*\d+(?:[.,]\d+)?)*\s*([a-zа-яіїєґё°]+(?:\.\s?[a-zа-яіїєґё]+)?)(?![.,]?\s*\d)/i.exec(v); return m ? m[1].toLowerCase().replace(/[.\s]/g, "") : ""; };
+const n12Dot = (v) => v.replace(/(?:(\d)|(?<=[\d\s])(вт|квт|в|а|гц|мм|см|м|кг|г|л|мл|бар|дб|°с|°c))\.$/i, (all, d, u) => d || u);
+function n12Check(key, value, raw) {
+  const k = normName(key);
+  if (!key || !value) return "порожня назва або значення";
+  if (/\d\s*\)?$/.test(key)) return "діапазон (назва закінчується числом) — неоднозначно";
+  if (/^[–—-]/.test(value)) return "тире на початку значення — неоднозначно";
+  if (/\s[–—-]\s/.test(value)) return "кілька пар в одному пункті (ще одне тире в значенні) — неоднозначно";
+  if (ENTITY_LEFT_RE.test(raw)) return "невідома HTML-сутність у назві або значенні";
+  if (N12_KIT_KEY_RE.test(key) || (N12_PIECES_RE.test(value) && !N12_COUNT_KEY_RE.test(k))) return "комплектація / склад набору — окремий аудит, не загальна характеристика";
+  if (SPACED_NUMBERS_RE.test(value)) return "числа лише через пробіл (діапазон, кілька значень чи тисячі — не визначити) — неоднозначно";
+  const u = n12Unit(value), qs = N12_QTY.filter(([kr]) => kr.test(k));
+  if (u && qs.some(([, ur]) => !ur.test(u))) return `одиниця «${u}» не відповідає величині ключа`; // кілька величин у ключі — до всіх
+  if (!/\d/.test(value) && n12Words(value) >= 6) return "не характеристика: опис / перелік переваг без технічних даних";
+  const nc = descriptionNonCharacteristic({ key, value, via: "list" }) || (key.split(/\s+/).length > 7 ? { why: "назва довша за 7 слів (речення)" } : null);
+  if (nc) return "не характеристика: " + nc.why;
+  return "";
+}
+export function n1ListPairs(html) {
+  const s = mtText(html), pairs = [], skipped = [];
+  const tables = [...s.matchAll(/<table\b[\s\S]*?<\/table>/gi)].map((m) => [m.index, m.index + m[0].length]);
+  const inTable = (i) => tables.some(([a, b]) => i >= a && i < b);
+  const take = (key, value, raw, start, end, via) => {
+    key = cleanValue(key).replace(/[:\s]+$/, ""); value = n12Dot(cleanValue(value));
+    const why = n12Check(key, value, raw);
+    if (why) skipped.push({ key, value, why }); else pairs.push({ key, value, start, end, via });
+  };
+  // (1) однорідні списки «Назва – значення» (поза таблицями)
+  for (const ul of s.matchAll(/<(ul|ol)\b[^>]*>([\s\S]*?)<\/\1>/gi)) {
+    if (inTable(ul.index)) continue;
+    const lis = [...ul[2].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gi)];
+    if (lis.length < 3 || lis.some((li) => /<(ul|ol|br)\b/i.test(li[1]))) continue;
+    const parts = lis.map((li) => { const raw = htmlText(mtDecode(li[1].replace(/<[^>]+>/g, " "))).replace(/\s+/g, " ").trim(); return { li, raw, m: N12_DASH_RE.exec(raw) }; });
+    if (parts.filter((p) => p.m && !/:/.test(p.m[1])).length * 3 < lis.length * 2) continue;
+    const base = ul.index + ul[0].indexOf(ul[2]);
+    // Список «характеристика – перевага» (половина й більше пунктів — пояснення без чисел): увесь список лише в аудит.
+    const ok = parts.filter((p) => p.m && !/:/.test(p.m[1]));
+    if (ok.filter((p) => n12Benefit(cleanValue(p.m[1]), cleanValue(p.m[2]))).length * 2 >= ok.length) {
+      for (const p of ok) skipped.push({ key: cleanValue(p.m[1]), value: cleanValue(p.m[2]), why: "список переваг (пояснення без технічних даних) — не характеристики" });
+      continue;
+    }
+    for (const p of parts) if (p.m && !/:/.test(p.m[1])) take(p.m[1], p.m[2], p.raw, base + p.li.index, base + p.li.index + p.li[0].length, "list");
+  }
+  // (2) рядки з маркером «• Назва: значення» (поза таблицями) і (3) таблиця-обгортка: p / li однієї клітинки
+  const lines = (from, inner, via, plainKv) => {
+    const re = /<br\s*\/?>|\r?\n/gi; let last = 0, mm; const parts = [];
+    while ((mm = re.exec(inner))) { parts.push([last, mm.index]); last = mm.index + mm[0].length; }
+    parts.push([last, inner.length]);
+    for (const [a, b] of parts) {
+      const raw = htmlText(mtDecode(inner.slice(a, b).replace(/<[^>]+>/g, " "))).replace(/\s+/g, " ").trim();
+      const mk = N12_MARK_RE.exec(raw), body = mk ? mk[1].trim() : plainKv ? raw : "";
+      const kv = body && KV_RE.exec(body);
+      if (kv) take(kv[1], kv[2], raw, from + a, from + b, via);
+    }
+  };
+  for (const m of s.matchAll(/<(p|li|div)\b[^>]*>([\s\S]*?)<\/\1>/gi)) {
+    if (inTable(m.index) || /<(p|li|div|ul|ol)\b/i.test(m[2])) continue;
+    lines(m.index + m[0].indexOf(m[2]), m[2], m[1].toLowerCase() === "li" ? "list" : "p", false);
+  }
+  for (const [a, b] of tables) {
+    const tb = s.slice(a, b);
+    if (/<table\b/i.test(tb.slice(6))) continue; // вкладені — без розбору
+    for (const tr of tb.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)) {
+      const cells = [...tr[1].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/gi)];
+      if (cells.length !== 1) continue;
+      for (const m of cells[0][1].matchAll(/<(p|li)\b[^>]*>([\s\S]*?)<\/\1>/gi)) lines(a + tr.index + tr[0].indexOf(cells[0][1]) + m.index + m[0].indexOf(m[2]), m[2], m[1].toLowerCase() === "li" ? "list" : "p", true);
+    }
+  }
+  return { pairs: pairs.sort((x, y) => x.start - y.start), skipped };
+}
+
 /** Запис опису виду «Назва: текст», який НЕ є характеристикою (власник, 26.10.2026: характеристики — лише структуровані
  *  пари з блоку характеристик; пояснення, переваги, реклама, службовий текст, інструкції й попередження лишаються лише в
  *  описі). Повертає { kind, why } або null. Лише однозначні випадки; неоднозначні (числа, перелік, комплектація) — null,
@@ -980,12 +1081,32 @@ export function alignPairs(U, R, score) {
  *  цих рішень з репозиторію (назви характеристик без значень: без файлу рішень характеристики утримуються); cardTitles — назви
  *  картки (UA / RU) для звірки моделі разом із назвами постачальника (titles).
  */
-export function buildCharacteristics({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [], kitOwner = null, multiOwner = null, ownerValues = null, ownerIndex = null, cardTitles = [], techRules = [], exactPairs = [] }) {
+/** Підготовлені характеристики. Пакет N1-2 (Hermes, 27.10.2026): для товару з техправилом N1 (когорта N0), без <param> у XML,
+ *  якщо пробний прогін лише із сирих даних постачальника (без поточних, ручних і власницьких значень — тож повторний прогін
+ *  стабільний) не дає ні характеристик, ні позначок, — запасне джерело n1ListPairs (списки «Назва – значення», «• Назва:
+ *  значення», таблиця-обгортка). Ключ бренду ≠ «Виробник» картки з N1-2 не передається (аудит). Інакше — як раніше. */
+export function buildCharacteristics(opts = {}) {
+  const tech = new Set(opts.techRules || []);
+  if (!tech.has("N1") || !opts.schema || asParams(opts.rawParams || []).length) return buildCore(opts);
+  const ua = n1ListPairs(opts.descUa), ru = n1ListPairs(opts.descRu);
+  if (!ua.pairs.length && !ru.pairs.length && !ua.skipped.length && !ru.skipped.length) return buildCore(opts);
+  const probe = buildCore({ ...opts, current: [], provenance: null, ownerValues: null, ownerIndex: null, kitOwner: null, multiOwner: null });
+  if (probe.params.length || probe.needsReview.length) return buildCore(opts);
+  const skipped = [...ua.skipped.map((x) => ({ lang: "ua", ...x })), ...ru.skipped.map((x) => ({ lang: "ru", ...x }))];
+  const keep = (lang) => (p) => {
+    if (isBrandName(p.key) && !brandEq(p.value, opts.brand)) { skipped.push({ lang, key: p.key, value: p.value, why: `бренд «${p.value}» ≠ «Виробник» картки — не передається` }); return false; }
+    return true;
+  };
+  // Бренд — офіційне написання з «Виробник» картки (власник, 25.10.2026), не варіант опису («DeWALT.»).
+  const official = (p) => (isBrandName(p.key) ? { ...p, value: mtText(opts.brand).trim() } : p);
+  return buildCore({ ...opts, n12: { ua: ua.pairs.filter(keep("ua")).map(official), ru: ru.pairs.filter(keep("ru")).map(official), skipped } });
+}
+function buildCore({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [], kitOwner = null, multiOwner = null, ownerValues = null, ownerIndex = null, cardTitles = [], techRules = [], exactPairs = [], n12 = null }) {
   const cur = asParams(typeof current === "string" ? jsonOr(current, []) : current);
   const raw = asParams(rawParams);
   const prov = typeof provenance === "string" ? readProvenance(provenance) : provenance;
   const notes = [];
-  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], warranty: null, uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [], lexDiff: [] }, lexMerged: [], aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [], emptyDesc: [], descText: [], timeFixed: [], owner: [] };
+  const unchanged = { params: cur, provenance: prov, notes, ambiguous: [], conflicts: [], duplicates: [], merged: [], overflow: [], rawOnly: [], customAttrNames: [], needsReview: [], warranty: null, uaRuMerged: 0, proposals: { names: [], values: [], synonyms: [], lexDiff: [] }, lexMerged: [], aligned: 0, positionalCandidates: 0, ruOnly: 0, ruDup: [], removed: [], descRanges: { ua: [], ru: [] }, changed: false, unmapped: [], emptyDesc: [], descText: [], listSkipped: [], timeFixed: [], owner: [] };
   const ownSpec = ownerValues && (Array.isArray(ownerValues) ? { items: ownerValues } : ownerValues);
   const ownIdx = ownerIndex && (Array.isArray(ownerIndex) ? { items: ownerIndex } : ownerIndex); // перелік рішень (без значень)
   const tech = new Set(techRules || []); // технічні нормалізації пакетів (лише з валідним переліком захищених товарів)
@@ -1012,7 +1133,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const review = (name, values, reason) => needsReview.push({ name, values, reason, kind: /інформаційно/.test(reason) ? "інформаційно" : /можливо, лише переклад/.test(reason) ? "переклад?" : /не визначити/.test(reason) ? "слова різні" : "конфлікт" });
   const hint = (a, b) => { const ta = tokens(a), tb = tokens(b); return ta !== tb ? "" : ta ? " (числа й латиниця однакові — можливо, лише переклад)" : " (без чисел і латиниці — переклад чи інший зміст, не визначити)"; };
   let uaRuMerged = 0; // та сама характеристика в UA- і RU-описі з однаковим значенням → одна
-  const aligned = [], gapProps = [], valueProps = [], ruOnly = [], warrantyDesc = [], lexMerged = [], lexDiff = [], emptyDesc = [], descText = [], tableSkipped = [], tableConflicts = []; // вирівняні пари UA/RU; пропозиції словника; лише RU; N1-1: рядки таблиці, лишені в описі, і справжні конфлікти UA / RU
+  const aligned = [], gapProps = [], valueProps = [], ruOnly = [], warrantyDesc = [], lexMerged = [], lexDiff = [], emptyDesc = [], descText = [], tableSkipped = [], tableConflicts = [], listSkipped = [...(n12?.skipped || [])]; // вирівняні пари UA/RU; пропозиції словника; лише RU; N1-1: рядки таблиці, лишені в описі, і справжні конфлікти UA / RU
   const extras = new Map(); // ключ → { out, src, from, blocked, why }
   const extra = (key, out, src, from, more = {}) => {
     if (!key) return;
@@ -1071,7 +1192,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
       conflicts.push(`опис UA / RU: таблиця «Параметр | Значення | Примітка» — «${c.key}»: «${c.ua}» ≠ «${c.ru}», не передано`);
     }
     for (const x of n1?.skipped || []) { tableSkipped.push(x); notes.push(`опис ${x.lang.toUpperCase()}: таблиця «Параметр | Значення | Примітка»${x.key ? ` — «${x.key}»` : ""}: ${x.why}`); }
-    for (const [lang, html] of [["ua", descUa], ["ru", descRu]]) for (const pr0 of [...descriptionPairs(html), ...(lang === "ua" ? n1?.pairs || [] : [])].sort((a, b) => a.start - b.start)) {
+    for (const [lang, html] of [["ua", descUa], ["ru", descRu]]) for (const pr0 of [...descriptionPairs(html), ...(lang === "ua" ? n1?.pairs || [] : []), ...(n12?.[lang] || []).map((p) => ({ ...p, n12: true }))].sort((a, b) => a.start - b.start)) {
       let pr = pr0;
       // «Тип акумулятора: Li-ion, LXT» (власник, 25.10.2026, ТОП-50 №3): поле Prom — тип зі схеми, платформа LXT / CXT не губиться —
       // окрема характеристика «Акумуляторна платформа». Лише коли в категорії є поле типу акумулятора.
@@ -1133,6 +1254,8 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
         continue;
       }
       if (ambiguous.has(a)) continue;
+      // N1-2: поле лише з RU-пар запасного джерела — не заповнюється (RU окремо не передається), поіменно в аудит
+      if (list.every((pr) => pr.n12 && pr.lang === "ru")) { for (const pr of list) listSkipped.push({ lang: "ru", key: pr.key, value: cleanValue(pr.value), why: "RU-пара N1-2 без UA-відповідника — окремо не передається" }); continue; }
       const uaL = list.filter((pr) => pr.lang === "ua"), ruL = list.filter((pr) => pr.lang === "ru");
       const feq = tech.has("A1") && uaL.length === 1 && ruL.length === 1 && new Set(list.map((pr) => itemKey(pr.m.out))).size > 1 && a1Equivalent(uaL[0].key, uaL[0].value, ruL[0].value);
       if (feq) {
@@ -1234,6 +1357,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
         const t = lexTwin(r, U);
         if (t && sameValue(pv(t), pv(r), names)) { lexMerged.push({ ua: t.key, ru: r.key, value: pv(t).value }); add("ru", pk(t), r, nameOfPair(t)); continue; }
         if (t) lexDiff.push({ ua: t.key, ru: r.key, ua_value: pv(t).value, ru_value: pv(r).value });
+        if (r.n12) { listSkipped.push({ lang: "ru", key: r.key, value: cleanValue(r.value), why: "RU-пара N1-2 без підтвердженої UA-відповідності — окремо не передається" }); continue; }
         ruOnly.push(r); // підтвердженої UA-відповідності немає — оригінальна назва (або підтверджена українська)
       }
       add("ru", key, r, nameOfPair(r));
@@ -1812,7 +1936,7 @@ export function buildCharacteristics({ schema = null, categoryId = "", rawParams
   const reviewNotes = needsReview.map((r) => `ПОТРЕБУЄ ПЕРЕВІРКИ «${r.name}»: ${r.values.map((v) => `${v.src} «${v.value}»`).join(" / ")} — ${r.reason}`);
   const provenanceOut = { v: 1, cat: String(categoryId || ""), items, x: [...suppressed], notes: [...reviewNotes, ...conflictsU, ...notes].slice(0, 30) };
   return {
-    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, warranty, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps, lexDiff }, lexMerged, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped, emptyDesc, descText, tableSkipped, tableConflicts, timeFixed: [...timeFixed.values()], owner: ownerReport,
+    params: result, provenance: provenanceOut, notes, ambiguous: [...ambiguous], conflicts: conflictsU, duplicates, merged, overflow: overflow.map((o) => ({ ...o.p, reason: o.reason })), rawOnly, customAttrNames, needsReview, warranty, uaRuMerged, proposals: { names: [...aligned.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: x.how, ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) })), ...gapProps.map((x) => ({ ua: x.ua.key, ru: x.ru.key, how: "за позицією, значення різні", ua_value: htmlText(x.ua.value), ru_value: htmlText(x.ru.value) }))], values: valueProps, synonyms: synProps, lexDiff }, lexMerged, aligned: 0, positionalCandidates: aligned.length + gapProps.length, ruOnly: ruOnly.length, ruDup: [], removed, descRanges, unmapped, emptyDesc, descText, tableSkipped, tableConflicts, listSkipped, timeFixed: [...timeFixed.values()], owner: ownerReport,
     changed: JSON.stringify(result) !== JSON.stringify(cur),
   };
 }
