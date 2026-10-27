@@ -404,8 +404,12 @@ export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", c
   // Підготовлені характеристики — за схемою категорії (без схеми: не змінюються).
   const cat = schemaCategory(r, catalog).cat;
   const schema = catalog?.schemas?.get(cat) || null;
-  if (schema && mtText(r[RAW_PARAMS]).trim()) {
-    const ch = buildCharacteristics({ schema, categoryId: cat, rawParams: jsonOr(r[RAW_PARAMS], []), descUa: r[RAW_DESC_UA], descRu: r[RAW_DESC_RU], current: r["Характеристики JSON"], provenance: r[PARAMS_ORIGIN], mapping: catalog?.mappings?.get(cat), units: catalog?.units, names: catalog?.names, mode: "main", brand: r["Виробник"], titles: [r["Назва постачальника UA"], r["Назва постачальника RU"]], kitOwner: catalog?.kitConfirmed?.get(String(r["Offer ID"])) || null, multiOwner: catalog?.multiConfirmed?.get(String(r["Offer ID"])) || null, ownerValues: catalog?.ownerValues?.get(String(r["Offer ID"])) || null, ownerIndex: catalog?.ownerIndex?.get(String(r["Offer ID"])) || null, cardTitles: [r["Назва UA"], r["Назва RU"]], techRules: catalog?.techRulesFor?.(String(r["Offer ID"])) || [] });
+  const techRules = catalog?.techRulesFor?.(String(r["Offer ID"])) || [];
+  // А2: у повному XML немає жодного <param> — характеристики лише з блоку характеристик опису (той самий генератор), тільки в
+  // області дії переліку захищених товарів; без повного XML, без опису або без валідного переліку — як раніше (не перебудовується).
+  const descOnly = techRules.includes("A2") && Boolean(full) && !(full.params || []).length && Boolean(mtText(r[RAW_DESC_UA]).trim() || mtText(r[RAW_DESC_RU]).trim());
+  if (schema && (mtText(r[RAW_PARAMS]).trim() || descOnly)) {
+    const ch = buildCharacteristics({ schema, categoryId: cat, rawParams: jsonOr(r[RAW_PARAMS], []), descUa: r[RAW_DESC_UA], descRu: r[RAW_DESC_RU], current: r["Характеристики JSON"], provenance: r[PARAMS_ORIGIN], mapping: catalog?.mappings?.get(cat), units: catalog?.units, names: catalog?.names, mode: "main", brand: r["Виробник"], titles: [r["Назва постачальника UA"], r["Назва постачальника RU"]], kitOwner: catalog?.kitConfirmed?.get(String(r["Offer ID"])) || null, multiOwner: catalog?.multiConfirmed?.get(String(r["Offer ID"])) || null, ownerValues: catalog?.ownerValues?.get(String(r["Offer ID"])) || null, ownerIndex: catalog?.ownerIndex?.get(String(r["Offer ID"])) || null, cardTitles: [r["Назва UA"], r["Назва RU"]], techRules });
     const prepared = JSON.stringify(ch.params);
     if (ch.changed && prepared.length <= CELL_LIMIT) params = set("Характеристики JSON", prepared, "ХАРАКТЕРИСТИКИ ЗА СХЕМОЮ PROM (автоматично; ручні значення збережено)");
     quiet(PARAMS_ORIGIN, JSON.stringify(ch.provenance));

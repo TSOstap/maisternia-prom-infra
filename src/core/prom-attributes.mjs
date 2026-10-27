@@ -752,11 +752,35 @@ export function a1Equivalent(key, a, b) {
 // В: поле / наявне значення передано, а запис опису лише сумісно уточнює його → інформаційна позначка (обидва значення).
 const A1_MAINS = /мереж|сет[ьиі]|сетев|електромереж|электросет/i, A1_BAT = /акум|аккум|li-?ion|батар/i;
 const a1Tokens = (s) => [...String(s).matchAll(/(?<![a-zа-яіїєґ\d.,])(\d+(?:[.,]\d+)?)(?:\s*[-–—]\s*(\d+(?:[.,]\d+)?))?(\s*)([a-zа-яіїєґ°·]+)?/giu)].map((m) => ({ n: Number(m[1].replace(",", ".")), n2: m[2] ? Number(m[2].replace(",", ".")) : null, glued: !m[3] && Boolean(m[4]), unit: (m[4] || "").toLowerCase() }));
+// Слова запису опису (safety-review Hermes, 27.10.2026): В1–В4 оцінюють не лише числа. Заперечення, порівняння, межі, допуски,
+// сумісність, альтернативи — fail-closed; поза числами дозволено лише слова з переліку (джерело живлення; позначки величини),
+// одиниці й латинські позначки лише з переліку свого контексту (батарейки: AA / AAA / LR6 / LR03; акумулятор: CAS / Li-Ion;
+// коефіцієнт потужності: cos; кількість променів: «4D»). Оператори меж і допусків (< > ≤ ≥ ± ≠ =) — конфлікт. Невідоме слово
+// (зокрема англійське) — не доведено (лишається конфлікт).
+const A1_RISK_WORD = new Set(["не", "ні", "ни", "нет", "немає", "нема", "без", "крім", "кроме", "до", "від", "от", "для", "або", "или", "чи", "мін", "мин", "макс", "max", "min", "not", "no", "to", "or", "up", "from", "without"]);
+const A1_RISK_PREFIX = /^(менш|меньш|більш|больш|понад|свыше|вищ|выш|нижч|ниж|мінім|миним|максим|сумісн|совмест|допуск|підход|подход|відсутн|отсутств|окрем|тільки|лише|только|близьк|приблизн|около|примерн|орієнтовн|ориентир)/;
+const A1_POWER_WORD = { whole: new Set(["по", "x", "х", "тип", "типа", "типу"]), prefix: /^(мереж|електромереж|сет[ьиі]|сетев|электросет|акумулятор|аккумулятор|батаре)/ };
+const A1_V4_WORD = { whole: new Set(["фаза", "фази", "фаз", "частота", "частоти", "частоты"]), prefix: /^$/ };
+const a1Allowed = (w, set) => set.whole.has(w) || set.prefix.test(w);
+const a1Risky = (w) => A1_RISK_WORD.has(w) || A1_RISK_PREFIX.test(w);
+const A1_OPS = /[<>≤≥±≠=]|\+\s*\/\s*-/;
+const a1WordsOk = (s, set, latin = new Set()) => {
+  const text = String(s).toLowerCase().replace(/&phi;/g, "φ");
+  if (A1_OPS.test(text)) return false;
+  for (const tk of a1Tokens(text)) if (tk.unit && (a1Risky(tk.unit) || !(a1Unit(tk.unit) || a1Allowed(tk.unit, set) || (tk.glued && latin.has(tk.unit))))) return false;
+  const rest = text.replace(/(?<![a-zа-яіїєґ\d.,])\d+(?:[.,]\d+)?(?:\s*[-–—]\s*\d+(?:[.,]\d+)?)?(\s*)([a-zа-яіїєґ°·]+)?/giu, " ");
+  return (rest.match(/[a-z]+\d*|[а-яіїєґ]+/giu) || []).every((w) => !a1Risky(w) && (Boolean(a1Unit(w)) || a1Allowed(w, set) || latin.has(w)));
+};
+const A1_LATIN = { mains: new Set(), batteries: new Set(["aa", "aaa", "lr6", "lr03"]), accumulator: new Set(["cas", "li", "ion", "liion"]) };
+const A1_MAX_KEY = /максимальн|вантажопідйомн|грузоподъемн|граничн|допустим/, A1_MIN_KEY = /мінімальн|минимальн/;
 /** Сумісне уточнення: назва правила або null. Лише для запису опису проти наявного значення тієї самої характеристики. */
 export function a1Refinement(key, have, sup) {
   const h = cleanValue(`${mtText(have?.value)}${mtText(have?.unit) ? " " + mtText(have.unit) : ""}`), d = cleanValue(`${mtText(sup?.value)}${mtText(sup?.unit) ? " " + mtText(sup.unit) : ""}`), k = normName(key);
   if (!h || !d) return null;
   if (/живлен|питани|джерело живлення|источник питания/.test(k)) {
+    // «від мережі / від акумулятора» — джерело живлення, не межа; решта слів — лише з переліку
+    const latin = /^батарейки/i.test(h) ? A1_LATIN.batteries : /^акумулятор/i.test(h) ? A1_LATIN.accumulator : A1_LATIN.mains;
+    if (!a1WordsOk(d.replace(/(^|[^a-zа-яіїєґ])(від|от)(\s+)(?=(електромереж|мереж|электросет|сет[ьиі]|акумулятор|аккумулятор|батаре))/giu, "$1$3"), A1_POWER_WORD, latin)) return null;
     const toks = a1Tokens(d), volts = toks.filter((t) => a1Unit(t.unit)?.dim === "volt"), others = toks.filter((t) => !["volt", "freq"].includes(a1Unit(t.unit)?.dim));
     if (/^мережа/i.test(h) && A1_MAINS.test(d) || /^мережа/i.test(h) && volts.length && !A1_BAT.test(d)) {
       if (A1_BAT.test(d) || others.length) return null;
@@ -769,8 +793,18 @@ export function a1Refinement(key, have, sup) {
     if (/^акумулятор/i.test(h) && (A1_BAT.test(d) || (volts.length && !others.length)) && !A1_MAINS.test(d)) return "живлення від акумулятора";
     return null;
   }
+  // В4а: опис дає приблизне значення ТОГО САМОГО числа («близько 8 кг» при полі 8 кг) — не рівнозначність, а явне інформаційне
+  // уточнення (обидва записи в позначці, передається наявне); інше число або будь-які інші слова — конфлікт.
+  const qh = a1Qty(h);
+  if (A1_APPROX.test(d)) { if (/[<>≤≥±≠=]/.test(d)) return null; const qd = a1Qty(d); return qh && qd && qd.approx && !qh.approx && qd.dim === qh.dim && qd.n === qh.n ? "приблизне значення того самого числа" : null; }
+  // В4б: «до X» / «від X» — межа того самого числа лише для ключа-максимуму / мінімуму (вантажопідйомність, максимальний діаметр);
+  // для будь-якої іншої величини (робочий тиск, вага) — конфлікт.
+  const lim = /^(до|від|от)\s+(.+)$/i.exec(d);
+  if (lim) { const ql = a1Qty(lim[2]), up = lim[1].toLowerCase() === "до"; return qh && ql && !ql.approx && ql.dim === qh.dim && ql.n === qh.n && (up ? A1_MAX_KEY.test(k) : A1_MIN_KEY.test(k)) ? `межа того самого числа (ключ — ${up ? "максимальне" : "мінімальне"} значення)` : null; }
+  const latin = new Set([...(/коефіцієнт потужності|коэффициент мощности/.test(k) ? ["cos"] : []), ...(/промен|лучей|луча/.test(k) ? ["d"] : [])]);
+  if (!a1WordsOk(d, A1_V4_WORD, latin)) return null;
   // В4: одне число поля з одиницею (або лічильне без одиниці) — у записі опису є та сама величина; решта чисел — інший вимір
-  // (з одиницею) або позначка, приклеєна до літер («4D»). Інше значення того самого виміру або число без одиниці — не доведено.
+  // (з одиницею) або позначка, приклеєна до літер («4D», без max / min). Інше значення того самого виміру або число без одиниці — не доведено.
   const ht = a1Tokens(h);
   if (ht.length !== 1 || ht[0].n2 !== null) return null;
   const hu = ht[0].unit ? a1Unit(ht[0].unit) : null;
@@ -783,7 +817,7 @@ export function a1Refinement(key, have, sup) {
     if (t.n2 !== null) return null;
     if (hdim === "count" ? !u && t.n === hv && (!t.unit || !t.glued) : u?.dim === hdim && round6(t.n * u.f) === hv) { same++; continue; }
     if (u && u.dim !== hdim) continue; // інший вимір (Гц, В тощо)
-    if (t.glued && /^[a-z]/i.test(t.unit)) continue; // позначка «4D»
+    if (t.glued && latin.has(t.unit)) continue; // позначка «4D» (лише в своєму контексті)
     return null;
   }
   return same ? "та сама величина, опис уточнює" : null;

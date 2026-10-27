@@ -146,11 +146,11 @@ const freezeEnv = (ids, file = fileOf(ids), contract = contractOf(ids)) => {
 };
 
 test("перелік захищених товарів (fail-closed): без файлу / пошкоджений / неузгоджений — режим вимкнено для всіх; валідний — лише в області дії, крім захищених", () => {
-  assert.deepEqual(TECH_RULES, ["A1"]);
+  assert.deepEqual(TECH_RULES, ["A1", "A2"]);
   const none = loadPromCatalog(undefined, { freezeFile: "" });
   assert.deepEqual([none.techRulesFor("111"), none.freezeInfo.valid], [[], false]);
   const ok = freezeEnv(["111", "112"]);
-  assert.deepEqual([ok.cat.techRulesFor("111"), ok.cat.techRulesFor("222"), ok.cat.techRulesFor("333"), ok.cat.techRulesFor(""), ok.cat.freezeInfo], [[], ["A1"], [], [], { valid: true, file: "freeze.json", rev: 1, date: "2026-10-27", count: 2, scope: 4, source: "тест", parts: null }], "поза областю дії (новий / черга) — як у 83206c4");
+  assert.deepEqual([ok.cat.techRulesFor("111"), ok.cat.techRulesFor("222"), ok.cat.techRulesFor("333"), ok.cat.techRulesFor(""), ok.cat.freezeInfo], [[], [...TECH_RULES], [], [], { valid: true, file: "freeze.json", rev: 1, date: "2026-10-27", count: 2, scope: 4, source: "тест", parts: null }], "поза областю дії (новий / черга) — як у 83206c4");
   const sc = scopeOf(["111", "112"]), sco = { count: sc.length, ids: sc };
   // кожен файл — з правильною ревізією, щоб відсікала саме його вада (count / ID / дата / дублікати), а не ревізія
   for (const bad of ["{ зламаний", JSON.stringify({ v: 1, rev: 1, date: "2026-10-27", count: 3, ids: ["111", "112"], scope: sco }), JSON.stringify({ v: 1, rev: 1, date: "2026-10-27", count: 1, ids: ["x"], scope: sco }), JSON.stringify({ v: 1, rev: 1, count: 1, ids: ["111"], scope: sco }), JSON.stringify({ v: 1, rev: 1, date: "2026-10-27", count: 2, ids: ["111", "111"], scope: sco })]) {
@@ -231,6 +231,7 @@ test("синхронізація: техрежим лише для основн�
     const qa = refreshQueueRow({ ...a, "Категорія Prom ID": SAW }, qOffer(id), full, { stamp: "2026-10-27T11:00:00.000Z", catalog: on }).row;
     const qb = refreshQueueRow({ ...b, "Категорія Prom ID": SAW }, qOffer(id), full, { stamp: "2026-10-27T11:00:00.000Z", catalog: off }).row;
     assert.deepEqual(qa, qb, `черга ${id}`);
+    assert.ok(!JSON.parse(qa["Характеристики JSON"]).some((p) => p.name === "Зубило"), `черга ${id}: без А1 (як 83206c4)`);
   }
   fs.rmSync(dir, { recursive: true, force: true });
   // Без файлу / пошкоджений / порожній / з дублями — результат як без режиму, синхронізація не блокується.
@@ -242,4 +243,101 @@ test("синхронізація: техрежим лише для основн�
   const sim = new WatchSim({ catalog: { ...catalog } });
   const r = await sim.start();
   assert.ok(r.warnings.some((w) => /технічні нормалізації .*не активні/.test(w)), JSON.stringify(r.warnings));
+});
+
+// Пакет А2 (Hermes / власник, 27.10.2026): у XML товару немає жодного <param>, характеристики є лише в блоці характеристик
+// опису. До А2 refreshMainRow такі картки не перебудовував (потрібна непорожня «Характеристики постачальника JSON») — 805 карток
+// основного каталогу без характеристик у Prom. А2 — той самий погоджений генератор за описом, лише для основного каталогу в
+// області дії переліку, крім захищених; без валідного переліку, без повного XML або без опису — як у 83206c4.
+test("А2: у XML немає <param> — характеристики з опису лише в області дії переліку (захищені, поза областю, без переліку, без XML, без опису — як раніше)", async () => {
+  const { refreshMainRow, refreshQueueRow, candidateRow, RAW_PARAMS, PARAMS_ORIGIN } = await import("../src/core/sheet-sync.mjs");
+  const { dir, cat } = freezeEnv(["91"]);
+  const desc = { ua: "<ul><li>Кількість обертів: 3000 об/хв</li><li>Матеріал корпусу: пластик</li></ul>", ru: "<ul><li>Количество оборотов: 3000 об/мин</li><li>Материал корпуса: пластик</li></ul>" };
+  const full = (more = {}) => ({ params: [], pictures: [], descriptionUa: desc.ua, descriptionRu: desc.ru, ...more });
+  const row = (id) => ({ "Offer ID": id, "ID постачальника": id, "Категорія Prom ID": SAW, "Виробник": "Test", "Характеристики JSON": "[]", "Назва постачальника UA": "Пила тестова", "Назва постачальника RU": "" });
+  const offer = (id) => ({ id, vendor: "Test", sku: "", nameUa: "Пила тестова", nameRu: "", price: 100, available: true, currency: "UAH" });
+  const run = (id, c = cat, f = full()) => refreshMainRow(row(id), offer(id), f, { stamp: "2026-10-27T10:00:00.000Z", catalog: c }).row;
+  const params = (r) => JSON.parse(r["Характеристики JSON"]);
+  // відтворення пропуску: без режиму картка без <param> не перебудовується
+  const before = run("90", catalog);
+  assert.deepEqual([params(before), before[RAW_PARAMS] ?? "", before[PARAMS_ORIGIN] ?? ""], [[], "", ""], "до А2 — без змін");
+  // А2: з валідним переліком — характеристики з опису (поле й користувацька), походження «ОПИС», сирих параметрів немає
+  const a = run("90");
+  assert.ok(params(a).some((p) => p.name === "Кількість обертів" && p.value === "3000"), a["Характеристики JSON"]);
+  assert.ok(params(a).some((p) => p.name === "Матеріал корпусу" && p.value === "пластик"), a["Характеристики JSON"]);
+  assert.ok(JSON.parse(a[PARAMS_ORIGIN]).items.every((i) => i.s === "ОПИС"));
+  assert.equal(a[RAW_PARAMS] ?? "", "", "сирі характеристики постачальника не вигадуються");
+  // повторний запуск стабільний
+  const again = refreshMainRow(a, offer("90"), full(), { stamp: "2026-10-27T11:00:00.000Z", catalog: cat });
+  assert.equal(again.row["Характеристики JSON"], a["Характеристики JSON"]);
+  assert.equal(again.params, false);
+  // захищений, поза областю, без переліку / з пошкодженим — як раніше
+  // «як раніше» — рядок ідентичний рядку без режиму (не лише порожні характеристики)
+  for (const [what, r] of [["захищений", run("91")], ["поза областю дії", run("95")], ["без переліку", run("90", catalog)]]) { assert.deepEqual(params(r), [], what); assert.deepEqual(r, run(r["Offer ID"], catalog), what); }
+  const bad = freezeEnv(["91"], "{ зламаний");
+  assert.deepEqual(params(run("90", bad.cat)), [], "пошкоджений перелік");
+  fs.rmSync(bad.dir, { recursive: true, force: true });
+  // без повного XML (full = null) або без опису — як раніше
+  const noFull = (c) => refreshMainRow(row("90"), offer("90"), null, { stamp: "2026-10-27T10:00:00.000Z", catalog: c }).row;
+  assert.deepEqual(noFull(cat), noFull(catalog), "без повного XML");
+  // повний XML недоступний (збій / неповне покриття), а в рядку — старий опис з таблиці: не перебудовувати із застарілого опису
+  const stale = { ...row("90"), "Опис постачальника UA": desc.ua, "Опис постачальника RU": desc.ru };
+  const staleRun = (c) => refreshMainRow({ ...stale }, offer("90"), undefined, { stamp: "2026-10-27T10:00:00.000Z", catalog: c }).row;
+  assert.deepEqual(staleRun(cat), staleRun(catalog), "без повного XML, старий опис у рядку");
+  assert.deepEqual(params(staleRun(cat)), []);
+  const noDesc = full({ descriptionUa: "", descriptionRu: "" });
+  assert.deepEqual(run("90", cat, noDesc), run("90", catalog, noDesc), "без опису");
+  // картка з <param> у XML — як після А1 (А2 її не стосується)
+  const x = run("90", cat, full({ params: [P("Состояние", "Новое")] }));
+  assert.ok(params(x).length > 0);
+  // черга й нові кандидати — як у 83206c4 (з переліком і без — однаково)
+  const pricing = JSON.parse(fs.readFileSync(new URL("../config/default.json", import.meta.url), "utf8")).pricing;
+  const pc = { date: "2026-10-27", map: new Map([["90", SAW]]) };
+  const on = { ...cat, promCategories: pc }, off = { ...catalog, promCategories: pc };
+  const qo = { ...offer("90"), nameRu: "Пила", url: "https://example.com/p.html", quantity: "" };
+  const ca = candidateRow(qo, full(), "2026-10-27T10:00:00.000Z", pricing, on), cb = candidateRow(qo, full(), "2026-10-27T10:00:00.000Z", pricing, off);
+  assert.deepEqual(ca, cb, "новий товар");
+  assert.deepEqual(refreshQueueRow({ ...ca, "Категорія Prom ID": SAW }, qo, full(), { stamp: "2026-10-27T11:00:00.000Z", catalog: on }).row, refreshQueueRow({ ...cb, "Категорія Prom ID": SAW }, qo, full(), { stamp: "2026-10-27T11:00:00.000Z", catalog: off }).row, "черга");
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test("А2: опис без жодної пари характеристик — картка лишається порожньою (не «готова»), нічого не вигадується", async () => {
+  const { refreshMainRow } = await import("../src/core/sheet-sync.mjs");
+  const { dir, cat } = freezeEnv(["91"]);
+  const r = refreshMainRow({ "Offer ID": "90", "ID постачальника": "90", "Категорія Prom ID": SAW, "Виробник": "Test", "Характеристики JSON": "[]", "Назва постачальника UA": "Пила тестова", "Назва постачальника RU": "" }, { id: "90", vendor: "Test", sku: "", nameUa: "Пила тестова", nameRu: "", price: 100, available: true, currency: "UAH" }, { params: [], pictures: [], descriptionUa: "<p>Надійна пила для дому та саду. Купуйте вигідно!</p>", descriptionRu: "<p>Надежная пила для дома и сада.</p>" }, { stamp: "2026-10-27T10:00:00.000Z", catalog: cat });
+  assert.deepEqual(JSON.parse(r.row["Характеристики JSON"]), []);
+  assert.equal(r.params, false);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+// Safety-review Hermes (27.10.2026, А1 → В): В1–В4 оцінювали числа, але не слова. Заперечення, порівняння, межі, допуски,
+// сумісність, альтернативи й неперевірені слова — fail-closed (конфлікт). Вузькі винятки: «від мережі / від акумулятора»;
+// «до X» — лише для ключа-максимуму (вантажопідйомність, максимальний …); «близько X» того самого числа — явно «приблизне».
+test("В: заперечення, порівняння, межі, допуски, сумісність і неперевірені слова — конфлікт; вузькі доказові уточнення — інформаційно з явною причиною", async () => {
+  const { a1Refinement } = await import("../src/core/prom-attributes.mjs");
+  const ref = (key, h, d) => a1Refinement(key, P(key, h), P(key, d));
+  // приклади Hermes — не уточнення
+  for (const [k, h, d] of [["Напруга", "18 В", "не 18 В"], ["Діаметр", "125 мм", "не підходить для 125 мм"], ["Вага", "1 кг", "максимум 1 кг"], ["Вага", "1 кг", "менше 1 кг"], ["Довжина", "5 см", "мінімум 5 см"],
+    ["Робочий тиск", "8 бар", "до 8 бар"], ["Вага", "2 кг", "від 2 кг"], ["Вага", "2 кг", "2 кг ± 0,1 кг"], ["Вага", "2 кг", "2 кг або 3 кг"], ["Довжина шини", "40 см", "40 см (сумісна з моделями 2022)"], ["Вага", "2 кг", "2 кг без упаковки"], ["Вага", "2 кг", "близько 2 кг, без акумулятора"], ["Напруга", "220 В", "220 В max"], ["Напруга", "220 В", "220 В, не менше"], ["Вантажопідйомність", "50 кг", "до 60 кг"], ["Напруга", "18 В", "18 В (20Vmax)"], ["Вантажопідйомність", "50 кг", "від 50 кг"],
+    // оператори меж / допусків і невідома латиниця (повторний probe Hermes) — конфлікт
+    ["Напруга", "18 В", "<18В"], ["Напруга", "18 В", "≤18В"], ["Напруга", "18 В", "±18В"], ["Напруга", "18 В", ">18 В"], ["Напруга", "18 В", "18 В ≥"], ["Напруга", "18 В", "less than 18В"], ["Напруга", "18 В", "except 18В"], ["Напруга", "18 В", "18В only"], ["Напруга", "18 В", "18 В (CAS)"],
+    ["Кількість фаз", "1", "1 (4D)"], ["Коефіцієнт мощності", "0.8", "cos φ 0,8"], ["Вага", "8 кг", "8 кг ± 0,2"], ["Вага", "8 кг", "~8 кг ± 1"],
+    ["Живлення", "Мережа 220В", "мережа ≤ 240 В"], ["Живлення", "Мережа 220В", "мережа (EU plug)"], ["Живлення", "Батарейки", "2 батарейки CR2032 only"], ["Живлення", "Акумулятор", "від акумулятора Power X-Change (18 В)"], ["Живлення", "Акумулятор", "акумулятор 18 В (AA)"],
+    // RU «мин.» — мінімум, не хвилини; невідома «одиниця» після числа; приблизне поле — не правило В4а
+    ["Довжина", "5 см", "мин. 5 см"], ["Живлення", "Акумулятор", "акумулятор 18 В 2 запасні"], ["Вага", "близько 8 кг", "около 8 кг"],
+    ["Живлення", "Мережа 220В", "не від мережі"], ["Живлення", "Мережа 220В", "без мережі"], ["Живлення", "Мережа 220В", "мережа або акумулятор"], ["Живлення", "Мережа 220В", "мережа до 240 В"], ["Живлення", "Мережа 220В", "мережа, вилка тип C"], ["Живлення", "Батарейки", "без батарейок"], ["Живлення", "Акумулятор", "без акумулятора"], ["Живлення", "Акумулятор", "акумулятор не входить"]]) assert.equal(ref(k, h, d), null, `${k}: ${h} / ${d}`);
+  // фактичні доказові випадки А1 — лишаються інформаційними, причина явна
+  assert.match(ref("Вантажопідйомність", "50 кг", "до 50 кг"), /межа того самого числа/);
+  assert.match(ref("Максимальний діаметр реза", "30 мм", "до 30 мм"), /межа того самого числа/);
+  assert.match(ref("Максимальна глибина обробки", "16 см", "до 160 мм"), /межа того самого числа/);
+  assert.match(ref("Вага", "8 кг", "близько 8 кг"), /приблизне значення того самого числа/);
+  assert.match(ref("Вага", "600 г", "приблизно 0,6 кг"), /приблизне значення того самого числа/);
+  assert.equal(ref("Вага", "600 г", "приблизно 0,7 кг"), null, "приблизне іншого числа — конфлікт");
+  for (const [k, h, d] of [["Кількість променів", "16", "16 (4D)"], ["Максимальний тиск", "10 атм", "10 атм. (кг/см2)"], ["Кількість фаз", "1", "1 фаза 220 В (50 Гц)"], ["Напруга", "220 В", "220В / Частота: 50 Гц"], ["Коефіцієнт потужності", "0.8", "cos &phi; 0,8"], ["Вантажопідйомність", "3500 кг", "3500 кг / 3,5 т"]]) assert.match(String(ref(k, h, d)), /та сама величина, опис уточнює/, `${k}: ${d}`);
+  for (const d of ["Від мережі 220 В", "від мережі (220 В)", "Від електромережі", "мережеве", "Мережа 220В, 50 Гц", "220-240 В / 50 Гц"]) assert.ok(ref("Живлення", "Мережа 220В", d), d);
+  for (const d of ["Від акумулятора", "акумуляторне", "Аккумуляторный", "40В", "36V (2 акумулятори по 18V)", "Акумулятор 18 В (CAS)", "акумулятор 18 В Li-Ion"]) assert.ok(ref("Живлення", "Акумулятор", d), d);
+  for (const d of ["2 батарейки типа AA", "3 x 1,5 В, LR6 (AA)"]) assert.ok(ref("Живлення", "Батарейки", d), d);
+  // через генератор: «до 8 бар» робочого тиску — конфлікт
+  const r = B({ current: [P("Робочий тиск", "8 бар")], descUa: "<p>Робочий тиск: до 8 бар</p>", ...A1 });
+  assert.equal(hard(r).length, 1, JSON.stringify(r.needsReview));
 });

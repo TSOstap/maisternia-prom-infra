@@ -64,7 +64,7 @@ export function loadOwnerValues(file) {
 
 /** Технічні нормалізації, увімкнені в генераторі (пакети після 83206c4). Діють лише з валідним переліком захищених товарів
  *  і лише для основного каталогу (refreshMainRow): нові кандидати й черга «Нові товари» — як у 83206c4. */
-export const TECH_RULES = Object.freeze(["A1"]);
+export const TECH_RULES = Object.freeze(["A1", "A2"]); // A2 — картки без <param> у XML: характеристики з опису (лише refreshMainRow)
 
 /** Відбиток набору Offer ID (не залежить від порядку): у репозиторії зберігається лише він, самі ID — поза репозиторієм. */
 export const freezeFingerprint = (ids) => "sha256:" + sha256([...new Set([...ids].map(String))].sort().join("\n"));
