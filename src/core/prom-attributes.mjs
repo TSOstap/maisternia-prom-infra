@@ -456,22 +456,49 @@ const N12_KIT_KEY_RE = /\d+\s*шт(?![а-яіїєґa-z])/i; // \b у JS — ли
 const N12_QTY = [
   [/(^|\s)(напруга|напряжение)(\s|,|$)/, /^(в|кв|мв|v|kv)$/],
   [/(^|\s)(потужність|мощность)(\s|,|$)/, /^(вт|квт|мвт|w|kw|кс|лс|ква|ва|hp)$/],
-  [/(^|\s)(частота)(\s|,|$)/, /^(гц|кгц|мгц|hz|об|уд)$/],
+  [/(^|\s)(частота)(\s|,|$)/, /^(гц|кгц|мгц|hz|об(\/(хв|мин|min))?|уд(\/(хв|мин|min))?)$/],
   [/(^|\s)(струм|ток)(\s|,|$)/, /^(а|ма|ка|a|ma)$/],
   [/(^|\s)(вага|вес|маса|масса)(\s|,|$)/, /^(кг|г|т|мг|kg|g|грам\S*)$/],
-  [/(^|\s)(розмір\S*|размер\S*|габарит\S*|довжина|ширина|висота|глибина|діаметр|товщина|длина|высота|глубина|диаметр|толщина)(\s|,|$)/, /^(мм|см|м|дм|км|дюйм\S*|mm|cm|m)$/],
+  [/(^|\s)(розмір\S*|размер\S*|габарит\S*|довжина|ширина|висота|глибина|діаметр|товщина|длина|высота|глубина|диаметр|толщина)(\s|,|$)/, /^(мм|см|м|дм|км|дюйм\S*|mm|cm|m)$/], // «м/хв» для глибини — ні
 ];
+// Технічна назва (Hermes msg_9372211d55a6: числа не роблять рекламу характеристикою): перше значуще слово назви (після
+// модифікаторів «макс.», «номінальна», «робочий» …) має починатися з головного слова з переглянутого переліку технічних назв
+// (за фактичними назвами 50 карток N1-2); «… у / в комплекті» — теж. Інакше — аудит («Якість», «Надійність», «Комфорт»,
+// «Особливості», «1 позиція» …). Це перелік дозволених головних слів, не чорний список.
+const N12_TECH_HEADS = ["вага", "ваги", "маса", "масса", "потужн", "напруг", "довжин", "ширин", "висот", "глибин", "діаметр", "товщин", "об'єм", "обсяг", "ємн", "місткість",
+  "частот", "швидк", "число", "кількість", "оберт", "оборот", "тиск", "продуктивн", "витрат", "рівень", "клас", "тип", "матеріал", "колір", "розмір", "габарит", "країна",
+  "бренд", "виробник", "торгова", "модель", "артикул", "ean", "охолодж", "живлен", "джерел", "струм", "температур", "площ", "крок", "різьб", "хвостовик", "патрон", "режим",
+  "кут", "час", "систем", "призначен", "комплект", "енергі", "зусилл", "амплітуд", "січен", "ступін", "ступен", "фаз", "ножів", "ніж", "стабілізатор", "датчик", "вихід",
+  "avr", "принцип", "плавний", "регулюван", "підігрів", "посадков", "приєднувальн", "квадрат", "шпиндел", "зняття", "відстань", "двигун", "марка", "кейс", "пилозбірник",
+  "світлов", "антивібрац", "самовирівнюван", "знімн", "діапазон", "стіл", "захист", "крутн"];
+const N12_KEY_MODS = /^(макс|мін|ном|максимальн\S*|мінімальн\S*|номінальн\S*|робоч\S*|внутрішн\S*|зовнішн\S*|загальн\S*|рекомендован\S*|споживан\S*|споживч\S*|вбудован\S*|тягов\S*)\.?$/;
+const n12TechKey = (key) => {
+  const w = normName(key).replace(/[’ʼ`´]/g, "'").split(/[\s(]+/).filter(Boolean);
+  if (/(^|\s)(в|у) комплекті$/.test(normName(key))) return true;
+  let i = 0; while (i < w.length - 1 && N12_KEY_MODS.test(w[i])) i++;
+  return Boolean(w[i]) && N12_TECH_HEADS.some((h) => w[i].startsWith(h));
+};
+// Технічне значення (Hermes msg_138535dcab7c: правильна назва — не доказ технічного значення): якщо в значенні є число, кожен
+// елемент — число / елемент з цифрою (4-тактний, IP23, М14), одиниця, межа чи сполучник («до», «±», «не більше», «від … до»),
+// роздільник або латинський код (SAE, HEX, Li-Ion). Інакше («5 кг неймовірного комфорту», «100% гарантія якості») — аудит.
+const N12_UNIT_TOK = new Set(("вт квт мвт в кв мв а ма ка гц кгц мгц мм см м км дм мкм кг г т мг л мл бар атм мпа кпа па дб дж нм н ° °с °c º град шт к.с л.с кс лс " +
+  "ач аг а ч мач маг мағ ва ква об уд хв хвилин хвилини хвилина мин год годин години година сек секунд с дюйм дюйми дюймів \" ″ % м/с км/год м/хв л/хв л/год м³ м3 " +
+  "куб кв см³ см3 см.куб куб.м кв.м м.кв м² м2 мм² мм2 lm лм люмен").split(" "));
+const N12_BOUND_TOK = new Set("до від не більше менше понад близько приблизно орієнтовно макс мін max min і та або на з x х × - – — … + ~ ≈ ± =".split(" "));
+const n12TechValue = (value) => !/\d/.test(value) || value.toLowerCase().replace(/[’ʼ]/g, "'").split(/[\s,;()[\]/*·]+/).map((t) => t.replace(/^["«»“”]+|[.:«»“”]+$/g, "")).filter(Boolean)
+  .every((t) => /\d/.test(t) || N12_UNIT_TOK.has(t) || N12_BOUND_TOK.has(t) || /^[a-z][a-z0-9.+-]*$/i.test(t) || /^[-–—…~≈±x×+"″°º%]+$/.test(t));
 // Значення без чисел: ≥ 6 слів — опис / перелік переваг; ≥ 3 слів і крапка в кінці — «перевага» (для оцінки списку).
 const n12Words = (v) => (v.match(/[a-zа-яіїєґё'’]+/gi) || []).length;
 const n12Benefit = (key, value) => !/\d/.test(value) && n12Words(value) >= 3 && (/\.$/.test(value) || /\d/.test(key));
 // Одиниця першого числа (розміри «131х88х78 мм»: знак множення між числами — не одиниця).
-const n12Unit = (v) => { const m = /^[~≈]?\s*[-+]?\d+(?:[.,]\d+)?(?:\s*[xXхХ×*]\s*\d+(?:[.,]\d+)?)*\s*([a-zа-яіїєґё°]+(?:\.\s?[a-zа-яіїєґё]+)?)(?![.,]?\s*\d)/i.exec(v); return m ? m[1].toLowerCase().replace(/[.\s]/g, "") : ""; };
+// Діапазон «A-B од.» — одиниця після другого числа; складена одиниця «м/хв», «об/ хв» — разом.
+const n12Unit = (v) => { const m = /^[~≈]?\s*[-+]?\d+(?:[.,]\d+)?(?:\s*[-–—]\s*\d+(?:[.,]\d+)?)?(?:\s*[xXхХ×*]\s*\d+(?:[.,]\d+)?)*\s*(%|[a-zа-яіїєґё°]+(?:\.\s?[a-zа-яіїєґё]+)?(?:\s?\/\s?[a-zа-яіїєґё]+)?)(?![.,]?\s*\d)/i.exec(v); return m ? m[1].toLowerCase().replace(/[.\s]/g, "") : ""; };
 const n12Dot = (v) => v.replace(/(?:(\d)|(?<=[\d\s])(вт|квт|в|а|гц|мм|см|м|кг|г|л|мл|бар|дб|°с|°c))\.$/i, (all, d, u) => d || u);
-function n12Check(key, value, raw) {
+function n12Check(key, value, raw, lang = "ua", isTechKey = n12TechKey) {
   const k = normName(key);
   if (!key || !value) return "порожня назва або значення";
   if (/\d\s*\)?$/.test(key)) return "діапазон (назва закінчується числом) — неоднозначно";
-  if (/^[–—-]/.test(value)) return "тире на початку значення — неоднозначно";
+  if (/^[–—-](?!\d)/.test(value)) return "тире на початку значення — неоднозначно"; // «-20 °C» — від'ємне число, не тире
   if (/\s[–—-]\s/.test(value)) return "кілька пар в одному пункті (ще одне тире в значенні) — неоднозначно";
   if (ENTITY_LEFT_RE.test(raw)) return "невідома HTML-сутність у назві або значенні";
   if (N12_KIT_KEY_RE.test(key) || (N12_PIECES_RE.test(value) && !N12_COUNT_KEY_RE.test(k))) return "комплектація / склад набору — окремий аудит, не загальна характеристика";
@@ -479,17 +506,20 @@ function n12Check(key, value, raw) {
   const u = n12Unit(value), qs = N12_QTY.filter(([kr]) => kr.test(k));
   if (u && qs.some(([, ur]) => !ur.test(u))) return `одиниця «${u}» не відповідає величині ключа`; // кілька величин у ключі — до всіх
   if (!/\d/.test(value) && n12Words(value) >= 6) return "не характеристика: опис / перелік переваг без технічних даних";
+  if (n12Words(value) >= 7) return "не характеристика: значення — опис, не коротка технічна характеристика";
+  if (!n12TechValue(value)) return "значення з нетехнічними словами поруч із числом — аудит (не обрізається)";
   const nc = descriptionNonCharacteristic({ key, value, via: "list" }) || (key.split(/\s+/).length > 7 ? { why: "назва довша за 7 слів (речення)" } : null);
   if (nc) return "не характеристика: " + nc.why;
+  if (lang === "ua" && !isTechKey(key)) return "назва не підтверджена як технічна характеристика (поза переліком технічних назв) — аудит"; // RU лише перевіряє UA
   return "";
 }
-export function n1ListPairs(html) {
+export function n1ListPairs(html, { lang = "ua", isTechKey = n12TechKey } = {}) {
   const s = mtText(html), pairs = [], skipped = [];
   const tables = [...s.matchAll(/<table\b[\s\S]*?<\/table>/gi)].map((m) => [m.index, m.index + m[0].length]);
   const inTable = (i) => tables.some(([a, b]) => i >= a && i < b);
   const take = (key, value, raw, start, end, via) => {
     key = cleanValue(key).replace(/[:\s]+$/, ""); value = n12Dot(cleanValue(value));
-    const why = n12Check(key, value, raw);
+    const why = n12Check(key, value, raw, lang, isTechKey);
     if (why) skipped.push({ key, value, why }); else pairs.push({ key, value, start, end, via });
   };
   // (1) однорідні списки «Назва – значення» (поза таблицями)
@@ -609,7 +639,8 @@ const HOMO = { a: "а", e: "е", o: "о", p: "р", c: "с", x: "х", y: "у", i:
 export function normValue(v, names = null) {
   // Невидимі символи й типографські пробіли; «²» / «³» = «2» / «3» (м/с² = м/с2) — однозначна технічна нормалізація.
   let s = htmlText(v).replace(/[\u200b-\u200d\u2060\ufeff\u00ad]/g, "").replace(/[\u00a0\u2000-\u200a\u202f]/g, " ").replace(/²/g, "2").replace(/³/g, "3").toLowerCase().replace(/ё/g, "е").replace(/[’ʼ`´]/g, "'");
-  s = s.replace(/^[\s✔✓✅☑•·*–—-]+/u, "").replace(/[«»"“”„]/g, "");
+  // Маркери списку на початку («✔», «•», «- ») — не значення; тире перед цифрою — знак числа («-20 °C» ≠ «20 °C», Hermes msg_9372211d55a6).
+  s = s.replace(/^(?:[\s✔✓✅☑•·*]|[–—-](?!\d))+/u, "").replace(/[«»"“”„]/g, "");
   s = s.replace(/(\d)\s*[–—-]\s*(\d)/g, "$1-$2").replace(/(\d)[\s  ](?=\d{3}(?!\d))/g, "$1").replace(/(\d),(\d)/g, "$1.$2");
   s = s.replace(/(\d)\s+%/g, "$1%"); // «75 %» = «75%»
   // «0;8 кг» = «0,8 кг»: «;» як десятковий роздільник — лише ізольована пара цифр; ланцюжок «17;19;21;23» — перелік, не змінюється.
@@ -1088,7 +1119,9 @@ export function alignPairs(U, R, score) {
 export function buildCharacteristics(opts = {}) {
   const tech = new Set(opts.techRules || []);
   if (!tech.has("N1") || !opts.schema || asParams(opts.rawParams || []).length) return buildCore(opts);
-  const ua = n1ListPairs(opts.descUa), ru = n1ListPairs(opts.descRu);
+  // Технічна назва: перелік головних слів або перевірений словник назв (ціла назва → UA-назва з переліку); значення — як завжди.
+  const isTechKey = (k) => n12TechKey(k) || (Boolean(opts.names?.name?.has(normName(k))) && n12TechKey(canonName(opts.names, k)));
+  const ua = n1ListPairs(opts.descUa, { lang: "ua", isTechKey }), ru = n1ListPairs(opts.descRu, { lang: "ru" });
   if (!ua.pairs.length && !ru.pairs.length && !ua.skipped.length && !ru.skipped.length) return buildCore(opts);
   const probe = buildCore({ ...opts, current: [], provenance: null, ownerValues: null, ownerIndex: null, kitOwner: null, multiOwner: null });
   if (probe.params.length || probe.needsReview.length) return buildCore(opts);
@@ -1099,7 +1132,13 @@ export function buildCharacteristics(opts = {}) {
   };
   // Бренд — офіційне написання з «Виробник» картки (власник, 25.10.2026), не варіант опису («DeWALT.»).
   const official = (p) => (isBrandName(p.key) ? { ...p, value: mtText(opts.brand).trim() } : p);
-  return buildCore({ ...opts, n12: { ua: ua.pairs.filter(keep("ua")).map(official), ru: ru.pairs.filter(keep("ru")).map(official), skipped } });
+  // Відкинутий RU-пункт тієї самої характеристики (атрибут схеми, словник назв або той самий запис назви — консервативно) не дає
+  // UA-підтвердження (Hermes msg_9372211d55a6): UA не передається, жорстка позначка з обома оригіналами.
+  const canon = (k) => { const at = resolveAttr(opts.schema, k, opts.mapping).attr; return at ? "a:" + at.id : "n:" + normName(canonName(opts.names, k)); };
+  const ruRejected = new Map(ru.skipped.map((x) => [canon(x.key), x]));
+  const blocked = [];
+  const uaPass = ua.pairs.filter(keep("ua")).filter((p) => { const x = ruRejected.get(canon(p.key)); if (!x) return true; blocked.push({ ua: p, ru: x }); return false; });
+  return buildCore({ ...opts, n12: { ua: uaPass.map(official), ru: ru.pairs.filter(keep("ru")).map(official), skipped, blocked } });
 }
 function buildCore({ schema = null, categoryId = "", rawParams = [], descUa = "", descRu = "", current = [], provenance = null, mapping = null, units = null, names = null, mode = "queue", brand = "", titles = [], kitOwner = null, multiOwner = null, ownerValues = null, ownerIndex = null, cardTitles = [], techRules = [], exactPairs = [], n12 = null }) {
   const cur = asParams(typeof current === "string" ? jsonOr(current, []) : current);
@@ -1186,6 +1225,10 @@ function buildCore({ schema = null, categoryId = "", rawParams = [], descUa = ""
     // (sameValueIn; А1, якщо діє).
     const n1Val = (a, b, ku, kr) => sameValueIn([ku, kr], { value: a, unit: "" }, { value: b, unit: "" }, names, categoryId) || (tech.has("A1") && Boolean(a1Equivalent(ku, a, b)));
     const n1 = tech.has("N1") ? conditionTablePairsUaRu(descUa, descRu, { sameVal: n1Val }) : null;
+    for (const b of n12?.blocked || []) {
+      review(nameOf(b.ua.key), [{ src: "опис UA", value: `${b.ua.key}: ${b.ua.value}` }, { src: "опис RU", value: `${b.ru.key}: ${b.ru.value}` }], `N1-2: RU-значення тієї самої характеристики не прийнято (${b.ru.why}) — UA не підтверджено`);
+      listSkipped.push({ lang: "ua", key: b.ua.key, value: b.ua.value, why: "RU-пункт тієї самої характеристики не прийнято — UA не підтверджено" });
+    }
     for (const c of n1?.conflicts || []) {
       tableConflicts.push(c);
       review(nameOf(c.key), [{ src: "опис UA", value: `${c.key}: ${c.ua}` }, { src: "опис RU", value: `${c.ruKey}: ${c.ru}` }], "UA і RU значення відрізняються");
