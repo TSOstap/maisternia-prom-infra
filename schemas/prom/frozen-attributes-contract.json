@@ -1,0 +1,12 @@
+{
+ "v": 1,
+ "rev": 1,
+ "date": "2026-10-28",
+ "count": 5,
+ "idsFingerprint": "sha256:0c2d3148911488660f9de19df6600ad6ee759bb3f17c628e9650c8a7538b4b18",
+ "fingerprint": "sha256:df10e3d4ca3d37bc5549f01fe67071e2a73293112fda94159243706dd9afd1dd",
+ "basis": {
+  "snapshotSha": "sha256:344f8fc7af818bd6b5a6a2a6061a6a812b51b7e371f2bbac7c2885ab3b5ad2d4",
+  "acceptedCommit": "1961ef9ca886e496ceeea8005959d2c61de1bf65"
+ }
+}

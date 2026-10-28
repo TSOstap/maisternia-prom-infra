@@ -9,8 +9,9 @@ import path from "node:path";
 import { SRC, buildCharacteristics } from "../src/core/prom-attributes.mjs";
 import { ACTION, planStaleCleanup } from "../src/core/prom-cleanup.mjs";
 import { loadOwnerValues, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
+import { STATE_A } from "./helpers/state-a.mjs";
 
-const catalog = loadPromCatalog();
+const catalog = loadPromCatalog(undefined, STATE_A);
 const P = (name, value, unit = "") => ({ name, value, unit });
 const B = (cat, o) => buildCharacteristics({ schema: catalog.schemas.get(cat), categoryId: cat, current: [], names: catalog.names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "main", ...o });
 const OV = (o) => ({ action: "set", source: "тест", date: "2026-10-26", priority: 1, autoUpdate: false, ...o });
@@ -273,7 +274,7 @@ test("перелік рішень у репозиторії (без значен
   // файл, що повністю відповідає переліку (значення синтетичні — звіряються лише назви, поля й модель)
   const products = Object.fromEntries([...catalog.ownerIndex].map(([id, p]) => [id, { model: p.model, items: p.items.map((x) => OV({ ...x, value: "x" })) }]));
   fs.writeFileSync(file, JSON.stringify({ v: 1, date: "2026-10-26", products }));
-  assert.deepEqual(loadPromCatalog(undefined, { ownerValuesFile: file }).problems, []);
+  assert.deepEqual(loadPromCatalog(undefined, { ...STATE_A, ownerValuesFile: file }).problems, []);
   const [id0] = Object.keys(products);
   const less = structuredClone(products); less[id0].items.shift();
   const more = structuredClone(products); more[id0].items.push(OV({ name: "Нова характеристика", value: "1" }));

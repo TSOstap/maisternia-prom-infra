@@ -11,7 +11,9 @@ import { GROUP_HEADERS } from "../src/core/seal.mjs";
 import { SHEET, extractFullOffers, readPassport, samePassport } from "../src/core/sheet-sync.mjs";
 import { syncSheet } from "../src/pipeline/sheet-sync-run.mjs";
 import { parseSupplierText } from "../src/core/supplier-feed.mjs";
+import { loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
 import { WatchSim, fullOffer } from "./helpers/watch-sim.mjs";
+import { STATE_A } from "./helpers/state-a.mjs";
 
 const mainRows = (sim) => sim.rows(SHEET.main);
 const card = (sim, offerId) => mainRows(sim).find((r) => mtText(r["Offer ID"]) === offerId);
@@ -23,7 +25,7 @@ function supplierOf(c, over = {}) {
 const priceOk = (r) => { const p = mtPrices(Number(r["Ціна постачальника"]), r["Наявність"] === "+"); return Number(r["Ціна кінцева"]) === p.final && Number(r["Ціна"]) === p.base; };
 async function syncWith(sim, fetchFull) {
   const xml = sim.xml();
-  return syncSheet({ sheets: sim.sheets, readBook: sim.readBook, parsed: await parseSupplierText(xml, { maximumChars: 45_000_000, identityFields: true }), fetchFull: fetchFull || (async (ids) => extractFullOffers(xml, ids)), stamp: sim.stamp(), config: sim.config, now: sim.now });
+  return syncSheet({ sheets: sim.sheets, readBook: sim.readBook, parsed: await parseSupplierText(xml, { maximumChars: 45_000_000, identityFields: true }), fetchFull: fetchFull || (async (ids) => extractFullOffers(xml, ids)), stamp: sim.stamp(), config: sim.config, now: sim.now, catalog: loadPromCatalog(undefined, STATE_A) });
 }
 const passportOk = (sim) => samePassport(readPassport(sim.book[SHEET.passport]), approvalManifest(mainRows(sim), objectsFromValues(sim.book[SHEET.groups], GROUP_HEADERS)));
 

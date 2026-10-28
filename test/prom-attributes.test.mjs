@@ -8,8 +8,9 @@ import path from "node:path";
 import { categoryBlocks, parseSchemaText } from "../src/core/prom-schema.mjs";
 import { SRC, alignPairs, brandEq, dimEqMm, latinOriginal, isBatteryTypeName, itemsCompatible, normName, normValue, buildCharacteristics, buildNames, charKey, cleanDescription, cleanValue, descriptionNonCharacteristic, descriptionPairs, hoursValue, hoursWord, importRisks, timeValue, yearsWord, mapParam, sameValue, sameValueIn, validateValue, wordsMatch, wordsMatchAnyOrder } from "../src/core/prom-attributes.mjs";
 import { SCHEMAS_DIR, importSchemaFiles, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
+import { STATE_A } from "./helpers/state-a.mjs";
 
-const catalog = loadPromCatalog();
+const catalog = loadPromCatalog(undefined, STATE_A);
 const S = (id, maybe = false) => { const s = catalog.schemas.get(id); if (!maybe) assert.ok(s, "схема " + id); return s; };
 const GRIND = "141717", SAW = "1250302", GEN = "410402"; // Шліфувальні машини; Бензопили і електропили; Електрогенератори
 const attrOf = (id, name) => S(id).attributes.find((a) => a.nameUK === name);
@@ -1466,11 +1467,11 @@ test("категорія схеми — фактична категорія то
   // Завантаження файлу: немає / зіпсований — попередження, категорія таблиці; правильний — мапа (лише числові ID категорій)
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mm-promcat-"));
   assert.equal(loadPromCatalog(SCHEMAS_DIR, { promCategoriesFile: "" }).promCategories, null);
-  const miss = loadPromCatalog(SCHEMAS_DIR, { promCategoriesFile: path.join(dir, "нема.json") });
+  const miss = loadPromCatalog(SCHEMAS_DIR, { ...STATE_A, promCategoriesFile: path.join(dir, "нема.json") });
   assert.equal(miss.promCategories, null);
   assert.match(miss.problems.at(-1), /файл категорій Prom/);
   fs.writeFileSync(path.join(dir, "bad.json"), JSON.stringify({ categories: { 1: "410402" } }));
-  assert.match(loadPromCatalog(SCHEMAS_DIR, { promCategoriesFile: path.join(dir, "bad.json") }).problems.at(-1), /немає date/);
+  assert.match(loadPromCatalog(SCHEMAS_DIR, { ...STATE_A, promCategoriesFile: path.join(dir, "bad.json") }).problems.at(-1), /немає date/);
   fs.writeFileSync(path.join(dir, "ok.json"), JSON.stringify({ date: "2026-10-23", source: "експорт", categories: { 1: "410402", 2: "", 3: "abc", 4: 141714 } }));
   const ok = loadPromCatalog(SCHEMAS_DIR, { promCategoriesFile: path.join(dir, "ok.json") });
   assert.deepEqual([...ok.promCategories.map], [["1", "410402"], ["4", "141714"]]);

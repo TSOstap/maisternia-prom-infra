@@ -9,8 +9,9 @@ import os from "node:os";
 import path from "node:path";
 import { a1Equivalent, buildCharacteristics } from "../src/core/prom-attributes.mjs";
 import { TECH_RULES, a3Fingerprint, freezeFingerprint, loadFreeze, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
+import { STATE_A } from "./helpers/state-a.mjs";
 
-const catalog = loadPromCatalog(undefined, { freezeFile: "", a3PairsFile: "" }); // ізольовано від MM_FREEZE_IDS / MM_A3_PAIRS
+const catalog = loadPromCatalog(undefined, { ...STATE_A, freezeFile: "", a3PairsFile: "" }); // ізольовано від MM_FREEZE_IDS / MM_A3_PAIRS; стан A (до FZ)
 const P = (name, value, unit = "") => ({ name, value, unit });
 const SAW = "1250302";
 const B = (o) => buildCharacteristics({ schema: catalog.schemas.get(SAW), categoryId: SAW, current: [], names: catalog.names, mapping: catalog.mappings.get(SAW), units: catalog.units, mode: "main", ...o });

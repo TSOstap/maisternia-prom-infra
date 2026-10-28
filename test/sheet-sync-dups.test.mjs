@@ -13,6 +13,8 @@ import { MemorySheets } from "../src/pipeline/sheets-writer.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
 import baseConfig from "../config/default.json" with { type: "json" };
 import { syncAndIntake } from "./helpers/intake.mjs";
+import { loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
+import { STATE_A } from "./helpers/state-a.mjs";
 
 const NOW = Date.parse("2026-10-22T10:00:00Z");
 const STAMP = new Date(NOW).toISOString();
@@ -240,7 +242,7 @@ test("конфлікти прив'язки: ID постачальника вже
   let calls = 0;
   const racy = async () => { calls++; const bk = structuredClone(w.book); if (calls === 2) bk[SHEET.queue][1][0] = "змінено"; return bk; };
   const parsed = await parseSupplierText(xml, { maximumChars: 45_000_000, identityFields: true });
-  r = await syncSheet({ sheets: w.sheets, readBook: racy, parsed, fetchFull: async (ids) => extractFullOffers(xml, ids), stamp: STAMP, config, now: NOW });
+  r = await syncSheet({ sheets: w.sheets, readBook: racy, parsed, fetchFull: async (ids) => extractFullOffers(xml, ids), stamp: STAMP, config, now: NOW, catalog: loadPromCatalog(undefined, STATE_A) });
   assert.equal(r.state, "SKIPPED_CONCURRENT_EDIT");
   assert.deepEqual(w.book, snap);
   assert.ok(b);

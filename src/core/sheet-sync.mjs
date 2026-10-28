@@ -39,6 +39,48 @@ export const RAW_DESC_RU = "Опис постачальника RU";
 export const PARAMS_ORIGIN = "Походження характеристик JSON";
 export { CATEGORY_CONFIRMED };
 export const CONTENT_COLUMNS = Object.freeze([RAW_PARAMS, RAW_DESC_UA, RAW_DESC_RU, PARAMS_ORIGIN, CATEGORY_CONFIRMED]);
+
+/** FZ (Frozen Attributes; FZ-03 ред. 2, FZ-HERMES-06, FZ-HERMES-REVIEW-1): обов'язкові ключі джерела збереженого товару — offer
+ *  операційного розбору (identityFields: true, як у production: vendor і model) і повний XML (extractFullOffers, з read-only id / vendor /
+ *  sku / categoryId постачальника). Операційний і повний XML — різні фіди: кожна сторона зв'язана окремо. Відсутній ключ ≠ порожнє значення. */
+export const FROZEN_OFFER_KEYS = Object.freeze(["id", "sku", "nameUa", "nameRu", "url", "vendor", "model"]);
+export const FROZEN_FULL_TEXT = Object.freeze(["nameUa", "nameRu", "descriptionUa", "descriptionRu", "model", "id", "vendor", "sku", "categoryId"]);
+const FROZEN_FULL_LISTS = Object.freeze(["params", "pictures"]);
+/** Тип блокування в «Журналі» (рядок «ОНОВЛЕННЯ ЗАБЛОКОВАНО»): FZ або кореневий контракт захисту недійсні. */
+export const FZ_BLOCK = "ЗАХИСТ ХАРАКТЕРИСТИК (FZ)";
+const fzBlockText = (b) => `${b.id}: ${b.kind} — ${b.reason}${b.fields?.length ? ` (${b.fields.join(", ")})` : ""}`;
+const ownText = (o, k) => o !== null && typeof o === "object" && Object.prototype.hasOwnProperty.call(o, k) && typeof o[k] === "string";
+
+/** Перевірки FZ-товару — ДО «вже збережено» і до перерахунку печатки звичайним конвеєром (FZ-HERMES-06):
+ *  1) повнота offer / full за ключами; 2) джерело — поточні offer / full = знімку (повні значення, без нормалізації); 3) локальна
+ *  ідентичність рядка і фактична категорія вибору схеми (schemaCategory: експорт Prom, інакше таблиця); 4) фактична rowSeal(рядок) =
+ *  печатці в рядку; 5) рішення власника; 6) стан рядка: збережений → нічого, очікуваний → застосувати, інакше — ручний drift.
+ *  Повертає { block: { id, kind, fields, reason } } або { state: "saved" | "apply" }. */
+export function frozenCheck(row, offer, full, item, catalog = null) {
+  const id = mtText(row["Offer ID"]);
+  const block = (kind, reason, fields = []) => ({ block: { id, kind, fields, reason } });
+  const missOffer = FROZEN_OFFER_KEYS.filter((k) => !ownText(offer, k));
+  if (missOffer.length) return block("OFFER", offer ? "неповний offer постачальника" : "немає offer постачальника (товар зник із фіду)", missOffer);
+  const missFull = [...FROZEN_FULL_TEXT.filter((k) => !ownText(full, k)), ...FROZEN_FULL_LISTS.filter((k) => !(full && typeof full === "object" && Array.isArray(full[k])))];
+  if (missFull.length) return block("FULL", full ? "неповний повний XML товару" : "немає повного XML товару", missFull);
+  const src = [
+    ...FROZEN_OFFER_KEYS.filter((k) => offer[k] !== item.source.offer[k]).map((k) => "offer." + k),
+    ...FROZEN_FULL_TEXT.filter((k) => full[k] !== item.source.full[k]).map((k) => "full." + k),
+    ...FROZEN_FULL_LISTS.filter((k) => JSON.stringify(full[k]) !== JSON.stringify(item.source.full[k])).map((k) => "full." + k),
+  ];
+  if (src.length) return block("ДЖЕРЕЛО", "дані постачальника змінилися з моменту знімка — потрібна нова ревізія FZ", src);
+  const loc = [["ID постачальника", item.supplierId], ["Категорія Prom ID", item.categoryId], ["Виробник", item.vendor]].filter(([k, v]) => mtText(row[k]) !== v).map(([k]) => k);
+  if (schemaCategory(row, catalog).cat !== item.schemaCategoryId) loc.push("Категорія Prom (фактична для схеми: експорт Prom / таблиця)");
+  if (loc.length) return block("ІДЕНТИЧНІСТЬ", "ідентичність картки змінилася з моменту знімка", loc);
+  if (rowSeal(row) !== mtText(row[SEAL_COLUMN])) return block("ПЕЧАТКА", "печатка в рядку не відповідає вмісту (поле змінено без перерахунку)", [SEAL_COLUMN]);
+  if (catalog?.ownerValueIds?.has?.(id) || catalog?.ownerValues?.has?.(id) || catalog?.ownerIndex?.has?.(id)) return block("ВЛАСНИК", "для товару є рішення власника — потрібна нова погоджена ревізія FZ (накладання не автоматичне)");
+  if (catalog?.ownerValuesOk === false) return block("ВЛАСНИК", "файл рішень власника недійсний — рішення власника для товару невідомі");
+  const cur = { paramsJson: mtText(row["Характеристики JSON"]), provenanceJson: mtText(row[PARAMS_ORIGIN]), seal: mtText(row[SEAL_COLUMN]) };
+  const same = (st) => ["paramsJson", "provenanceJson", "seal"].every((k) => cur[k] === item[st][k]);
+  if (same("saved")) return { state: "saved" };
+  if (same("expected")) return { state: "apply" };
+  return block("DRIFT", "поточні характеристики / походження / печатка відрізняються і від очікуваних, і від збережених — ручна зміна", ["paramsJson", "provenanceJson", "seal"].filter((k) => cur[k] !== item.saved[k]));
+}
 export const MAIN_HEADERS = Object.freeze([...YML_HEADERS, ...CONTENT_COLUMNS]);
 export const QUEUE_HEADERS = Object.freeze([...YML_HEADERS, ...QUEUE_EXTRA, ...QUEUE_STATE, ...CONTENT_COLUMNS]);
 export const VERIFIED = "ПЕРЕВІРЕНО";
@@ -113,6 +155,8 @@ export function extractFullOffers(xml, ids) {
       })).filter((p) => p.name),
       country: mtDecode(tagRaw(b, "country_of_origin") || tagRaw(b, "country")),
       model: mtDecode(tagRaw(b, "model")),
+      // Лише читання для перевірки ідентичності FZ (повний XML — окремий фід): у дані таблиці не потрапляють.
+      id, vendor: mtDecode(tagRaw(b, "vendor")), sku: mtDecode(tagRaw(b, "vendorCode")), categoryId: mtDecode(tagRaw(b, "categoryId")),
     });
     if (out.size === want.size) break;
   }
@@ -370,6 +414,17 @@ export function refreshQueueRow(row, offer, full, { stamp, catalog = null, clean
  * Offer ID і категорія Prom не змінюються. Фото й характеристики — лише з повного перевіреного XML (full).
  */
 export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", catalog = null }) {
+  // FZ: каталог заблоковано (кореневий контракт захисту або обов'язковий FZ недійсний) — жодних змін, структурований блокер; для
+  // FZ-товару — перевірки frozenCheck до будь-яких змін (зокрема на відсутній offer / full — не тихий успіх).
+  const idle = (frozenBlock) => ({ row, entries: [], changed: false, identity: false, photos: false, params: false, frozenBlock });
+  if (catalog?.guard?.blocked) return idle({ id: mtText(row["Offer ID"]), kind: "КАТАЛОГ", fields: [], reason: catalog.guard.reasons.join("; ") });
+  const fz = catalog?.frozenFor?.(mtText(row["Offer ID"])) || null;
+  let fzState = "";
+  if (fz) {
+    const chk = frozenCheck(row, offer, full, fz, catalog);
+    if (chk.block) return idle(chk.block);
+    fzState = chk.state;
+  }
   if (!offer) return { row, entries: [], changed: false, identity: false, photos: false, params: false };
   const r = { ...row };
   const id = mtText(row["Offer ID"]);
@@ -408,7 +463,13 @@ export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", c
   // А2: у повному XML немає жодного <param> — характеристики лише з блоку характеристик опису (той самий генератор), тільки в
   // області дії переліку захищених товарів; без повного XML, без опису або без валідного переліку — як раніше (не перебудовується).
   const descOnly = techRules.includes("A2") && Boolean(full) && !(full.params || []).length && Boolean(mtText(r[RAW_DESC_UA]).trim() || mtText(r[RAW_DESC_RU]).trim());
-  if (schema && (mtText(r[RAW_PARAMS]).trim() || descOnly)) {
+  if (fz) {
+    // FZ: лише збережені params / provenance прийнятого знімка; генератор для товару не викликається.
+    if (fzState === "apply") {
+      params = set("Характеристики JSON", fz.saved.paramsJson, `ЗБЕРЕЖЕНІ ХАРАКТЕРИСТИКИ ЗАХИЩЕНОГО ТОВАРУ (FZ rev ${catalog.frozenInfo?.rev ?? ""})`);
+      quiet(PARAMS_ORIGIN, fz.saved.provenanceJson);
+    }
+  } else if (schema && (mtText(r[RAW_PARAMS]).trim() || descOnly)) {
     const ch = buildCharacteristics({ schema, categoryId: cat, rawParams: jsonOr(r[RAW_PARAMS], []), descUa: r[RAW_DESC_UA], descRu: r[RAW_DESC_RU], current: r["Характеристики JSON"], provenance: r[PARAMS_ORIGIN], mapping: catalog?.mappings?.get(cat), units: catalog?.units, names: catalog?.names, mode: "main", brand: r["Виробник"], titles: [r["Назва постачальника UA"], r["Назва постачальника RU"]], kitOwner: catalog?.kitConfirmed?.get(String(r["Offer ID"])) || null, multiOwner: catalog?.multiConfirmed?.get(String(r["Offer ID"])) || null, ownerValues: catalog?.ownerValues?.get(String(r["Offer ID"])) || null, ownerIndex: catalog?.ownerIndex?.get(String(r["Offer ID"])) || null, cardTitles: [r["Назва UA"], r["Назва RU"]], techRules, exactPairs: catalog?.a3PairsFor?.(String(r["Offer ID"])) || [] });
     const prepared = JSON.stringify(ch.params);
     if (ch.changed && prepared.length <= CELL_LIMIT) params = set("Характеристики JSON", prepared, "ХАРАКТЕРИСТИКИ ЗА СХЕМОЮ PROM (автоматично; ручні значення збережено)");
@@ -422,6 +483,8 @@ export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", c
     const details = describeSupplierChanges(pre, post);
     if (details.length) entries.push([stamp, SHEET.main, id, RECHECK, "", jv(details.join("; ")), "ІНФОРМАЦІЙНО: наше SEO не змінено — перевірте відповідність новим даним постачальника"]);
   }
+  // FZ: підсумковий рядок має точно дорівнювати збереженому стану (печатка охоплює всі незмінні колонки).
+  if (fz && mtText(r[SEAL_COLUMN]) !== fz.saved.seal) return idle({ id, kind: "ПЕЧАТКА", fields: [SEAL_COLUMN], reason: "після оновлення печатка ≠ збереженій — змінено незв'язане поле; потрібна нова ревізія FZ" });
   return { row: r, entries, changed: touched, identity, photos, params };
 }
 
@@ -628,6 +691,8 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
   const out = { abort: null, block: null, warnings: [], stats: {} };
   // Зупинка: зрозуміла причина + тип, кількість зачеплених товарів і поріг (для «Журналу»).
   const stop = (type, reason, affected = "", limit = "") => { out.abort = reason; out.block = { type, reason, affected, limit }; return out; };
+  // FZ: кореневий контракт захисту або обов'язковий FZ недійсний — прохід НЕ ВИКОНАНО до будь-яких записів (FZ-HERMES-06).
+  if (catalog?.guard?.blocked) return stop(FZ_BLOCK, `прохід НЕ ВИКОНАНО: ${catalog.guard.reasons.join("; ")}; нічого не записано`);
   const main = readMain(book[SHEET.main]);
   const queueValues = book[SHEET.queue];
   const queueHeader = (queueValues?.[0] || []).map(mtText);
@@ -669,12 +734,29 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
     const sid = mtText(r["ID постачальника"]);
     return refreshMainRow(r, parsed.offers.get(sid), fullById.get(sid), { stamp, skuInUse, catalog: cat });
   });
+  // FZ preflight — до звичайного оновлення й перерахунку печаток: будь-який блокер обов'язкового FZ-товару зупиняє весь прохід.
+  const fzBlocks = [];
+  for (const fid of catalog?.frozenIds || []) {
+    const i = mainRows.findIndex((r) => mtText(r["Offer ID"]) === fid);
+    if (i < 0) { fzBlocks.push(`${fid}: немає в основному каталозі`); continue; }
+    // Прив'язка / скасування цього запуску змінили ідентичність після планування, а refreshAll такі рядки пропускає — лише BLOCK.
+    if (undo.changedMain.has(i) || bind.changedMain.has(i)) { fzBlocks.push(`${fid}: змінено прив'язкою або її скасуванням у цьому запуску — потрібна нова ревізія FZ`); continue; }
+    const sid = mtText(mainRows[i]["ID постачальника"]);
+    const chk = frozenCheck(mainRows[i], parsed.offers.get(sid), fullById.get(sid), catalog.frozenFor(fid), catalog);
+    if (chk.block) fzBlocks.push(fzBlockText(chk.block));
+  }
+  if (fzBlocks.length) return stop(FZ_BLOCK, `НЕ ВИКОНАНО — блокери збережених характеристик (${fzBlocks.length}): ${fzBlocks.join(" | ")}; нічого не записано`, fzBlocks.length, 0);
   let refreshedMain = refreshAll(catalog);
+  const lateFz = refreshedMain.filter((m) => m?.frozenBlock).map((m) => fzBlockText(m.frozenBlock));
+  if (lateFz.length) return stop(FZ_BLOCK, `НЕ ВИКОНАНО — блокери збережених характеристик (${lateFz.length}): ${lateFz.join(" | ")}; нічого не записано`, lateFz.length, 0);
   // Масова зміна підготовлених характеристик (напр. щойно додано схеми) — не застосовується в цьому запуску;
   // сирі дані, ціни й наявність оновлюються як завжди. Ліміт можна підняти лише окремим погодженим запуском.
   const paramsLim = config.characteristics?.maxChangedRows ?? Math.max(200, Math.ceil(mainRows.length * 0.1));
   const paramsChanged = refreshedMain.filter((m) => m?.params).length;
   if (paramsChanged > paramsLim) {
+    // Активний FZ: обхід refreshAll(null) пройшов би без каталогу й оминув би збережені характеристики — весь прохід НЕ ВИКОНАНО
+    // (FZ-HERMES-06). Поріг не змінюється, FZ-зміни рахуються в статистиці.
+    if (catalog?.frozenInfo?.active) return stop(FZ_BLOCK, `НЕ ВИКОНАНО — МАСОВА ЗМІНА ХАРАКТЕРИСТИК за активного FZ: ${paramsChanged} товарів (поріг ${paramsLim}); обхід без каталогу характеристик оминув би збережені характеристики; нічого не записано`, paramsChanged, paramsLim);
     mainRaw.paramsHeld = paramsChanged;
     out.warnings.push(`МАСОВА ЗМІНА ХАРАКТЕРИСТИК: підготовлені характеристики змінились би в ${paramsChanged} товарах (поріг ${paramsLim}) — у цьому запуску не застосовано; сирі дані, ціни й наявність оновлено`);
     mainRaw.entries.push([stamp, SHEET.main, "", "ХАРАКТЕРИСТИКИ НЕ ЗАСТОСОВАНО", "", paramsChanged, `МАСОВА ЗМІНА ХАРАКТЕРИСТИК (поріг ${paramsLim}) — потрібне окреме погодження`]);
@@ -817,6 +899,7 @@ export function planIntake({ book, parsed, fullById, stamp, config, now, ready =
   const rules = { ...INTAKE_RULES, ...(config.intake || {}) };
   const out = { abort: null, block: null, warnings: [], stats: {}, results: {} };
   const stop = (type, reason) => { out.abort = reason; out.block = { type, reason, affected: "", limit: "" }; return out; };
+  if (catalog?.guard?.blocked) return stop(FZ_BLOCK, `прохід НЕ ВИКОНАНО: ${catalog.guard.reasons.join("; ")}; нічого не записано`);
   const queueValues = book[SHEET.queue];
   const queueHeader = (queueValues?.[0] || []).map(mtText);
   if (QUEUE_EXTRA.some((k) => !queueHeader.includes(k))) return stop("ЧЕРГА НЕ ГОТОВА", "аркуш «Нові товари» ще не переведено в режим черги");

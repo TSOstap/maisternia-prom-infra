@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import { sha256 } from "../core/text.mjs";
 import { parseCategory, parseSchemaText } from "../core/prom-schema.mjs";
 import { buildNames, charKey, cleanValue, normName, normUnit, unitAliasMap } from "../core/prom-attributes.mjs";
+import { FROZEN_FULL_TEXT, FROZEN_OFFER_KEYS } from "../core/sheet-sync.mjs";
 
 export const SCHEMAS_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../schemas/prom");
 const readJson = (f, d) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : d);
@@ -29,11 +30,14 @@ export function readManifest(dir = SCHEMAS_DIR) {
  *  Запис без назви, значення (для set), джерела чи дати, з невідомою дією або пріоритетом — не застосовується (лише попередження).
  *  Повертає { map: Map(Offer ID → { model, title, items }), date, items, problems }. */
 export function loadOwnerValues(file) {
-  const res = { map: new Map(), date: "", items: 0, problems: [] };
+  // ids — усі Offer ID файлу, зокрема з невалідними записами (FZ: будь-яке рішення власника для товару — блокер); ok — файл прочитано.
+  const res = { map: new Map(), ids: new Set(), ok: false, date: "", items: 0, problems: [] };
   if (!fs.existsSync(file)) { res.problems.push(`файл рішень власника «${path.basename(file)}» не знайдено`); return res; }
   let j = null;
   try { j = readJson(file, null); } catch { res.problems.push(`файл рішень власника «${path.basename(file)}»: некоректний JSON`); return res; }
   if (!j || j.v !== 1 || typeof j.products !== "object" || !j.products || !/^\d{4}-\d{2}-\d{2}$/.test(String(j.date || ""))) { res.problems.push(`файл рішень власника «${path.basename(file)}»: немає v=1 / date / products`); return res; }
+  res.ok = true;
+  res.ids = new Set(Object.keys(j.products).map(String));
   res.date = String(j.date);
   const str = (v) => (typeof v === "string" ? v.trim() : "");
   for (const [id, p] of Object.entries(j.products)) {
@@ -170,13 +174,93 @@ export function loadCohort(file, contract = null) {
   return { valid: true, ids: new Set(ids), count: ids.length, rev: j.rev, date: String(j.date), problems: [] };
 }
 
+/** FZ (Frozen Attributes; дизайн FZ-03 ред. 2, рецензії Hermes FZ-HERMES-рецензія-ред2 і FZ-HERMES-06): збережені прийняті
+ *  характеристики новозахищених товарів. Канонічний JSON — ключі об'єктів відсортовано рекурсивно, порядок масивів збережено. */
+const canon = (x) => (Array.isArray(x) ? `[${x.map(canon).join(",")}]` : x && typeof x === "object" ? `{${Object.keys(x).sort().map((k) => JSON.stringify(k) + ":" + canon(x[k])).join(",")}}` : JSON.stringify(x));
+export const frozenSha = (x) => "sha256:" + sha256(canon(x));
+/** Відбиток файлу FZ: усі поля всіх записів (params, provenance, джерело, локальна ідентичність, очікуваний і збережений стан) + basis. */
+export const frozenFingerprint = (items, basis) => frozenSha({ basis, items: [...items].sort((a, b) => String(a.id).localeCompare(String(b.id))) });
+const DATE = /^\d{4}-\d{2}-\d{2}$/;
+const own = (o, k) => o !== null && typeof o === "object" && Object.prototype.hasOwnProperty.call(o, k);
+const ownStr = (o, k) => own(o, k) && typeof o[k] === "string";
+const isParams = (a) => Array.isArray(a) && a.every((p) => p && typeof p === "object" && ["name", "value", "unit"].every((k) => typeof p[k] === "string"));
+
+/** FZ-контракт (у репозиторії й у requiresFrozenAttrs кореневого контракту): { v: 1, rev, date, count, idsFingerprint, fingerprint,
+ *  basis: { snapshotSha, acceptedCommit } } — без ID і значень. "" — коректний, інакше причина. */
+function frozenContractProblem(k) {
+  if (!k || typeof k !== "object" || Array.isArray(k)) return "не об'єкт";
+  if (k.v !== 1 || !Number.isInteger(k.rev) || k.rev < 1 || !DATE.test(String(k.date || "")) || !Number.isInteger(k.count) || k.count < 1) return "немає v=1 / rev / date / count";
+  if (!FP.test(String(k.idsFingerprint || "")) || !FP.test(String(k.fingerprint || ""))) return "немає idsFingerprint / fingerprint";
+  if (!k.basis || typeof k.basis !== "object" || !FP.test(String(k.basis.snapshotSha || "")) || !/^[0-9a-f]{40}$/.test(String(k.basis.acceptedCommit || ""))) return "немає basis (snapshotSha / acceptedCommit)";
+  return "";
+}
+/** Кореневий контракт захисту (schemas/prom/freeze-contract.json) — довірена точка в Git, читається ЗАВЖДИ, незалежно від ENV.
+ *  Присутній requiresFrozenAttrs із некоректною структурою (null / false / неповний) — пошкодження, а не «FZ не активовано». */
+function freezeContractProblem(k) {
+  if (!k || typeof k !== "object" || Array.isArray(k)) return "відсутній або не об'єкт";
+  if (k.v !== 1 || !DATE.test(String(k.date || "")) || !Number.isInteger(k.count) || k.count < 1 || !FP.test(String(k.fingerprint || "")) || !Number.isInteger(k.scope?.count) || k.scope.count < 1 || !FP.test(String(k.scope?.fingerprint || "")) || !Number.isInteger(k.rev) || k.rev < 1) return "некоректна структура (v / rev / date / count / fingerprint / scope)";
+  if (own(k, "requiresFrozenAttrs")) { const p = frozenContractProblem(k.requiresFrozenAttrs); if (p) return `requiresFrozenAttrs присутній, але некоректний (${p}) — пошкодження, не «FZ не активовано»`; }
+  return "";
+}
+/** Запис FZ: { id, supplierId, categoryId (колонка таблиці), schemaCategoryId (фактична категорія вибору схеми на момент знімка: експорт
+ *  Prom, інакше таблиця), vendor, params, provenance, source: { offer: {id, sku, nameUa, nameRu, url, vendor, model}, full: {nameUa, nameRu,
+ *  descriptionUa, descriptionRu, model, id, vendor, sku, categoryId, params, pictures} }, expected: {paramsJson, provenanceJson, seal},
+ *  saved: {…}, reason }. */
+function frozenItemProblem(it) {
+  if (!it || typeof it !== "object") return "запис не об'єкт";
+  for (const k of ["id", "supplierId"]) if (!ownStr(it, k) || !/^\d+$/.test(it[k])) return k;
+  if (!ownStr(it, "categoryId") || !it.categoryId || !ownStr(it, "schemaCategoryId") || !it.schemaCategoryId || !ownStr(it, "vendor")) return "categoryId / schemaCategoryId / vendor";
+  if (!isParams(it.params) || !it.provenance || typeof it.provenance !== "object" || Array.isArray(it.provenance)) return "params / provenance";
+  const so = it.source?.offer, sf = it.source?.full;
+  if (!FROZEN_OFFER_KEYS.every((k) => ownStr(so, k)) || so.id !== it.supplierId) return "source.offer";
+  if (!FROZEN_FULL_TEXT.every((k) => ownStr(sf, k)) || sf.id !== it.supplierId || !isParams(sf.params) || !Array.isArray(sf.pictures) || !sf.pictures.every((x) => typeof x === "string")) return "source.full";
+  for (const st of ["expected", "saved"]) if (!["paramsJson", "provenanceJson", "seal"].every((k) => ownStr(it[st], k)) || !/^[0-9a-f]{64}$/.test(it[st].seal)) return st;
+  if (JSON.stringify(it.params) !== it.saved.paramsJson || JSON.stringify(it.provenance) !== it.saved.provenanceJson) return "params / provenance ≠ saved";
+  return "";
+}
+
+/** Збережені характеристики (FZ) — файл ПОЗА репозиторієм (MM_FROZEN_ATTRS): { v: 1, rev, date, source, basis: { snapshot, snapshotSha,
+ *  acceptedCommit, acceptedBy }, count, fingerprint, items }. Викликається лише в активному стані (requiresFrozenAttrs у кореневому
+ *  контракті). Дійсний лише з FZ-контрактом у репозиторії, що дорівнює requiresFrozenAttrs, і лише для захищених товарів області дії
+ *  валідного переліку. Будь-яка відсутність / пошкодження / невідповідність — «frozen: required», прохід НЕ ВИКОНАНО. */
+export function loadFrozenAttrs(file, contract, contractError, required, fz) {
+  const res = { valid: false, items: new Map(), rev: 0, count: 0, problems: [] };
+  const fail = (why) => { res.problems.push(`frozen: required — ${why} — прохід НЕ ВИКОНАНО`); return res; };
+  if (!fz.valid) return fail("перелік захищених товарів (MM_FREEZE_IDS) не задано або недійсний");
+  if (!file) return fail("файл збережених характеристик (MM_FROZEN_ATTRS) не задано");
+  const name = `файл збережених характеристик «${path.basename(file)}»`;
+  if (!fs.existsSync(file)) return fail(`${name} не знайдено`);
+  let j = null;
+  try { j = readJson(file, null); } catch { return fail(`${name}: некоректний JSON`); }
+  if (contractError) return fail(`FZ-контракт у репозиторії: ${contractError}`);
+  const kp = frozenContractProblem(contract);
+  if (kp) return fail(`FZ-контракт у репозиторії некоректний (${kp})`);
+  if (canon(contract) !== canon(required)) return fail("FZ-контракт у репозиторії ≠ requiresFrozenAttrs кореневого контракту захисту");
+  const b = j?.basis;
+  if (!j || j.v !== 1 || !Number.isInteger(j.rev) || j.rev < 1 || !DATE.test(String(j.date || "")) || !Array.isArray(j.items) || !j.items.length || j.count !== j.items.length || !FP.test(String(j.fingerprint || ""))) return fail(`${name}: немає v=1 / rev / date / items / count / fingerprint`);
+  if (!b || typeof b !== "object" || !ownStr(b, "snapshot") || !b.snapshot || !FP.test(String(b.snapshotSha || "")) || !/^[0-9a-f]{40}$/.test(String(b.acceptedCommit || "")) || !ownStr(b, "acceptedBy")) return fail(`${name}: некоректний basis`);
+  for (const [i, it] of j.items.entries()) { const p = frozenItemProblem(it); if (p) return fail(`${name}: запис №${i + 1} некоректний (${p})`); }
+  const ids = j.items.map((it) => it.id);
+  if (new Set(ids).size !== ids.length) return fail(`${name}: повторені Offer ID`);
+  const fp = frozenFingerprint(j.items, b);
+  if (j.fingerprint !== fp) return fail(`${name}: відбиток не збігається з записами (змінено params / provenance / джерело / стан / basis)`);
+  if (contract.rev !== j.rev || contract.date !== j.date || contract.count !== ids.length || contract.fingerprint !== fp || contract.idsFingerprint !== freezeFingerprint(ids) || contract.basis.snapshotSha !== b.snapshotSha || contract.basis.acceptedCommit !== b.acceptedCommit) {
+    return fail(`${name} не відповідає FZ-контракту (ревізія ${j.rev} / ${contract.rev}, записів ${ids.length} / ${contract.count}, відбиток ${contract.fingerprint === fp ? "збігається" : "інший"})`);
+  }
+  const outside = ids.filter((id) => !fz.ids.has(id) || !fz.scope.has(id));
+  if (outside.length) return fail(`${name}: ${outside.length} товарів не захищені валідним переліком або поза областю дії`);
+  return { valid: true, items: new Map(j.items.map((it) => [it.id, it])), rev: j.rev, count: ids.length, problems: [] };
+}
+
 /** Схеми, словники й одиниці для синхронізації. */
-export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "", ownerValuesFile = process.env.MM_OWNER_VALUES || "", freezeFile = process.env.MM_FREEZE_IDS || "", freezeContractFile = path.join(dir, "freeze-contract.json"), a3PairsFile = process.env.MM_A3_PAIRS || "", a3ContractFile = path.join(dir, "a3-pairs-contract.json"), n0CohortFile = process.env.MM_N0_COHORT || "", n0CohortContractFile = path.join(dir, "n0-cohort-contract.json") } = {}) {
+export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "", ownerValuesFile = process.env.MM_OWNER_VALUES || "", freezeFile = process.env.MM_FREEZE_IDS || "", freezeContractFile = path.join(dir, "freeze-contract.json"), a3PairsFile = process.env.MM_A3_PAIRS || "", a3ContractFile = path.join(dir, "a3-pairs-contract.json"), n0CohortFile = process.env.MM_N0_COHORT || "", n0CohortContractFile = path.join(dir, "n0-cohort-contract.json"), frozenAttrsFile = process.env.MM_FROZEN_ATTRS || "", frozenAttrsContractFile = path.join(dir, "frozen-attributes-contract.json") } = {}) {
   const out = { schemas: new Map(), mappings: new Map(), units: readJson(path.join(dir, "units.json"), { conversions: [] }), problems: [] };
   // Технічні нормалізації (TECH_RULES) — лише з валідним переліком захищених товарів, що точно відповідає контракту; для захищених — не діють.
-  let contract = null;
-  if (freezeFile) { try { contract = readJson(freezeContractFile, null); } catch { contract = null; } }
-  const fz = loadFreeze(freezeFile, contract);
+  // Кореневий контракт захисту читається ЗАВЖДИ (FZ-HERMES-06 п. 2): відсутній / пошкоджений / некоректний — прохід НЕ ВИКОНАНО.
+  let contract = null, rootProblem = "";
+  try { contract = readJson(freezeContractFile, null); } catch { rootProblem = "некоректний JSON"; }
+  if (!rootProblem) rootProblem = freezeContractProblem(contract);
+  const fz = loadFreeze(freezeFile, rootProblem ? null : contract);
   out.freezeInfo = { valid: fz.valid, file: freezeFile ? path.basename(freezeFile) : "", rev: fz.rev, date: fz.date, count: fz.ids.size, scope: fz.scope.size, source: fz.source, parts: fz.parts };
   // Когорта N0 (правила N1) — лише з валідним переліком захищених; уся когорта має бути в області дії.
   let n0c = null;
@@ -193,10 +277,13 @@ export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = proces
   out.techRulesFor = (id) => (fz.valid && fz.scope.has(String(id)) && !fz.ids.has(String(id)) ? [...TECH_RULES, ...(out.cohortInfo.valid && co.ids.has(String(id)) ? N1_RULES : [])] : []);
   // Рішення власника щодо окремих характеристик (Offer ID → { model, items }); немає файлу — не застосовуються.
   out.ownerValues = null;
+  out.ownerValueIds = new Set();
   if (ownerValuesFile) {
     const ov = loadOwnerValues(ownerValuesFile);
     out.problems.push(...ov.problems);
     out.ownerValues = ov.map;
+    out.ownerValueIds = ov.ids;
+    out.ownerValuesOk = ov.ok; // FZ: файл рішень не прочитано — рішення для збереженого товару невідомі (блокер)
     out.ownerValuesInfo = { file: path.basename(ownerValuesFile), date: ov.date, products: ov.map.size, items: ov.items };
   }
   // Фактичні категорії товарів у Prom (власник, 25.10.2026) — файл ПОЗА репозиторієм (дані товарів у репозиторій не пишемо):
@@ -291,6 +378,22 @@ export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = proces
   }
   out.problems.push(...fz.problems); // проблеми переліку — після проблем схем (порядок попереджень як до А1)
   out.problems.push(...co.problems);
+  // FZ: стан A — у кореневому контракті немає requiresFrozenAttrs (сплячий, N1-2 без змін); стан B — є (обов'язковий, читається з Git
+  // незалежно від ENV). guard.blocked — прохід НЕ ВИКОНАНО: кореневий контракт недійсний або обов'язковий FZ недійсний.
+  const active = !rootProblem && own(contract, "requiresFrozenAttrs");
+  let fzk = null, fzkError = "";
+  if (active) {
+    if (!fs.existsSync(frozenAttrsContractFile)) fzkError = "відсутній";
+    else { try { fzk = readJson(frozenAttrsContractFile, null); } catch { fzkError = "некоректний JSON"; } }
+  }
+  const fa = active ? loadFrozenAttrs(frozenAttrsFile, fzk, fzkError, contract.requiresFrozenAttrs, fz) : { valid: false, items: new Map(), rev: 0, count: 0, problems: [] };
+  out.frozenInfo = { active, required: active, valid: active && fa.valid, rev: fa.rev, count: fa.count, file: frozenAttrsFile ? path.basename(frozenAttrsFile) : "" };
+  out.frozenFor = (id) => (out.frozenInfo.valid ? fa.items.get(String(id)) || null : null);
+  out.frozenIds = out.frozenInfo.valid ? [...fa.items.keys()] : [];
+  const reasons = [...(rootProblem ? [`кореневий контракт захисту «${path.basename(freezeContractFile)}»: ${rootProblem} — прохід НЕ ВИКОНАНО`] : []), ...(active ? fa.problems : [])];
+  out.guard = { blocked: reasons.length > 0, reasons };
+  out.problems.push(...reasons);
+  if (!active && !rootProblem && frozenAttrsFile) out.problems.push(`FZ не активовано: у кореневому контракті захисту немає requiresFrozenAttrs — файл «${path.basename(frozenAttrsFile)}» (MM_FROZEN_ATTRS) не використано`);
   // Точні пари А3 — лише разом із валідним переліком захищених і лише для товарів, яким діють технічні нормалізації.
   let a3c = null;
   if (a3PairsFile) { try { a3c = readJson(a3ContractFile, null); } catch { a3c = null; } }
