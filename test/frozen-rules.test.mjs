@@ -11,6 +11,7 @@ import os from "node:os";
 import path from "node:path";
 import crypto from "node:crypto";
 import { loadPromCatalog, freezeFingerprint } from "../src/pipeline/prom-schemas.mjs";
+import { OWNER_INDEX_A } from "./helpers/state-a.mjs"; // OV (R1): прийнятий перелік рішень без required
 import { refreshMainRow, candidateRow, PARAMS_ORIGIN, SHEET, BINDINGS_SHEET, BINDINGS_HEADERS, extractFullOffers } from "../src/core/sheet-sync.mjs";
 import { SEAL_COLUMN, rowSeal } from "../src/core/seal.mjs";
 import { mtText } from "../src/core/text.mjs";
@@ -85,7 +86,7 @@ function env({ items = [itemOf()], active = true, protectedIds = ["91", "92"], s
   const zk = w("frozen-contract.json", fzContract === undefined ? rq : fzContract);
   // Експорт категорій Prom (формат MM_PROM_CATEGORIES): { date, source, categories: { Offer ID: ID категорії } }.
   const pc = promCategories ? w("prom-categories.json", { date: "2026-10-28", source: "тест", categories: promCategories }) : "";
-  const cat = loadPromCatalog(undefined, { freezeFile: freezeEnvSet ? ff : "", freezeContractFile: rk, frozenAttrsFile: fzEnvSet ? zf : "", frozenAttrsContractFile: zk, a3PairsFile: "", n0CohortFile: "", ownerValuesFile: ownerFile, promCategoriesFile: pc });
+  const cat = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: freezeEnvSet ? ff : "", freezeContractFile: rk, frozenAttrsFile: fzEnvSet ? zf : "", frozenAttrsContractFile: zk, a3PairsFile: "", n0CohortFile: "", ownerValuesFile: ownerFile, promCategoriesFile: pc });
   return { dir, cat, rm: () => fs.rmSync(dir, { recursive: true, force: true }) };
 }
 const run = (cat, row = baseRow(), offer = offerOf(mtText(row["ID постачальника"]) || "91"), full = fullOf()) => refreshMainRow({ ...row }, offer, full, { stamp: STAMP, catalog: cat });

@@ -9,7 +9,7 @@ import path from "node:path";
 import { SRC, buildCharacteristics } from "../src/core/prom-attributes.mjs";
 import { ACTION, planStaleCleanup } from "../src/core/prom-cleanup.mjs";
 import { loadOwnerValues, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
-import { STATE_A } from "./helpers/state-a.mjs";
+import { STATE_A, OWNER_INDEX_A } from "./helpers/state-a.mjs";
 
 const catalog = loadPromCatalog(undefined, STATE_A);
 const P = (name, value, unit = "") => ({ name, value, unit });
@@ -158,12 +158,12 @@ test("файл рішень власника (поза репозиторієм)
   assert.deepEqual(ov.map.get("111").items.map((o) => [o.name, o.action, o.priority, o.autoUpdate]), [["Стан", "set", 1, false]]);
   assert.equal(ov.problems.length, 4, ov.problems.join("; "));
   assert.ok(ov.problems.some((p) => /№2: неправильне source/.test(p)) && ov.problems.some((p) => /priority/.test(p)) && ov.problems.some((p) => /action/.test(p)));
-  const c = loadPromCatalog(undefined, { ownerValuesFile: file });
+  const c = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, ownerValuesFile: file });
   assert.equal(c.ownerValues.get("222").items[0].action, "drop");
   assert.deepEqual(c.ownerValuesInfo, { file: "owner-values.json", date: "2026-10-26", products: 2, items: 2 });
   assert.equal(c.problems.filter((p) => /№\d+: неправильне|немає items/.test(p)).length, 4, c.problems.join("; "));
   assert.ok(c.problems.some((p) => /немає в переліку репозиторію/.test(p)) && c.problems.some((p) => /характеристику утримано/.test(p)), "звірка з переліком рішень у репозиторії");
-  assert.equal(loadPromCatalog(undefined, { ownerValuesFile: "" }).ownerValues, null, "без файлу — рішень немає");
+  assert.equal(loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, ownerValuesFile: "" }).ownerValues, null, "без файлу — рішень немає");
   assert.match(loadOwnerValues(path.join(dir, "немає.json")).problems[0], /не знайдено/);
   fs.writeFileSync(file, "{ зламаний");
   assert.match(loadOwnerValues(file).problems[0], /некоректний JSON/);
@@ -281,10 +281,10 @@ test("перелік рішень у репозиторії (без значен
   const model = structuredClone(products); model[id0].model = "ІНША-МОДЕЛЬ";
   for (const [p, re] of [[less, /є в переліку репозиторію, але немає у файлі рішень — характеристику утримано/], [more, /є у файлі рішень, але немає в переліку репозиторію/], [model, /модель у файлі «ІНША-МОДЕЛЬ»/]]) {
     fs.writeFileSync(file, JSON.stringify({ v: 1, date: "2026-10-26", products: p }));
-    assert.ok(loadPromCatalog(undefined, { ownerValuesFile: file }).problems.some((x) => re.test(x)), re.source);
+    assert.ok(loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, ownerValuesFile: file }).problems.some((x) => re.test(x)), re.source);
   }
   fs.writeFileSync(file, "{ зламаний");
-  const broken = loadPromCatalog(undefined, { ownerValuesFile: file });
+  const broken = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, ownerValuesFile: file });
   assert.ok(broken.problems.some((x) => /некоректний JSON/.test(x)) && broken.problems.filter((x) => /характеристику утримано/.test(x)).length === items.length, "пошкоджений файл: усі характеристики переліку утримано");
   fs.rmSync(dir, { recursive: true, force: true });
 });
@@ -326,8 +326,9 @@ test("реальні рішення власника 26.10.2026 (локальн�
   want("1822909979", ["Тип приводу: Електродвигун (від мережі)", "Живлення: Електромережа"]); never("1822909979", /^Тип приводу: (Акумулятор|Електричний)/);
   want("1774128020", ["Споживана потужність: 3000 Вт", "Живлення: Мережа 220 В"]); never("1774128020", /1800/);
   want("2212278908", ["Робоча швидкість: 10 000–14 000 об/хв", "З'єднання: M14", "Сумісний інструмент: УШМ"]); never("2212278908", /8000|^(Посадковий отвір|Посадочное отверстие|Рабочая скорость)/);
-  want("3158153340", ["Максимальний зварювальний струм: 120 А", "Мінімальний зварювальний струм: 20 А", "Живлення: 230 В", "Регулювання зварювального струму: 20–120 А", "Напруга холостого ходу: 60 В", "Діаметр електродів: 1,6–3,2 мм", "Тривалість навантаження: 30 %", "Коефіцієнт корисної дії: 85 %", "Клас ізоляції: F", "Ступінь захисту IP: 21", "Функції: HOT START, ARC FORCE, ANTI-STICK"]);
-  never("3158153340", /: 300 А|^Напруга живлення|: 60 %|40%|FORSE|ругулювання|ругулирования|^ККД|^КПД|^Клас захисту корпуса/);
+  // Zegor: ПВ 40 % — новіше пряме рішення власника (OWNER-DECISIONS-QUEUE-AFTER-N1-2, 27.10) замість 30 % (26.10); 200 А з XML не передається.
+  want("3158153340", ["Максимальний зварювальний струм: 120 А", "Мінімальний зварювальний струм: 20 А", "Живлення: 230 В", "Регулювання зварювального струму: 20–120 А", "Напруга холостого ходу: 60 В", "Діаметр електродів: 1,6–3,2 мм", "Тривалість навантаження: 40 %", "Коефіцієнт корисної дії: 85 %", "Клас ізоляції: F", "Ступінь захисту IP: 21", "Функції: HOT START, ARC FORCE, ANTI-STICK"]);
+  never("3158153340", /: 300 А|^Напруга живлення|: 60 %|: 30 %|^Номінальний зварювальний струм|40%|FORSE|ругулювання|ругулирования|^ККД|^КПД|^Клас захисту корпуса/);
   for (const id of ["2572063884", "2572081588"]) { want(id, ["Акумулятор у комплекті: Ні", "Зарядний пристрій у комплекті: Ні"]); never(id, /у комплекті: Так|^Кількість акумуляторів у комплекті/); }
   want("2571161463", ["Акумулятор у комплекті: Так", "Кількість акумуляторів у комплекті: 1"]);
 });

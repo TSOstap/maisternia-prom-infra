@@ -48,6 +48,9 @@ export const FROZEN_FULL_TEXT = Object.freeze(["nameUa", "nameRu", "descriptionU
 const FROZEN_FULL_LISTS = Object.freeze(["params", "pictures"]);
 /** Тип блокування в «Журналі» (рядок «ОНОВЛЕННЯ ЗАБЛОКОВАНО»): FZ або кореневий контракт захисту недійсні. */
 export const FZ_BLOCK = "ЗАХИСТ ХАРАКТЕРИСТИК (FZ)";
+/** Тип блокування в «Журналі»: обов'язкові рішення власника (OV, R1) недійсні — файл рішень не відповідає переліку в репозиторії. */
+export const OV_BLOCK = "РІШЕННЯ ВЛАСНИКА (OV)";
+const guardType = (g) => (g?.type === "OV" ? OV_BLOCK : FZ_BLOCK);
 const fzBlockText = (b) => `${b.id}: ${b.kind} — ${b.reason}${b.fields?.length ? ` (${b.fields.join(", ")})` : ""}`;
 const ownText = (o, k) => o !== null && typeof o === "object" && Object.prototype.hasOwnProperty.call(o, k) && typeof o[k] === "string";
 
@@ -463,14 +466,18 @@ export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", c
   // А2: у повному XML немає жодного <param> — характеристики лише з блоку характеристик опису (той самий генератор), тільки в
   // області дії переліку захищених товарів; без повного XML, без опису або без валідного переліку — як раніше (не перебудовується).
   const descOnly = techRules.includes("A2") && Boolean(full) && !(full.params || []).length && Boolean(mtText(r[RAW_DESC_UA]).trim() || mtText(r[RAW_DESC_RU]).trim());
+  // OV (рішення власника, 28.10.2026): товар із підтвердженими рішеннями власника (файл рішень або перелік у репозиторії), але без сирих
+  // характеристик постачальника і не А2 — генератор лише застосовує рішення власника й зберігає наявні значення картки: сирих даних
+  // і опису не розбирає (порожні rawParams / descUa / descRu), тож нічого нового з опису не з'являється.
+  const ownerOnly = !mtText(r[RAW_PARAMS]).trim() && !descOnly && Boolean(catalog?.ownerValues?.has?.(id) || catalog?.ownerIndex?.has?.(id));
   if (fz) {
     // FZ: лише збережені params / provenance прийнятого знімка; генератор для товару не викликається.
     if (fzState === "apply") {
       params = set("Характеристики JSON", fz.saved.paramsJson, `ЗБЕРЕЖЕНІ ХАРАКТЕРИСТИКИ ЗАХИЩЕНОГО ТОВАРУ (FZ rev ${catalog.frozenInfo?.rev ?? ""})`);
       quiet(PARAMS_ORIGIN, fz.saved.provenanceJson);
     }
-  } else if (schema && (mtText(r[RAW_PARAMS]).trim() || descOnly)) {
-    const ch = buildCharacteristics({ schema, categoryId: cat, rawParams: jsonOr(r[RAW_PARAMS], []), descUa: r[RAW_DESC_UA], descRu: r[RAW_DESC_RU], current: r["Характеристики JSON"], provenance: r[PARAMS_ORIGIN], mapping: catalog?.mappings?.get(cat), units: catalog?.units, names: catalog?.names, mode: "main", brand: r["Виробник"], titles: [r["Назва постачальника UA"], r["Назва постачальника RU"]], kitOwner: catalog?.kitConfirmed?.get(String(r["Offer ID"])) || null, multiOwner: catalog?.multiConfirmed?.get(String(r["Offer ID"])) || null, ownerValues: catalog?.ownerValues?.get(String(r["Offer ID"])) || null, ownerIndex: catalog?.ownerIndex?.get(String(r["Offer ID"])) || null, cardTitles: [r["Назва UA"], r["Назва RU"]], techRules, exactPairs: catalog?.a3PairsFor?.(String(r["Offer ID"])) || [] });
+  } else if (schema && (mtText(r[RAW_PARAMS]).trim() || descOnly || ownerOnly)) {
+    const ch = buildCharacteristics({ schema, categoryId: cat, rawParams: jsonOr(r[RAW_PARAMS], []), descUa: ownerOnly ? "" : r[RAW_DESC_UA], descRu: ownerOnly ? "" : r[RAW_DESC_RU], current: r["Характеристики JSON"], provenance: r[PARAMS_ORIGIN], mapping: catalog?.mappings?.get(cat), units: catalog?.units, names: catalog?.names, mode: "main", brand: r["Виробник"], titles: [r["Назва постачальника UA"], r["Назва постачальника RU"]], kitOwner: catalog?.kitConfirmed?.get(String(r["Offer ID"])) || null, multiOwner: catalog?.multiConfirmed?.get(String(r["Offer ID"])) || null, ownerValues: catalog?.ownerValues?.get(String(r["Offer ID"])) || null, ownerIndex: catalog?.ownerIndex?.get(String(r["Offer ID"])) || null, cardTitles: [r["Назва UA"], r["Назва RU"]], techRules, exactPairs: catalog?.a3PairsFor?.(String(r["Offer ID"])) || [] });
     const prepared = JSON.stringify(ch.params);
     if (ch.changed && prepared.length <= CELL_LIMIT) params = set("Характеристики JSON", prepared, "ХАРАКТЕРИСТИКИ ЗА СХЕМОЮ PROM (автоматично; ручні значення збережено)");
     quiet(PARAMS_ORIGIN, JSON.stringify(ch.provenance));
@@ -692,7 +699,7 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
   // Зупинка: зрозуміла причина + тип, кількість зачеплених товарів і поріг (для «Журналу»).
   const stop = (type, reason, affected = "", limit = "") => { out.abort = reason; out.block = { type, reason, affected, limit }; return out; };
   // FZ: кореневий контракт захисту або обов'язковий FZ недійсний — прохід НЕ ВИКОНАНО до будь-яких записів (FZ-HERMES-06).
-  if (catalog?.guard?.blocked) return stop(FZ_BLOCK, `прохід НЕ ВИКОНАНО: ${catalog.guard.reasons.join("; ")}; нічого не записано`);
+  if (catalog?.guard?.blocked) return stop(guardType(catalog.guard), `прохід НЕ ВИКОНАНО: ${catalog.guard.reasons.join("; ")}; нічого не записано`);
   const main = readMain(book[SHEET.main]);
   const queueValues = book[SHEET.queue];
   const queueHeader = (queueValues?.[0] || []).map(mtText);
@@ -899,7 +906,7 @@ export function planIntake({ book, parsed, fullById, stamp, config, now, ready =
   const rules = { ...INTAKE_RULES, ...(config.intake || {}) };
   const out = { abort: null, block: null, warnings: [], stats: {}, results: {} };
   const stop = (type, reason) => { out.abort = reason; out.block = { type, reason, affected: "", limit: "" }; return out; };
-  if (catalog?.guard?.blocked) return stop(FZ_BLOCK, `прохід НЕ ВИКОНАНО: ${catalog.guard.reasons.join("; ")}; нічого не записано`);
+  if (catalog?.guard?.blocked) return stop(guardType(catalog.guard), `прохід НЕ ВИКОНАНО: ${catalog.guard.reasons.join("; ")}; нічого не записано`);
   const queueValues = book[SHEET.queue];
   const queueHeader = (queueValues?.[0] || []).map(mtText);
   if (QUEUE_EXTRA.some((k) => !queueHeader.includes(k))) return stop("ЧЕРГА НЕ ГОТОВА", "аркуш «Нові товари» ще не переведено в режим черги");

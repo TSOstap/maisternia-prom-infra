@@ -63,7 +63,24 @@ export function loadOwnerValues(file) {
     res.items += items.length;
     if (items.length) res.map.set(String(id), { model: str(p.model), title: str(p.title), items });
   }
+  // OV (R1, HERMES-OV1-REVIEW-1): ревізія й відбиток ВСЬОГО вмісту products (значення, походження, supplier) — для обов'язкової
+  // прив'язки переліку в репозиторії до прийнятого файлу рішень; кількість товарів і записів — як у файлі (до валідації).
+  res.rev = Number.isInteger(j.rev) ? j.rev : 0;
+  res.fingerprint = frozenSha(j.products);
+  res.productCount = Object.keys(j.products).length;
+  res.rawItems = Object.values(j.products).reduce((n, p) => n + (Array.isArray(p?.items) ? p.items.length : 0), 0);
   return res;
+}
+
+/** Перелік рішень для репозиторію (БЕЗ значень) з розібраного файлу рішень: Offer ID → { model, items: [{ name, field?, replaces? }] }. */
+export function ownerIndexOf(ov) {
+  return Object.fromEntries([...ov.map].sort(([a], [b]) => a.localeCompare(b)).map(([id, p]) => [id, { model: p.model, items: p.items.map((o) => ({ name: o.name, ...(o.field ? { field: o.field } : {}), ...(o.replaces?.length ? { replaces: o.replaces } : {}) })) }]));
+}
+/** Обов'язкова прив'язка в переліку: { rev, date, fingerprint, products, items }. "" — коректна, інакше причина. */
+export function ownerRequiredProblem(rq) {
+  if (!rq || typeof rq !== "object" || Array.isArray(rq)) return "не об'єкт";
+  if (!Number.isInteger(rq.rev) || rq.rev < 1 || !DATE.test(String(rq.date || "")) || !FP.test(String(rq.fingerprint || "")) || !Number.isInteger(rq.products) || rq.products < 1 || !Number.isInteger(rq.items) || rq.items < 1) return "немає rev / date / fingerprint / products / items";
+  return "";
 }
 
 /** Технічні нормалізації, увімкнені в генераторі (пакети після 83206c4). Діють лише з валідним переліком захищених товарів
@@ -253,7 +270,7 @@ export function loadFrozenAttrs(file, contract, contractError, required, fz) {
 }
 
 /** Схеми, словники й одиниці для синхронізації. */
-export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "", ownerValuesFile = process.env.MM_OWNER_VALUES || "", freezeFile = process.env.MM_FREEZE_IDS || "", freezeContractFile = path.join(dir, "freeze-contract.json"), a3PairsFile = process.env.MM_A3_PAIRS || "", a3ContractFile = path.join(dir, "a3-pairs-contract.json"), n0CohortFile = process.env.MM_N0_COHORT || "", n0CohortContractFile = path.join(dir, "n0-cohort-contract.json"), frozenAttrsFile = process.env.MM_FROZEN_ATTRS || "", frozenAttrsContractFile = path.join(dir, "frozen-attributes-contract.json") } = {}) {
+export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = process.env.MM_PROM_CATEGORIES || "", ownerValuesFile = process.env.MM_OWNER_VALUES || "", freezeFile = process.env.MM_FREEZE_IDS || "", freezeContractFile = path.join(dir, "freeze-contract.json"), a3PairsFile = process.env.MM_A3_PAIRS || "", a3ContractFile = path.join(dir, "a3-pairs-contract.json"), n0CohortFile = process.env.MM_N0_COHORT || "", n0CohortContractFile = path.join(dir, "n0-cohort-contract.json"), frozenAttrsFile = process.env.MM_FROZEN_ATTRS || "", frozenAttrsContractFile = path.join(dir, "frozen-attributes-contract.json"), ownerValuesIndexFile = path.join(dir, "owner-values-index.json"), ownerIndexLegacy = false } = {}) {
   const out = { schemas: new Map(), mappings: new Map(), units: readJson(path.join(dir, "units.json"), { conversions: [] }), problems: [] };
   // Технічні нормалізації (TECH_RULES) — лише з валідним переліком захищених товарів, що точно відповідає контракту; для захищених — не діють.
   // Кореневий контракт захисту читається ЗАВЖДИ (FZ-HERMES-06 п. 2): відсутній / пошкоджений / некоректний — прохід НЕ ВИКОНАНО.
@@ -278,8 +295,9 @@ export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = proces
   // Рішення власника щодо окремих характеристик (Offer ID → { model, items }); немає файлу — не застосовуються.
   out.ownerValues = null;
   out.ownerValueIds = new Set();
+  let ov = null;
   if (ownerValuesFile) {
-    const ov = loadOwnerValues(ownerValuesFile);
+    ov = loadOwnerValues(ownerValuesFile);
     out.problems.push(...ov.problems);
     out.ownerValues = ov.map;
     out.ownerValueIds = ov.ids;
@@ -329,7 +347,35 @@ export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = proces
   out.kitConfirmed = new Map(Object.entries(readJson(path.join(dir, "kit-confirmed.json"), {}).products || {}).map(([id, v]) => [String(id), { battery: v.battery, charger: v.charger, ...(v.batteryCount !== undefined ? { batteryCount: v.batteryCount } : {}) }]));
   // Перелік рішень власника (репозиторій, БЕЗ значень; значення — у файлі поза репозиторієм): без файлу рішень ці характеристики
   // утримуються (значення постачальника не передається), а не повертаються до даних постачальника непомітно.
-  out.ownerIndex = new Map(Object.entries(readJson(path.join(dir, "owner-values-index.json"), {}).products || {}).map(([id, p]) => [String(id), {
+  // OV (R1, HERMES-OV1-REVIEW-1): перелік — довірена точка в Git, читається ЗАВЖДИ. Відсутній / пошкоджений / з некоректним required —
+  // прохід НЕ ВИКОНАНО. З required файл рішень обов'язковий незалежно від ENV: не задано / немає / порожній / пошкоджений / інша ревізія /
+  // інший відбиток вмісту (інші значення того самого набору полів) / інша кількість / перелік ≠ файлу — прохід НЕ ВИКОНАНО (тип OV).
+  // F1 (HERMES-OV1-REVIEW-1-FOLLOWUP): перелік формату v2 — required ОБОВ'ЯЗКОВИЙ (відсутній / null / false / неповний — блокер), тож
+  // видалення маркера не повертає старий режим. Формат v1 без прив'язки — лише явно обраний ownerIndexLegacy (історичні фікстури стану
+  // до OV; не ENV); інший / відсутній формат — блокер.
+  const ownerReasons = [];
+  let idx = null, idxProblem = "";
+  if (!fs.existsSync(ownerValuesIndexFile)) idxProblem = "відсутній";
+  else { try { idx = readJson(ownerValuesIndexFile, null); } catch { idxProblem = "некоректний JSON"; } }
+  if (!idxProblem && (!idx || typeof idx !== "object" || Array.isArray(idx) || !idx.products || typeof idx.products !== "object" || Array.isArray(idx.products))) idxProblem = "немає products";
+  if (!idxProblem && idx.v !== 2 && !(idx.v === 1 && ownerIndexLegacy === true)) idxProblem = idx.v === 1 ? "формат v1 без обов'язкової прив'язки — лише явно для історичних фікстур; потрібен v2 з required" : `невідомий формат (v ${JSON.stringify(idx.v ?? null)}); потрібен v2 з required`;
+  if (!idxProblem && idx.v === 2 && !own(idx, "required")) idxProblem = "формат v2 без обов'язкового required";
+  if (!idxProblem && own(idx, "required")) { const p = ownerRequiredProblem(idx.required); if (p) idxProblem = `required присутній, але некоректний (${p})`; }
+  const ovFail = (why) => ownerReasons.push(`owner-values: required — ${why} — прохід НЕ ВИКОНАНО`);
+  if (idxProblem) ownerReasons.push(`перелік рішень власника «${path.basename(ownerValuesIndexFile)}»: ${idxProblem} — прохід НЕ ВИКОНАНО`);
+  else if (idx.required) {
+    const rq = idx.required, fname = ownerValuesFile ? `файл рішень «${path.basename(ownerValuesFile)}»` : "";
+    if (!ownerValuesFile) ovFail("файл рішень власника (MM_OWNER_VALUES) не задано");
+    else if (!ov.ok) ovFail(`${fname} недійсний (${ov.problems[0] || "структура"})`);
+    else if (ov.rev !== rq.rev) ovFail(`${fname}: ревізія ${ov.rev || "немає"} ≠ обов'язковій ${rq.rev}`);
+    else if (ov.fingerprint !== rq.fingerprint) ovFail(`${fname}: відбиток вмісту ≠ обов'язковому (інші значення того самого набору полів)`);
+    else if (ov.productCount !== rq.products || ov.rawItems !== rq.items) ovFail(`${fname}: товарів / записів ${ov.productCount} / ${ov.rawItems} ≠ ${rq.products} / ${rq.items}`);
+    else if (ov.problems.length) ovFail(`${fname}: некоректні записи (${ov.problems.length})`);
+    else if (canon(ownerIndexOf(ov)) !== canon(idx.products)) ovFail("перелік у репозиторії ≠ файлу рішень (назви / поля / replaces)");
+  }
+  out.ownerRequired = { required: Boolean(!idxProblem && idx.required), rev: idx?.required?.rev || 0, valid: !ownerReasons.length };
+  if (ownerReasons.length) { out.ownerValues = null; out.ownerValuesOk = false; }
+  out.ownerIndex = new Map(Object.entries(idx?.products || {}).map(([id, p]) => [String(id), {
     model: String(p?.model || ""),
     items: (Array.isArray(p?.items) ? p.items : []).filter((x) => x && typeof x.name === "string" && x.name.trim()).map((x) => ({ name: x.name.trim(), ...(x.field !== undefined ? { field: String(x.field) } : {}), ...(Array.isArray(x.replaces) ? { replaces: x.replaces.map(String) } : {}) })),
   }]));
@@ -390,8 +436,10 @@ export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = proces
   out.frozenInfo = { active, required: active, valid: active && fa.valid, rev: fa.rev, count: fa.count, file: frozenAttrsFile ? path.basename(frozenAttrsFile) : "" };
   out.frozenFor = (id) => (out.frozenInfo.valid ? fa.items.get(String(id)) || null : null);
   out.frozenIds = out.frozenInfo.valid ? [...fa.items.keys()] : [];
-  const reasons = [...(rootProblem ? [`кореневий контракт захисту «${path.basename(freezeContractFile)}»: ${rootProblem} — прохід НЕ ВИКОНАНО`] : []), ...(active ? fa.problems : [])];
-  out.guard = { blocked: reasons.length > 0, reasons };
+  const fzReasons = [...(rootProblem ? [`кореневий контракт захисту «${path.basename(freezeContractFile)}»: ${rootProblem} — прохід НЕ ВИКОНАНО`] : []), ...(active ? fa.problems : [])];
+  const reasons = [...fzReasons, ...ownerReasons];
+  // type — чий блокер (для «Журналу»): FZ — кореневий контракт / FZ; OV — обов'язкові рішення власника (R1).
+  out.guard = { blocked: reasons.length > 0, reasons, type: fzReasons.length ? "FZ" : ownerReasons.length ? "OV" : "" };
   out.problems.push(...reasons);
   if (!active && !rootProblem && frozenAttrsFile) out.problems.push(`FZ не активовано: у кореневому контракті захисту немає requiresFrozenAttrs — файл «${path.basename(frozenAttrsFile)}» (MM_FROZEN_ATTRS) не використано`);
   // Точні пари А3 — лише разом із валідним переліком захищених і лише для товарів, яким діють технічні нормалізації.

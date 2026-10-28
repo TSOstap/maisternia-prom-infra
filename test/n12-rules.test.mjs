@@ -97,7 +97,8 @@ test("N1-2 розбір: «• Назва: значення» — знімаєт
 // ---------- генератор: межа N1-2 і UA ↔ RU ----------
 import { buildCharacteristics } from "../src/core/prom-attributes.mjs";
 import { TECH_RULES, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
-const catalog = loadPromCatalog(undefined, { freezeFile: "", a3PairsFile: "", n0CohortFile: "" }); // ізольовано від MM_*
+import { OWNER_INDEX_A } from "./helpers/state-a.mjs"; // OV (R1): прийнятий перелік рішень без required
+const catalog = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: "", a3PairsFile: "", n0CohortFile: "" }); // ізольовано від MM_*
 const SAW = "1250302";
 const B = (o) => buildCharacteristics({ schema: catalog.schemas.get(SAW), categoryId: SAW, current: [], names: catalog.names, mapping: catalog.mappings.get(SAW), units: catalog.units, mode: "main", brand: "Test", ...o });
 const N1 = { techRules: [...TECH_RULES, "N1"] };
@@ -206,8 +207,8 @@ test("N1-2 синхронізація: лише refreshMainRow для когор
   const fk = w("freeze-contract.json", { v: 1, rev: 1, date: "2026-10-27", source: "тест", count: 1, fingerprint: freezeFingerprint(prot), scope: { count: scope.length, fingerprint: freezeFingerprint(scope) } });
   const cf = w("cohort.json", { v: 1, rev: 1, date: "2026-10-27", source: "тест", count: 1, fingerprint: cohortFingerprint(co), ids: co });
   const ck = w("cohort-contract.json", { v: 1, rev: 1, date: "2026-10-27", source: "тест", count: 1, fingerprint: cohortFingerprint(co) });
-  const on = loadPromCatalog(undefined, { freezeFile: ff, freezeContractFile: fk, a3PairsFile: "", n0CohortFile: cf, n0CohortContractFile: ck });
-  const off = loadPromCatalog(undefined, { freezeFile: ff, freezeContractFile: fk, a3PairsFile: "", n0CohortFile: "" });
+  const on = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: ff, freezeContractFile: fk, a3PairsFile: "", n0CohortFile: cf, n0CohortContractFile: ck });
+  const off = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: ff, freezeContractFile: fk, a3PairsFile: "", n0CohortFile: "" });
   const full = { params: [], pictures: [], descriptionUa: UA, descriptionRu: RU };
   const row = (id) => ({ "Offer ID": id, "ID постачальника": id, "Категорія Prom ID": SAW, "Виробник": "Test", "Характеристики JSON": "[]", "Назва постачальника UA": "Пила тестова", "Назва постачальника RU": "" });
   const offer = (id) => ({ id, vendor: "Test", sku: "", nameUa: "Пила тестова", nameRu: "", price: 100, available: true, currency: "UAH" });

@@ -9,7 +9,7 @@ import os from "node:os";
 import path from "node:path";
 import { a1Equivalent, buildCharacteristics } from "../src/core/prom-attributes.mjs";
 import { TECH_RULES, a3Fingerprint, freezeFingerprint, loadFreeze, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
-import { STATE_A } from "./helpers/state-a.mjs";
+import { STATE_A, OWNER_INDEX_A } from "./helpers/state-a.mjs";
 
 const catalog = loadPromCatalog(undefined, { ...STATE_A, freezeFile: "", a3PairsFile: "" }); // ізольовано від MM_FREEZE_IDS / MM_A3_PAIRS; стан A (до FZ)
 const P = (name, value, unit = "") => ({ name, value, unit });
@@ -143,12 +143,12 @@ const freezeEnv = (ids, file = fileOf(ids), contract = contractOf(ids)) => {
   const f = path.join(dir, "freeze.json"), k = path.join(dir, "freeze-contract.json");
   fs.writeFileSync(f, typeof file === "string" ? file : JSON.stringify(file));
   if (contract) fs.writeFileSync(k, typeof contract === "string" ? contract : JSON.stringify(contract));
-  return { dir, f, k, cat: loadPromCatalog(undefined, { freezeFile: f, freezeContractFile: k, a3PairsFile: "" }) };
+  return { dir, f, k, cat: loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: f, freezeContractFile: k, a3PairsFile: "" }) };
 };
 
 test("перелік захищених товарів (fail-closed): без файлу / пошкоджений / неузгоджений — режим вимкнено для всіх; валідний — лише в області дії, крім захищених", () => {
   assert.deepEqual(TECH_RULES, ["A1", "A2"]);
-  const none = loadPromCatalog(undefined, { freezeFile: "", a3PairsFile: "" });
+  const none = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: "", a3PairsFile: "" });
   assert.deepEqual([none.techRulesFor("111"), none.freezeInfo.valid], [[], false]);
   const ok = freezeEnv(["111", "112"]);
   assert.deepEqual([ok.cat.techRulesFor("111"), ok.cat.techRulesFor("222"), ok.cat.techRulesFor("333"), ok.cat.techRulesFor(""), ok.cat.freezeInfo], [[], [...TECH_RULES], [], [], { valid: true, file: "freeze.json", rev: 1, date: "2026-10-27", count: 2, scope: 4, source: "тест", parts: null }], "поза областю дії (новий / черга) — як у 83206c4");
@@ -156,11 +156,11 @@ test("перелік захищених товарів (fail-closed): без ф�
   // кожен файл — з правильною ревізією, щоб відсікала саме його вада (count / ID / дата / дублікати), а не ревізія
   for (const bad of ["{ зламаний", JSON.stringify({ v: 1, rev: 1, date: "2026-10-27", count: 3, ids: ["111", "112"], scope: sco }), JSON.stringify({ v: 1, rev: 1, date: "2026-10-27", count: 1, ids: ["x"], scope: sco }), JSON.stringify({ v: 1, rev: 1, count: 1, ids: ["111"], scope: sco }), JSON.stringify({ v: 1, rev: 1, date: "2026-10-27", count: 2, ids: ["111", "111"], scope: sco })]) {
     fs.writeFileSync(ok.f, bad);
-    const c = loadPromCatalog(undefined, { freezeFile: ok.f, freezeContractFile: ok.k, a3PairsFile: "" });
+    const c = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: ok.f, freezeContractFile: ok.k, a3PairsFile: "" });
     assert.deepEqual([c.techRulesFor("222"), c.freezeInfo.valid], [[], false], bad);
     assert.ok(c.problems.some((p) => /переліку захищених/.test(p)), bad);
   }
-  assert.ok(loadPromCatalog(undefined, { freezeFile: path.join(ok.dir, "немає.json"), freezeContractFile: ok.k }).problems.some((p) => /не знайдено/.test(p)));
+  assert.ok(loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: path.join(ok.dir, "немає.json"), freezeContractFile: ok.k }).problems.some((p) => /не знайдено/.test(p)));
   assert.equal(loadFreeze(path.join(ok.dir, "немає.json"), contractOf(["111"])).valid, false);
   fs.rmSync(ok.dir, { recursive: true, force: true });
 });
@@ -196,7 +196,7 @@ test("перелік захищених товарів: порожній, неп
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "freeze-"));
   const f = path.join(dir, "freeze.json");
   fs.writeFileSync(f, JSON.stringify(fileOf(two)));
-  const real = loadPromCatalog(undefined, { freezeFile: f, a3PairsFile: "" });
+  const real = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: f, a3PairsFile: "" });
   assert.deepEqual([real.techRulesFor("222"), real.freezeInfo.valid], [[], false]);
   fs.rmSync(dir, { recursive: true, force: true });
   assert.equal(freezeFingerprint(["2", "1"]), freezeFingerprint(["1", "2"]), "відбиток не залежить від порядку");
@@ -355,7 +355,7 @@ const a3Env = (pairs, file = a3File(pairs), contract = a3Contract(pairs), freeze
   const f = path.join(fz.dir, "a3.json"), k = path.join(fz.dir, "a3-contract.json");
   fs.writeFileSync(f, typeof file === "string" ? file : JSON.stringify(file));
   if (contract) fs.writeFileSync(k, typeof contract === "string" ? contract : JSON.stringify(contract));
-  const cat = loadPromCatalog(undefined, { freezeFile: fz.f, freezeContractFile: fz.k, a3PairsFile: f, a3ContractFile: k });
+  const cat = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: fz.f, freezeContractFile: fz.k, a3PairsFile: f, a3ContractFile: k });
   return { ...fz, a3: f, a3k: k, cat };
 };
 
@@ -424,7 +424,7 @@ test("А3: синхронізація — лише refreshMainRow і лише п
   assert.ok(!JSON.parse(qa["Характеристики JSON"]).some((p) => p.name === A3_KEY && p.value === "стрічково-дисковий"), "черга — без А3");
   // попередження: перелік захищених валідний, а переліку пар немає
   const { WatchSim } = await import("./helpers/watch-sim.mjs");
-  const noA3 = loadPromCatalog(undefined, { freezeFile: e.f, freezeContractFile: e.k, a3PairsFile: "" }); // явно без переліку пар (не з MM_A3_PAIRS)
+  const noA3 = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: e.f, freezeContractFile: e.k, a3PairsFile: "" }); // явно без переліку пар (не з MM_A3_PAIRS)
   const w = await new WatchSim({ catalog: noA3 }).start();
   assert.ok(w.warnings.some((x) => /точні пари А3 не активні/.test(x)), JSON.stringify(w.warnings));
   fs.rmSync(e.dir, { recursive: true, force: true });

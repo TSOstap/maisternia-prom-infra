@@ -12,8 +12,9 @@ import os from "node:os";
 import path from "node:path";
 import { buildCharacteristics, conditionTablePairs, conditionTablePairsUaRu, descriptionPairs } from "../src/core/prom-attributes.mjs";
 import { TECH_RULES, cohortFingerprint, freezeFingerprint, loadCohort, loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
+import { OWNER_INDEX_A } from "./helpers/state-a.mjs"; // OV (R1): прийнятий перелік рішень без required
 
-const catalog = loadPromCatalog(undefined, { freezeFile: "", a3PairsFile: "", n0CohortFile: "" }); // ізольовано від MM_*
+const catalog = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: "", a3PairsFile: "", n0CohortFile: "" }); // ізольовано від MM_*
 const WELD = "14400101";
 const B = (o) => buildCharacteristics({ schema: catalog.schemas.get(WELD), categoryId: WELD, current: [], names: catalog.names, mapping: catalog.mappings.get(WELD), units: catalog.units, mode: "main", ...o });
 const N1 = { techRules: [...TECH_RULES, "N1"] };
@@ -280,7 +281,7 @@ const env = ({ cohort = cohortFileOf(["90"]), contract = cohortContractOf(["90"]
   const w = (n, x) => { const f = path.join(dir, n); if (x !== null) fs.writeFileSync(f, typeof x === "string" ? x : JSON.stringify(x)); return f; };
   const ff = w("freeze.json", freezeOk ? freezeFileOf(protectedIds) : "{ зламаний"), fk = w("freeze-contract.json", freezeContractOf(protectedIds));
   const cf = w("cohort.json", cohort), ck = w("cohort-contract.json", contract);
-  const cat = loadPromCatalog(undefined, { freezeFile: ff, freezeContractFile: fk, a3PairsFile: "", n0CohortFile: cf, n0CohortContractFile: ck });
+  const cat = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: ff, freezeContractFile: fk, a3PairsFile: "", n0CohortFile: cf, n0CohortContractFile: ck });
   return { dir, cat, cf, ck, ff, fk };
 };
 const rm = (e) => fs.rmSync(e.dir, { recursive: true, force: true });
@@ -296,7 +297,7 @@ test("когорта N0: валідна — N1 лише для когорти в
   assert.deepEqual(e.cat.techRulesFor("95"), [], "поза областю");
   assert.deepEqual(e.cat.problems.filter((p) => /когорт/i.test(p)), []);
   rm(e);
-  const none = loadPromCatalog(undefined, { freezeFile: "", a3PairsFile: "", n0CohortFile: "" });
+  const none = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: "", a3PairsFile: "", n0CohortFile: "" });
   assert.deepEqual([none.techRulesFor("90"), none.cohortInfo.valid], [[], false]);
 });
 
@@ -349,7 +350,7 @@ test("когорта N0 fail-closed: немає / пошкоджена / пор�
 test("N1-1 синхронізація: лише refreshMainRow для когорти; поза когортою, захищений, без когорти — рядок як раніше; черга й нові — як раніше", async () => {
   const { refreshMainRow, refreshQueueRow, candidateRow } = await import("../src/core/sheet-sync.mjs");
   const e = env({ cohort: cohortFileOf(["90"]), contract: cohortContractOf(["90"]) });
-  const noCohort = loadPromCatalog(undefined, { freezeFile: e.ff, freezeContractFile: e.fk, a3PairsFile: "", n0CohortFile: "" });
+  const noCohort = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, freezeFile: e.ff, freezeContractFile: e.fk, a3PairsFile: "", n0CohortFile: "" });
   const full = { params: [], pictures: [], descriptionUa: T3(ROWS_UA), descriptionRu: T3(ROWS_RU, HEAD_RU) };
   const row = (id) => ({ "Offer ID": id, "ID постачальника": id, "Категорія Prom ID": WELD, "Виробник": "Test", "Характеристики JSON": "[]", "Назва постачальника UA": "Апарат тестовий", "Назва постачальника RU": "" });
   const offer = (id) => ({ id, vendor: "Test", sku: "", nameUa: "Апарат тестовий", nameRu: "", price: 100, available: true, currency: "UAH" });
@@ -379,7 +380,7 @@ test("N1-1 синхронізація: лише refreshMainRow для когор
 });
 
 test("локально: когорта N0 (MM_N0_COHORT) точно відповідає контракту репозиторію і переліку захищених", { skip: !(process.env.MM_N0_COHORT && process.env.MM_FREEZE_IDS) && "немає MM_N0_COHORT / MM_FREEZE_IDS" }, () => {
-  const c = loadPromCatalog(undefined, { a3PairsFile: "" });
+  const c = loadPromCatalog(undefined, { ownerValuesIndexFile: OWNER_INDEX_A, ownerIndexLegacy: true, a3PairsFile: "" });
   const k = JSON.parse(fs.readFileSync(new URL("../schemas/prom/n0-cohort-contract.json", import.meta.url), "utf8"));
   assert.deepEqual([c.cohortInfo.valid, c.cohortInfo.count, c.cohortInfo.rev], [true, k.count, k.rev], JSON.stringify(c.problems));
 });
