@@ -123,3 +123,28 @@ test("охоронець режиму deferred: лише дописування 
   await assert.rejects(g("deferred").deleteRows(SHEET.queue, [2]), /видалення рядків заборонено/);
   for (const m of ["update", "find-new", "transfer", "qa"]) await assert.rejects(g(m).deleteRows(SHEET.deferred, [2]), /видалення рядків заборонено/, m);
 });
+
+test("прибрати вкладку «Відкладені товари»: deleteSheet лише в режимі drop-deferred і лише для цього аркуша; інші режими й аркуші — BLOCK; відсутність вкладки не ламає читання", async () => {
+  const w = await world();
+  const g = (mode) => guardedSheets(w.raw, { spreadsheetId: TEST_SHEET_ID, policy: MODE_POLICIES[mode], headers: headers(w) });
+  await assert.rejects(g("drop-deferred").deleteSheet(SHEET.main), /видалення аркуша заборонено/);
+  for (const m of ["deferred", "update", "transfer", "find-new"]) await assert.rejects(g(m).deleteSheet(SHEET.deferred), /видалення аркуша заборонено/, m);
+  await g("drop-deferred").deleteSheet(SHEET.deferred);
+  assert.equal(w.raw.book[SHEET.deferred], undefined);
+  // Без вкладки розбір нічого не робить, а пошук новинок / перенесення читають книгу як раніше.
+  assert.equal((await resolve(w, { planOnly: true })).state, "NOTHING");
+  for (const m of Object.keys(MODE_POLICIES)) for (const [title, p] of Object.entries(MODE_POLICIES[m])) assert.equal((p.ops || []).includes("deleteSheet") || p.deleteSheet === true, m === "drop-deferred" && title === SHEET.deferred, `${m}/${title}`);
+});
+
+test("dropDeferredSheet: непорожня вкладка — PRECONDITION_FAILED без видалення; порожня — прибрано й подія в «Журналі»; повтор — NOTHING", async () => {
+  const { dropDeferredSheet } = await import("../src/pipeline/deferred-resolve.mjs");
+  const w = await world();
+  const g = guardedSheets(w.raw, { spreadsheetId: TEST_SHEET_ID, policy: MODE_POLICIES["drop-deferred"], headers: headers(w) });
+  assert.equal((await dropDeferredSheet({ sheets: g, readBook: w.readBook, stamp: STAMP })).state, "PRECONDITION_FAILED");
+  assert.ok(w.raw.book[SHEET.deferred]);
+  w.raw.book[SHEET.deferred] = [w.raw.book[SHEET.deferred][0]];
+  assert.equal((await dropDeferredSheet({ sheets: g, readBook: w.readBook, stamp: STAMP })).state, "SHEET_REMOVED");
+  assert.equal(w.raw.book[SHEET.deferred], undefined);
+  assert.ok(w.raw.book[JOURNAL_SHEET].some((e) => e[3] === "ВКЛАДКУ ПРИБРАНО"));
+  assert.equal((await dropDeferredSheet({ sheets: g, readBook: w.readBook, stamp: STAMP })).state, "NOTHING");
+});

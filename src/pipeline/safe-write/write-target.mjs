@@ -12,7 +12,7 @@ export const TEST_SHEET_ID = "1th8VXOUeN08Lk9QNrjdt4GK3Z0nTnU8Awkb5pLvWOxs";
 export const LIVE_SHEET_ID = "1AhQUz1bUB2LiQX4OKBbvTCSmTMWoKPcdQUtr3-TK2L8";
 export const WRITER_ACCOUNTS = Object.freeze(["mm-sheets-copy@maisternia-prom-infra.iam.gserviceaccount.com"]);
 export const WRITE_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
-const WRITE_OPS = Object.freeze(["updateRanges", "appendRows", "deleteRows", "ensureColumns", "ensureSheet", "setPercentFormat"]);
+const WRITE_OPS = Object.freeze(["updateRanges", "appendRows", "deleteRows", "ensureColumns", "ensureSheet", "setPercentFormat", "deleteSheet"]);
 /** Методи записувача без запису (читання). Будь-який інший метод — BLOCK (заборонено за замовчуванням). */
 const READ_OPS = Object.freeze(["meta", "read"]);
 /** Короткоживучий токен: не довше за типовий строк IAM generateAccessToken (3600 с). */
@@ -65,6 +65,7 @@ export function guardedSheets(sheets, { spreadsheetId, policy, headers = {} }) {
     // ENG-29 (рішення власника 02.11, змінює B6): видалення рядків — лише де політика режиму явно це дозволяє для САМЕ цього аркуша
     // (deleteRows: true; зараз — лише «Перенести затверджені» → «Нові товари», за ключем зі знімком рядка через шлюз W2). Інакше — BLOCK.
     if (op === "deleteRows" && !(policy[title]?.deleteRows === true && (policy[title].ops || []).includes("deleteRows"))) block("видалення рядків заборонено", { title });
+    if (op === "deleteSheet" && !(policy[title]?.deleteSheet === true && (policy[title].ops || []).includes("deleteSheet"))) block("видалення аркуша заборонено", { title });
     const p = policy[title] || policy["*"];
     if (!p) block(`аркуш «${title}» не дозволено цією операцією`, { op });
     if (!(p.ops || []).includes(op)) block(`операція ${op} для «${title}» не дозволена`, { op });
@@ -104,7 +105,7 @@ export function guardedSheets(sheets, { spreadsheetId, policy, headers = {} }) {
       return async (...args) => {
         if (prop === "updateRanges") for (const b of args[0] || []) checkBlock(b);
         else if (prop === "appendRows") { const p = check(prop, String(args[0])); clearOnlyCheck(p, String(args[0]), hdr[String(args[0])], 1, args[1], 0); }
-        else if (prop === "ensureColumns" || prop === "ensureSheet" || prop === "deleteRows" || prop === "setPercentFormat") check(prop, String(args[0]));
+        else if (prop === "ensureColumns" || prop === "ensureSheet" || prop === "deleteRows" || prop === "setPercentFormat" || prop === "deleteSheet") check(prop, String(args[0]));
         return v.apply(target, args);
       };
     },
@@ -149,6 +150,8 @@ export const MODE_POLICIES = Object.freeze({
   // ENG-29 (рішення власника 03.11): розбір «Відкладених товарів» — повернення в «Основний каталог» (лише дописування нових карток),
   // відсутні у фіді — у «Видалені товари» (створення аркуша й дописування), прибирання перенесених із «Відкладених» (за ключем зі знімком;
   // appendRows — лише повернення чужого рядка зі знімка), паспорт, «Журнал».
+  // ENG-29 (рішення власника 03.11): прибрати порожню вкладку «Відкладені товари» — лише видалення саме цього аркуша й «Журнал».
+  "drop-deferred": { "Відкладені товари": { ops: ["deleteSheet"], deleteSheet: true }, "Журнал": { ops: ["appendRows"] } },
   deferred: { "Основний каталог": { ops: ["appendRows"] }, "Видалені товари": { ops: ["ensureSheet", "appendRows"] },
     "Відкладені товари": { ops: ["deleteRows", "appendRows"], deleteRows: true },
     "Паспорт каталогу": { ops: ["ensureSheet", "updateRanges"], columns: "*", header: true }, "Журнал": JOURNAL_KEYED },

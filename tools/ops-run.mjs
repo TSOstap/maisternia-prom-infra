@@ -25,6 +25,7 @@ export const OP_MODES = Object.freeze({
   // ENG-29: розбір «Відкладених товарів» (разова операція власника; не в меню) — спершу план, потім виконання.
   "deferred-plan": { mode: "deferred", cc: true, extra: ["--plan-only"] },
   deferred: { mode: "deferred", cc: true },
+  "drop-deferred": { mode: "drop-deferred", cc: false, extra: ["--maintenance"] },
 });
 const op = arg("op");
 const env = process.env;

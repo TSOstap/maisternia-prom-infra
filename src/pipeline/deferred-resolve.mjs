@@ -35,7 +35,8 @@ export async function resolveDeferred({ readBook, xml, stamp, session = null, co
   catch (e) { return { state: "ABORTED", reason: "фід постачальника не розібрано: " + mtText(e?.message || e).slice(0, 200) + "; нічого не записано" }; }
   if (parsed.count < (config?.supplier?.minimumOffers ?? 0)) return { state: "ABORTED", reason: `у фіді ${parsed.count} товарів — менше мінімуму ${config.supplier.minimumOffers}; повноту не доведено, нічого не записано` };
   const book = await readBook([...DEFERRED_SHEETS]);
-  const sids = (readSheet(book[SHEET.deferred] || [[]], SHEET.deferred).rows || []).map((r) => t(r["ID постачальника"])).filter((x) => parsed.offers.has(x));
+  const dv = book[SHEET.deferred];
+  const sids = (dv?.length > 1 ? readSheet(dv, SHEET.deferred).rows : []).map((r) => t(r["ID постачальника"])).filter((x) => parsed.offers.has(x));
   const plan = planDeferred({ book, parsed, fullById: extractFullOffers(xml, sids), stamp, pricing: config.pricing });
   const brief = { counts: plan.counts, keep: plan.keep, toMain: (plan.moveRows || []).map((r) => t(r["Offer ID"])), toArchive: (plan.archiveRows || []).map((r) => t(r["Offer ID"])) };
   if (plan.state === "PRECONDITION_FAILED") return { state: "PRECONDITION_FAILED", reason: plan.checks.filter((c) => !c.ok).map((c) => c.name).join("; ") };
@@ -82,7 +83,8 @@ async function execute({ cp, ver, store, session, readBook, stamp, resumed }) {
     await progress("ARCHIVE_DONE");
     let removed = [];
     if (cp.remove.length) {
-      const dNow = readSheet((await readBook([SHEET.deferred]))[SHEET.deferred] || [[]], SHEET.deferred).rows;
+      const dv = (await readBook([SHEET.deferred]))[SHEET.deferred];
+      const dNow = dv?.length > 1 ? readSheet(dv, SHEET.deferred).rows : [];
       const byId = new Map(dNow.map((r) => [t(r["Offer ID"]), r]));
       const todo = [];
       for (const x of cp.remove) {
@@ -125,4 +127,17 @@ async function execute({ cp, ver, store, session, readBook, stamp, resumed }) {
   } catch (e) {
     return { state: "INCOMPLETE", error: mtText(e?.message || e).slice(0, 300), done, verify: e?.verify, conflicts, next: "запустіть ту саму операцію ще раз — продовження за планом", ...base };
   }
+}
+
+/** ENG-29 (рішення власника 03.11): прибрати порожню вкладку «Відкладені товари» після розбору. Лише якщо в ній 0 рядків даних; викликається
+ *  під орендою обслуговування W2 (tools/sheet-sync --mode=drop-deferred --maintenance), sheets — записувач з охоронцем політики drop-deferred. */
+export async function dropDeferredSheet({ sheets, readBook, stamp }) {
+  const v = (await readBook([SHEET.deferred]))[SHEET.deferred];
+  if (!v) return { state: "NOTHING", reason: "вкладки «Відкладені товари» вже немає" };
+  const data = v.slice(1).filter((r) => (r || []).some((x) => mtText(x).trim()));
+  if (data.length) return { state: "PRECONDITION_FAILED", reason: `у «Відкладених товарах» ще ${data.length} рядків — спершу розбір (--mode=deferred); нічого не видалено` };
+  await sheets.deleteSheet(SHEET.deferred);
+  if ((await readBook([SHEET.deferred]))[SHEET.deferred]) return { state: "INCOMPLETE", reason: "вкладка лишилась після видалення — перевірте вручну" };
+  await sheets.appendRows(JOURNAL_SHEET, [[stamp, "СИСТЕМА", "", "ВКЛАДКУ ПРИБРАНО", SHEET.deferred, "", "порожня після розбору (рішення власника 03.11)"]]);
+  return { state: "SHEET_REMOVED", removed: SHEET.deferred };
 }

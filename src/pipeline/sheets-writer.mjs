@@ -243,6 +243,16 @@ export class GoogleSheetsWriter {
     return true;
   }
 
+  /** ENG-29: видалити аркуш (лише через охоронця з явною політикою deleteSheet; відсутній — нічого). */
+  async deleteSheet(title) {
+    const s = (await this.meta()).find((x) => x.title === String(title));
+    if (!s) return { outcome: OUTCOME.APPLIED, calls: 0, absent: true };
+    this.metrics.writes++;
+    try { await this.#call("POST", ":batchUpdate", { requests: [{ deleteSheet: { sheetId: s.sheetId } }] }, [], this.policies.write, "deleteSheet"); }
+    finally { this.metaCache = null; }
+    return { outcome: OUTCOME.APPLIED, calls: 1 };
+  }
+
   /** Числовий формат «0%» для колонки (рядки fromRow..toRow, з 1) — як у колонці «Знижка» чинної таблиці. */
   async setPercentFormat(title, col, fromRow, toRow) {
     if (col < 1 || toRow < fromRow) return;
@@ -371,6 +381,12 @@ export class MemorySheets {
     if (this.book[title]) return false;
     this.book[title] = [header.slice()];
     return true;
+  }
+  async deleteSheet(title) {
+    const t = String(title);
+    if (!this.book[t]) return { outcome: OUTCOME.APPLIED, calls: 0, absent: true };
+    await this.#write("deleteSheet", () => { delete this.book[t]; }, { title: t });
+    return { outcome: OUTCOME.APPLIED, calls: 1 };
   }
   async ensureColumns() {}
   async setPercentFormat(title, col, fromRow, toRow) {
