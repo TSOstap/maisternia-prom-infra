@@ -44,10 +44,12 @@ export const CC_KEY_SCOPE = Object.freeze({ [CC_CHECKPOINT_KEY]: "catalog-contro
 const ccScopeOf = (key) => { const id = keyIdentity(key); return CC_KEY_SCOPE[id] ?? (id.startsWith(CC_KEY_PREFIX) ? "catalog-controls" : null); };
 
 export class WriteGateway {
-  constructor({ sheets, read, store, contract = loadOwnership(), now = Date.now, ttlMs, settleMs = SETTLE_MS, owner = "process", resourceFor }) {
+  /** heartbeatMs — ENG-29: подовження оренди, поки процес живий (довгі операції на сервері перевищують ttl оренди 15 хв: читання «Журналу»
+   *  ≈ 50 тис. рядків у межах квоти Google). За замовчуванням — як просить сховище (RemoteStore / Durable Object — 4 хв); локальні — вимкнено. */
+  constructor({ sheets, read, store, contract = loadOwnership(), now = Date.now, ttlMs, settleMs = SETTLE_MS, owner = "process", resourceFor, heartbeatMs = store?.leaseHeartbeatMs ?? null }) {
     if (!sheets || typeof read !== "function" || !store) throw new Error("WriteGateway: потрібні sheets, read, store");
     if (typeof store.putJsonIfVersionFenced !== "function") throw new Error("WriteGateway: сховище без putJsonIfVersionFenced — fencing контрольної точки CC неможливий (Р7)");
-    this.sheets = sheets; this.read = read; this.store = store; this.contract = contract; this.now = now; this.settleMs = settleMs;
+    this.sheets = sheets; this.read = read; this.store = store; this.contract = contract; this.now = now; this.settleMs = settleMs; this.heartbeatMs = heartbeatMs;
     this.committer = createCommitter({ store, now, ttlMs, settleMs, owner, ...(resourceFor ? { resourceFor } : {}) });
     if (!DESKS.has(store)) {
       let rec;
@@ -71,6 +73,7 @@ export class WriteGateway {
       await journal.append(lease, { opId: "", phase: "ACQUIRE", writer, detail: { tookOverCrashed: lease.tookOverCrashed, previous: lease.previous } });
     } catch (e) { await lease.release().catch(() => {}); throw e; }
     const s = new WriteSession(this, lease, journal, String(writer));
+    if (this.heartbeatMs > 0) s.startHeartbeat(this.heartbeatMs);
     await s.refreshState();
     return s;
   }
@@ -125,6 +128,17 @@ class WriteSession {
     this.sheets = this.#fencedRaw();
   }
   assertCurrent() { return this.lease.assertCurrent(); }
+  /** ENG-29: подовження оренди за інтервалом (CAS за token + leaseId — committer.renew). Відмова (перехоплено / сплила / звільнено) —
+   *  серцебиття зупиняється, наступний запис відхиляється як STALE (як без серцебиття). Процес упав — оренда спливає за ttl. */
+  startHeartbeat(ms) {
+    let busy = null, stopped = false;
+    const timer = setInterval(() => {
+      if (stopped || busy) return;
+      busy = this.lease.renew().catch((e) => { stopped = true; clearInterval(timer); this.heartbeatError = String(e?.message || e).slice(0, 200); }).finally(() => { busy = null; });
+    }, ms);
+    timer.unref?.();
+    this.stopHeartbeat = async () => { stopped = true; clearInterval(timer); if (busy) await busy; };
+  }
   async refreshState() {
     this.unresolved = await this.journal.unresolved();
     this.blocking = await this.journal.blocking();
@@ -225,6 +239,7 @@ class WriteSession {
   }
   async close() {
     if (this.state === SESSION.CLOSED) return;
+    await this.stopHeartbeat?.(); // ENG-29: спершу дочекатися подовження в процесі — інакше release отримав би CONFLICT за версією оренди
     try { await this.journal.append(this.lease, { opId: "", phase: "RELEASE", writer: this.writer }); } catch { /* стара оренда: журнал відхиляє — release нижче теж відмовить */ }
     try { await this.lease.release(); } finally { this.state = SESSION.CLOSED; this.restoreFence(); }
   }

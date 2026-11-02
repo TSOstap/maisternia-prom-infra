@@ -312,6 +312,8 @@ export class RemoteStore {
     if (!/^https:\/\//.test(String(url || "")) && !/^http:\/\/(127\.0\.0\.1|localhost)[:/]/.test(String(url || ""))) throw new Error("W2: адреса сховища має бути https://");
     if (!key || String(key).length < 20) throw new Error("W2: немає ключа доступу до сховища");
     this.endpoint = new URL("/w2", url).href; this.key = String(key); this.fetchImpl = fetchImpl; this.retries = retries; this.timeoutMs = timeoutMs; this.sleep = sleep;
+    // Шлюз над цим сховищем подовжує оренду кожні 4 хв (операції на сервері довші за ttl оренди 15 хв) — WriteGateway.heartbeatMs.
+    this.leaseHeartbeatMs = 4 * 60_000;
   }
   async #call(body) {
     const req = JSON.stringify({ ...body, reqId: crypto.randomBytes(16).toString("hex") });
