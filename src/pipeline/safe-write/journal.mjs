@@ -17,6 +17,31 @@ export const opIdOf = (intent) => "op-" + crypto.createHash("sha256").update(JSO
 
 const OPEN = new Set(["INTENT", "UNKNOWN", "PARTIAL"]);
 const BLOCKING = new Set(["NEEDS_DECISION"]);
+/** ENG-29: стиснення наміру ЗАВЕРШЕНОЇ операції. Повні дані наміру потрібні лише для з'ясування (reconcile) операції з невідомим
+ *  результатом (остання фаза INTENT / UNKNOWN / PARTIAL) або рішення людини (NEEDS_DECISION); для завершеної — ні. Без стиснення журнал
+ *  у сховищі W2 ріс на розмір кожного наміру (перший запуск «Оновити товари» на 5 121 рядку — 51 млн символів) і перевищував межі
+ *  Durable Object. Лишаються аркуш, ключова колонка, ключі й кількості; значення, знімки рядків — прибираються (позначка compacted). */
+export const COMPACT_MIN_CHARS = 4096;
+export function compactDetail(d) {
+  if (!d || typeof d !== "object") return d;
+  const keysOf = (list) => (Array.isArray(list) ? list.map((x) => (x && typeof x === "object" ? x.key : x)).filter((k) => k !== undefined) : []);
+  const out = {};
+  for (const k of ["title", "keyColumn", "op", "label", "supersedable"]) if (d[k] !== undefined) out[k] = d[k];
+  if (Array.isArray(d.items)) { out.items = d.items.length; out.keys = keysOf(d.items).slice(0, 6000); }
+  if (Array.isArray(d.targets)) { out.targets = d.targets.length; out.keys = keysOf(d.targets).slice(0, 6000); }
+  if (Array.isArray(d.keys)) out.keys = d.keys.slice(0, 6000);
+  out.compactedChars = JSON.stringify(d).length;
+  return out;
+}
+function compactClosed(entries, lastByOp) {
+  return entries.map((x) => {
+    if (x.phase !== "INTENT" || x.compacted || !x.opId) return x;
+    const last = lastByOp[x.opId];
+    if (!last || OPEN.has(last.phase) || BLOCKING.has(last.phase)) return x;
+    if (JSON.stringify(x.detail ?? null).length < COMPACT_MIN_CHARS) return x;
+    return { ...x, detail: compactDetail(x.detail), compacted: true };
+  });
+}
 
 export class OpJournal {
   constructor({ store, resource, now = Date.now, maxEntries = 5000 }) { this.store = store; this.resource = resource; this.now = now; this.maxEntries = maxEntries; }
@@ -33,6 +58,7 @@ export class OpJournal {
       const e = { seq: (entries.at(-1)?.seq || 0) + 1, token: lease.token, scope: lease.scope, at: new Date(this.now()).toISOString(), ...rec };
       // Обмеження розміру: найстаріші ЗАКРИТІ записи можна стиснути; відкриті й ті, що потребують рішення, — ніколи.
       let next = [...entries, e];
+      next = compactClosed(next, this.#lastByOp(next));
       if (next.length > this.maxEntries) {
         const keep = new Set(Object.entries(this.#lastByOp(next)).filter(([, x]) => OPEN.has(x.phase) || BLOCKING.has(x.phase)).map(([op]) => op));
         next = next.filter((x, i) => i >= next.length - this.maxEntries || keep.has(x.opId));

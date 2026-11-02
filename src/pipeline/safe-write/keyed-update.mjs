@@ -13,6 +13,7 @@
  *  ЧЕСНА МЕЖА (ENG-06): Google Sheets API не має умовного запису (CAS) і ізоляції від правок людей. Перевірка expect перед
  *  записом і перевірка після запису ВИЯВЛЯЮТЬ гонку, але не роблять запис атомарним щодо людини, яка править / сортує таблицю
  *  в мілісекундному вікні між читанням і записом. Виявлене — компенсується за ключем або зупиняє роботу до рішення. */
+import crypto from "node:crypto";
 import { mtText } from "../../core/text.mjs";
 import { OUTCOME, WriteOutcomeError, outcomeOf } from "../write-outcome.mjs";
 import { assertWritable, gatedColumns, consumeColumns } from "./ownership.mjs";
@@ -58,6 +59,14 @@ function indexOf(values, keyCol) {
   }
   return { idx, dup };
 }
+/** ENG-29: у НАМІРІ журналу W2 довгі значення клітинок — відбитком SHA-256 тексту (з'ясування лише порівнює на рівність; повні тексти
+ *  описів / характеристик 5 121 рядка робили один намір десятки МБ — межі Durable Object). Короткі значення — як були. */
+export const DIGEST_MIN_CHARS = 200;
+export const isCellDigest = (v) => Boolean(v && typeof v === "object" && typeof v["#sha256"] === "string");
+export const cellDigest = (v) => { const s = t(v); return s.length < DIGEST_MIN_CHARS ? s : { "#sha256": crypto.createHash("sha256").update(s).digest("hex"), len: s.length }; };
+/** Значення клітинки (текст) = збереженому в намірі (текст або відбиток). */
+export const cellMatches = (text, stored) => (isCellDigest(stored) ? crypto.createHash("sha256").update(t(text)).digest("hex") === stored["#sha256"] : t(text) === t(stored));
+const digestCells = (o) => Object.fromEntries(Object.entries(o || {}).map(([k, v]) => [k, cellDigest(v)]));
 const cellsOf = (row, header, cols) => Object.fromEntries(cols.map((c) => [c, t(row?.[header.indexOf(c)])]));
 const same = (a, b, cols) => cols.every((c) => t(a[c]) === t(b[c]));
 
@@ -142,7 +151,7 @@ export async function keyedUpdate({ sheets, read, contract, writer, title, chang
   if (!todo.length) return { opId, outcome: items.some((x) => [ITEM.CONFLICT, ITEM.IDENTITY_MISMATCH, ITEM.MISSING, ITEM.FIELD_CUSTOM].includes(x.status)) ? OP.NOT_APPLIED : OP.NOTHING, items, misplaced: [] };
 
   // 2. Намір у журнал → перевірка оренди → запис.
-  if (journal) await journal.append(lease, { opId, phase: "INTENT", writer: W, kind: "update", detail: { title: T, keyColumn, items: todo.map(({ key, row, cols, set, expect }) => ({ key, row, cols, set, expect })) } });
+  if (journal) await journal.append(lease, { opId, phase: "INTENT", writer: W, kind: "update", detail: { title: T, keyColumn, items: todo.map(({ key, row, cols, set, expect }) => ({ key, row, cols, set: digestCells(set), expect: digestCells(expect) })) } });
   let dispatch = OUTCOME.APPLIED, dispatchError = null;
   try {
     await assertCurrent();

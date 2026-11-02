@@ -112,6 +112,27 @@ export class OpsCore {
       if (m === "POST" && p === "/admin/w2-seed") { const b = await req.json().catch(() => null); const r = this.tx(() => w2Seed(this.kv, b?.entries)); return json(r, r.error ? 409 : 200); }
       if (m === "GET" && p === "/admin/w2-dump") return json({ entries: this.rows("SELECT k FROM w2 ORDER BY k").map((r) => { const e = this.kv.get(r.k); return { key: r.k, version: e.version, value: e.value }; }) });
       if (m === "GET" && p === "/admin/runs") return json({ runs: this.recentRuns(50) });
+      // Ремонт журналу операцій W2 оператором (ENG-29: стиснення журналу, що перевищив межі): лише ключі state/write-journal/*, лише CAS
+      // за версією і лише коли немає чинної оренди sheets-main (ніхто не пише).
+      if (m === "POST" && p === "/admin/w2-replace-journal") {
+        const b = await req.json().catch(() => null);
+        if (!b || !/^state\/write-journal\/[a-z0-9:_-]+\.json$/.test(String(b.key)) || typeof b.version !== "string") return json({ error: { code: "BAD_REQUEST", message: "потрібні key (state/write-journal/*) і version" } }, 400);
+        const r = this.tx(() => {
+          const lease = this.kv.get("state/write-lease/sheets-main.json")?.value;
+          if (lease && !lease.released && this.now() < Number(lease.expiresAt) + 200_000) return { error: { code: "BUSY", message: "є чинна оренда — ремонт журналу заборонено" } };
+          // Лише версія — без розбору старого значення (саме воно може перевищувати межі пам'яті Worker).
+          const cur = this.rows("SELECT version FROM w2 WHERE k = ?", b.key)[0];
+          if (!cur || cur.version !== b.version) return { error: { code: "CONFLICT", message: `версія ${cur?.version ?? "відсутня"} ≠ ${b.version}` } };
+          const next = String(Number(cur.version) + 1);
+          this.kv.set(b.key, b.value, next);
+          return { result: { version: next } };
+        });
+        return json(r, r.error ? 409 : 200);
+      }
+      // Розміри ключів W2 без розбору значень (діагностика великих значень).
+      if (m === "GET" && p === "/admin/w2-stats") return json({ keys: this.rows("SELECT w2.k AS k, w2.version AS version, length(w2.v) AS v, (SELECT COUNT(*) FROM w2_chunk c WHERE c.k = w2.k) AS parts, (SELECT COALESCE(SUM(length(c.part)), 0) FROM w2_chunk c WHERE c.k = w2.k) AS chunked FROM w2 ORDER BY w2.k") });
+      // Сире значення ключа (текст JSON частинами, без розбору) — для локального аналізу оператором.
+      if (m === "GET" && p === "/admin/w2-raw") return this.rawValue(url.searchParams.get("key") || "");
       return json({ error: { code: "NOT_FOUND", message: "не знайдено" } }, 404);
     } catch (e) {
       return json({ error: { code: "INTERNAL", message: String(e?.message || e).slice(0, 300) } }, 500);
@@ -128,6 +149,25 @@ export class OpsCore {
       return r;
     });
     return json(res, res.error?.code === "BAD_REQUEST" ? 400 : 200);
+  }
+
+  /** Значення ключа потоком: частини читаються по одній (пам'ять — одна частина), без JSON.parse. */
+  rawValue(key) {
+    const r = this.rows("SELECT version, v FROM w2 WHERE k = ?", key)[0];
+    if (!r) return json({ error: { code: "NOT_FOUND", message: "ключа немає" } }, 404);
+    const n = r.v.startsWith("#chunks:") ? Number(r.v.slice(8)) : 0;
+    const sql = this.sql, enc = new TextEncoder();
+    let i = 0;
+    const stream = new ReadableStream({
+      pull(c) {
+        if (!n) { c.enqueue(enc.encode(r.v)); c.close(); return; }
+        if (i >= n) { c.close(); return; }
+        const part = sql.exec("SELECT part FROM w2_chunk WHERE k = ? AND i = ?", key, i).toArray()[0]?.part ?? "";
+        i++;
+        c.enqueue(enc.encode(part));
+      },
+    });
+    return new Response(stream, { headers: { "content-type": "application/json; charset=utf-8", "x-w2-version": r.version, "cache-control": "no-store" } });
   }
 
   // ---------- вхідні файли (погоджені власником, поза репозиторієм) ----------

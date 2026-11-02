@@ -26,7 +26,7 @@ import { keyIdentity, sameKey } from "../../storage/keys.mjs";
 import { OpJournal } from "./journal.mjs";
 import { loadOwnership } from "./ownership.mjs";
 import { withProvisionalQueue } from "./queue-ownership.mjs";
-import { keyedUpdate, appendMissingByKey, compensateMisplaced, deleteByKeys, OP, SETTLE_MS } from "./keyed-update.mjs";
+import { keyedUpdate, appendMissingByKey, compensateMisplaced, deleteByKeys, cellMatches, OP, SETTLE_MS } from "./keyed-update.mjs";
 import { buildProtocolA } from "../cc-serving.mjs";
 
 /** ENG-23 (E3 / E5): стіл квитків сховища W2 — забирає ПЕРШИЙ шлюз над цим сховищем (store.claimDesk видається один раз); назовні
@@ -181,10 +181,11 @@ class WriteSession {
           const i = at.get(it.key);
           if (i === undefined) return "VANISHED";
           const cur = it.cols.map((c) => mtText(v[i][h.indexOf(c)]));
-          return it.cols.every((c, j) => cur[j] === mtText(it.set[c])) ? "APPLIED" : it.cols.every((c, j) => cur[j] === mtText(it.expect[c])) ? "NOT_APPLIED" : "CHANGED";
+          // ENG-29: значення наміру — текст або відбиток SHA-256 (довгі клітинки) — cellMatches.
+          return it.cols.every((c, j) => cellMatches(cur[j], it.set[c])) ? "APPLIED" : it.cols.every((c, j) => cellMatches(cur[j], it.expect[c])) ? "NOT_APPLIED" : "CHANGED";
         });
         // Запис у чужий рядок: на позиції рядка тепер інший ключ і в ньому наші значення.
-        const misplaced = d.items.filter((it) => { const row = v[it.row - 1]; const k = mtText(row?.[kc]); return k && k !== it.key && it.cols.every((c) => mtText(row[h.indexOf(c)]) === mtText(it.set[c])); }).map((it) => ({ row: it.row, intendedKey: it.key, key: mtText(v[it.row - 1][kc]) }));
+        const misplaced = d.items.filter((it) => { const row = v[it.row - 1]; const k = mtText(row?.[kc]); return k && k !== it.key && it.cols.every((c) => cellMatches(row[h.indexOf(c)], it.set[c])); }).map((it) => ({ row: it.row, intendedKey: it.key, key: mtText(v[it.row - 1][kc]) }));
         result = misplaced.length || per.some((p) => p === "CHANGED" || p === "VANISHED") ? OP.NEEDS_DECISION : per.every((p) => p === "APPLIED") ? OP.VERIFIED : per.every((p) => p === "NOT_APPLIED") ? OP.NOT_APPLIED : OP.PARTIAL;
         // PARTIAL після з'ясування — стан відомий (частина застосована, частина ні): повтор наміру безпечний за ключем.
         detail = { per: d.items.map((it, j) => ({ key: it.key, status: per[j] })), misplaced };
