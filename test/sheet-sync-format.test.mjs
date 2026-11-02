@@ -12,7 +12,8 @@ import { SHEET, candidateRow, extractFullOffers, nonProductReason } from "../src
 import { mergeNew92, syncSheet, sheetDiscount } from "../src/pipeline/sheet-sync-run.mjs";
 import { MemorySheets, GoogleSheetsWriter } from "../src/pipeline/sheets-writer.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 import { syncAndIntake } from "./helpers/intake.mjs";
 
 const NOW = Date.parse("2026-10-22T10:00:00Z");

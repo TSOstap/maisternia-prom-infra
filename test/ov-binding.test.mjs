@@ -22,7 +22,8 @@ import { parseSupplierText } from "../src/core/supplier-feed.mjs";
 import { generateSynthetic } from "../src/synth/generator.mjs";
 import { mergeNew92, syncSheet } from "../src/pipeline/sheet-sync-run.mjs";
 import { MemorySheets } from "../src/pipeline/sheets-writer.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 import { STATE_A, OWNER_INDEX_A } from "./helpers/state-a.mjs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -222,7 +223,7 @@ test("OV R1 конвеєр: stale / відсутній обов'язковий �
     const added = w.book[SHEET.journal].slice(before[SHEET.journal].length);
     assert.deepEqual([added.length, added[0][3], added[0][4]], [1, "ОНОВЛЕННЯ ЗАБЛОКОВАНО", OV_BLOCK], what);
     w.calls.length = 0;
-    const ri = await intakeAll(w, w.xml, { stamp: WSTAMP, now: NOW, config, catalog: e.cat });
+    const ri = await intakeAll(w, w.xml, { session: "auto", stamp: WSTAMP, now: NOW, config, catalog: e.cat });
     assert.equal(ri.state, "ABORTED", what + " intake");
     assert.equal(ri.block?.type, OV_BLOCK, what + " intake");
     assert.deepEqual(w.calls, [["appendRows", SHEET.journal]], what + " intake: лише «Журнал»");

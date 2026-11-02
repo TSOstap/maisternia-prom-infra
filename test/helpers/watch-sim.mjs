@@ -12,7 +12,8 @@ import { route } from "../../workers/new-items-watch/src/router.mjs";
 import { WatchCore } from "../../workers/new-items-watch/src/watch-core.mjs";
 import { doContext, doNamespace } from "./do-sqlite.mjs";
 import { EMPTY_CATALOG, intakeAll } from "./intake.mjs";
-import baseConfig from "../../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. legacy-config.mjs.
+import baseConfig from "./legacy-config.mjs";
 
 export const T0 = Date.parse("2026-10-22T10:00:00Z");
 export const MIN = 60_000;
@@ -96,7 +97,7 @@ export class WatchSim {
   /** GitHub intake: список — з Worker (GET /intake), звіт — назад (POST /ack). */
   async github() {
     const list = await (await route(this.req("/intake"), this.env)).json();
-    const r = await intakeAll({ sheets: this.sheets, readBook: this.readBook }, this.xml(), { stamp: this.stamp(), now: this.now, config: this.config, ready: list.ready, catalog: this.catalog });
+    const r = await intakeAll({ sheets: this.sheets, readBook: this.readBook }, this.xml(), { session: "auto", stamp: this.stamp(), now: this.now, config: this.config, ready: list.ready, catalog: this.catalog });
     this.intakes.push(r);
     if (r.ack) await route(this.req("/ack", "POST", r.ack), this.env);
     return r;

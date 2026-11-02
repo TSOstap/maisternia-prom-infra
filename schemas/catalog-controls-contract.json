@@ -1,0 +1,26 @@
+{
+  "_comment": "Контракт активації Catalog Controls R6 (рішення власника 29.10.2026: аркуш «Видалені товари»; видалений товар — без жодного <offer> у новому YML; «Видалити товар» — одна дія; підтвердження Prom не потрібне). activated=true — лише окремим дозволом власника. До активації — лише shadow (без записів). Після активації недійсна / відсутня контрольна точка = BLOCKED (стан невідомий); проблеми окремого товару — ізоляція цього товару. Видалені товари переносить Engineering за moves; CC пише лише «Історію керування», «Стан керування» і контрольну точку.",
+  "v": 3,
+  "module": "catalog-controls",
+  "activated": false,
+  "activatedAt": null,
+  "sheets": {
+    "history": "Історія керування",
+    "state": "Стан керування",
+    "archive": "Видалені товари"
+  },
+  "inputColumns": [
+    "SEO заголовок UA",
+    "SEO заголовок RU",
+    "SEO опис UA",
+    "SEO опис RU",
+    "SEO рішення",
+    "Продаж рішення"
+  ],
+  "limits": {
+    "maxSaleChangesPerRun": 50,
+    "maxPermanentPerRun": 10
+  },
+  "requireTemporaryFirst": false,
+  "deletion": "OMIT_FROM_YML"
+}

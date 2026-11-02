@@ -11,7 +11,8 @@ import { compareEntries, entryKeys, kitDifferences } from "../src/core/dup-check
 import { mergeNew92, syncSheet } from "../src/pipeline/sheet-sync-run.mjs";
 import { MemorySheets } from "../src/pipeline/sheets-writer.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 import { syncAndIntake } from "./helpers/intake.mjs";
 import { loadPromCatalog } from "../src/pipeline/prom-schemas.mjs";
 import { STATE_A } from "./helpers/state-a.mjs";
@@ -131,7 +132,10 @@ test("зміна ID постачальника → дубль із підказ�
   assert.equal(b["Наявність"], "+");
   assert.equal(b["Ціна постачальника"], 1234);
   assert.equal(rowSeal(b), b[SEAL_COLUMN]);
-  assert.ok(!queueRow(w, "2950000007"), "зник із черги");
+  // ENG-27 (Hermes INT N3): рядок черги з командою лишається (B6: видалення заблоковано), рішення власника не стерто.
+  assert.equal(mtText(queueRow(w, "2950000007")["Рішення"]), `ПРИВ'ЯЗАТИ ДО ${c["Offer ID"]}`, "рядок і рішення власника лишились");
+  assert.equal(r.queueRemoval.state, "BLOCKED_B6");
+  assert.ok(r.queueRemoval.keys.includes("2950000007"));
   assert.equal(rows(w.book, SHEET.main).length, 132, "дубль не створено");
   const hist = w.book[BINDINGS_SHEET];
   assert.equal(hist.length, 2);
@@ -140,6 +144,9 @@ test("зміна ID постачальника → дубль із підказ�
   assert.notEqual(readPassport(w.book[SHEET.passport]).contentSha, passportBefore.contentSha, "паспорт оновлено");
   r = await sync(w, xml);
   assert.equal(r.stats.added, 0, "повторний запуск не повертає позицію в чергу");
+  assert.equal(r.stats.bound, 0, "команда в черзі вдруге не виконується (ідемпотентність за «Історією прив'язок»)");
+  assert.equal(w.book[BINDINGS_SHEET].length, 2, "історія без повторного запису");
+  assert.match(queueRow(w, "2950000007")["Перевірка"], /ПРИВ'ЯЗАНО РАНІШЕ/);
 
   // Скасування помилкової прив'язки
   setDecision(w, c["Offer ID"], "СКАСУВАТИ", BINDINGS_SHEET);
@@ -151,6 +158,12 @@ test("зміна ID постачальника → дубль із підказ�
   assert.match(w.book[BINDINGS_SHEET][1][15], /^СКАСОВАНА/);
   assert.ok(queueRow(w, "2950000007"), "позиція знову в черзі для рішення");
   assert.ok(rows(w.book, SHEET.main).every((x) => rowSeal(x) === x[SEAL_COLUMN]));
+  // ENG-27 (N3): команда «ПРИВ'ЯЗАТИ ДО», що лишилась у черзі, скасовану власником прив'язку не відновлює.
+  r = await sync(w, xml);
+  assert.equal(r.stats.bound, 0, "скасовану прив'язку не відновлено");
+  assert.equal(mtText(card(w, 7)["ID постачальника"]), oldSupplier);
+  assert.match(queueRow(w, "2950000007")["Перевірка"], /скасовано власником/);
+  assert.equal(w.book[BINDINGS_SHEET].length, 2);
 });
 
 test("конфлікти прив'язки: стара позиція досі у фіді; ID уже має інший товар; різні фото без «(ПІДТВЕРДЖУЮ)» — не прив'язано, з поясненням", async () => {
@@ -246,4 +259,52 @@ test("конфлікти прив'язки: ID постачальника вже
   assert.equal(r.state, "SKIPPED_CONCURRENT_EDIT");
   assert.deepEqual(w.book, snap);
   assert.ok(b);
+});
+
+test("ENG-27 N3: «ПРИВ'ЯЗАТИ ДО» власник змінив одразу після запису картки — CONFLICT «після запису» (не SYNCED); нове рішення не стерто, рядок черги не видалено", async () => {
+  const w = await world();
+  await sync(w, w.xml);
+  const c = card(w, 7);
+  const oldSupplier = mtText(c["ID постачальника"]);
+  let xml = perturb.drop(w.xml, [oldSupplier]);
+  xml = addOffer(xml, { id: "2950000007", sku: c["Артикул постачальника"], nameUa: c["Назва постачальника UA"], nameRu: c["Назва постачальника RU"], url: "https://market-tools.com.ua/p2950000007-tovar.html", pictures: JSON.parse(c["Фото JSON"]), available: true, price: 1234 });
+  await sync(w, xml);
+  assert.ok(queueRow(w, "2950000007"), "передумова: позиція в черзі");
+  setDecision(w, "2950000007", `ПРИВ'ЯЗАТИ ДО ${c["Offer ID"]}`);
+  const qLen = w.book[SHEET.queue].length;
+  // Власник змінює рішення одразу після запису історії прив'язки (картку вже записано).
+  const raw = w.sheets.appendRows.bind(w.sheets);
+  let injected = 0;
+  w.sheets.appendRows = async (t, rws) => { const res = await raw(t, rws); if (t === BINDINGS_SHEET && !injected) { injected++; setDecision(w, "2950000007", "нотатка власника"); } return res; };
+  const parsed = await parseSupplierText(xml, { maximumChars: 45_000_000, identityFields: true });
+  const r = await syncSheet({ sheets: w.sheets, readBook: w.readBook, parsed, fetchFull: async (ids) => extractFullOffers(xml, ids), stamp: STAMP, config, now: NOW, catalog: loadPromCatalog(undefined, STATE_A) });
+  w.sheets.appendRows = raw;
+  assert.equal(injected, 1);
+  assert.equal(r.state, "CONFLICT_OWNER_EDIT", JSON.stringify(r).slice(0, 400));
+  assert.ok(r.queueConflicts.some((x) => x.key === "2950000007" && /після запису/.test(x.phase)), "про виконану прив'язку за зміненим рішенням — звіт");
+  assert.equal(mtText(queueRow(w, "2950000007")["Рішення"]), "нотатка власника", "нове рішення власника не стерто");
+  assert.equal(w.book[SHEET.queue].length, qLen, "рядок черги не видалено");
+});
+
+test("ENG-27 N3: «ПРИВ'ЯЗАТИ ДО» змінено після перевірки черги, але до запису картки — нічого не записано (SKIPPED_CONCURRENT_EDIT), картку не прив'язано", async () => {
+  const w = await world();
+  await sync(w, w.xml);
+  const c = card(w, 7);
+  const oldSupplier = mtText(c["ID постачальника"]);
+  let xml = perturb.drop(w.xml, [oldSupplier]);
+  xml = addOffer(xml, { id: "2950000007", sku: c["Артикул постачальника"], nameUa: c["Назва постачальника UA"], nameRu: c["Назва постачальника RU"], url: "https://market-tools.com.ua/p2950000007-tovar.html", pictures: JSON.parse(c["Фото JSON"]), available: true, price: 1234 });
+  await sync(w, xml);
+  setDecision(w, "2950000007", `ПРИВ'ЯЗАТИ ДО ${c["Offer ID"]}`);
+  const histBefore = structuredClone(w.book[BINDINGS_SHEET] || null);
+  // Правка власника — під час читання «Основного каталогу» перед записом (після перевірки незмінності черги).
+  let injected = 0;
+  const readBook = async (names) => { if (!injected && Array.isArray(names) && names.length === 1 && names[0] === SHEET.main) { injected++; setDecision(w, "2950000007", "нотатка власника"); } return w.readBook(names); };
+  const parsed = await parseSupplierText(xml, { maximumChars: 45_000_000, identityFields: true });
+  const r = await syncSheet({ sheets: w.sheets, readBook, parsed, fetchFull: async (ids) => extractFullOffers(xml, ids), stamp: STAMP, config, now: NOW, catalog: loadPromCatalog(undefined, STATE_A) });
+  assert.equal(injected, 1);
+  assert.equal(r.state, "SKIPPED_CONCURRENT_EDIT", JSON.stringify(r).slice(0, 400));
+  assert.ok(r.queueConflicts?.some((x) => x.key === "2950000007"));
+  assert.equal(mtText(card(w, 7)["ID постачальника"]), oldSupplier, "картку не прив'язано");
+  assert.deepEqual(w.book[BINDINGS_SHEET] || null, histBefore, "історія без змін");
+  assert.equal(mtText(queueRow(w, "2950000007")["Рішення"]), "нотатка власника");
 });

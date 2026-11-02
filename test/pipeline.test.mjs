@@ -15,7 +15,8 @@ import { verifyYmlStream } from "../src/core/xml-verify.mjs";
 import { YML_HEADERS } from "../src/core/seal.mjs";
 import worker from "../worker/src/index.js";
 import { r2BindingFrom } from "./helpers/r2-fake.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 
 const T0 = Date.parse("2026-10-21T06:00:00.000Z");
 const KEY = "test-access-key-not-secret";
@@ -83,12 +84,18 @@ test("зміна ціни → нова версія; попередня збер
   assert.ok((await bodyText(await get("/feeds/main.xml?key=" + KEY))).toString().includes("782.77"));
 
   await store.delete(m.active.key); // аварія активного об'єкта
+  // Правило 8 (Hermes E7): попередня версія — запасна ЛИШЕ якщо publisher перевірив її на стан CC (previousFallbackSafe).
+  // Старий режим без CC такої перевірки не має → 503, а не неперевірена стара версія.
+  assert.equal(m.previousFallbackSafe, false);
+  assert.equal((await get("/feeds/main.xml?key=" + KEY)).status, 503);
+  await store.putJson(manifestKey("main"), { ...m, previousFallbackSafe: true }); // як після перевірки candidateGuard
   const res = await get("/feeds/main.xml?key=" + KEY);
   assert.equal(res.status, 200);
   assert.equal(res.headers.get("x-feed-version"), "previous");
 
-  await assert.rejects(rollbackFeed(store, "main", { toKey: m.active.key }), /відсутня/);
-  const rolled = await rollbackFeed(store, "main");
+  // Механіка відкату; перевірка стану CC (обов'язкова, правило 8) — тут «порушень немає».
+  await assert.rejects(rollbackFeed(store, "main", { toKey: m.active.key, violations: () => [] }), /відсутня/);
+  const rolled = await rollbackFeed(store, "main", { violations: () => [] });
   assert.equal(rolled.active.key, first.key);
 });
 

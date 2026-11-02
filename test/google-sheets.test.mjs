@@ -13,7 +13,8 @@ import { approvalManifest, GROUP_HEADERS, YML_HEADERS } from "../src/core/seal.m
 import { objectsFromValues } from "../src/core/yml.mjs";
 import { verifyCatalog, pipelineReplay, SHEETS } from "../src/verify/catalog-verify.mjs";
 import { generateSynthetic } from "../src/synth/generator.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 
 const SHEET_ID = "TEST_SPREADSHEET_ID_0123456789abcdef";
 const TOKEN = "ya29.TEST-TOKEN-SHOULD-NEVER-LEAK";

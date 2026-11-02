@@ -10,7 +10,8 @@ import { generateSynthetic } from "../src/synth/generator.mjs";
 import { FileSupplierSource, NdjsonCatalogSource, writeCatalogSnapshot } from "../src/pipeline/sources.mjs";
 import { LocalObjectStore } from "../src/storage/local.mjs";
 import { runUpdate } from "../src/pipeline/update.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 
 const row = (oid, sku, ua, brand = "X") => Object.fromEntries(YML_HEADERS.map((k) => [k, ""]).concat([["Offer ID", oid], ["ID постачальника", oid], ["Артикул постачальника", sku], ["Назва постачальника UA", ua], ["Назва постачальника RU", ua], ["Виробник", brand]]));
 const offer = (id, sku, ua, vendor = "X") => [id, { id, sku, nameUa: ua, nameRu: ua, vendor, url: "" }];

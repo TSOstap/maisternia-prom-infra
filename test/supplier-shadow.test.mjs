@@ -14,7 +14,8 @@ import { writeCatalogSnapshot } from "../src/pipeline/sources.mjs";
 import { approvalManifest, GROUP_HEADERS, YML_HEADERS } from "../src/core/seal.mjs";
 import { objectsFromValues } from "../src/core/yml.mjs";
 import { formatYmlDate } from "../src/core/time.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const H = 3600000;

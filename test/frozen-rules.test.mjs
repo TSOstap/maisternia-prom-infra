@@ -20,7 +20,8 @@ import { parseSupplierText } from "../src/core/supplier-feed.mjs";
 import { generateSynthetic } from "../src/synth/generator.mjs";
 import { mergeNew92, syncSheet } from "../src/pipeline/sheet-sync-run.mjs";
 import { MemorySheets } from "../src/pipeline/sheets-writer.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 import { intakeAll } from "./helpers/intake.mjs";
 
 // Канонічний JSON: ключі об'єктів відсортовано рекурсивно, порядок масивів збережено.
@@ -452,12 +453,12 @@ test("FZ intake (GitHub, лише черга): заблокований ката
   const w = await fzWorld();
   const bad = fzCatalog(w, { root: null });
   const before = structuredClone(w.book);
-  const r = await intakeAll(w, w.xml, { stamp: WSTAMP, now: NOW, config, catalog: bad.cat });
+  const r = await intakeAll(w, w.xml, { session: "auto", stamp: WSTAMP, now: NOW, config, catalog: bad.cat });
   assertFzAborted(w, r, before, "intake за заблокованого каталогу");
   bad.rm();
   const w2 = await fzWorld();
   const ok = fzCatalog(w2);
-  const r2 = await intakeAll(w2, w2.xml, { stamp: WSTAMP, now: NOW, config, catalog: ok.cat });
+  const r2 = await intakeAll(w2, w2.xml, { session: "auto", stamp: WSTAMP, now: NOW, config, catalog: ok.cat });
   assert.notEqual(r2.state, "ABORTED", JSON.stringify(r2).slice(0, 300));
   ok.rm();
 });

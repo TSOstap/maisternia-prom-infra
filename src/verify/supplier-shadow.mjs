@@ -16,6 +16,7 @@ import { parseSupplierText, validateFeed } from "../core/supplier-feed.mjs";
 import { LIVE_COLUMNS, MATCH, matchOffer, planRows, readSheet } from "../core/sync-plan.mjs";
 import { approvalManifest, GROUP_HEADERS } from "../core/seal.mjs";
 import { objectsFromValues } from "../core/yml.mjs";
+import { holdLimit } from "../core/supplier-presence.mjs";
 import { resolveUnknownOffers, cardKeys, brandKey, modelKey } from "../core/identity.mjs";
 import { FileSupplierSource } from "../pipeline/sources.mjs";
 import { LocalObjectStore } from "../storage/local.mjs";
@@ -186,7 +187,7 @@ export async function runScenarios({ book, xml, config, tmpDir, expected }) {
   // Масове зникнення: трохи понад поріг аномалії D1 (max(N, частка каталогу)), але менше 20% фіду —
   // щоб спрацював саме новий захист, а не правило LIVE «різке зменшення кількості».
   const totalRows = mainRows.length + queueRows.length;
-  const limit = Math.max(cfg.policy.anomaly.maxNewlyMissing, Math.ceil(totalRows * cfg.policy.anomaly.maxNewlyMissingRatio));
+  const limit = holdLimit({ maxGoneAbsolute: cfg.policy.anomaly.maxNewlyMissing, maxGoneRatio: cfg.policy.anomaly.maxNewlyMissingRatio }, totalRows); // як у D1 (ENG-28b)
   const massCount = limit + 20;
   if (massCount >= parsed.count * 0.2) throw new Error("Каталог замалий для сценарію масового зникнення");
   if (ok.length < 60 + massCount) throw new Error("Замало зіставлених карток для сценаріїв");

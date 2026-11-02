@@ -10,7 +10,8 @@ import { SHEET, BINDINGS_SHEET, extractFullOffers, readPassport } from "../src/c
 import { mergeNew92, syncSheet } from "../src/pipeline/sheet-sync-run.mjs";
 import { MemorySheets } from "../src/pipeline/sheets-writer.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 import { syncAndIntake } from "./helpers/intake.mjs";
 
 const NOW = Date.parse("2026-10-22T10:00:00Z");
@@ -213,7 +214,7 @@ test("відкат посеред операції: збій під час пр�
   assert.ok(uniqueSupplierIds(w) && sealsOk(w));
 });
 
-test("подвійна прив'язка A→B→C: B повертається у фід (у черзі як нова) — скасування C→B забирає її з черги; ланцюжок історії збережено", async () => {
+test("подвійна прив'язка A→B→C: B повертається у фід — скасування C→B повертає B картці (рядок B у черзі лишається, B6); скасоване не відновлюється; ланцюжок історії збережено", async () => {
   const { w, ctx } = await boundWorld(); // картка: Offer ID = A, ID постачальника B (= NEW_ID)
   const C = "2950000077";
   let xml = addOffer(perturb.drop(ctx.xml, [NEW_ID]), { ...ctx.newOffer, id: C, sku: "NEW-SKU-77", url: `https://market-tools.com.ua/p${C}-tovar.html`, price: 2000 });
@@ -235,10 +236,18 @@ test("подвійна прив'язка A→B→C: B повертається �
   const c = byOffer(w, ctx.offerId);
   assert.equal(mtText(c["ID постачальника"]), NEW_ID);
   assert.equal(c["Ціна постачальника"], 999, "ціна — з актуальної позиції B");
-  assert.ok(!queueRow(w, NEW_ID), "B забрано з черги");
+  // ENG-27 (Hermes INT N3): рядок B у черзі не видаляється (B6) — лише позначка в звіті.
+  assert.equal(r.queueRemoval.state, "BLOCKED_B6");
+  assert.ok(r.queueRemoval.keys.includes(NEW_ID), "B — серед рядків, видалення яких заблоковано");
   assert.ok(queueRow(w, C), "C — знову в черзі");
   assert.ok(w.book[SHEET.journal].some((e) => e[3] === "ПОВЕРНУТО КАРТЦІ"));
   assert.match(hist[1][h.indexOf("Стан")], /^АКТИВНА/, "перша прив'язка A→B лишається активною");
   assert.ok(uniqueSupplierIds(w) && sealsOk(w));
   assert.equal(rows(w.book, SHEET.main).length, 132);
+  // ENG-27 (N3): команди «ПРИВ'ЯЗАТИ ДО», що лишились у черзі, нічого не повторюють і скасоване не відновлюють.
+  r = await sync(w, xml);
+  assert.equal(r.stats.bound, 0);
+  assert.equal(mtText(byOffer(w, ctx.offerId)["ID постачальника"]), NEW_ID, "картка лишилась на B");
+  assert.match(queueRow(w, C)["Перевірка"], /скасовано власником/);
+  assert.equal(w.book[BINDINGS_SHEET].length, hist.length);
 });

@@ -7,8 +7,15 @@
  * Принципи (як у doGet чинного Apps Script):
  *  - без ключа або з хибним — 403 ДО будь-якого звернення до R2;
  *  - Worker нічого не формує й не записує: лише читає manifest.json і віддає вказаний об'єкт потоком;
- *  - якщо активна версія відсутня/не збігається з маніфестом — віддається перевірена попередня;
- *  - якщо немає жодної — 503, ніколи не порожній <offers> і не чужий фід.
+ *  - якщо активна версія відсутня/не збігається з маніфестом — віддається попередня, ЛИШЕ якщо publisher перевірив її на стан Catalog
+ *    Controls (manifest.previousFallbackSafe === true; правило 8 — стара версія не повертає видалений товар);
+ *  - manifest.withdrawn (небезпечну активну версію неможливо виправити) — 503;
+ *  - якщо немає жодної — 503, ніколи не порожній <offers> і не чужий фід;
+ *  - ENG-23 (E10): обслуговуються лише об'єкти під feeds/<фід>/ — службові ключі сховища (state/…, зокрема дзеркало реєстру рішень
+ *    state/cc-registry/head.json) недоступні, навіть якщо маніфест на них вкаже;
+ *  - ENG-27 (Hermes INT N2): віддаються лише байти, чий SHA-256 збігається з відбитком у маніфесті (storedSha256; для identity-записів
+ *    до ENG-27 — sha256 YML), а не з метаданими об'єкта, які задає записувач. Перевірка читає весь об'єкт до відповіді (і для HEAD):
+ *    підмінені байти не віддаються ні частково. Ціна — CPU пропорційний розміру (план Workers Paid, не Free 10 мс).
  *
  * Прив'язки (wrangler): FEEDS_BUCKET (R2), секрет FEED_ACCESS_KEY, змінна FEEDS="main,…".
  */
@@ -35,9 +42,20 @@ async function readManifest(env, feed) {
   try { return JSON.parse(await obj.text()); } catch { return null; }
 }
 
-/** Перевірка відповідності об'єкта запису маніфесту без читання всього тіла (CPU-ліміт Free — 10 мс). */
+/** Перевірка відповідності об'єкта запису маніфесту за розміром і метаданими (попередній фільтр; не доказ цілісності). */
 function matches(obj, entry) {
   return Boolean(obj && entry && obj.size === entry.storedBytes && obj.customMetadata && obj.customMetadata.sha256 === entry.sha256);
+}
+/** ENG-27 (N2): відбиток збережених байтів із маніфесту; gzip-запис без storedSha256 — неперевірний (не віддається). */
+const expectedStoredSha = (entry) => (typeof entry?.storedSha256 === "string" && entry.storedSha256 ? entry.storedSha256 : entry?.encoding !== "gzip" && entry?.sha256 ? entry.sha256 : null);
+const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+/** Байти об'єкта, якщо їхній SHA-256 і розмір збігаються з маніфестом; інакше null. */
+async function verifiedBytes(obj, entry) {
+  const want = expectedStoredSha(entry);
+  if (!want || !obj?.body) return null;
+  const buf = await new Response(obj.body).arrayBuffer();
+  if (buf.byteLength !== entry.storedBytes) return null;
+  return hex(await crypto.subtle.digest("SHA-256", buf)) === want ? buf : null;
 }
 
 export default {
@@ -58,6 +76,7 @@ export default {
 
     const manifest = await readManifest(env, feed);
     if (!manifest || !manifest.active) return plain(503, "Перевірений YML тимчасово недоступний");
+    if (manifest.withdrawn && feedMatch) return plain(503, "Перевірений YML тимчасово недоступний");
 
     if (statusMatch) {
       const a = manifest.active;
@@ -70,11 +89,13 @@ export default {
     }
 
     const wantGzip = Boolean(feedMatch[2]);
-    const candidates = [["active", manifest.active], ["previous", manifest.previous]]
-      .filter(([, e]) => e && (e.encoding === "gzip") === wantGzip);
+    const own = (e) => typeof e?.key === "string" && e.key.startsWith(`feeds/${feed}/`) && !e.key.includes("..");
+    const candidates = [["active", manifest.active], ["previous", manifest.previousFallbackSafe === true ? manifest.previous : null]]
+      .filter(([, e]) => e && own(e) && (e.encoding === "gzip") === wantGzip);
     for (const [version, entry] of candidates) {
-      const obj = request.method === "HEAD" ? await env.FEEDS_BUCKET.head(entry.key) : await env.FEEDS_BUCKET.get(entry.key);
-      if (!matches(obj, entry)) {
+      const obj = await env.FEEDS_BUCKET.get(entry.key); // ENG-27 (N2): і для HEAD — щоб звірити самі байти
+      const bytes = matches(obj, entry) ? await verifiedBytes(obj, entry) : null;
+      if (!bytes) {
         console.warn(JSON.stringify({ feed, version, state: "unavailable" }));
         continue;
       }
@@ -88,7 +109,7 @@ export default {
         "x-feed-generated-at": entry.generatedAt,
       });
       if (version !== "active") console.warn(JSON.stringify({ feed, version, state: "served-previous" }));
-      return new Response(request.method === "HEAD" ? null : obj.body, { status: 200, headers });
+      return new Response(request.method === "HEAD" ? null : bytes, { status: 200, headers });
     }
     return plain(503, "Перевірений YML тимчасово недоступний");
   },

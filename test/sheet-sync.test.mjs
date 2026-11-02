@@ -10,7 +10,9 @@ import { SHEET, QUEUE_HEADERS, DECISION, extractFullOffers, readPassport } from 
 import { mergeNew92, syncSheet, refreshCopyFromLive } from "../src/pipeline/sheet-sync-run.mjs";
 import { MemorySheets, GoogleSheetsWriter, rangeA1 } from "../src/pipeline/sheets-writer.mjs";
 import { perturb } from "../src/verify/supplier-shadow.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+import { holdLimit } from "../src/core/supplier-presence.mjs";
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 import { syncAndIntake } from "./helpers/intake.mjs";
 
 const NOW = Date.parse("2026-10-22T10:00:00Z");
@@ -116,10 +118,13 @@ test("зміна ціни, зміна наявності і зникнення �
   assert.equal(r2.state, "ABORTED");
   assert.match(r2.reason, /збій постачальника/);
   assertOnlyBlockedJournal(snapshot, w.book, "МАСОВЕ ЗНИКНЕННЯ");
-  assert.match(w.book[SHEET.journal].at(-1)[5], /зачеплено 60; поріг 50/);
+  // ENG-28b: поріг — менший із «50» і «⌈2 % каталогу⌉», при досягненні.
+  const lim = holdLimit({ maxGoneAbsolute: config.policy.anomaly.maxNewlyMissing, maxGoneRatio: config.policy.anomaly.maxNewlyMissingRatio }, rows(snapshot, SHEET.main).length);
+  assert.ok(lim < 50, "на малому каталозі діє менший поріг: " + lim);
+  assert.equal(w.book[SHEET.journal].at(-1)[5], `зачеплено 60; поріг ${lim}`);
 });
 
-test("затвердження: без SEO — лишається з поясненням; з SEO — переноситься з тим самим ID і зникає з черги; паспорт оновлено", async () => {
+test("затвердження: без SEO — лишається з поясненням; з SEO — переноситься з тим самим ID; рядок черги з рішенням лишається (B6, ENG-27 N3); повтор ідемпотентний; паспорт оновлено", async () => {
   const w = world();
   await mergeNew92({ sheets: w.sheets, readBook: w.readBook, stamp: STAMP });
   await sync(w);
@@ -145,13 +150,22 @@ test("затвердження: без SEO — лишається з поясн�
   assert.ok(moved, "той самий Offer ID в основному каталозі");
   assert.equal(moved["Статус імпорту"], "ДОЗВОЛЕНО");
   assert.equal(rowSeal(moved), moved[SEAL_COLUMN]);
-  assert.ok(!rows(w.book, SHEET.queue).some((x) => x["Offer ID"] === id), "зник із черги");
+  // ENG-27 (Hermes INT N3): видалення рядків черги заборонене до B6 — рядок лишається з рішенням власника без змін.
+  const stay = rows(w.book, SHEET.queue).filter((x) => x["Offer ID"] === id);
+  assert.equal(stay.length, 1, "рядок черги лишився (B6: видалення заблоковано)");
+  assert.equal(mtText(stay[0]["Рішення"]), DECISION.APPROVE, "рішення власника не стерто");
+  assert.equal(r.queueRemoval.state, "BLOCKED_B6");
+  assert.ok(r.queueRemoval.keys.includes(mtText(id)));
   assert.equal(readPassport(w.book[SHEET.passport]).count, passportBefore.count + 1);
   const r3 = await sync(w);
+  assert.equal(r3.state, "SYNCED", JSON.stringify(r3).slice(0, 400));
   assert.equal(r3.stats.added, 0, "затверджений не повертається в чергу як новий");
+  assert.equal(r3.stats.approved, 0, "повторний запуск не переносить удруге");
+  assert.equal(rows(w.book, SHEET.main).filter((x) => x["Offer ID"] === id).length, 1, "без дубля в основному каталозі");
+  assert.equal(readPassport(w.book[SHEET.passport]).count, passportBefore.count + 1, "паспорт — без повторного приросту");
 });
 
-test("відхилення: позиція зникає з черги, ID додається до «Заморожених», повторно не з'являється", async () => {
+test("відхилення: ID додається до «Заморожених» один раз; рядок черги з рішенням лишається (B6, ENG-27 N3); повторно не з'являється", async () => {
   const w = world();
   await mergeNew92({ sheets: w.sheets, readBook: w.readBook, stamp: STAMP });
   await sync(w);
@@ -162,8 +176,17 @@ test("відхилення: позиція зникає з черги, ID дод
   const r = await sync(w);
   assert.equal(r.stats.rejected, 1);
   assert.ok(w.book[SHEET.frozen].some((x) => x[0] === id));
-  assert.ok(!rows(w.book, SHEET.queue).some((x) => x["Offer ID"] === id));
-  assert.equal((await sync(w)).stats.added, 0);
+  // ENG-27 (Hermes INT N3): рядок не видаляється (B6), рішення власника не стирається.
+  const stay = rows(w.book, SHEET.queue).filter((x) => x["Offer ID"] === id);
+  assert.equal(stay.length, 1, "рядок черги лишився (B6: видалення заблоковано)");
+  assert.equal(mtText(stay[0]["Рішення"]), "відхилено", "рішення власника не змінено");
+  assert.equal(r.queueRemoval.state, "BLOCKED_B6");
+  assert.ok(r.queueRemoval.keys.includes(mtText(id)));
+  const r2 = await sync(w);
+  assert.equal(r2.state, "SYNCED", JSON.stringify(r2).slice(0, 400));
+  assert.equal(r2.stats.added, 0);
+  assert.equal(r2.stats.rejected, 0, "повтор нічого не дописує");
+  assert.equal(w.book[SHEET.frozen].filter((x) => x[0] === id).length, 1, "ID у «Заморожених» — один раз");
 });
 
 test("захисти: зміна SEO поза затвердженням → нічого не записано; редагування черги під час запуску → лише ціни; збій запису → відкат", async () => {

@@ -12,10 +12,13 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildVersion, checkYml, publishVersion, sha256, feedStatus, MAX_PARTS, ASSET_LIMIT } from "../src/publish/cf-assets.mjs";
+import { assertPocIsolated } from "../src/publish/poc-guard.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const POC = path.join(root, "poc", "c3-assets");
 const WORKER_NAME = "mm-feed-poc";
+// ENG-20 (рішення власника 30.10, п. 4): PoC — лише ізольовані тести; заборонено як робочий публікатор / джерело для Prom.
+try { assertPocIsolated({ workerName: WORKER_NAME }); } catch (e) { console.error("ПОМИЛКА: " + e.message); process.exit(2); }
 const WORKER_MAIN = path.join(POC, "src", "worker.js");
 const WRANGLER = path.join(POC, "node_modules", "wrangler", "bin", "wrangler.js");
 const LIMITS = { workersRequestsPerDay: 100_000, stopAtShare: 0.8, actionsMinutesPerMonth: 2000, promRecommendedBytes: 180_000_000 };

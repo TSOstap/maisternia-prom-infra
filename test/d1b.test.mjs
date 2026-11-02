@@ -13,7 +13,8 @@ import { buildYml, memorySink } from "../src/core/yml.mjs";
 import { YML_HEADERS } from "../src/core/seal.mjs";
 import { verifyYmlStream } from "../src/core/xml-verify.mjs";
 import { formatYmlDate } from "../src/core/time.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 
 const T0 = Date.parse("2026-10-21T06:00:00.000Z");
 const H = 3600000;
@@ -33,6 +34,8 @@ async function setup(opts = {}) {
   const config = structuredClone(baseConfig);
   config.supplier.minimumOffers = 10;
   config.policy.anomaly.maxNewlyMissing = 5;
+  // ENG-28b: поріг — менший із «N» і «частка × каталог», при досягненні; частка 1 → діє абсолютний 5 (як задумано в цих тестах).
+  config.policy.anomaly.maxNewlyMissingRatio = 1;
   if (opts.config) opts.config(config);
   const run = (now = T0) => runUpdate({ store, config, catalog: new NdjsonCatalogSource(path.join(dir, "catalog")), supplier: new FileSupplierSource(supplierFile), now: () => now, tmpDir: dir });
   const setXml = (fn) => fsp.writeFile(supplierFile, fn(baseXml));
@@ -177,6 +180,26 @@ test("п.9: зникнення і конфлікти рахуються разо
   const r = await run();
   assert.equal(r.sync.state, "ERROR");
   assert.match(r.sync.error, /нових зникнень 3, нових конфліктів 3; поріг 5/);
+});
+
+test("ENG-28b п.9: межа аномалії при досягненні — 2 + 2 = 4 < 5 публікується; 3 + 2 = 5 = поріг — аномалія (менший із «N» і «частки»)", async () => {
+  const drop = (x, ns) => x.split("\n").filter((l) => !ns.some((n) => l.startsWith(`<offer id="${id(n)}"`))).join("\n");
+  const conflict = (x, ns) => { for (const n of ns) x = edit(x, id(n), setTag("vendorCode", "X" + n)); return x; };
+  const a = await setup();
+  await a.setXml((x) => conflict(drop(x, [0, 1]), [3, 4]));
+  const r4 = await a.run();
+  assert.equal(r4.feeds[0].state, "PUBLISHED", JSON.stringify(r4.sync || r4).slice(0, 300));
+  const b = await setup();
+  await b.setXml((x) => conflict(drop(x, [0, 1, 2]), [3, 4]));
+  const r5 = await b.run();
+  assert.equal(r5.sync.state, "ERROR");
+  assert.match(r5.sync.error, /нових зникнень 3, нових конфліктів 2; поріг 5/);
+  // Робочі значення 50 / 2 %: на каталозі ~130 рядків менший поріг — ⌈2 %⌉ = 3 (до ENG-28b діяв більший — 50).
+  const c = await setup({ config: (cfg) => { cfg.policy.anomaly.maxNewlyMissing = 50; cfg.policy.anomaly.maxNewlyMissingRatio = 0.02; } });
+  await c.setXml((x) => drop(x, [0, 1, 2]));
+  const rc = await c.run();
+  assert.equal(rc.sync.state, "ERROR", "3 зниклих ≥ ⌈2 % каталогу⌉ < 50");
+  assert.ok(Number(/поріг (\d+)/.exec(rc.sync.error)[1]) < 50, rc.sync.error);
 });
 
 test("п.7, 10: нові й сумнівні товари не потрапляють у YML; ID у фіді = лише погоджені Offer ID; «Заморожені ID» не вважаються новими", async () => {

@@ -64,27 +64,29 @@ export function objectsFromValues(values, required) {
 }
 
 /** Перевірки до запису першого байта: свіжість sync, набір ID, печатки, групи. */
-function preflight(rows, groups, meta, manifest, config) {
+/** ownerPriority (фінальні вимоги власника 29.10): набір ID і печатки — аудит, не заборона (лічильник у звіті); групи й свіжість — як раніше. */
+function preflight(rows, groups, meta, manifest, config, { ownerPriority = false } = {}) {
   if (meta.syncState !== "OK") throw new Error("Немає успішного завершеного mtUpdate");
   const success = new Date(meta.lastSuccess).getTime();
   const now = new Date(meta.now).getTime();
   if (!Number.isFinite(success) || !Number.isFinite(now) || now - success > config.maximumSyncAgeHours * 3600000 || success > now + 60000) {
     throw new Error("Оновлення цін застаріле або дата невалідна");
   }
-  if (rows.length !== manifest.count) throw new Error("Потрібні рівно " + manifest.count + " товарів; отримано " + rows.length);
+  if (!ownerPriority && rows.length !== manifest.count) throw new Error("Потрібні рівно " + manifest.count + " товарів; отримано " + rows.length);
   const ids = rows.map((r) => mtText(r["Offer ID"]));
   const seen = new Set();
   for (const id of ids) {
-    if (!/^\d+$/.test(id) || seen.has(id)) throw new Error("Невалідний або повторений Offer ID");
+    if (!/^\d+$/.test(id) || seen.has(id)) throw new Error("Невалідний або повторений Offer ID"); // ключ фіду — глобально
     seen.add(id);
   }
-  if (idsSha(ids) !== manifest.idsSha) throw new Error("Набір дозволених ID змінився: публікацію зупинено");
+  const audit = { sealMismatch: 0, idsChanged: false, contentChanged: false };
+  if (idsSha(ids) !== manifest.idsSha) { if (!ownerPriority) throw new Error("Набір дозволених ID змінився: публікацію зупинено"); audit.idsChanged = true; }
   const sealed = rows.map((r) => {
     const seal = rowSeal(r);
-    if (seal !== mtText(r[SEAL_COLUMN])) throw new Error("Контент/identity змінено після QA; ID " + r["Offer ID"]);
+    if (seal !== mtText(r[SEAL_COLUMN])) { if (!ownerPriority) throw new Error("Контент/identity змінено після QA; ID " + r["Offer ID"]); audit.sealMismatch++; }
     return r["Offer ID"] + "\t" + seal;
   });
-  if (contentSha(sealed) !== manifest.contentSha) throw new Error("Контрольні хеші погодженого контенту не збігаються");
+  if (contentSha(sealed) !== manifest.contentSha) { if (!ownerPriority) throw new Error("Контрольні хеші погодженого контенту не збігаються"); audit.contentChanged = true; }
   const canonical = canonicalGroups(groups);
   if (sha256(JSON.stringify(canonical)) !== manifest.groupsSha) throw new Error("Групи змінилися після QA");
   const groupMap = Object.create(null);
@@ -103,7 +105,7 @@ function preflight(rows, groups, meta, manifest, config) {
       id = groupMap[id][3];
     }
   }
-  return { success, now, groupMap, categories };
+  return { success, now, groupMap, categories, audit };
 }
 
 /** Серіалізація одного товару — порядок і умови тегів як у mtBuildYml_. */
@@ -131,20 +133,25 @@ function statusAllowed(r, missingPolicy, conflictPolicy) {
   return false;
 }
 
-export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missingPolicy = "block", conflictPolicy = "block") {
+/** opts.held (S7): знятий / виключений товар — available="false" незалежно від стану синхронізації, власного залишку й
+ *  значень «Наявність» / «Знижка» / «Ціна кінцева» рядка; потрібна лише перевірена «Ціна постачальника». */
+export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missingPolicy = "block", conflictPolicy = "block", opts = {}) {
   const id = mtText(r["Offer ID"]);
-  if (r["Статус імпорту"] !== "ДОЗВОЛЕНО" || !statusAllowed(r, missingPolicy, conflictPolicy)) throw new Error("Непідтверджений статус; ID " + id);
-  if (new Date(r["Оновлено"]).getTime() !== success) throw new Error("Рядок не належить останньому успішному оновленню; ID " + id);
-  if (r["Валюта"] !== "UAH" || ["+", "-"].indexOf(r["Наявність"]) < 0) throw new Error("Невизначена валюта/наявність; ID " + id);
-  const available = r["Наявність"] === "+";
+  const held = opts.held === true;
+  if (r["Статус імпорту"] !== "ДОЗВОЛЕНО" || (!held && !statusAllowed(r, missingPolicy, conflictPolicy))) throw new Error("Непідтверджений статус; ID " + id);
+  if (!held && new Date(r["Оновлено"]).getTime() !== success) throw new Error("Рядок не належить останньому успішному оновленню; ID " + id);
+  if (r["Валюта"] !== "UAH" || (!held && ["+", "-"].indexOf(r["Наявність"]) < 0)) throw new Error("Невизначена валюта/наявність; ID " + id);
+  const available = held ? false : r["Наявність"] === "+";
   const price = Number(r["Ціна постачальника"]);
+  if (held && !(price > 0)) throw new Error("Знятий товар без перевіреної ціни; ID " + id);
   const expected = mtPrices(price, available, pricing);
   const discountOk = mtText(r["Знижка"]) === expected.discount
     || (expected.discount === pricing.discount + "%" && typeof r["Знижка"] === "number" && Math.abs(r["Знижка"] - pricing.discount / 100) < 1e-9);
-  if (mtText(r["Ціна"]).trim() === "" || mtText(r["Ціна кінцева"]).trim() === "" || Number(r["Ціна"]) !== expected.base
-    || Number(r["Ціна кінцева"]) !== expected.final || !discountOk || expected.base > 9999999999) {
+  if (!held && (mtText(r["Ціна"]).trim() === "" || mtText(r["Ціна кінцева"]).trim() === "" || Number(r["Ціна"]) !== expected.base
+    || Number(r["Ціна кінцева"]) !== expected.final || !discountOk)) {
     throw new Error("Ціни/знижка не відповідають погодженій формулі; ID " + id);
   }
+  if (expected.base > 9999999999) throw new Error("Ціни/знижка не відповідають погодженій формулі; ID " + id);
   for (const k of ["Назва UA", "Назва RU", "Опис UA", "Опис RU"]) if (!mtText(r[k]).trim()) throw new Error("Порожнє " + k + "; ID " + id);
   if (!groupMap[mtText(r["Група ID"])] || !/^\d+$/.test(mtText(r["Категорія Prom ID"]))) throw new Error("Не визначена група/категорія; ID " + id);
   const photos = jsonArray(r["Фото JSON"], "Фото JSON", id);
@@ -170,7 +177,7 @@ export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missin
   if (mtText(r["Запити UA"]).length > 1024 || mtText(r["Запити RU"]).length > 1024) throw new Error("Запити довші за ліміт Prom; ID " + id);
   // type=vendor.model не задається, щоб Prom не склеював іншу назву.
   if (r["Модель"]) body.push(element("model", r["Модель"]));
-  const qty = r["Кількість постачальника"];
+  const qty = held ? "" : r["Кількість постачальника"];
   if (qty !== "") {
     if (!/^\d+(?:\.\d+)?$/.test(mtText(qty)) || !Number.isFinite(Number(qty))) throw new Error("Невалідна кількість; ID " + id);
     body.push(element("quantity_in_stock", qty));
@@ -186,6 +193,65 @@ export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missin
   return body.join("");
 }
 
+// ---------- S6 / S7: стан Catalog Controls у фіді (ENG-10 розд. 1) ----------
+/** Стан CC недостовірний (controlsState.blocked) — нового фіду не формуємо. */
+export class ControlsBlockedError extends Error {
+  constructor(reasons) { super("Стан Catalog Controls недостовірний (blocked): " + (reasons || []).join("; ")); this.name = "ControlsBlockedError"; this.code = "CC_BLOCKED"; }
+}
+/** Нормалізований вхід стану CC: held — зняті з продажу; removed — виключені / видалені (tombstone, архів). */
+export function controlsInput(c) {
+  if (!c) return null;
+  const set = (v) => new Set(v instanceof Map ? v.keys() : [...(v || [])].map(String));
+  return Object.freeze({ held: set(c.held), removed: set(c.removed), blocked: c.blocked === true, fingerprint: String(c.fingerprint || ""), reasons: [...(c.reasons || [])] });
+}
+const OFFER_RE = /<offer id="([^"]+)"[^>]*>[\s\S]*?<\/offer>/g;
+/** Усі offer фіду: id → XML offer. */
+export function offersById(xml) {
+  const m = new Map();
+  for (const x of String(xml).matchAll(OFFER_RE)) if (!m.has(x[1])) m.set(x[1], x[0]);
+  return m;
+}
+/** Примусово «немає в наявності» (S7): available="false", ціна — базова (як у offerXml для недоступного: без oldprice),
+ *  без знижки й quantity_in_stock. Решта offer — без змін. */
+export function forceUnavailable(offer) {
+  let s = String(offer).replace(/(<offer id="[^"]+"[^>]*?)available="(?:true|false)"/, '$1available="false"');
+  const old = /<oldprice>([^<]*)<\/oldprice>/.exec(s);
+  if (old) s = s.replace(/<price>[^<]*<\/price>/, "<price>" + old[1] + "</price>").replace(/<oldprice>[^<]*<\/oldprice>/, "");
+  return s.replace(/<quantity_in_stock>[^<]*<\/quantity_in_stock>/, "");
+}
+/** Патч цілого фіду (захист від старих версій, S7): offer з ids → forceUnavailable. Повертає новий XML і змінені ID. */
+export function patchFeedUnavailable(xml, ids) {
+  const patched = [];
+  const out = String(xml).replace(OFFER_RE, (offer, id) => {
+    if (!ids.has(id)) return offer;
+    const next = forceUnavailable(offer);
+    if (next !== offer) patched.push(id);
+    return next;
+  });
+  return { xml: out, patched };
+}
+/** Патч цілого фіду (рішення власника 29.10: видалений товар — жодного <offer>): offer з ids прибираються повністю. */
+export function patchFeedRemove(xml, ids) {
+  const removed = [];
+  const out = String(xml).replace(new RegExp("\\n?" + OFFER_RE.source, "g"), (offer) => { const id = /<offer id="([^"]+)"/.exec(offer)[1]; if (!ids.has(id)) return offer; removed.push(id); return ""; });
+  return { xml: out, removed };
+}
+/** Чи є у фіді доступний (available="true") offer із заборонених ID — для відкату та перевірки старих версій. */
+export function availableForbidden(xml, ids) {
+  const bad = [];
+  for (const [id, offer] of offersById(xml)) if (ids.has(id) && /available="true"/.test(offer.slice(0, offer.indexOf(">") + 1))) bad.push(id);
+  return bad;
+}
+/** Порушення стану CC у версії фіду: видалений (removed) — будь-який offer; знятий (held) — available="true". */
+export function controlsViolations(xml, { held = new Set(), removed = new Set() } = {}) {
+  const bad = [];
+  for (const [id, offer] of offersById(xml)) {
+    if (removed.has(id)) bad.push({ id, why: "видалений товар у фіді" });
+    else if (held.has(id) && /available="true"/.test(offer.slice(0, offer.indexOf(">") + 1))) bad.push({ id, why: "знятий товар доступний" });
+  }
+  return bad;
+}
+
 function headerXml(dateText, config, categories) {
   return '<?xml version="1.0" encoding="UTF-8"?>\n<yml_catalog date="' + dateText + '"><shop><name>' + config.shopName + "</name><company>" + config.company
     + '</company><currencies><currency id="UAH" rate="1"/></currencies><categories>' + categories.join("") + "</categories><offers>";
@@ -197,10 +263,22 @@ const FOOTER = "</offers></shop></yml_catalog>";
  * rows/groups — об'єкти (див. objectsFromValues). manifest — паспорт погодженого набору.
  * Повертає метадані, сумісні з маніфестом публікатора LIVE (sha256, bytes, sourceDigest, ...).
  */
-export async function buildYml({ rows, groups, meta, manifest, config, pricing = DEFAULT_PRICING, maximumBytes, sink, missingPolicy = "block", conflictPolicy = "block" }) {
+/**
+ * S6 / S7 (ENG-10): controls — стан Catalog Controls { held, removed, blocked, fingerprint, reasons } (controlsInput):
+ *   blocked → ControlsBlockedError до першого байта (нового фіду немає);
+ *   removed (видалений: tombstone CC / архів) → ЖОДНОГО offer (рішення власника 29.10; без підтвердження Prom);
+ *   held (тимчасово знятий) → offer лише available="false" (пріоритет над будь-яким залишком і рядком).
+ * isolateRows: вада одного рядка не зупиняє фід — останній опублікований offer цього товару, ПРИМУСОВО недоступний
+ *   (без продажу за застарілими даними), або пропуск, якщо товар не публікувався; rowIssues у результаті.
+ * ownerPriority: паспорт / печатки — аудит (preflight).
+ */
+export async function buildYml({ rows, groups, meta, manifest, config, pricing = DEFAULT_PRICING, maximumBytes, sink, missingPolicy = "block", conflictPolicy = "block",
+  controls = null, lastGood = null, isolateRows = false, ownerPriority = false }) {
   if (!MISSING_POLICIES.includes(missingPolicy)) throw new Error("Невідома політика відсутніх товарів: " + missingPolicy);
   if (!CONFLICT_POLICIES.includes(conflictPolicy)) throw new Error("Невідома політика конфліктів: " + conflictPolicy);
-  const { success, now, groupMap, categories } = preflight(rows, groups, meta, manifest, config);
+  const cc = controlsInput(controls);
+  if (cc?.blocked) throw new ControlsBlockedError(cc.reasons);
+  const { success, now, groupMap, categories, audit } = preflight(rows, groups, meta, manifest, config, { ownerPriority });
   const full = crypto.createHash("sha256");
   const digest = crypto.createHash("sha256");
   let bytes = 0;
@@ -212,25 +290,43 @@ export async function buildYml({ rows, groups, meta, manifest, config, pricing =
     digest.update(digestText, "utf8");
     await sink.write(text);
   };
-  await emit(headerXml(formatYmlDate(now, config.timeZone), config, categories), headerXml("", config, categories));
+  // Відбиток стану CC — частина відбитка джерела: інший стан керування → нова версія (REUSE лише за того самого відбитка).
+  await emit(headerXml(formatYmlDate(now, config.timeZone), config, categories), headerXml("", config, categories) + (cc ? "<!--cc:" + cc.fingerprint + "-->" : ""));
   const published = [];
   const excluded = [];
+  const rowIssues = [];
   let unavailableMissing = 0;
   let isolatedConflicts = 0;
   let ownStock = 0;
+  let held = 0;
+  const removedOut = [];
+  const forcedIds = cc ? new Set(cc.held) : new Set();
   for (const r of rows) {
     const st = r["Стан синхронізації"];
-    // Ізольована картка без жодної перевіреної ціни ніколи не публікувалась — у Prom її нема чого вимикати.
+    const id = mtText(r["Offer ID"]);
+    if (cc?.removed.has(id)) { removedOut.push(id); continue; } // видалений — жодного offer, навіть останнього опублікованого
+    const forced = forcedIds.has(id);
+    // Ізольована / знята картка без жодної перевіреної ціни ніколи не публікувалась — у Prom її нема чого вимикати.
     const isolatedHere = (st === STATUS_MISSING && missingPolicy === "unavailable") || (CONFLICTS.has(st) && conflictPolicy === "isolate");
-    if (isolatedHere && mtText(r["Ціна постачальника"]).trim() === "") {
-      excluded.push(mtText(r["Offer ID"]));
+    if ((isolatedHere || forced) && mtText(r["Ціна постачальника"]).trim() === "") {
+      excluded.push(id);
       continue;
     }
-    await emit("\n" + offerXml(r, success, groupMap, pricing, missingPolicy, conflictPolicy));
-    published.push(mtText(r["Offer ID"]));
-    if (st === STATUS_MISSING) unavailableMissing++;
-    if (CONFLICTS.has(st)) isolatedConflicts++;
-    if (st === STATUS_OWN_STOCK) ownStock++;
+    let xml;
+    try { xml = offerXml(r, success, groupMap, pricing, missingPolicy, conflictPolicy, { held: forced }); }
+    catch (e) {
+      if (!isolateRows) throw e;
+      const lg = lastGood?.get(id);
+      rowIssues.push({ offerId: id, reason: String(e.message).slice(0, 300), action: lg ? "LAST_GOOD_UNAVAILABLE" : "SKIPPED_NEVER_PUBLISHED" });
+      if (!lg) { excluded.push(id); continue; }
+      xml = forceUnavailable(lg);
+    }
+    await emit("\n" + xml);
+    published.push(id);
+    if (forced) held++;
+    else if (st === STATUS_MISSING) unavailableMissing++;
+    else if (CONFLICTS.has(st)) isolatedConflicts++;
+    else if (st === STATUS_OWN_STOCK) ownStock++;
   }
   await emit("\n" + FOOTER);
   return {
@@ -241,13 +337,18 @@ export async function buildYml({ rows, groups, meta, manifest, config, pricing =
     sourceSuccess: meta.lastSuccess,
     generatedAt: new Date(meta.now).toISOString(),
     // Паспорт перевірено на ВСІХ погоджених рядках; опубліковано — без ніколи не оцінених відсутніх.
-    idsSha: excluded.length ? idsSha(published) : manifest.idsSha,
+    idsSha: excluded.length || removedOut.length || ownerPriority ? idsSha(published) : manifest.idsSha,
     contentSha: manifest.contentSha,
     approvedCount: rows.length,
     excludedNeverPriced: excluded,
     unavailableMissing,
     isolatedConflicts,
     ownStock,
+    held,
+    removedExcluded: removedOut,
+    rowIssues,
+    audit,
+    ccFingerprint: cc ? cc.fingerprint : null,
   };
 }
 

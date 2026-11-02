@@ -16,6 +16,37 @@ import { buildDupIndex, compareEntries, dupNote, findDuplicates, kitDifferences,
 import { INTAKE_RULES, changedParts, rawFromOffer, rawFromQueueRow, sheetFingerprint, verifyReady, watchFingerprint } from "./intake.mjs";
 import { buildCharacteristics, cleanDescription } from "./prom-attributes.mjs";
 import { CATEGORY_CONFIRMED } from "./prom-categories.mjs";
+import { PRESENCE_COLUMNS, holdLimit } from "./supplier-presence.mjs";
+import { enabled as ownerPriorityEnabled, OP_MAIN_COLUMNS, prepareRow, finishRow, stateCell, markCell, approvalState } from "./owner-priority.mjs";
+import { STATE_COLUMN, WARNING_MARK_COLUMN, acceptSupplier, markCustom } from "./field-control.mjs";
+import { WARN_SHEET, pendingActions, CLASSIFY_SHEET, CLASSIFY, pendingClassifications } from "../pipeline/supplier-warnings.mjs";
+import { ARCHIVE_SHEET } from "./archive.mjs";
+/** Рядки архіву «Видалені товари» як об'єкти — лише для «відомих» ID (анти-повторне створення). */
+/** CC R6 (S5, правило 5): стан Catalog Controls для синхронізації й intake — { removed: Set Offer ID (усі видалені, будь-яка стадія),
+ *  gate: { check(offer) }, blocked, reasons }. Приймає вихід адаптера (removed / tombstoned) або null. */
+export function syncControls(c) {
+  if (!c) return null;
+  const ids = (v) => new Set(v instanceof Map ? [...v.keys()].map(String) : [...(v || [])].map(String));
+  return Object.freeze({ removed: new Set([...ids(c.removed), ...ids(c.tombstoned)]), gate: c.gate && typeof c.gate.check === "function" ? c.gate : null, blocked: c.blocked === true, reasons: [...(c.reasons || [])] });
+}
+export const REMOVED_ISOLATION = "ВИДАЛЕНО (рішення Catalog Controls) — синхронізація не оновлює товар до перенесення в «Видалені товари»";
+const gateOffer = (row) => ({ id: mtText(row["ID постачальника"]), sku: row["Артикул постачальника"], nameUa: row["Назва постачальника UA"], nameRu: row["Назва постачальника RU"], url: row["URL постачальника"], vendor: row["Виробник"], model: row["Модель"], gtin: row["GTIN"] });
+/** S5: фільтр повторного створення CC для позиції (offer постачальника або рядок черги). blocked — не додавати / не затверджувати;
+ *  SIMILAR_TO_EXCLUDED — лише позначка (не хибне зіставлення різних моделей), затвердження — як для можливого дубля. */
+export function gateFor(cc, { offer = null, row = null } = {}) {
+  if (!cc) return null;
+  const ids = [mtText(offer?.id), mtText(row?.["ID постачальника"]), mtText(row?.["Offer ID"])].filter(Boolean);
+  const hit = ids.find((id) => cc.removed.has(id));
+  if (hit) return { blocked: true, kind: "EXCLUDED", reason: `товар видалено (Offer ID ${hit}) — повторне додавання заборонене` };
+  if (!cc.gate) return { blocked: true, kind: "NO_GATE", reason: "фільтр новинок Catalog Controls недоступний — нові товари не приймаються" };
+  const g = cc.gate.check(offer || gateOffer(row));
+  if (g?.blocked) return { blocked: true, kind: g.kind, reason: g.reason || g.kind };
+  if (g?.kind === "SIMILAR_TO_EXCLUDED") return { blocked: false, kind: g.kind, reason: g.reason || "схожий на видалений товар" };
+  return null;
+}
+const ccStop = (cc) => `стан Catalog Controls ${cc ? "недостовірний: " + (cc.reasons.join("; ") || "blocked") : "не підключено"} — видалені товари неможливо відрізнити (правила 5 / S5); нічого не записано`;
+
+const archivedRows = (book) => { const v = book[ARCHIVE_SHEET]; if (!v?.length) return []; const h = v[0].map(mtText); return v.slice(1).filter((r) => r.some((x) => mtText(x))).map((r) => Object.fromEntries(h.map((k, i) => [k, r[i] ?? ""]))); };
 
 /** Категорія для вибору схеми характеристик (власник, 25.10.2026): фактична категорія товару в Prom (перевірений експорт;
  *  catalog.promCategories — { date, map: Offer ID → ID категорії }) — джерело істини. Категорія таблиці — лише якщо товару
@@ -29,6 +60,8 @@ export function schemaCategory(row, catalog) {
 
 export const SHEET = Object.freeze({ main: "Основний каталог", queue: "Нові товари", deferred: "Відкладені товари", frozen: "Заморожені ID", groups: "Групи", journal: "Журнал", passport: "Паспорт каталогу" });
 export const QUEUE_EXTRA = Object.freeze(["Рішення", "Перевірка", "Виявлено"]);
+/** ENG-28a: системна позначка в «Перевірці» рядків NEW92 після міграції структури й до перенесення — sync / intake їх не змінюють. */
+export const PENDING_TRANSFER_MARK = "ОЧІКУЄ ПЕРЕНЕСЕННЯ В «ОСНОВНИЙ КАТАЛОГ»";
 /** Стан даних постачальника в черзі (варіант А, погоджено 22.10.2026). До наявної черги додаються автоматично. */
 export const QUEUE_STATE = Object.freeze(["Остання зміна постачальника", "SHA даних постачальника", "Погоджено для SHA", "SHA SEO при додаванні", "Погоджені дані постачальника"]);
 /** Контент постачальника й походження характеристик (погоджено 23.10.2026) — в обох аркушах, після наявних колонок.
@@ -289,14 +322,14 @@ export function describeSupplierChanges(a, b) {
  *    постачальника; інакше власне або «походження невідоме» (команди «SEO ПОСТАЧАЛЬНИКА» / «ПЕРЕВІРЕНО»).
  * offer — операційний розбір; full — повний offer (фото, характеристики, опис) або undefined (тоді вони не змінюються).
  */
-export function refreshQueueRow(row, offer, full, { stamp, catalog = null, cleanDescriptions = false }) {
+export function refreshQueueRow(row, offer, full, { stamp, catalog = null, cleanDescriptions = false, commands = true }) {
   const r = { ...row };
   const entries = [], notes = [];
   const id = mtText(row["Offer ID"]);
   const prevSha = mtText(row["SHA даних постачальника"]);
   const decision = norm(row["Рішення"]);
-  const verifiedCmd = VERIFIED_RE.exec(decision);
-  const supplierCmd = SEO_SUPPLIER_RE.test(decision);
+  const verifiedCmd = commands ? VERIFIED_RE.exec(decision) : null;
+  const supplierCmd = commands && SEO_SUPPLIER_RE.test(decision);
   // 1. Походження SEO
   let initialSeo = mtText(row["SHA SEO при додаванні"]);
   if (!initialSeo) {
@@ -416,7 +449,11 @@ export function refreshQueueRow(row, offer, full, { stamp, catalog = null, clean
  * «Код товару Prom» іде за артикулом лише тоді, коли дорівнював попередньому артикулу й новий не зайнятий іншою карткою.
  * Offer ID і категорія Prom не змінюються. Фото й характеристики — лише з повного перевіреного XML (full).
  */
-export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", catalog = null }) {
+/** ENG-28b (рішення власника 01.11): characteristics — "rebuild" (як раніше: генератор за схемою) або "preserve" (звичайне
+ *  «Оновити товари»: «Характеристики JSON» і походження не перебудовуються, опис не розбирається, збережені FZ не застосовуються;
+ *  сирі дані постачальника, зокрема «Характеристики постачальника JSON», оновлюються й виявляються як зміни — rawParams). */
+export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", catalog = null, ownerPriority = false, characteristics = "rebuild" }) {
+  const preserve = characteristics === "preserve";
   // FZ: каталог заблоковано (кореневий контракт захисту або обов'язковий FZ недійсний) — жодних змін, структурований блокер; для
   // FZ-товару — перевірки frozenCheck до будь-яких змін (зокрема на відсутній offer / full — не тихий успіх).
   const idle = (frozenBlock) => ({ row, entries: [], changed: false, identity: false, photos: false, params: false, frozenBlock });
@@ -442,19 +479,20 @@ export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", c
   const oldSku = mtText(row["Артикул постачальника"]).trim();
   for (const [col, f] of RAW_COLUMNS) set(col, f === "sku" ? mtText(offer.sku).trim() : offer[f] ?? "");
   const newSku = mtText(r["Артикул постачальника"]).trim();
-  if (newSku !== oldSku) {
+  // Пріоритет власника (рішення 29.10): «Код товару Prom» — поле власника (за замовчуванням Offer ID), за артикулом не ходить.
+  if (newSku !== oldSku && !ownerPriority) {
     const code = mtText(row["Код товару Prom"]).trim();
     const owner = newSku ? skuInUse(newSku, id) : "";
     if ((!code || code === oldSku) && newSku && !owner) set("Код товару Prom", newSku);
     else if (owner) entries.push([stamp, SHEET.main, id, "Код товару Prom", code, code, "НЕ ЗМІНЕНО: артикул «" + newSku + "» уже має товар " + owner]);
   }
-  let photos = false, params = false;
+  let photos = false, params = false, rawParams = false;
   if (full) {
     const model = mtText(full.model).trim();
     if (model) set("Модель", model);
     if ((full.pictures || []).length) photos = set("Фото JSON", JSON.stringify(full.pictures.slice(0, 10)));
     const rawJson = JSON.stringify((full.params || []).slice(0, 100));
-    if (rawJson.length <= CELL_LIMIT && (full.params || []).length) { if (firstRaw) quiet(RAW_PARAMS, rawJson); else set(RAW_PARAMS, rawJson); }
+    if (rawJson.length <= CELL_LIMIT && (full.params || []).length) { if (firstRaw) quiet(RAW_PARAMS, rawJson); else rawParams = set(RAW_PARAMS, rawJson); }
     for (const [col, text] of [[RAW_DESC_UA, full.descriptionUa], [RAW_DESC_RU, full.descriptionRu]]) {
       if (mtText(text).trim() && mtText(text).length <= CELL_LIMIT) quiet(col, text); // зміну опису видно з SHA; повний текст у «Журнал» не пишемо
     }
@@ -472,15 +510,22 @@ export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", c
   const ownerOnly = !mtText(r[RAW_PARAMS]).trim() && !descOnly && Boolean(catalog?.ownerValues?.has?.(id) || catalog?.ownerIndex?.has?.(id));
   if (fz) {
     // FZ: лише збережені params / provenance прийнятого знімка; генератор для товару не викликається.
-    if (fzState === "apply") {
+    // ENG-28b: у режимі preserve збережені FZ не застосовуються (етап C) — рядок лишається в стані expected, перевірка нижче.
+    if (fzState === "apply" && !preserve) {
       params = set("Характеристики JSON", fz.saved.paramsJson, `ЗБЕРЕЖЕНІ ХАРАКТЕРИСТИКИ ЗАХИЩЕНОГО ТОВАРУ (FZ rev ${catalog.frozenInfo?.rev ?? ""})`);
       quiet(PARAMS_ORIGIN, fz.saved.provenanceJson);
     }
-  } else if (schema && (mtText(r[RAW_PARAMS]).trim() || descOnly || ownerOnly)) {
+  } else if (!preserve && schema && (mtText(r[RAW_PARAMS]).trim() || descOnly || ownerOnly)) {
     const ch = buildCharacteristics({ schema, categoryId: cat, rawParams: jsonOr(r[RAW_PARAMS], []), descUa: ownerOnly ? "" : r[RAW_DESC_UA], descRu: ownerOnly ? "" : r[RAW_DESC_RU], current: r["Характеристики JSON"], provenance: r[PARAMS_ORIGIN], mapping: catalog?.mappings?.get(cat), units: catalog?.units, names: catalog?.names, mode: "main", brand: r["Виробник"], titles: [r["Назва постачальника UA"], r["Назва постачальника RU"]], kitOwner: catalog?.kitConfirmed?.get(String(r["Offer ID"])) || null, multiOwner: catalog?.multiConfirmed?.get(String(r["Offer ID"])) || null, ownerValues: catalog?.ownerValues?.get(String(r["Offer ID"])) || null, ownerIndex: catalog?.ownerIndex?.get(String(r["Offer ID"])) || null, cardTitles: [r["Назва UA"], r["Назва RU"]], techRules, exactPairs: catalog?.a3PairsFor?.(String(r["Offer ID"])) || [] });
     const prepared = JSON.stringify(ch.params);
-    if (ch.changed && prepared.length <= CELL_LIMIT) params = set("Характеристики JSON", prepared, "ХАРАКТЕРИСТИКИ ЗА СХЕМОЮ PROM (автоматично; ручні значення збережено)");
-    quiet(PARAMS_ORIGIN, JSON.stringify(ch.provenance));
+    const provJson = JSON.stringify(ch.provenance);
+    // Пріоритет власника (рішення 29.10): без зайвих записів — якщо характеристики разом зі своїм походженням (items[i] ↔ params[i])
+    // збігаються як множина пар без урахування порядку, а службова частина походження (крім діагностичних notes) та сама — нічого
+    // не пишемо (ні порядок, ні позначку джерела). Будь-яка змістовна зміна — як і раніше.
+    if (!(ownerPriority && sameCharacteristics(r["Характеристики JSON"], r[PARAMS_ORIGIN], prepared, provJson))) {
+      if (ch.changed && prepared.length <= CELL_LIMIT) params = set("Характеристики JSON", prepared, "ХАРАКТЕРИСТИКИ ЗА СХЕМОЮ PROM (автоматично; ручні значення збережено)");
+      quiet(PARAMS_ORIGIN, provJson);
+    }
   }
   const identity = mtKey(pre.nameUa) !== mtKey(r["Назва постачальника UA"]) || mtKey(pre.nameRu) !== mtKey(r["Назва постачальника RU"]) || pre.sku !== newSku;
   if (touched) {
@@ -490,9 +535,24 @@ export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", c
     const details = describeSupplierChanges(pre, post);
     if (details.length) entries.push([stamp, SHEET.main, id, RECHECK, "", jv(details.join("; ")), "ІНФОРМАЦІЙНО: наше SEO не змінено — перевірте відповідність новим даним постачальника"]);
   }
-  // FZ: підсумковий рядок має точно дорівнювати збереженому стану (печатка охоплює всі незмінні колонки).
-  if (fz && mtText(r[SEAL_COLUMN]) !== fz.saved.seal) return idle({ id, kind: "ПЕЧАТКА", fields: [SEAL_COLUMN], reason: "після оновлення печатка ≠ збереженій — змінено незв'язане поле; потрібна нова ревізія FZ" });
-  return { row: r, entries, changed: touched, identity, photos, params };
+  // FZ: підсумковий рядок має точно дорівнювати стану, який визнає FZ (печатка охоплює всі незмінні колонки): збереженому, а в
+  // режимі preserve без застосування (state "apply") — очікуваному (поточному) стану. Будь-яке інше відхилення — BLOCK, як і раніше.
+  const fzSeal = preserve && fzState === "apply" ? fz.expected.seal : fz?.saved.seal;
+  if (fz && mtText(r[SEAL_COLUMN]) !== fzSeal) return idle({ id, kind: "ПЕЧАТКА", fields: [SEAL_COLUMN], reason: "після оновлення печатка ≠ збереженій — змінено незв'язане поле; потрібна нова ревізія FZ" });
+  return { row: r, entries, changed: touched, identity, photos, params, rawParams, ...(preserve && fzState === "apply" ? { frozenPending: true } : {}) };
+}
+
+/** Характеристики та їхнє походження однакові по суті: та сама множина пар «характеристика + запис походження» (без порядку),
+ *  та сама службова частина походження (v, cat, x); діагностичні notes не враховуються. Помилка розбору → «різні» (захисно). */
+export function sameCharacteristics(curParams, curProv, newParams, newProv) {
+  try {
+    const cp = JSON.parse(mtText(curParams) || "[]"), np = JSON.parse(mtText(newParams) || "[]");
+    const cv = JSON.parse(mtText(curProv) || "null"), nv = JSON.parse(mtText(newProv) || "null");
+    if (!Array.isArray(cp) || !Array.isArray(np)) return false;
+    const pairs = (ps, pv) => ps.map((p, i) => JSON.stringify([p?.name, p?.value, p?.unit ?? "", pv?.items?.[i] ?? null])).sort();
+    const meta = (pv) => JSON.stringify([pv?.v ?? null, pv?.cat ?? null, [...(pv?.x || [])].map(String).sort()]);
+    return JSON.stringify(pairs(cp, cv)) === JSON.stringify(pairs(np, nv)) && meta(cv) === meta(nv);
+  } catch { return false; }
 }
 
 /** Черга з колонками стану й контенту (додаються автоматично в кінець, якщо аркуш створено раніше). */
@@ -503,9 +563,9 @@ function readQueue(values) {
   return { ...readSheet(v, SHEET.queue), migrated };
 }
 /** Основний каталог з колонками контенту (погоджено 23.10.2026; додаються автоматично в кінець аркуша). */
-export function readMain(values) {
+export function readMain(values, { extra = [] } = {}) {
   const header = (values?.[0] || []).map(mtText);
-  const migrated = values?.length ? CONTENT_COLUMNS.filter((k) => !header.includes(k)) : [];
+  const migrated = values?.length ? [...CONTENT_COLUMNS, ...extra].filter((k) => !header.includes(k)) : [];
   const v = migrated.length ? [[...header, ...migrated], ...values.slice(1)] : values;
   return { ...readSheet(v, SHEET.main), migrated };
 }
@@ -578,16 +638,30 @@ function bindingDoubts(cmp) {
 }
 
 /** Перевірка й застосування «ПРИВ'ЯЗАТИ ДО» (лише рішення власника; автоматичних прив'язок немає). */
-function planBindings({ queueRows, mainRows, deferredRows, offers, stamp }) {
+function planBindings({ queueRows, mainRows, deferredRows, offers, stamp, cc = null, historyValues = null }) {
   const mainById = new Map(mainRows.map((r, i) => [mtText(r["Offer ID"]), i]));
+  // ENG-27 (N3): рядок черги з «ПРИВ'ЯЗАТИ ДО» після прив'язки лишається (видалення рядків — B6), а команду sync не стирає. Тож
+  // команда ідемпотентна за «Історією прив'язок»: та сама пара (картка, новий ID постачальника) уже є — повторно не виконується;
+  // скасовану власником прив'язку команда в черзі не відновлює.
+  const hh = (historyValues?.[0] || []).map(mtText), hT = hh.indexOf("Offer ID"), hS = hh.indexOf("Новий ID постачальника"), hState = hh.indexOf("Стан");
+  const past = new Map();
+  if (hT >= 0 && hS >= 0) for (const h of (historyValues || []).slice(1)) { const k = mtText(h?.[hT]) + "\u0000" + mtText(h?.[hS]); if (mtText(h?.[hT])) past.set(k, mtText(h?.[hState])); }
   const wanted = [];
   queueRows.forEach((r, qi) => {
     const m = BIND_RE.exec(norm(r["Рішення"]).replace(/’|ʼ|`/g, "'"));
     if (m) wanted.push({ qi, row: r, target: m[1], confirmed: Boolean(m[2]) });
   });
-  const perTarget = wanted.reduce((a, w) => ((a[w.target] = (a[w.target] || 0) + 1), a), {});
   const done = [], refused = new Map();
-  for (const w of wanted) {
+  // Команди, уже записані в історію, не виконуються й не рахуються як «кілька позицій до одного товару».
+  const fresh = wanted.filter((w) => {
+    const was = past.get(w.target + "\u0000" + mtText(w.row["ID постачальника"]));
+    if (was === undefined) return true;
+    refused.set(w.qi, /^АКТИВНА/.test(was) ? "ПРИВ'ЯЗАНО РАНІШЕ (див. «Історія прив'язок»): повторно не виконується; рядок лишається в черзі до затвердження B6 (видалення рядків)"
+      : "НЕ ПРИВ'ЯЗАНО: цю прив'язку скасовано власником («Історія прив'язок», стан «" + was + "») — команда в черзі її не відновлює");
+    return false;
+  });
+  const perTarget = fresh.reduce((a, w) => ((a[w.target] = (a[w.target] || 0) + 1), a), {});
+  for (const w of fresh) {
     const problems = [];
     const ti = mainById.get(w.target);
     const offerId = mtText(w.row["ID постачальника"]);
@@ -595,6 +669,9 @@ function planBindings({ queueRows, mainRows, deferredRows, offers, stamp }) {
     if (ti === undefined) problems.push(`товару ${w.target} немає в основному каталозі`);
     if (!offer) problems.push("цієї позиції зараз немає у фіді постачальника");
     if (perTarget[w.target] > 1) problems.push(`до товару ${w.target} прив'язують кілька позицій — залиште одну`);
+    if (cc?.removed.has(w.target)) problems.push(`товар ${w.target} видалено (Catalog Controls) — прив'язка заборонена`);
+    const g = cc ? gateFor(cc, { offer, row: w.row }) : null;
+    if (g?.blocked) problems.push("позиція: " + g.reason);
     // Один ID постачальника — лише в однієї активної картки (основний каталог і відкладені, з урахуванням скасувань і прив'язок цього запуску).
     const owner = [...mainRows, ...deferredRows].find((r) => mtText(r["ID постачальника"]) === offerId && mtText(r["Offer ID"]) !== w.target);
     if (owner) problems.push(`ID постачальника вже використовує товар ${mtText(owner["Offer ID"])}`);
@@ -642,7 +719,7 @@ function applyBindings(bind, { mainRows, originals, stamp }) {
  * Картка зберігає Offer ID і SEO; повертаються старі ID постачальника, артикул, «Код товару Prom», назви/URL постачальника.
  * Ціни й наявність НЕ відновлюються з історії — їх перераховує поточний XML за старим ID (немає — «немає в наявності»).
  */
-function planUndos({ historyValues, mainRows, deferredRows, queueRows, offers, stamp }) {
+function planUndos({ historyValues, mainRows, deferredRows, queueRows, offers, stamp, cc = null }) {
   const out = { undone: [], cells: [], changedMain: new Set(), reclaimedQueueIds: new Set() };
   if (!historyValues || historyValues.length < 2) return out;
   const h = historyValues[0].map(mtText);
@@ -664,6 +741,7 @@ function planUndos({ historyValues, mainRows, deferredRows, queueRows, offers, s
     const ti = mainById.get(offerId);
     const problems = [];
     if (ti === undefined) problems.push("товару немає в основному каталозі");
+    else if (cc?.removed.has(offerId)) problems.push("товар видалено (Catalog Controls) — скасування прив'язки не виконується");
     else if (mtText(mainRows[ti]["ID постачальника"]) !== mtText(r[col("Новий ID постачальника")])) problems.push("товар уже прив'язано до іншої позиції — спершу скасуйте новішу прив'язку");
     const owner = [...mainRows, ...deferredRows].find((x) => mtText(x["ID постачальника"]) === oldId && mtText(x["Offer ID"]) !== offerId);
     if (owner) problems.push(`старий ID постачальника тепер використовує товар ${mtText(owner["Offer ID"])}`);
@@ -693,42 +771,85 @@ function planUndos({ historyValues, mainRows, deferredRows, queueRows, offers, s
  *  book — { назва: values2D } (основний, черга, відкладені, заморожені, групи, паспорт, історія прив'язок);
  *  parsed — операційний розбір фіду (Map offers).
  */
-export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fullById = new Map(), catalog = null }) {
+/** ENG-28a: стан для товару, відсутнього у фіді з фільтром охоплення (внутрішній; у таблицю не пишеться). */
+export const OUT_OF_SCOPE = "ПОЗА_ОХОПЛЕННЯМ_ФІДУ";
+/** ENG-28c (рішення власника: три незалежні операції): queueMode "off" — «Оновити товари» не чіпає «Нові товари»: сирі дані черги не
+ *  оновлюються, рішення черги (затвердження / відхилення / прив'язки / скасування) не виконуються (лише кількість у звіті), записів
+ *  «Журналу» про чергу немає. Типово "full" — як раніше (застарілий комбінований --mode=sync і тести). */
+export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fullById = new Map(), catalog = null, controls = null, queueCommands = true, presenceColumns = false, feedScope = "full", queueMode = "full", resumeStateMigration = false }) {
+  const queueOff = queueMode === "off";
   const cleanDescriptions = config.characteristics?.cleanDescriptions === true; // очищення сирої копії опису — окреме погодження
   const out = { abort: null, block: null, warnings: [], stats: {} };
   // Зупинка: зрозуміла причина + тип, кількість зачеплених товарів і поріг (для «Журналу»).
   const stop = (type, reason, affected = "", limit = "") => { out.abort = reason; out.block = { type, reason, affected, limit }; return out; };
   // FZ: кореневий контракт захисту або обов'язковий FZ недійсний — прохід НЕ ВИКОНАНО до будь-яких записів (FZ-HERMES-06).
   if (catalog?.guard?.blocked) return stop(guardType(catalog.guard), `прохід НЕ ВИКОНАНО: ${catalog.guard.reasons.join("; ")}; нічого не записано`);
-  const main = readMain(book[SHEET.main]);
+  // Пріоритет власника (фінальні вимоги 29.10; Hermes CC4-REQ-MANUAL): паспорт / печатка — аудит, правки власника — field-control,
+  // критична проблема одного товару — ізоляція лише його (owner-priority.mjs). Без прапорця — чинна прийнята поведінка.
+  const op = ownerPriorityEnabled(config);
+  // CC R6: у режимі пріоритету власника стан CC обов'язковий; недостовірний / відсутній — нічого не пишемо (fail-closed).
+  const cc = op ? syncControls(controls) : null;
+  if (op && (!cc || cc.blocked)) return stop("CATALOG CONTROLS НЕДОСТОВІРНИЙ", ccStop(cc));
+  // ENG-28: колонки присутності у фіді постачальника — лише коли запуск їх застосовує («Оновити товари»).
+  const main = readMain(book[SHEET.main], op ? { extra: presenceColumns ? [...OP_MAIN_COLUMNS, ...PRESENCE_COLUMNS] : OP_MAIN_COLUMNS } : undefined);
   const queueValues = book[SHEET.queue];
   const queueHeader = (queueValues?.[0] || []).map(mtText);
   if (QUEUE_EXTRA.some((k) => !queueHeader.includes(k))) return stop("ЧЕРГА НЕ ГОТОВА", "аркуш «Нові товари» ще не переведено в режим черги (немає колонок «Рішення/Перевірка/Виявлено») — спершу перенесення NEW92");
   const queue0 = readQueue(queueValues);
   // Варіант А: сирі дані постачальника черги — з поточного XML (SEO не змінюється); далі всі кроки — на оновлених рядках.
-  const refreshed = queue0.rows.map((r) => refreshQueueRow(r, parsed.offers.get(mtText(r["ID постачальника"])), fullById.get(mtText(r["ID постачальника"])), { stamp, catalog, cleanDescriptions }));
+  // ENG-27 (N3): queueCommands:false (sync) — службові команди «ПЕРЕВІРЕНО» / «SEO ПОСТАЧАЛЬНИКА» не виконуються: виконати й спожити
+  // їх атомарно може лише intake (cmd-consume); sync рішень власника не стирає, тож повторне виконання щозапуску затирало б пізніші правки.
+  const refreshed = queueOff ? queue0.rows.map((r) => ({ row: { ...r }, entries: [], notes: [], recheck: [], changed: false, verified: false }))
+    : queue0.rows.map((r) => refreshQueueRow(r, parsed.offers.get(mtText(r["ID постачальника"])), fullById.get(mtText(r["ID постачальника"])), { stamp, catalog, cleanDescriptions, commands: queueCommands }));
   const queue = { ...queue0, rows: refreshed.map((x) => x.row) };
   const deferred = book[SHEET.deferred] ? readSheet(book[SHEET.deferred], SHEET.deferred).rows : [];
   const frozenIds = new Set((book[SHEET.frozen] || []).slice(1).map((r) => mtText(r[0])).filter(Boolean));
 
   // 0. Паспорт: основний каталог не змінювали поза затвердженням/прив'язкою.
   const passport = readPassport(book[SHEET.passport]);
-  if (!passport) return stop("НЕМАЄ ПАСПОРТА", "немає «Паспорта каталогу» — запис заборонено");
-  if (!samePassport(passport, approvalManifest(main.rows, groupsRows))) {
+  if (!op && !passport) return stop("НЕМАЄ ПАСПОРТА", "немає «Паспорта каталогу» — запис заборонено");
+  if (op) out.audit = { passportPresent: Boolean(passport), passportMatches: Boolean(passport) && samePassport(passport, approvalManifest(main.rows, groupsRows)), sealMismatch: main.rows.filter((r) => rowSeal(r) !== mtText(r[SEAL_COLUMN])).length };
+  else if (!samePassport(passport, approvalManifest(main.rows, groupsRows))) {
     const badSeals = main.rows.filter((r) => rowSeal(r) !== mtText(r[SEAL_COLUMN])).length;
     return stop("ЗМІНИ ПОЗА ЗАТВЕРДЖЕННЯМ", `основний каталог не відповідає паспорту (рядків ${main.rows.length}/${passport.count}, змінених печаток ${badSeals}) — зміни поза затвердженням; нічого не записано`, badSeals || Math.abs(main.rows.length - passport.count), 0);
   }
   const ids = main.rows.map((r) => mtText(r["Offer ID"]));
-  out.stats.before = { mainRows: main.rows.length, uniqueIds: new Set(ids).size, queueRows: queue.rows.length, passportCount: passport.count };
+  out.stats.before = { mainRows: main.rows.length, uniqueIds: new Set(ids).size, queueRows: queue.rows.length, passportCount: passport?.count ?? null };
+  // Пріоритет власника: стан полів кожного рядка (міграція / виявлення правок) і ізоляція окремих товарів — до будь-яких змін.
+  const migratingState = op && main.migrated.includes(STATE_COLUMN);
+  // ENG-28d (F-28B-1, Hermes U3): перший прохід обірвано після запису заголовка (колонка стану вже є), до запису стану в рядки, —
+  // рядки без стану продовжують ту саму міграцію (консервативно, hold), а не ізолюються як «додані вручну». Ознака — з контрольного
+  // плану незавершеного запуску (resumeStateMigration), не з даних таблиці.
+  const migrateRow = (r) => migratingState || (op && resumeStateMigration && !mtText(r[STATE_COLUMN]).trim());
+  const opPrep = op ? main.rows.map((r) => prepareRow(r, { at: stamp, migrating: migrateRow(r) })) : null;
+  const isolated = new Map(); // індекс рядка → причина (жодного запису в цей рядок у цьому запуску)
+  opPrep?.forEach((p, i) => { if (p.isolate) isolated.set(i, p.isolate); });
+  // Правило 5 (CC R6): видалений товар (tombstone CC, будь-яка стадія), чий рядок ще в «Основному каталозі», — жодного запису.
+  if (cc) main.rows.forEach((r, i) => { if (cc.removed.has(mtText(r["Offer ID"]))) isolated.set(i, REMOVED_ISOLATION); });
+  // Дії власника з аркуша попереджень: «Прийняти значення постачальника» → поле (або характеристика) знову S. Стан спершу
+  // пишеться окремо (фаза 1 у sheet-sync-run), щоб «ворота стану» пропустили запис значення постачальника (фаза 2).
+  const accepted = [], actionsSkipped = [];
+  if (op) for (const a of [...pendingActions(book[WARN_SHEET]).map((x) => ({ ...x, sheet: WARN_SHEET })), ...pendingClassifications(book[CLASSIFY_SHEET])]) {
+    const i = main.rows.findIndex((r) => mtText(r["Offer ID"]) === a.offerId);
+    if (i < 0 || isolated.has(i) || !opPrep[i]?.state) { actionsSkipped.push({ ...a, reason: i < 0 ? "товару немає в основному каталозі" : "товар ізольовано або без стану" }); continue; }
+    const next = a.decision === CLASSIFY.OURS ? markCustom(opPrep[i].state, a.field, a.param, stamp, "owner-classified") : acceptSupplier(opPrep[i].state, a.field, a.param, stamp);
+    opPrep[i].state = { ...next, sid: opPrep[i].state.sid };
+    accepted.push({ ...a, i, originalState: mtText(main.rows[i][STATE_COLUMN]) });
+  }
+  // Кілька рішень для одного товару — один проміжний стан (кумулятивний, після всіх дій товару).
+  for (const a of accepted) a.intermediateState = stateCell(opPrep[a.i].state, main.rows[a.i]);
 
   // 1. Рішення власника, що змінюють картки: скасування прив'язок, потім нові прив'язки (на копіях рядків).
   const mainRows = main.rows.map((r) => ({ ...r }));
-  const undo = planUndos({ historyValues: book[BINDINGS_SHEET], mainRows, deferredRows: deferred, queueRows: queue.rows, offers: parsed.offers, stamp });
+  // ENG-28c: queueMode "off" — прив'язки / скасування (рішення власника з черги) у «Оновити товари» не виконуються.
+  const undo = queueOff ? { undone: [], cells: [], changedMain: new Set(), reclaimedQueueIds: new Set() }
+    : planUndos({ historyValues: book[BINDINGS_SHEET], mainRows, deferredRows: deferred, queueRows: queue.rows, offers: parsed.offers, stamp, cc });
   const originals = mainRows.map((r) => ({ ...r })); // після скасувань, до прив'язок — «старі» значення для історії
-  const bind = planBindings({ queueRows: queue.rows, mainRows, deferredRows: deferred, offers: parsed.offers, stamp });
-  Object.assign(bind, applyBindings(bind, { mainRows, originals, stamp }));
+  const bind = queueOff ? { done: [], refused: new Map() } : planBindings({ queueRows: queue.rows, mainRows, deferredRows: deferred, offers: parsed.offers, stamp, cc, historyValues: book[BINDINGS_SHEET] });
+  Object.assign(bind, queueOff ? { history: [], changedMain: new Set() } : applyBindings(bind, { mainRows, originals, stamp }));
   // Остаточний запобіжник: жоден ID постачальника не належить двом карткам.
-  const supplierIds = [...mainRows, ...deferred].map((r) => mtText(r["ID постачальника"])).filter(Boolean);
+  // Пріоритет власника: ізольований рядок (ідентичність змінено поза системою) у перевірці не бере участі — він нічого не отримує.
+  const supplierIds = [...mainRows.filter((_, i) => !isolated.has(i)), ...deferred].map((r) => mtText(r["ID постачальника"])).filter(Boolean);
   if (new Set(supplierIds).size !== supplierIds.length) return stop("КОНФЛІКТ ID ПОСТАЧАЛЬНИКА", "після рішень один ID постачальника належав би двом карткам — нічого не записано", supplierIds.length - new Set(supplierIds).size, 0);
 
   // 1б. Основний каталог: зміни постачальника під тим самим ID — автоматично (не для карток, змінених прив'язкою цього запуску).
@@ -736,10 +857,12 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
   for (const r of mainRows) for (const k of ["Артикул постачальника", "Код товару Prom"]) { const v = mtText(r[k]).trim(); if (v && !skuOwners.has(v)) skuOwners.set(v, mtText(r["Offer ID"])); }
   const skuInUse = (sku, self) => { const o = skuOwners.get(sku); return o && o !== self ? o : ""; };
   const mainRaw = { entries: [], changed: new Set(), identity: 0, photos: 0, params: 0, paramsHeld: 0 };
+  // ENG-28b: звичайне оновлення (productionConfig) — характеристики основного каталогу зберігаються (A / B), перебудова — окремий етап C.
+  const charMode = config.characteristics?.main === "preserve" ? "preserve" : "rebuild";
   const refreshAll = (cat) => mainRows.map((r, i) => {
-    if (undo.changedMain.has(i) || bind.changedMain.has(i)) return null;
+    if (undo.changedMain.has(i) || bind.changedMain.has(i) || isolated.has(i)) return null;
     const sid = mtText(r["ID постачальника"]);
-    return refreshMainRow(r, parsed.offers.get(sid), fullById.get(sid), { stamp, skuInUse, catalog: cat });
+    return refreshMainRow(r, parsed.offers.get(sid), fullById.get(sid), { stamp, skuInUse, catalog: cat, ownerPriority: op, characteristics: charMode });
   });
   // FZ preflight — до звичайного оновлення й перерахунку печаток: будь-який блокер обов'язкового FZ-товару зупиняє весь прохід.
   const fzBlocks = [];
@@ -750,15 +873,26 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
     if (undo.changedMain.has(i) || bind.changedMain.has(i)) { fzBlocks.push(`${fid}: змінено прив'язкою або її скасуванням у цьому запуску — потрібна нова ревізія FZ`); continue; }
     const sid = mtText(mainRows[i]["ID постачальника"]);
     const chk = frozenCheck(mainRows[i], parsed.offers.get(sid), fullById.get(sid), catalog.frozenFor(fid), catalog);
-    if (chk.block) fzBlocks.push(fzBlockText(chk.block));
+    if (chk.block) { if (op) isolated.set(i, "FZ: " + fzBlockText(chk.block)); else fzBlocks.push(fzBlockText(chk.block)); }
   }
   if (fzBlocks.length) return stop(FZ_BLOCK, `НЕ ВИКОНАНО — блокери збережених характеристик (${fzBlocks.length}): ${fzBlocks.join(" | ")}; нічого не записано`, fzBlocks.length, 0);
   let refreshedMain = refreshAll(catalog);
+  if (op) refreshedMain = refreshedMain.map((m, i) => { if (m?.frozenBlock) { isolated.set(i, "FZ: " + fzBlockText(m.frozenBlock)); return null; } return m; });
   const lateFz = refreshedMain.filter((m) => m?.frozenBlock).map((m) => fzBlockText(m.frozenBlock));
   if (lateFz.length) return stop(FZ_BLOCK, `НЕ ВИКОНАНО — блокери збережених характеристик (${lateFz.length}): ${lateFz.join(" | ")}; нічого не записано`, lateFz.length, 0);
   // Масова зміна підготовлених характеристик (напр. щойно додано схеми) — не застосовується в цьому запуску;
   // сирі дані, ціни й наявність оновлюються як завжди. Ліміт можна підняти лише окремим погодженим запуском.
   const paramsLim = config.characteristics?.maxChangedRows ?? Math.max(200, Math.ceil(mainRows.length * 0.1));
+  // ENG-28b: preserve — підготовлені характеристики не змінюються; запобіжник рахує зміни СИРИХ <param> постачальника (B): масова
+  // зміна за активного FZ зупиняє весь прохід (як і раніше), без FZ — попередження; зміни лише фіксуються, не застосовуються.
+  const supplierParamRows = refreshedMain.map((m, i) => (m?.rawParams ? i : -1)).filter((i) => i >= 0);
+  out.supplierParamChanges = supplierParamRows.map((i) => ({ offerId: mtText(mainRows[i]["Offer ID"]), supplierId: mtText(mainRows[i]["ID постачальника"]), name: mtText(mainRows[i]["Назва UA"]) }));
+  out.frozenPending = refreshedMain.map((m, i) => (m?.frozenPending ? mtText(mainRows[i]["Offer ID"]) : null)).filter(Boolean);
+  out.characteristicsMode = charMode;
+  if (charMode === "preserve" && supplierParamRows.length > paramsLim) {
+    if (catalog?.frozenInfo?.active) return stop(FZ_BLOCK, `НЕ ВИКОНАНО — МАСОВА ЗМІНА ХАРАКТЕРИСТИК ПОСТАЧАЛЬНИКА за активного FZ: ${supplierParamRows.length} товарів (поріг ${paramsLim}); схоже на помилку у фіді; нічого не записано`, supplierParamRows.length, paramsLim);
+    out.warnings.push(`МАСОВА ЗМІНА ХАРАКТЕРИСТИК ПОСТАЧАЛЬНИКА: ${supplierParamRows.length} товарів (поріг ${paramsLim}) — зафіксовано, характеристики не змінено`);
+  }
   const paramsChanged = refreshedMain.filter((m) => m?.params).length;
   if (paramsChanged > paramsLim) {
     // Активний FZ: обхід refreshAll(null) пройшов би без каталогу й оминув би збережені характеристики — весь прохід НЕ ВИКОНАНО
@@ -768,6 +902,24 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
     out.warnings.push(`МАСОВА ЗМІНА ХАРАКТЕРИСТИК: підготовлені характеристики змінились би в ${paramsChanged} товарах (поріг ${paramsLim}) — у цьому запуску не застосовано; сирі дані, ціни й наявність оновлено`);
     mainRaw.entries.push([stamp, SHEET.main, "", "ХАРАКТЕРИСТИКИ НЕ ЗАСТОСОВАНО", "", paramsChanged, `МАСОВА ЗМІНА ХАРАКТЕРИСТИК (поріг ${paramsLim}) — потрібне окреме погодження`]);
     refreshedMain = refreshAll(null);
+  }
+  // Пріоритет власника: керовані поля S → від постачальника, C → наші; попередження «було → стало»; стан і печатка рядка.
+  const opOut = { warnings: [], rawChanged: 0, productsWithRawChanges: 0, migratedRows: opPrep ? opPrep.filter((p) => p.migrated).length : 0, uncertainty: [], migrationClasses: {}, editsDetected: 0 };
+  if (op) {
+    refreshedMain = refreshedMain.map((m, i) => {
+      if (isolated.has(i) || undo.changedMain.has(i) || bind.changedMain.has(i)) return m;
+      const original = mainRows[i];
+      const f = finishRow({ original, refreshed: m?.changed ? m.row : original, state: opPrep[i].state, ctx: { offerId: mtText(original["Offer ID"]), sku: mtText(original["Артикул постачальника"]), name: mtText(original["Назва UA"]), source: "YML постачальника" }, at: stamp, hold: Boolean(opPrep[i].migrated) });
+      f.row[WARNING_MARK_COLUMN] = markCell(original[WARNING_MARK_COLUMN], f.warnings);
+      f.row[SEAL_COLUMN] = rowSeal(f.row);
+      opOut.warnings.push(...f.warnings); opOut.rawChanged += f.rawChanged.length; if (f.rawChanged.length) opOut.productsWithRawChanges++;
+      opOut.editsDetected += opPrep[i].changes.length;
+      if (opPrep[i].migrated) for (const x of opPrep[i].migrated) { opOut.migrationClasses[x.class] = (opOut.migrationClasses[x.class] || 0) + 1; if (x.class === "НЕВИЗНАЧЕНЕ") opOut.uncertainty.push({ offerId: mtText(original["Offer ID"]), ...x }); }
+      const changed = Object.keys(f.row).some((k) => mtText(f.row[k]) !== mtText(original[k]));
+      return changed ? { ...(m || { entries: [], identity: false, photos: false, params: false }), row: f.row, changed: true } : m;
+    });
+    // Прив'язка / її скасування змінили «ID постачальника» системою — оновити ідентичність у стані рядка.
+    for (const i of [...undo.changedMain, ...bind.changedMain]) if (opPrep[i]?.state) mainRows[i][STATE_COLUMN] = stateCell({ ...opPrep[i].state, sid: mtText(mainRows[i]["ID постачальника"]) }, mainRows[i]);
   }
   refreshedMain.forEach((m, i) => {
     if (!m) return;
@@ -783,7 +935,7 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
     const an0 = config.policy?.anomaly || { maxNewlyMissing: 50, maxNewlyMissingRatio: 0.02 };
     const lim = Math.max(an0.maxNewlyMissing, Math.ceil(mainRows.length * an0.maxNewlyMissingRatio));
     const photoLim = Math.max(200, Math.ceil(mainRows.length * 0.1));
-    out.stats.mainRaw = { changed: mainRaw.changed.size, identity: mainRaw.identity, photos: mainRaw.photos, params: mainRaw.params, paramsHeld: mainRaw.paramsHeld, migratedColumns: main.migrated.length };
+    out.stats.mainRaw = { changed: mainRaw.changed.size, identity: mainRaw.identity, photos: mainRaw.photos, params: mainRaw.params, paramsHeld: mainRaw.paramsHeld, migratedColumns: main.migrated.length, characteristics: charMode, supplierParams: out.supplierParamChanges.length, frozenPending: out.frozenPending.length };
     // Захист від помилкового фіду: масова зміна назв / артикулів або фото — нічого не пишемо.
     if (mainRaw.identity > lim) return stop("МАСОВА ЗМІНА ДАНИХ ПОСТАЧАЛЬНИКА", `назви / артикул змінились у ${mainRaw.identity} товарів основного каталогу (поріг ${lim}) — схоже на помилку у фіді; нічого не записано`, mainRaw.identity, lim);
     if (mainRaw.photos > photoLim) return stop("МАСОВА ЗМІНА ФОТО", `фото змінились у ${mainRaw.photos} товарів основного каталогу (поріг ${photoLim}) — схоже на помилку у фіді; нічого не записано`, mainRaw.photos, photoLim);
@@ -791,10 +943,23 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
 
   // 2. Ціни й наявність (точний порт mtPlan) — на картках уже з урахуванням прив'язок і даних постачальника.
   const mainPlan = planRows(mainRows, parsed.offers, stamp, config.pricing);
+  // Ізольований товар: ціни й наявність не змінюються в цьому запуску (жодного запису в рядок).
+  for (const i of isolated.keys()) mainPlan[i] = { ...mainPlan[i], next: mainPlan[i].before.slice() };
   const queuePlan = planRows(queue.rows, parsed.offers, stamp, config.pricing);
+  // ENG-28a: фід із фільтром охоплення (group_ids тощо) — відсутній у ньому товар може бути поза охопленням: наявність, ціни й стан
+  // синхронізації НЕ змінюються (не D1 «немає в наявності»), у масові зникнення не рахується.
+  if (feedScope !== "full") for (const p of [mainPlan, queuePlan]) p.forEach((x, i) => { if (x.match === MATCH.MISSING) p[i] = { ...x, next: x.before.slice(), match: OUT_OF_SCOPE }; });
+  // ENG-28a: рядки черги, що чекають перенесення NEW92 або вже перенесені (ID в основному каталозі), — без змін цін / наявності.
+  const mainIdSet = new Set(ids);
+  const queueFrozen = (i) => mtText(queue0.rows[i]["Перевірка"]).startsWith(PENDING_TRANSFER_MARK) || mainIdSet.has(mtText(queue0.rows[i]["Offer ID"]));
+  queuePlan.forEach((x, i) => { if (queueOff || queueFrozen(i)) queuePlan[i] = { ...x, next: x.before.slice() }; });
+  out.stats.outOfFeedScope = feedScope !== "full" ? mainPlan.filter((p) => p.match === OUT_OF_SCOPE).length : 0;
   const missing = mainPlan.filter((p) => p.match === MATCH.MISSING).length;
   const an = config.policy?.anomaly || { maxNewlyMissing: 50, maxNewlyMissingRatio: 0.02 };
   const limit = Math.max(an.maxNewlyMissing, Math.ceil(mainRows.length * an.maxNewlyMissingRatio));
+  // ENG-28b (рішення власника 01.11): аномальне ЗНИКНЕННЯ — менший із «50» і «2 %» каталогу, при досягненні; лише товари в доведено
+  // порівнюваному охопленні (фільтрований фід відсутніх не рахує — вони OUT_OF_SCOPE). Пороги масової зміни наявності — як були.
+  const missingLimit = holdLimit({ maxGoneAbsolute: an.maxNewlyMissing, maxGoneRatio: an.maxNewlyMissingRatio }, mainRows.length);
   const diff = (k) => mainPlan.filter((p) => mtText(p.before[LIVE_COLUMNS.indexOf(k)]) !== mtText(p.next[LIVE_COLUMNS.indexOf(k)])).length;
   const becameAvailable = mainPlan.filter((p) => p.before[4] !== "+" && p.next[4] === "+").length;
   const becameUnavailable = mainPlan.filter((p) => p.before[4] === "+" && p.next[4] !== "+").length;
@@ -804,14 +969,16 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
     becameAvailable, becameUnavailable, quantityChanged: diff("Кількість постачальника"), missingInFeed: missing,
   };
   // Захист від пошкодженого/помилкового фіду: масове зникнення або масова зміна наявності — нічого не пишемо.
-  if (missing > limit) return stop("МАСОВЕ ЗНИКНЕННЯ", `зникло ${missing} товарів основного каталогу (поріг ${limit}) — схоже на збій постачальника; нічого не записано`, missing, limit);
+  if (missing > 0 && missing >= missingLimit) return stop("МАСОВЕ ЗНИКНЕННЯ", `зникло ${missing} товарів основного каталогу (поріг ${missingLimit}) — схоже на збій постачальника; нічого не записано`, missing, missingLimit);
   if (becameUnavailable > limit) return stop("МАСОВА ЗМІНА НАЯВНОСТІ", `«немає в наявності» стало ${becameUnavailable} товарів (поріг ${limit}) — схоже на помилку у фіді постачальника; нічого не записано`, becameUnavailable, limit);
   if (becameAvailable > limit) return stop("МАСОВА ЗМІНА НАЯВНОСТІ", `«в наявності» стало ${becameAvailable} товарів (поріг ${limit}) — схоже на помилку у фіді постачальника; нічого не записано`, becameAvailable, limit);
 
   // 3. Нові позиції: ID постачальника, якого немає в жодній картці/черзі/відкладених і не заморожений.
-  const knownSupplierIds = new Set([...mainRows, ...queue.rows, ...deferred].map((r) => mtText(r["ID постачальника"])));
+  const archived = archivedRows(book); // видалені товари — відомі: постачальник не поверне їх у «Нові товари»
+  const knownSupplierIds = new Set([...mainRows, ...queue.rows, ...deferred, ...archived].map((r) => mtText(r["ID постачальника"])));
   // Також за Offer ID: позиція, чий ID уже є як Offer ID у будь-якому аркуші (напр. після ручної правки «ID постачальника»), не дублюється.
-  const knownOfferIds = new Set([...mainRows, ...queue.rows, ...deferred].map((r) => mtText(r["Offer ID"])));
+  const knownOfferIds = new Set([...mainRows, ...queue.rows, ...deferred, ...archived].map((r) => mtText(r["Offer ID"])));
+  for (const id of cc?.removed || []) { knownSupplierIds.add(id); knownOfferIds.add(id); } // видалені (CC) — не кандидати
   const unknown = [...parsed.offers.values()].filter((o) => !knownSupplierIds.has(o.id) && !knownOfferIds.has(o.id) && !frozenIds.has(o.id));
   const frozenFlag = frozenFlags({ mainRows, parsed, frozenIds, knownSupplierIds });
   // Погоджено 22.10.2026: синхронізація НЕ додає новинок — лише GitHub intake для ID, стабільність яких підтвердив «Сторож новинок».
@@ -829,22 +996,68 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
   const auditTypes = auditMarks(book[AUDIT_SHEET]);
   out.auditTypes = auditTypes;
   const approve = [], reject = [], keep = [], bound = [], reclaimed = [];
-  queue.rows.forEach((r, i) => {
+  const mainIdsBefore = new Set(ids), decisionRefused = []; // ENG-28 (N4)
+  // ENG-28c: queueMode "off" — черга лишається як є; рішення власника, які виконала б стара синхронізація, лише рахуються у звіті.
+  const pendingDecisions = queueOff ? queue0.rows.filter((r) => { const d = norm(r["Рішення"]); return d && !mainIdsBefore.has(mtText(r["Offer ID"])) && !mtText(r["Перевірка"]).startsWith(PENDING_TRANSFER_MARK) && (d === DECISION.APPROVE || d === DECISION.APPROVE_NOT_DUP || d === DECISION.REJECT || BIND_RE.test(d.replace(/’|ʼ|`/g, "'"))); }).length : 0;
+  if (queueOff) {
+    keep.push(...queue0.rows.map((r) => ({ ...r })));
+    // ENG-28 (N4) у «Оновити товари»: «ВІДХИЛЕНО» вже перенесеного товару не виконується (тут не виконується жодне рішення) —
+    // відмова з поясненням лише у звіті запуску (черга не змінюється).
+    for (const r of queue0.rows) {
+      const qid = mtText(r["Offer ID"]);
+      if (mtText(r["Перевірка"]).startsWith(PENDING_TRANSFER_MARK) || !mainIdsBefore.has(qid) || norm(r["Рішення"]) !== DECISION.REJECT) continue;
+      decisionRefused.push({ offerId: qid, decision: mtText(r["Рішення"]), reason: "НЕ ВІДХИЛЕНО: товар уже в «Основному каталозі» (рішення виконано раніше) — зняти з продажу або видалити лише через Catalog Controls; у «Заморожені ID» не додано" });
+    }
+  } else queue.rows.forEach((r, i) => {
     const updated = { ...r };
     const rq = refreshed[i];
     LIVE_COLUMNS.forEach((k, j) => { updated[k] = queuePlan[i].next[j]; });
     const decision = norm(r["Рішення"]);
     const cands = findDuplicates(index, queueEntry(r));
-    const dup = dupNote(cands, { frozen: frozenIds.has(mtText(r["ID постачальника"])) });
+    const g = cc ? gateFor(cc, { offer: parsed.offers.get(mtText(r["ID постачальника"])), row: r }) : null;
+    const dup = [dupNote(cands, { frozen: frozenIds.has(mtText(r["ID постачальника"])) }), g ? (g.blocked ? "ВИДАЛЕНИЙ ТОВАР: " : "СХОЖИЙ НА ВИДАЛЕНИЙ: ") + g.reason : ""].filter(Boolean).join(" ");
     if (bind.done.some((b) => b.qi === i)) { bound.push(updated); return; }
     if (undo.reclaimedQueueIds.has(mtText(r["Offer ID"]))) { reclaimed.push(updated); return; } // картка повернула собі цей ID постачальника
+    // ENG-28 (Hermes ENG-27 N4): рішення вже виконано (рядок лишається в черзі — B6), власник змінив його пізніше.
+    //  - товар уже в «Основному каталозі» (затверджено / перенесено раніше): «ВІДХИЛЕНО» не виконується (у «Заморожені» не додається,
+    //    картка лишається) — зняти / видалити лише через Catalog Controls; без рішення — рядок «ПЕРЕНЕСЕНО», дані черги не оновлюються;
+    //  - ID у «Заморожених ID» (відхилено раніше), а тепер «ЗАТВЕРДЖЕНО» — не переноситься (крім позначених схожими на зниклу картку).
+    const qid = mtText(r["Offer ID"]);
+    // ENG-28a: рядок NEW92 чекає перенесення (міграція структури) — без змін (рядок і печатка — як у NEW92).
+    if (mtText(queue0.rows[i]["Перевірка"]).startsWith(PENDING_TRANSFER_MARK)) { keep.push({ ...queue0.rows[i] }); return; }
+    if (mainIdsBefore.has(qid)) {
+      const kept = { ...queue0.rows[i] };
+      if (decision === DECISION.REJECT) {
+        const why = "НЕ ВІДХИЛЕНО: товар уже в «Основному каталозі» (рішення виконано раніше) — зняти з продажу або видалити лише через Catalog Controls; у «Заморожені ID» не додано";
+        decisionRefused.push({ offerId: qid, decision: mtText(r["Рішення"]), reason: why });
+        kept["Перевірка"] = why;
+      } else kept["Перевірка"] = "ПЕРЕНЕСЕНО: товар уже в «Основному каталозі»; рядок черги чекає рішення B6 (видалення рядків)" + (decision && decision !== DECISION.APPROVE && decision !== DECISION.APPROVE_NOT_DUP ? `; «Рішення» «${mtText(r["Рішення"])}» не виконується` : "");
+      keep.push(kept); return;
+    }
+    if ((decision === DECISION.APPROVE || decision === DECISION.APPROVE_NOT_DUP) && frozenIds.has(qid) && !frozenFlag.has(qid)) {
+      const why = "НЕ ПЕРЕНЕСЕНО: ID у «Заморожених ID» (відхилено раніше) — рішення змінено після виконання; потрібне окреме рішення власника";
+      decisionRefused.push({ offerId: qid, decision: mtText(r["Рішення"]), reason: why });
+      updated["Перевірка"] = withNonProduct(queueEntryNote(rq, [[dup, why].filter(Boolean).join(" ")]), nonProductReason(updated, auditTypes));
+      keep.push(updated); return;
+    }
     if (decision === DECISION.REJECT) { reject.push(updated); return; }
     if (bind.refused.has(i)) updated["Перевірка"] = [dup, bind.refused.get(i)].filter(Boolean).join(" ");
     else if (decision === DECISION.APPROVE || decision === DECISION.APPROVE_NOT_DUP) {
       // «(НЕ ДУБЛЬ)» обов'язкове лише при схожості з товаром основного каталогу або оцінці «ймовірно той самий».
-      const blocking = cands.some((c) => c.sheet === SHEET.main || c.level === "ЙМОВІРНО ТОЙ САМИЙ");
+      const blocking = cands.some((c) => c.sheet === SHEET.main || c.level === "ЙМОВІРНО ТОЙ САМИЙ") || Boolean(g && !g.blocked);
       const problems = approvalProblems(updated, { groupIds, mainIds, dupFlag: blocking });
-      if (!problems.length) { approve.push(toMainRow(updated, groupsById)); mainIds.add(mtText(r["Offer ID"])); return; }
+      if (g?.blocked) problems.unshift(g.reason); // S5: видалений товар (той самий ID, новий ID, конфлікт ID) — не затверджується
+      if (!problems.length) {
+        const mr = toMainRow(updated, groupsById);
+        if (op) {
+          // «Код товару Prom» нового товару: за замовчуванням Offer ID (порожній або системне значення = артикул постачальника);
+          // код, введений власником у черзі, зберігається.
+          const code = mtText(mr["Код товару Prom"]).trim();
+          if (!code || code === mtText(mr["Артикул постачальника"]).trim()) { mr["Код товару Prom"] = mtText(mr["Offer ID"]); mr[SEAL_COLUMN] = rowSeal(mr); }
+          mr[STATE_COLUMN] = stateCell(approvalState(mr, stamp), mr); mr[WARNING_MARK_COLUMN] = "";
+        }
+        approve.push(mr); mainIds.add(mtText(r["Offer ID"])); return;
+      }
       updated["Перевірка"] = [dup, "НЕ ПЕРЕНЕСЕНО: " + problems.join("; ")].filter(Boolean).join(" ");
     } else if (isStateCommand(decision)) {
       updated["Перевірка"] = dup; // службову команду не прийнято — причина в rq.notes
@@ -857,13 +1070,21 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
     keep.push(updated);
   });
   out.main = { start: main.start, header: main.header, migrated: main.migrated, plan: mainPlan, rows: mainRows, changedRows: new Set([...undo.changedMain, ...bind.changedMain, ...mainRaw.changed]) };
-  out.queue = { header: queue.header, migrated: queue.migrated, keep, approve, reject, bound, reclaimed, planRowsByIndex: queuePlan };
+  out.queue = { header: queue.header, migrated: queueOff ? [] : queue.migrated, keep, approve, reject, bound, reclaimed, planRowsByIndex: queuePlan, decisionRefused, mode: queueOff ? "off" : "full", pendingDecisions };
   out.bindings = { history: bind.history, done: bind.done.length, refused: bind.refused.size, undoCells: undo.cells, undone: undo.undone.length, undoneList: undo.undone };
   out.deferredRows = deferred;
-  out.journal = [...mainRaw.entries, ...changeEntries(stamp, SHEET.main, mainPlan), ...refreshed.flatMap((x) => x.entries), ...changeEntries(stamp, SHEET.queue, queuePlan)];
+  // ENG-28c: «поза охопленням фіду» — нейтральний стан (не помилка): щозапускового «ПОМИЛКА ПОЗА_ОХОПЛЕННЯМ_ФІДУ» в «Журналі» немає.
+  const notScopeError = (e) => !(e[3] === "ПОМИЛКА" && e[6] === OUT_OF_SCOPE);
+  out.journal = [...mainRaw.entries, ...changeEntries(stamp, SHEET.main, mainPlan).filter(notScopeError), ...(queueOff ? [] : [...refreshed.flatMap((x) => x.entries), ...changeEntries(stamp, SHEET.queue, queuePlan).filter(notScopeError)])];
   out.stats.queueRaw = { changed: refreshed.filter((x) => x.changed).length, recheck: refreshed.filter((x) => x.recheck.length).length, verified: refreshed.filter((x) => x.verified).length, migratedColumns: queue.migrated.length };
-  out.ackInput = { mainRows, deferredRows: deferred, frozenIds, frozenFlag };
+  // «Сторож новинок»: видалені (CC) — відомі ID, Worker їх не пропонує.
+  out.ackInput = { mainRows, deferredRows: [...deferred, ...archived, ...[...(cc?.removed || [])].map((id) => ({ "Offer ID": id, "ID постачальника": id }))], frozenIds, frozenFlag };
   out.passportBefore = passport;
+  if (op) {
+    out.ownerPriority = { isolated: [...isolated].map(([i, reason]) => ({ offerId: mtText(mainRows[i]["Offer ID"]), reason })), isolatedIndexes: new Set(isolated.keys()), ...opOut, accepted, actionsSkipped, removedInMain: [...isolated.values()].filter((x) => x === REMOVED_ISOLATION).length };
+    for (const w of opOut.warnings) out.journal.push([stamp, SHEET.main, w.offerId, w.field, jv(w.before), jv(w.after), "ПОПЕРЕДЖЕННЯ ПОСТАЧАЛЬНИКА: наше значення збережено («" + jv(w.custom).slice(0, 200) + "»)"]);
+    for (const x of out.ownerPriority.isolated) out.journal.push([stamp, SHEET.main, x.offerId, "ІЗОЛЬОВАНО", "", "", x.reason]);
+  }
   out.catalog = catalog;
   out.stats.queue = { rows: queue.rows.length, approve: approve.length, reject: reject.length, keep: keep.length, bound: bound.length, newIds: 0, candidatesInFeed: out.candidatesInFeed };
   return out;
@@ -901,12 +1122,15 @@ export function finalizeSheetSync(plan, { parsed, fullById, stamp, config, group
  *  Кожен повторно перевіряється за ПОВНИМ XML (verifyReady): ≥10 хв без змін, той самий відбиток, повні дані.
  *  Рішення власника (затвердження, відхилення, прив'язки) тут не обробляються — лише під час синхронізації.
  */
-export function planIntake({ book, parsed, fullById, stamp, config, now, ready = [], profile = "medium", catalog = null }) {
+export function planIntake({ book, parsed, fullById, stamp, config, now, ready = [], profile = "medium", catalog = null, controls = null, feedScope = "full" }) {
   const cleanDescriptions = config.characteristics?.cleanDescriptions === true;
   const rules = { ...INTAKE_RULES, ...(config.intake || {}) };
   const out = { abort: null, block: null, warnings: [], stats: {}, results: {} };
   const stop = (type, reason) => { out.abort = reason; out.block = { type, reason, affected: "", limit: "" }; return out; };
   if (catalog?.guard?.blocked) return stop(guardType(catalog.guard), `прохід НЕ ВИКОНАНО: ${catalog.guard.reasons.join("; ")}; нічого не записано`);
+  // CC R6 S5: у режимі пріоритету власника — лише з достовірним станом CC (blocked → новинок не приймати).
+  const cc = ownerPriorityEnabled(config) ? syncControls(controls) : null;
+  if (ownerPriorityEnabled(config) && (!cc || cc.blocked)) return stop("CATALOG CONTROLS НЕДОСТОВІРНИЙ", ccStop(cc));
   const queueValues = book[SHEET.queue];
   const queueHeader = (queueValues?.[0] || []).map(mtText);
   if (QUEUE_EXTRA.some((k) => !queueHeader.includes(k))) return stop("ЧЕРГА НЕ ГОТОВА", "аркуш «Нові товари» ще не переведено в режим черги");
@@ -916,14 +1140,21 @@ export function planIntake({ book, parsed, fullById, stamp, config, now, ready =
   const frozenIds = new Set((book[SHEET.frozen] || []).slice(1).map((r) => mtText(r[0])).filter(Boolean));
   const auditTypes = auditMarks(book[AUDIT_SHEET]);
 
-  const refreshed = queue0.rows.map((r) => refreshQueueRow(r, parsed.offers.get(mtText(r["ID постачальника"])), fullById.get(mtText(r["ID постачальника"])), { stamp, catalog, cleanDescriptions }));
+  // ENG-28a: рядки, що чекають перенесення NEW92 або вже перенесені (ID в основному каталозі), intake не оновлює.
+  const mainIdsI = new Set(main.rows.map((r) => mtText(r["Offer ID"])));
+  const frozenQ = (r) => mtText(r["Перевірка"]).startsWith(PENDING_TRANSFER_MARK) || mainIdsI.has(mtText(r["Offer ID"]));
+  const refreshed = queue0.rows.map((r) => (frozenQ(r) ? { row: { ...r }, entries: [], notes: [], recheck: [], changed: false, verified: false } : refreshQueueRow(r, parsed.offers.get(mtText(r["ID постачальника"])), fullById.get(mtText(r["ID постачальника"])), { stamp, catalog, cleanDescriptions })));
   const qRows = refreshed.map((x) => x.row);
-  const queuePlan = planRows(qRows, parsed.offers, stamp, config.pricing);
+  // ENG-28c: фід із фільтром охоплення — відсутній рядок черги поза охопленням: без змін і без «ПОМИЛКА» (нейтральний стан).
+  const queuePlan = planRows(qRows, parsed.offers, stamp, config.pricing).map((p, i) => (frozenQ(queue0.rows[i]) ? { ...p, next: p.before.slice() }
+    : feedScope !== "full" && p.match === MATCH.MISSING ? { ...p, next: p.before.slice(), match: OUT_OF_SCOPE } : p));
   const kept = qRows.map((r, i) => { const x = { ...r }; LIVE_COLUMNS.forEach((k, j) => { x[k] = queuePlan[i].next[j]; }); return x; });
 
-  const knownSupplierIds = new Set([...main.rows, ...qRows, ...deferred].map((r) => mtText(r["ID постачальника"])));
-  const knownOfferIds = new Set([...main.rows, ...qRows, ...deferred].map((r) => mtText(r["Offer ID"])));
+  const archivedI = archivedRows(book); // видалені товари — не новинки
+  const knownSupplierIds = new Set([...main.rows, ...qRows, ...deferred, ...archivedI].map((r) => mtText(r["ID постачальника"])));
+  const knownOfferIds = new Set([...main.rows, ...qRows, ...deferred, ...archivedI].map((r) => mtText(r["Offer ID"])));
   const frozenFlag = frozenFlags({ mainRows: main.rows, parsed, frozenIds, knownSupplierIds });
+  const similarNote = new Map();
   const maxNew = config.queue?.maxNewPerRun ?? 300;
   const newRows = [];
   for (const e of ready) {
@@ -933,6 +1164,9 @@ export function planIntake({ book, parsed, fullById, stamp, config, now, ready =
     if (frozenIds.has(id) && !frozenFlag.has(id)) { out.results[id] = { status: "ВІДМОВА", reason: "ID у «Заморожених»" }; continue; }
     if (newRows.length >= maxNew) { out.results[id] = { status: "ВІДМОВА", reason: `ліміт ${maxNew} нових за запуск` }; continue; }
     const offer = parsed.offers.get(id), full = fullById.get(id);
+    // S5: той самий видалений товар (за ID, під новим ID або конфлікт ID) — не додається; схожий — позначка в «Перевірці».
+    const g = cc ? gateFor(cc, { offer: offer || { id } }) : null;
+    if (g?.blocked) { out.results[id] = { status: "ВИДАЛЕНИЙ ТОВАР", kind: g.kind, reason: g.reason }; continue; }
     const raw = offer && full ? rawFromOffer(offer, full) : null;
     const v = verifyReady(e, raw, now, { rules, profile });
     if (!v.ok) { out.results[id] = { status: "ВІДМОВА", reason: v.reason, ...(v.fullFp ? { fullFp: v.fullFp } : {}) }; continue; }
@@ -942,6 +1176,7 @@ export function planIntake({ book, parsed, fullById, stamp, config, now, ready =
     row["Остання зміна постачальника"] = iso(e.lastChange);
     row["SHA даних постачальника"] = row["Погоджено для SHA"] = sheetFingerprint(raw);
     row["SHA SEO при додаванні"] = seoHash(row);
+    if (g) similarNote.set(id, "СХОЖИЙ НА ВИДАЛЕНИЙ: " + g.reason);
     newRows.push(row);
     knownSupplierIds.add(id); knownOfferIds.add(id);
     out.results[id] = { status: "ДОДАНО" };
@@ -961,18 +1196,24 @@ export function planIntake({ book, parsed, fullById, stamp, config, now, ready =
   for (const r of newRows) {
     const note = dupNote(findDuplicates(index, queueEntry(r)), { frozen: frozenFlag.has(mtText(r["Offer ID"])) });
     if (/^МОЖЛИВИЙ ДУБЛЬ/.test(note)) possibleDuplicates++;
-    r["Перевірка"] = withNonProduct([note, r["Перевірка"]].filter(Boolean).join(" "), nonProductReason(r, auditTypes));
+    r["Перевірка"] = withNonProduct([note, similarNote.get(mtText(r["ID постачальника"])), r["Перевірка"]].filter(Boolean).join(" "), nonProductReason(r, auditTypes));
   }
   const rows = [...kept, ...newRows];
   out.queue = { header: queue0.header, migrated: queue0.migrated, values: rows.map((r) => queue0.header.map((k) => (r[k] == null ? "" : r[k]))) };
   out.newRows = newRows;
-  const entries = [...refreshed.flatMap((x) => x.entries), ...changeEntries(stamp, SHEET.queue, queuePlan)];
+  // ENG-28c: рядки, які intake не веде (чекають перенесення / уже в основному каталозі), і «поза охопленням» — без записів «Журналу»
+  // (раніше щозапускова «ПОМИЛКА» перенесених поза охопленням фіду ще й змушувала intake писати).
+  const frozenIdsQ = new Set(queue0.rows.filter(frozenQ).map((r) => mtText(r["Offer ID"])));
+  const entries = [...refreshed.flatMap((x) => x.entries), ...changeEntries(stamp, SHEET.queue, queuePlan).filter((e) => !frozenIdsQ.has(mtText(e[2])) && !(e[3] === "ПОМИЛКА" && e[6] === OUT_OF_SCOPE))];
   for (const r of newRows) entries.push([stamp, SHEET.queue, mtText(r["Offer ID"]), "НОВИЙ", "", "", /МОЖЛИВИЙ ДУБЛЬ/.test(r["Перевірка"]) ? "МОЖЛИВИЙ ДУБЛЬ" : STATUS_NEW]);
   const tallyResults = tally(Object.values(out.results).map((x) => x.status));
   out.stats = { queueRows: qRows.length, ready: ready.length, results: tallyResults, added: newRows.length, possibleDuplicates, queueRaw: { changed: refreshed.filter((x) => x.changed).length, recheck: refreshed.filter((x) => x.recheck.length).length, verified: refreshed.filter((x) => x.verified).length, migratedColumns: queue0.migrated.length } };
-  out.changed = entries.length > 0 || queue0.migrated.length > 0;
+  // ENG-27 (N3): службові команди виконує лише intake — відмову (напр. «ПЕРЕВІРЕНО» із застарілою SHA) власник бачить у «Перевірці»
+  // рядка з командою, тож зміна лише її «Перевірки» — теж зміна (раніше її писала синхронізація; рядків із командою sync не оновлює).
+  const cmdNoteChanged = kept.some((r, i) => isStateCommand(norm(queue0.rows[i]?.["Рішення"])) && mtText(r["Перевірка"]) !== mtText(queue0.rows[i]?.["Перевірка"]));
+  out.changed = entries.length > 0 || queue0.migrated.length > 0 || cmdNoteChanged;
   entries.push([stamp, "СИСТЕМА", "", "ЗАВЕРШЕНО", "", parsed.count, JSON.stringify({ mode: "ІНТЕЙК", system: "НОВА СИСТЕМА (S1, тестова копія)", feedDate: parsed.date, offers: parsed.count, changes: entries.length, ready: ready.length, ...tallyResults })]);
   out.journal = entries;
-  out.ack = ackFor({ mainRows: main.rows, queueRows: rows, deferredRows: deferred, frozenIds, frozenFlag, profile, results: out.results });
+  out.ack = ackFor({ mainRows: main.rows, queueRows: rows, deferredRows: [...deferred, ...[...(cc?.removed || [])].map((id) => ({ "Offer ID": id, "ID постачальника": id }))], frozenIds, frozenFlag, profile, results: out.results });
   return out;
 }

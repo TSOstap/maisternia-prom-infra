@@ -38,6 +38,9 @@ import { runUpdate } from "../src/pipeline/update.mjs";
 import { buildVersion, publishVersion, sha256 } from "../src/publish/cf-assets.mjs";
 import { liveLimitStatus } from "../src/verify/size-watch.mjs";
 import { readXlsx } from "./lib/xlsx-read.mjs";
+import { assertPocIsolated, POC_WORKER } from "../src/publish/poc-guard.mjs";
+// ENG-20 (рішення власника 30.10, п. 4): PoC — лише ізольовані тести; заборонено як робочий публікатор / джерело для Prom.
+try { assertPocIsolated({ workerName: POC_WORKER }); } catch (e) { console.error("ПОМИЛКА: " + e.message); process.exit(2); }
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const arg = (n, d) => process.argv.find((a) => a.startsWith(`--${n}=`))?.slice(n.length + 3) ?? d;

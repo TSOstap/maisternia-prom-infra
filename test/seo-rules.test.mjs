@@ -129,7 +129,11 @@ test("8–9. «ПЕРЕВІРЕНО» → зміна ціни не скидає 
   sim.setOffer({ id: ID, ...MIG22 });
   await sim.sync();
   sim.setDecision(ID, "ПЕРЕВІРЕНО");
-  await sim.sync();
+  // ENG-27 (Hermes INT N3): sync службової команди не виконує й не стирає; рядок не оновлюється — виконує intake.
+  { const rs = await sim.sync(); assert.equal(rs.state, "SYNCED", JSON.stringify(rs).slice(0, 300));
+    assert.equal(mtText(sim.queueRow(ID)["Рішення"]), "ПЕРЕВІРЕНО", "sync рішення власника не стирає");
+    assert.ok(rs.queueUpdate.skipped.some((x) => x.key === ID && /службова команда/.test(x.reason)), "рядок із командою sync не оновлював"); }
+  await sim.github();
   let r = q(sim);
   assert.doesNotMatch(r["Перевірка"], /ПОТРЕБУЄ/);
   assert.equal(r["Погоджено для SHA"], r["SHA даних постачальника"]);
@@ -168,7 +172,11 @@ test("10. старий рядок без знімка SEO: власні текс
   sim.setCell(ID, "Група ID", sim.rows(SHEET.main)[0]["Група ID"]);
   sim.setCell(ID, "Категорія Prom ID", "501");
   sim.setDecision(ID, "SEO ПОСТАЧАЛЬНИКА");
-  await sim.sync();
+  // ENG-27 (Hermes INT N3): sync службової команди не виконує й не стирає; рядок не оновлюється — виконує intake.
+  { const rs = await sim.sync(); assert.equal(rs.state, "SYNCED", JSON.stringify(rs).slice(0, 300));
+    assert.equal(mtText(sim.queueRow(ID)["Рішення"]), "SEO ПОСТАЧАЛЬНИКА", "sync рішення власника не стирає");
+    assert.ok(rs.queueUpdate.skipped.some((x) => x.key === ID && /службова команда/.test(x.reason)), "рядок із командою sync не оновлював"); }
+  await sim.github();
   r = q(sim);
   assert.equal(r["Опис UA"], "<p>Опис уже інший</p>", "підтверджено як копію постачальника — оновлено");
   assert.doesNotMatch(r["Перевірка"], /ПОТРЕБУЄ/);
@@ -241,12 +249,12 @@ test("режим intake застосовує ті самі правила: си�
   const sim = await queued();
   sim.setOffer({ id: ID, nameUa: MIG20.nameUa + " (intake)" });
   const { intakeAll } = await import("./helpers/intake.mjs");
-  await intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { stamp: sim.stamp(), now: sim.now, config: sim.config, ready: [] });
+  await intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { session: "auto", stamp: sim.stamp(), now: sim.now, config: sim.config, ready: [] });
   assert.equal(q(sim)["Назва UA"], MIG20.nameUa + " (intake)");
   writeOwnSeo(sim);
   await sim.sync();
   sim.setOffer({ id: ID, ...MIG22 });
-  await intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { stamp: sim.stamp(), now: sim.now, config: sim.config, ready: [] });
+  await intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { session: "auto", stamp: sim.stamp(), now: sim.now, config: sim.config, ready: [] });
   assert.equal(q(sim)["Назва UA"], "Наш SEO: зварювальний інвертор MIG-20HB");
   assert.match(q(sim)["Перевірка"], /^ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ: Постачальник змінив назву/);
 });

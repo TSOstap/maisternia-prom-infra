@@ -394,7 +394,7 @@ test("контрольований intake: ліміт N (за часом вия�
   let i = await (await sim.core.fetch(sim.req("/intake"))).json();
   assert.equal(i.ready.length, 3);
   // Ручний intake лише 2 з 3
-  const r = await (await import("./helpers/intake.mjs")).intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { stamp: sim.stamp(), now: sim.now, config: sim.config, ready: limitReady(i.ready, 2) });
+  const r = await (await import("./helpers/intake.mjs")).intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { session: "auto", stamp: sim.stamp(), now: sim.now, config: sim.config, ready: limitReady(i.ready, 2) });
   assert.equal(r.stats.added, 2);
   await sim.core.fetch(sim.req("/ack", "POST", r.ack));
   i = await (await sim.core.fetch(sim.req("/intake"))).json();

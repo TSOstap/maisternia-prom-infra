@@ -13,7 +13,8 @@ import { route } from "../workers/new-items-watch/src/router.mjs";
 import { WatchCore } from "../workers/new-items-watch/src/watch-core.mjs";
 import { WatchSim, fullOffer, offerXml, MIN, T0 } from "./helpers/watch-sim.mjs";
 import { doContext, doNamespace } from "./helpers/do-sqlite.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 
 const raw = (over = {}) => ({ id: "1", nameUa: "Дриль UA", nameRu: "Дрель RU", sku: "D-1", url: "https://market-tools.com.ua/p1-d.html", price: 100, currency: "UAH", available: true,
   pictures: ["https://images.prom.ua/111_a.jpg", "https://images.prom.ua/222_b.jpg"], params: [{ name: "Потужність", value: "500", unit: "Вт" }, { name: "Вага", value: "2", unit: "кг" }],

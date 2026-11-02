@@ -1,0 +1,118 @@
+/** ENG-28a — охорона цілі запису в Google Sheets (вимога власника 01.11.2026, розд. 1): перевірка ПЕРЕД кожною операцією запису.
+ *
+ *  - запис дозволено ЛИШЕ в TEST_SHEET_ID; LIVE_SHEET_ID — завжди BLOCK (незалежно від змінних середовища й назви таблиці);
+ *  - лише облікові записи з allowlist (mm-sheets-copy) і лише короткочасний токен зі scope рівно spreadsheets (assertWriterToken);
+ *  - кожна операція: аркуш дозволено політикою операції, операція дозволена, колонки блоку — з дозволеного переліку (заголовок —
+ *    з прочитаного аркуша); видалення рядків — завжди BLOCK; будь-яка невідповідність — BLOCK БЕЗ запиту до API.
+ *  Залишкове обмеження: що обліковий запис НЕ може редагувати LIVE, код незалежно не доводить (Drive API у проєкті вимкнено;
+ *  підтверджено власником через інтерфейс 01.11: прямого доступу немає, загальний доступ LIVE — лише читання). Код забороняє LIVE сам. */
+import { mtText } from "../../core/text.mjs";
+
+export const TEST_SHEET_ID = "1th8VXOUeN08Lk9QNrjdt4GK3Z0nTnU8Awkb5pLvWOxs";
+export const LIVE_SHEET_ID = "1AhQUz1bUB2LiQX4OKBbvTCSmTMWoKPcdQUtr3-TK2L8";
+export const WRITER_ACCOUNTS = Object.freeze(["mm-sheets-copy@maisternia-prom-infra.iam.gserviceaccount.com"]);
+export const WRITE_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
+const WRITE_OPS = Object.freeze(["updateRanges", "appendRows", "deleteRows", "ensureColumns", "ensureSheet", "setPercentFormat"]);
+/** Методи записувача без запису (читання). Будь-який інший метод — BLOCK (заборонено за замовчуванням). */
+const READ_OPS = Object.freeze(["meta", "read"]);
+/** Короткоживучий токен: не довше за типовий строк IAM generateAccessToken (3600 с). */
+export const MAX_TOKEN_SECONDS = 3600;
+
+export class WriteTargetBlocked extends Error {
+  constructor(reason, detail = {}) { super("BLOCK запису: " + reason); this.code = "WRITE_TARGET_BLOCK"; this.outcome = "NOT_APPLIED"; this.detail = detail; }
+}
+const block = (reason, detail) => { throw new WriteTargetBlocked(reason, detail); };
+
+/** Ціль запису: лише тестова таблиця. */
+export function assertWriteTarget(spreadsheetId) {
+  const id = mtText(spreadsheetId).trim();
+  if (!id) block("немає ID таблиці");
+  if (id === LIVE_SHEET_ID) block("ціль — ЖИВА таблиця «Інструменти»: запис заборонено завжди");
+  if (id !== TEST_SHEET_ID) block("ціль — не тестова копія «Інструменти — ТЕСТ нової системи»: запис дозволено лише в неї");
+  return id;
+}
+/** Токен записувача: обліковий запис з allowlist, scope рівно spreadsheets (tokeninfo); info — { scopes, account }. */
+export function assertWriterToken(info) {
+  const scopes = info?.scopes || [];
+  if (scopes.length !== 1 || scopes[0] !== WRITE_SCOPE) block("токен запису має бути рівно зі scope spreadsheets", { scopes });
+  if (!WRITER_ACCOUNTS.includes(mtText(info?.account))) block("обліковий запис записувача не з дозволеного переліку", { account: info?.account ?? null });
+  return true;
+}
+/** Токен запису — лише короткоживучий токен mm-sheets-copy з одним scope spreadsheets; змінна оточення не використовується.
+ *  obtain({ scope }) — IAM generateAccessToken для ФІКСОВАНОГО облікового запису (tools/copy-access-check.mjs: obtainToken);
+ *  scopeOf(token, scope) — tokeninfo (assertTokenScope) → { scopes, expiresIn }; account — обліковий запис, для якого видано токен.
+ *  Залишкове обмеження: обліковий запис гарантує шлях видачі (URL generateAccessToken), tokeninfo його окремо не підтверджує. */
+export async function writerAccessToken({ obtain, scopeOf, account }) {
+  const token = await obtain({ scope: WRITE_SCOPE });
+  const info = await scopeOf(token, WRITE_SCOPE);
+  assertWriterToken({ scopes: info?.scopes, account });
+  const ttl = info?.expiresIn;
+  if (!(Number.isFinite(ttl) && ttl > 0 && ttl <= MAX_TOKEN_SECONDS)) block("токен запису має бути короткоживучим (≤ 1 год)", { expiresIn: ttl ?? null });
+  return async () => token;
+}
+
+const colOf = (header, n) => header[n - 1] ?? `#${n}`;
+/**
+ * Обгортка над записувачем (MemorySheets / GoogleSheetsWriter): перевірка кожної операції ДО виклику.
+ * policy: { [аркуш]: { ops: [...], columns?: [...] | "*", header?: bool } } — header: дозволено писати рядок 1 (міграція заголовка).
+ * headers: { [аркуш]: string[] } — заголовки, прочитані перед операцією (для назв колонок блоку); оновлюються після запису рядка 1.
+ */
+export function guardedSheets(sheets, { spreadsheetId, policy, headers = {} }) {
+  assertWriteTarget(spreadsheetId);
+  const hdr = Object.fromEntries(Object.entries(headers).map(([k, v]) => [k, (v || []).map(mtText)]));
+  const check = (op, title) => {
+    assertWriteTarget(spreadsheetId);
+    if (op === "deleteRows") block("видалення рядків заборонено", { title });
+    const p = policy[title] || policy["*"];
+    if (!p) block(`аркуш «${title}» не дозволено цією операцією`, { op });
+    if (!(p.ops || []).includes(op)) block(`операція ${op} для «${title}» не дозволена`, { op });
+    return p;
+  };
+  const checkBlock = (b) => {
+    const p = check("updateRanges", b.title);
+    const width = Math.max(0, ...(b.values || []).map((r) => r.length));
+    if (b.row === 1) { if (!p.header) block(`запис заголовка «${b.title}» не дозволено`); hdr[b.title] = (b.values[0] || []).map(mtText); return; }
+    if (p.columns === "*") return;
+    const header = hdr[b.title];
+    if (!header) block(`немає прочитаного заголовка «${b.title}» — колонки блоку не перевірити`);
+    for (let j = 0; j < width; j++) { const c = colOf(header, b.col + j); if (!(p.columns || []).includes(c)) block(`колонка «${c}» аркуша «${b.title}» не дозволена`, { row: b.row }); }
+  };
+  return new Proxy(sheets, {
+    get(target, prop) {
+      const v = target[prop];
+      if (typeof v !== "function") return v;
+      if (READ_OPS.includes(prop)) return v.bind(target);
+      if (!WRITE_OPS.includes(prop)) return () => block(`невідома операція записувача «${String(prop)}» — заборонено за замовчуванням`);
+      return async (...args) => {
+        if (prop === "updateRanges") for (const b of args[0] || []) checkBlock(b);
+        else if (prop === "appendRows" || prop === "ensureColumns" || prop === "ensureSheet" || prop === "deleteRows" || prop === "setPercentFormat") check(prop, String(args[0]));
+        return v.apply(target, args);
+      };
+    },
+  });
+}
+
+/** ENG-28a: політики запису для режимів tools/sheet-sync (аркуші / операції / колонки). «*» як аркуш — будь-який, крім видалень рядків
+ *  (режими CC / архіву створюють власні аркуші); колонки «*» — стовпці стережуть контракт власності й keyedUpdate. */
+const SYNC_TITLES = ["Основний каталог", "Нові товари", "Відкладені товари", "Заморожені ID", "Паспорт каталогу", "Історія прив'язок", "Аудит", "Попередження постачальника", "Архів", "Класифікація полів", "Журнал"];
+const BROAD = Object.freeze({ ops: ["updateRanges", "appendRows", "ensureColumns", "ensureSheet", "setPercentFormat"], columns: "*", header: true });
+/** ENG-28d: «Журнал» з ключем «ID події» — дописування подій і разове додавання колонки ID (лише заголовок; рядки подій не змінюються). */
+const JOURNAL_KEYED = Object.freeze({ ops: ["appendRows", "ensureColumns", "updateRanges"], columns: ["ID події"], header: true });
+const broad = (titles) => Object.fromEntries(titles.map((t) => [t, BROAD]));
+export const MODE_POLICIES = Object.freeze({
+  structure: { "Нові товари": { ops: ["ensureColumns", "updateRanges"], columns: ["Перевірка"], header: true }, "Паспорт каталогу": { ops: ["ensureSheet", "updateRanges"], columns: "*", header: true }, "Журнал": { ops: ["appendRows"] } },
+  correction: { "Основний каталог": { ops: ["updateRanges"], columns: ["Опис UA", "Опис RU", "Запити UA", "Запити RU"] }, "Журнал": { ops: ["appendRows"] } },
+  merge: { "Основний каталог": { ops: ["ensureColumns", "updateRanges", "appendRows"], columns: ["Стан у постачальника", "Знімок постачальника JSON"], header: true },
+    "Нові товари": { ops: ["ensureColumns", "updateRanges"], columns: ["Перевірка"], header: true }, "Паспорт каталогу": { ops: ["ensureSheet", "updateRanges"], columns: "*", header: true }, "Журнал": JOURNAL_KEYED },
+  sync: broad(SYNC_TITLES), update: broad(SYNC_TITLES), intake: broad(SYNC_TITLES), scenario: broad(SYNC_TITLES), "scenario-mass": broad(SYNC_TITLES),
+  controls: { "*": BROAD }, recover: { "*": BROAD }, archive: { "*": BROAD }, refresh: { "*": BROAD },
+  // ENG-28c: QA погоджених товарів — лише системні / сирі колонки постачальника й печатка «Основного каталогу» (за ключем), паспорт,
+  // «Журнал»; жодних SEO / описів / характеристик / рішень, нових колонок чи аркушів.
+  qa: { "Основний каталог": { ops: ["updateRanges"], columns: ["Ціна постачальника", "Ціна", "Ціна кінцева", "Знижка", "Наявність", "Кількість постачальника", "Стан синхронізації", "Оновлено", "Назва постачальника UA", "Назва постачальника RU", "URL постачальника", "Фото JSON", "Модель", "Артикул постачальника", "SHA256 незмінних полів"] },
+    "Паспорт каталогу": { ops: ["updateRanges"], columns: "*", header: true }, "Журнал": JOURNAL_KEYED },
+  // ENG-28d: з'ясування невідомих результатів W2 (reconcile / рішення людини) — лише читання таблиці; жодної операції запису.
+  reconcile: {},
+  // ENG-28c: «Знайти нові товари» — лише черга «Нові товари» (колонки стереже контракт власності intake) і «Журнал»; основного каталогу —
+  // жодної операції.
+  "find-new": { "Нові товари": { ops: ["ensureColumns", "updateRanges", "appendRows", "setPercentFormat"], columns: "*", header: true }, "Журнал": { ops: ["appendRows"] } },
+});

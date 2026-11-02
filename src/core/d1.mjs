@@ -10,6 +10,7 @@
  *  10. Окреме зникнення не блокує публікацію (див. missingPolicy у yml.mjs). */
 import { mtText } from "./text.mjs";
 import { MATCH } from "./sync-plan.mjs";
+import { holdLimit } from "./supplier-presence.mjs";
 import { applyRelink, cardKeys, effectiveSupplierId, modelKey, resolveUnknownOffers } from "./identity.mjs";
 import { STATUS_OWN_STOCK, STATUS_MODEL_CONFLICT, isConflictStatus } from "./yml.mjs";
 
@@ -201,10 +202,11 @@ export function applyAvailabilityPolicy({ sheets, offers = new Map(), previous =
       }
     });
   }
-  const limit = Math.max(policy.anomaly.maxNewlyMissing, Math.ceil(total * policy.anomaly.maxNewlyMissingRatio));
+  // ENG-28b (рішення власника 01.11): поріг аномалії — менший із «N» і «частка × каталог», спрацювання при досягненні (≥).
+  const limit = holdLimit({ maxGoneAbsolute: policy.anomaly.maxNewlyMissing, maxGoneRatio: policy.anomaly.maxNewlyMissingRatio }, total);
   const newlyIsolated = newlyMissing.length + newlyConflicted.length;
   return {
     missing, conflicts, verifiedAt, returned, newlyMissing, newlyConflicted, proposals, events,
-    anomaly: newlyIsolated > limit ? { newlyMissing: newlyMissing.length, newlyConflicted: newlyConflicted.length, limit } : null,
+    anomaly: newlyIsolated > 0 && newlyIsolated >= limit ? { newlyMissing: newlyMissing.length, newlyConflicted: newlyConflicted.length, limit } : null,
   };
 }

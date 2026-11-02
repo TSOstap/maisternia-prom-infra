@@ -12,7 +12,8 @@ import { manifestKey } from "../src/publish/publisher.mjs";
 import { kitConflict, validGtin, resolveUnknownOffers, cardKeys, applyRelink } from "../src/core/identity.mjs";
 import { buildYml, memorySink } from "../src/core/yml.mjs";
 import { YML_HEADERS } from "../src/core/seal.mjs";
-import baseConfig from "../config/default.json" with { type: "json" };
+// Старий режим (явно): регресія прийнятої механіки — див. helpers/legacy-config.mjs (рішення власника 29–30.10).
+import baseConfig from "./helpers/legacy-config.mjs";
 
 const T0 = Date.parse("2026-10-21T06:00:00.000Z");
 const H = 3600000;

@@ -120,7 +120,10 @@ test("4. SEO вже підготовлено, а постачальник змі
   sim.setDecision(ID, "ЗАТВЕРДЖЕНО (НЕ ДУБЛЬ)");
   const r = await sim.sync();
   assert.equal(r.stats.approved, 1);
-  assert.equal(sim.queueRow(ID), undefined);
+  // ENG-27 (Hermes INT N3): рядок черги з рішенням лишається (B6: видалення заблоковано).
+  assert.equal(mtText(sim.queueRow(ID)["Рішення"]), "ЗАТВЕРДЖЕНО (НЕ ДУБЛЬ)", "рішення власника не стерто");
+  assert.equal(r.queueRemoval.state, "BLOCKED_B6");
+  assert.deepEqual(r.queueRemoval.keys, [ID]);
   const m = sim.rows(SHEET.main).find((x) => x["Offer ID"] === ID);
   assert.equal(m["Назва UA"], "SEO: Шуруповерт Test 18 В з одним АКБ", "наше SEO перенесено без змін");
   assert.equal(m["Назва постачальника UA"], "Шуруповерт Test 18 В 2 АКБ");
@@ -143,7 +146,11 @@ test("5. власник підтвердив дані («ПЕРЕВІРЕНО» 
   const seenSha = q["SHA даних постачальника"];
   // Підтвердження з явною SHA, яку власник бачив
   sim.setDecision(ID, "ПЕРЕВІРЕНО " + seenSha);
-  await sim.sync();
+  // ENG-27 (Hermes INT N3): sync службової команди не виконує й не стирає; рядок не оновлюється — виконує intake.
+  { const rs = await sim.sync(); assert.equal(rs.state, "SYNCED", JSON.stringify(rs).slice(0, 300));
+    assert.equal(mtText(sim.queueRow(ID)["Рішення"]), "ПЕРЕВІРЕНО " + seenSha, "sync рішення власника не стирає");
+    assert.ok(rs.queueUpdate.skipped.some((x) => x.key === ID && /службова команда/.test(x.reason)), "рядок із командою sync не оновлював"); }
+  await sim.github();
   q = sim.queueRow(ID);
   assert.equal(q["Погоджено для SHA"], seenSha);
   assert.equal(mtText(q["Рішення"]), "", "рішення «ПЕРЕВІРЕНО» прийнято й очищено");
@@ -158,14 +165,23 @@ test("5. власник підтвердив дані («ПЕРЕВІРЕНО» 
   assert.notEqual(q["SHA даних постачальника"], seenSha);
   // Стара SHA більше не підходить
   sim.setDecision(ID, "ПЕРЕВІРЕНО " + seenSha);
-  await sim.sync();
+  // ENG-27 (Hermes INT N3): sync службової команди не виконує й не стирає; рядок не оновлюється — виконує intake.
+  { const rs = await sim.sync(); assert.equal(rs.state, "SYNCED", JSON.stringify(rs).slice(0, 300));
+    assert.equal(mtText(sim.queueRow(ID)["Рішення"]), "ПЕРЕВІРЕНО " + seenSha, "sync рішення власника не стирає");
+    assert.ok(rs.queueUpdate.skipped.some((x) => x.key === ID && /службова команда/.test(x.reason)), "рядок із командою sync не оновлював"); }
+  await sim.github();
   q = sim.queueRow(ID);
   assert.match(q["Перевірка"], /«ПЕРЕВІРЕНО» не прийнято: указана SHA не відповідає поточній/);
   assert.match(q["Перевірка"], /ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ/);
   // «ПЕРЕВІРЕНО» без SHA = поточні дані в рядку; якщо постачальник змінив їх ДО цього запуску — знову потрібна перевірка
   sim.setDecision(ID, "ПЕРЕВІРЕНО");
   sim.setOffer({ nameUa: "Шуруповерт акумуляторний Test 001 18 В NEW" });
-  await sim.sync();
+  // ENG-27 (N3): sync між командою і intake не оновлює рядок — інакше intake підтвердив би дані, яких власник не бачив.
+  // ENG-27 (Hermes INT N3): sync службової команди не виконує й не стирає; рядок не оновлюється — виконує intake.
+  { const rs = await sim.sync(); assert.equal(rs.state, "SYNCED", JSON.stringify(rs).slice(0, 300));
+    assert.equal(mtText(sim.queueRow(ID)["Рішення"]), "ПЕРЕВІРЕНО", "sync рішення власника не стирає");
+    assert.ok(rs.queueUpdate.skipped.some((x) => x.key === ID && /службова команда/.test(x.reason)), "рядок із командою sync не оновлював"); }
+  await sim.github();
   q = sim.queueRow(ID);
   assert.match(q["Перевірка"], /^ПОТРЕБУЄ ПОВТОРНОЇ ПЕРЕВІРКИ.*назва UA/, "підтверджено те, що бачив власник, а не свіжі дані");
 });
@@ -222,7 +238,7 @@ test("захисти: повторний запуск intake без дублів
   assert.equal(sim.rows().length, before, "без дубля");
   // Навіть якщо старий список потрапить в intake напряму — «ВЖЕ Є», без другої позиції
   const { intakeAll, readyFromXml } = await import("./helpers/intake.mjs");
-  const direct = await intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { stamp: sim.stamp(), now: sim.now, config: sim.config, ready: readyFromXml(sim.xml(), sim.now, { ids: [ID] }) });
+  const direct = await intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { session: "auto", stamp: sim.stamp(), now: sim.now, config: sim.config, ready: readyFromXml(sim.xml(), sim.now, { ids: [ID] }) });
   assert.equal(direct.stats.results["ВЖЕ Є"], 1);
   assert.equal(sim.rows().length, before, "без дубля");
 
@@ -340,7 +356,7 @@ test("рядок черги до запуску контролю: intake оно�
   // Постачальник перетворив B на іншу модель
   sim.setOffer({ id: B, nameUa: "Інвертор Test ZZTEST-777 Pro", nameRu: "Инвертор Test ZZTEST-777 Pro", sku: "ZZTEST-777" });
   const { intakeAll } = await import("./helpers/intake.mjs");
-  await intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { stamp: sim.stamp(), now: sim.now, config: sim.config, ready: [] });
+  await intakeAll({ sheets: sim.sheets, readBook: sim.readBook }, sim.xml(), { session: "auto", stamp: sim.stamp(), now: sim.now, config: sim.config, ready: [] });
   const b = sim.queueRow(B);
   assert.equal(b["Артикул постачальника"], "ZZTEST-777", "сирі дані оновлено");
   assert.doesNotMatch(b["Перевірка"], /ЙМОВІРНО ТОЙ САМИЙ/, "застарілої примітки немає");
