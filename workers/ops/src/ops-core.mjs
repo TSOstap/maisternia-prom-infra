@@ -16,6 +16,8 @@ export const OPS = Object.freeze({
   update: "Оновити товари",
   reconcile: "Звірити незавершені записи",
 });
+/** Типова тривалість (виміряно на TEST 02.11: «Оновити» ≈ 18 хв, «Знайти нові» ≈ 3 хв, «Перенести» 3–13 хв залежно від кількості). */
+const DURATION = Object.freeze({ transfer: "3–15 хвилин", "find-new": "3–5 хвилин", update: "15–20 хвилин", reconcile: "2–4 хвилини" });
 const ACTIVE = new Set(["DISPATCHING", "QUEUED", "RUNNING"]);
 /** Після цього часу без звісток запуск вважається завислим (job ops.yml має timeout-minutes 60) — кнопка знову доступна.
  *  Захист таблиці від цього не залежить: оренда W2 і журнал операцій не дадуть двом записувачам писати одночасно. */
@@ -217,7 +219,7 @@ export class OpsCore {
       return { state: "ERROR", message: "Не вдалося запустити операцію на сервері: " + d.reason };
     }
     this.setRun(id, "QUEUED");
-    return { state: "STARTED", runId: id, message: `Запущено «${OPS[op]}». Зазвичай це 3–10 хвилин; результат — у меню «Стан останньої операції» і в аркуші «Журнал».` };
+    return { state: "STARTED", runId: id, message: `Запущено «${OPS[op]}». Зазвичай це ${DURATION[op] || "кілька хвилин"}; результат — у меню «Стан останньої операції» і в аркуші «Журнал».` };
   }
   async dispatch(op, runId) {
     const e = this.env;
