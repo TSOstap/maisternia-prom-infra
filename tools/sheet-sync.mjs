@@ -127,6 +127,7 @@ if (WRITE_MODES.includes(mode) && source === "api") {
 
 // ---------- таблиця ----------
 let sheets, readBook, readLive, journalTail = null;
+const readStats = { calls: 0, ms: 0, sheets: {}, reader: null }; // ENG-29: розбивка часу (читання таблиці)
 try {
   if (source === "api") {
     if (!process.env.MM_TEST_SHEET_ID) throw new Error("немає MM_TEST_SHEET_ID");
@@ -145,7 +146,11 @@ try {
     const testReader = new GoogleSheetsCatalogSource({ spreadsheetId: process.env.MM_TEST_SHEET_ID, getAccessToken, maxRequests: 1000, maxRequestsPerMinute: 40 });
     readBook = async (names) => {
       testReader.metaCache = null; // свіжі розміри аркушів щоразу (після дописування / нових колонок / аркушів); спільні лише темп і межа
+      const t0 = Date.now(); // ENG-29: розбивка часу операції (для розкладу перед імпортом Prom)
+      readStats.reader ??= testReader;
       const loaded = await testReader.load(names);
+      readStats.calls++; readStats.ms += Date.now() - t0;
+      for (const n of names || []) readStats.sheets[n] = (readStats.sheets[n] || 0) + 1;
       return { ...loaded.sheets, [SHEET.groups]: loaded.groups };
     };
     // Жива таблиця — ЛИШЕ читання (службовий акаунт там «Читач»); потрібна тільки для режиму refresh.
@@ -156,7 +161,9 @@ try {
     };
     if (mode !== "merge" && mode !== "refresh") {
       testReader.metaCache = null;
+      const tj = Date.now();
       journalTail = await testReader.loadTail(SHEET.journal, { until: (rows) => findLastSync(rows) !== null });
+      readStats.tailMs = Date.now() - tj;
     }
   } else {
     const all = [...SYNC_SHEETS, SHEET.groups, SHEET.journal];
@@ -381,6 +388,9 @@ try {
 delete report.fetchFull;
 if (source === "xlsx" && arg("save-state")) fs.writeFileSync(arg("save-state"), JSON.stringify(sheets.book)); // лише локальний файл поза репозиторієм
 report.metrics.totalMs = Date.now() - started;
+// ENG-29: де йде час — читання таблиці (кількість читань / мс / аркуші), запити до читача Google, сховище W2.
+report.metrics.read = { calls: readStats.calls, ms: readStats.ms, tailMs: readStats.tailMs ?? null, requests: readStats.reader?.metrics?.requests ?? null, sheets: readStats.sheets };
+report.metrics.w2 = w2Store?.stats ? { ...w2Store.stats } : null;
 report.metrics.sheetsRequests = sheets?.metrics?.requests ?? null;
 report.metrics.sheetsWrites = sheets?.metrics?.writes ?? null;
 report.metrics.maxRssMb = Math.round(process.resourceUsage().maxRSS / 1024);
