@@ -34,6 +34,11 @@ export function ownerSummary(op, report) {
       const res = Object.entries(rep.intake.results || {}).filter(([, v]) => n(v));
       if (res.length) lines.push("Кандидати: " + res.map(([k, v]) => `${k} — ${n(v)}`).join("; "));
       if (rep.intake.reason) lines.push("Причина: " + clip(rep.intake.reason, 300));
+      // Причини відмов (по кандидатах — у звіті intake); найчастіші — для власника.
+      const why = {};
+      for (const x of Object.values(r.intake?.ack?.results || {})) if (x?.status === "ВІДМОВА" && x.reason) why[x.reason.replace(/:.*$/, "")] = (why[x.reason.replace(/:.*$/, "")] || 0) + 1;
+      for (const [k, v] of Object.entries(why).sort((a, b) => b[1] - a[1]).slice(0, 5)) lines.push(`Відмова (${v}): ${clip(k, 200)}`);
+      if (Object.keys(why).some((k) => /стабільність не підтверджена/.test(k))) lines.push("Підказка: натисніть «Знайти нові товари» ще раз не раніше ніж через 10 хвилин після попереднього натискання (товар має пробути у фіді без змін ≥ 10 хв).");
     }
     const ex = Object.entries(rep.excluded || {}).filter(([, v]) => n(v));
     if (ex.length) lines.push("Не нові (уже відомі): " + ex.map(([k, v]) => `${k} — ${n(v)}`).join("; "));
