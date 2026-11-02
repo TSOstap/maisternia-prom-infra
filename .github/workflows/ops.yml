@@ -1,0 +1,66 @@
+name: ops
+# ENG-29: операції кнопок таблиці TEST. Запуск — лише workflow_dispatch: Worker mm-ops (кнопка в таблиці) або вручну.
+# Ціль запису — лише ТЕСТОВА копія (жорстко в коді; LIVE — заборона в коді й немає прав Google). Записувач — mm-sheets-copy через WIF
+# (окремий провайдер, умова — саме цей файл у main). Сховище W2 (оренда, журнал операцій, плани) — Durable Object mm-ops.
+# Розкладу немає й не вмикати без погодження власника.
+on:
+  workflow_dispatch:
+    inputs:
+      op:
+        description: "Операція"
+        required: true
+        type: choice
+        options: [reconcile, transfer, find-new, update]
+      run_id:
+        description: "ID запуску в mm-ops (порожній — запуск вручну)"
+        required: false
+        default: ""
+permissions:
+  contents: read
+  id-token: write          # лише OIDC-токен GitHub для WIF; права запису в репозиторій не дає
+concurrency:
+  group: sheets-write-test # одна операція з таблицею TEST за раз (і W2-оренда в DO)
+  cancel-in-progress: false
+jobs:
+  op:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Перевірка налаштувань (без звернень до Google)
+        env:
+          WIF: ${{ vars.GCP_WIF_PROVIDER_OPS }}
+          OPS_SET: ${{ secrets.MM_OPS_URL != '' && secrets.MM_OPS_RUNNER_KEY != '' }}
+          TEST_SET: ${{ secrets.MM_TEST_SHEET_ID != '' }}
+          FEED_SET: ${{ secrets.MM_SUPPLIER_FEED_URL != '' }}
+        run: |
+          test -n "$WIF" || { echo "Не задано змінну GCP_WIF_PROVIDER_OPS"; exit 2; }
+          [ "$OPS_SET" = "true" ] || { echo "Не задано секрети MM_OPS_URL / MM_OPS_RUNNER_KEY"; exit 2; }
+          [ "$TEST_SET" = "true" ] || { echo "Не задано секрет MM_TEST_SHEET_ID"; exit 2; }
+          [ "$FEED_SET" = "true" ] || { echo "Не задано секрет MM_SUPPLIER_FEED_URL"; exit 2; }
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          package-manager-cache: false
+      # Облікові дані WIF для gcloud (пряма федерація, без ключів). Токен запису отримує сам sheet-sync тим самим шляхом, що й
+      # локально: gcloud auth print-access-token → generateAccessToken mm-sheets-copy (рівно scope spreadsheets, ≤ 1 год, tokeninfo).
+      - id: auth
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER_OPS }}
+          create_credentials_file: true
+          export_environment_variables: true
+      - name: Операція (у журнал — лише стан; підсумок для власника — у mm-ops)
+        env:
+          OP: ${{ inputs.op }}
+          MM_OPS_RUN_ID: ${{ inputs.run_id }}
+          MM_OPS_URL: ${{ secrets.MM_OPS_URL }}
+          MM_OPS_RUNNER_KEY: ${{ secrets.MM_OPS_RUNNER_KEY }}
+          MM_TEST_SHEET_ID: ${{ secrets.MM_TEST_SHEET_ID }}
+          MM_SUPPLIER_FEED_URL: ${{ secrets.MM_SUPPLIER_FEED_URL }}
+        run: |
+          command -v gcloud >/dev/null || { echo "На runner немає gcloud"; exit 2; }
+          node tools/ops-run.mjs --op="$OP"

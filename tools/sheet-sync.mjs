@@ -48,7 +48,7 @@ import { readXlsx } from "./lib/xlsx-read.mjs";
 import { productionConfig, loadCatalogControls, runCatalogControls, runArchiveStep, w2Coordinator, CC_BOOK_SHEETS } from "../src/pipeline/production.mjs";
 import { LocalObjectStore } from "../src/storage/local.mjs";
 import { WriteGateway } from "../src/pipeline/safe-write/gateway.mjs";
-import { FileStore, MemoryStore } from "../src/pipeline/safe-write/store.mjs";
+import { FileStore, MemoryStore, RemoteStore } from "../src/pipeline/safe-write/store.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const arg = (n, d) => process.argv.find((a) => a.startsWith(`--${n}=`))?.slice(n.length + 3) ?? d;
@@ -73,6 +73,8 @@ const WRITE_BUDGETS = Object.freeze({ update: 120, sync: 120, scenario: 120, ref
 const MAINTENANCE_MODES = ["merge", "refresh", "structure", "correction"];
 // archive — перенесення за дорученнями CC (moves) і завершення видалень за активними фідами (--feed-store).
 // controls — запуск Catalog Controls (CC R7 G3): тінь типово; --apply — застосування (лише активований CC, готовність, W2).
+// ENG-29: невідомий режим — відмова (раніше потрапляв у гілку sync). Усі режими CLI пишуть, тож перелік — WRITE_MODES.
+if (!WRITE_MODES.includes(mode)) { process.stderr.write(`НЕВІДОМИЙ РЕЖИМ: «${String(mode).slice(0, 40)}» — можна: ${WRITE_MODES.join(", ")}; нічого не записано\n`); process.exit(2); }
 const config0 = JSON.parse(await fsp.readFile(path.join(root, "config", "default.json"), "utf8"));
 const config = WRITE_MODES.includes(mode) ? productionConfig(config0) : config0;
 const source = arg("source", "api");
@@ -81,7 +83,7 @@ const started = Date.now();
 // ---------- захист від витоку ----------
 const secrets = new Set();
 const addSecret = (v) => { const s = v == null ? "" : String(v); if (s.length >= 8) secrets.add(s); };
-for (const k of ["MM_SHEET_ID", "MM_TEST_SHEET_ID", "GOOGLE_OAUTH_ACCESS_TOKEN", "MM_WATCH_KEY"]) addSecret(process.env[k]);
+for (const k of ["MM_SHEET_ID", "MM_TEST_SHEET_ID", "GOOGLE_OAUTH_ACCESS_TOKEN", "MM_WATCH_KEY", "MM_W2_KEY"]) addSecret(process.env[k]);
 const addUrlSecrets = (raw) => { addSecret(raw); try { const u = new URL(raw); addSecret(u.search.slice(1)); addSecret(u.host + u.pathname + u.search); for (const [, v] of u.searchParams) { addSecret(v); addSecret(encodeURIComponent(v)); } } catch { /* */ } };
 if (process.env.MM_SUPPLIER_FEED_URL) addUrlSecrets(process.env.MM_SUPPLIER_FEED_URL);
 if (process.env.MM_WATCH_URL) addUrlSecrets(process.env.MM_WATCH_URL);
@@ -129,6 +131,7 @@ try {
     if (WRITE_MODES.includes(mode)) assertWriteTarget(process.env.MM_TEST_SHEET_ID);
     if (process.env.MM_SHEET_ID && process.env.MM_SHEET_ID !== LIVE_SHEET_ID) throw new Error("MM_SHEET_ID не збігається з відомою живою таблицею — відмова");
     // Режими запису — лише короткоживучий токен mm-sheets-copy (scope spreadsheets, tokeninfo); GOOGLE_OAUTH_ACCESS_TOKEN — лише читання.
+    // ENG-29 (сервер): у GitHub Actions — той самий шлях: gcloud (облікові дані WIF ops.yml) → generateAccessToken mm-sheets-copy.
     const getAccessToken = WRITE_MODES.includes(mode) ? await writerAccessToken({ obtain: obtainToken, scopeOf: assertTokenScope, account: COPY_SA }) : envAccessToken();
     sheets = new GoogleSheetsWriter({ spreadsheetId: process.env.MM_TEST_SHEET_ID, liveSpreadsheetId: process.env.MM_SHEET_ID || LIVE_SHEET_ID, getAccessToken }); // кидає, якщо ID = живої
     if (WRITE_BUDGETS[mode]) sheets.maxRequests = WRITE_BUDGETS[mode];
@@ -185,7 +188,8 @@ const NOW = source === "xlsx" && arg("now") ? Date.parse(arg("now")) : Date.now(
 let w2Store = null, controls = null;
 if (WRITE_MODES.includes(mode)) {
   // W2 (не обходиться): координатора між машинами немає — лише явний однохостовий режим із постійним сховищем; інакше відмова.
-  w2Store = source === "api" ? new FileStore(w2Admission.dir) : new MemoryStore();
+  // ENG-29: спільне сховище W2 у Durable Object (MM_W2_MODE=do) — одна черга записувачів для сервера й локальних запусків.
+  w2Store = source !== "api" ? new MemoryStore() : w2Admission.kind === "durable-object" ? new RemoteStore({ url: w2Admission.url, key: w2Admission.key }) : new FileStore(w2Admission.dir);
   controls = await loadCatalogControls({ loadBook: () => readBook(CC_BOOK_SHEETS), store: w2Store, config, ...ccContract });
 }
 const stamp = new Date(NOW).toISOString();

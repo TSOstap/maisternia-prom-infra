@@ -33,6 +33,7 @@
  *  кінцевих крапок, імен пристроїв), інакше INVALID_KEY — для КОЖНОГО методу й КОЖНОГО ключа (зокрема fence.leaseKey і читання).
  *  Запечатані ключі розпізнаються за фізичною ідентичністю: будь-який інший запис того самого файлу (напр. «STATE/…» на NTFS) —
  *  CC_KEY_SEALED незалежно від оренди й квитка. */
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { jcs, jcsHash } from "./jcs.mjs";
@@ -275,5 +276,97 @@ export class FileStore {
     fs.renameSync(tmp, file);
     this.probe?.("committed", key);
     return { version: next };
+  }
+}
+
+/** ENG-29: квиток для запису ключа точки через RemoteStore — ті самі перевірки, що checkTicket, КРІМ запису оренди: його атомарно з
+ *  CAS перевіряє сервер (w2-engine: token, leaseId, не звільнена, не сплила на момент desk.now()). */
+function checkTicketClient(store, key, value, version, fence) {
+  const t = fence?.ticket;
+  if (!t || typeof t !== "object") throw new StoreSealedError(key, "запис контрольної точки без квитка beforeCommit заборонено");
+  const d = DESKS.get(store);
+  const reg = d?.tickets.get(String(t.nonce));
+  const why = [];
+  if (!reg) why.push("квиток невідомий цьому екземпляру сховища (інший процес / екземпляр, погашений або відкликаний)");
+  else {
+    if (jcs(reg) !== jcs(t)) why.push("квиток змінено після видачі");
+    if (reg.key !== key) why.push("квиток для іншого ключа");
+    if (reg.expectedVersion !== (version ?? null)) why.push(`квиток для версії ${reg.expectedVersion ?? "відсутня"}, запис — для ${version ?? "відсутня"}`);
+    let hash = null;
+    try { hash = jcsHash(value); } catch (e) { why.push("значення не є JSON: " + e.message); }
+    if (hash !== null && hash !== reg.nextHash) why.push("значення не те, на яке видано квиток (nextHash)");
+    if (d.now() > reg.notAfter) why.push("квиток прострочено");
+    if (reg.leaseToken !== fence.token || reg.leaseId !== fence.leaseId) why.push("квиток іншої оренди");
+  }
+  if (why.length) throw new TicketRejectedError(key, why);
+  return reg.nonce;
+}
+const fenceOf = (f) => ({ leaseKey: f.leaseKey, token: f.token, ...(f.leaseId !== undefined ? { leaseId: f.leaseId } : {}), ...(f.scope ? { scope: f.scope } : {}) });
+
+/** ENG-29 (переїзд на сервер) — сховище W2 у Cloudflare Durable Object (Worker mm-ops, POST /w2; сервер — w2-engine.mjs).
+ *  Те саме API, що MemoryStore / FileStore. Ключі, запечатані ключі й квитки перевіряються тут (стіл квитків — лише в процесі),
+ *  оренда + CAS — атомарно на сервері. Кожен запит має reqId: повтор після мережевої помилки чи 5xx повертає збережену відповідь
+ *  сервера (запис не виконується двічі). Сховище недоступне після повторів → виняток W2_UNAVAILABLE (fail-closed: шлюз не пише). */
+export class RemoteStore {
+  constructor({ url, key, fetchImpl = globalThis.fetch, retries = 3, timeoutMs = 20_000, sleep = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
+    if (!/^https:\/\//.test(String(url || "")) && !/^http:\/\/(127\.0\.0\.1|localhost)[:/]/.test(String(url || ""))) throw new Error("W2: адреса сховища має бути https://");
+    if (!key || String(key).length < 20) throw new Error("W2: немає ключа доступу до сховища");
+    this.endpoint = new URL("/w2", url).href; this.key = String(key); this.fetchImpl = fetchImpl; this.retries = retries; this.timeoutMs = timeoutMs; this.sleep = sleep;
+  }
+  async #call(body) {
+    const req = JSON.stringify({ ...body, reqId: crypto.randomBytes(16).toString("hex") });
+    let last = "";
+    for (let attempt = 0; attempt <= this.retries; attempt++) {
+      if (attempt) await this.sleep(1000 * attempt);
+      let res, text;
+      try {
+        res = await this.fetchImpl(this.endpoint, { method: "POST", redirect: "error", signal: AbortSignal.timeout(this.timeoutMs), headers: { authorization: "Bearer " + this.key, "content-type": "application/json" }, body: req });
+        text = await res.text();
+      } catch (e) { last = "мережа: " + String(e?.name || e?.message || e).slice(0, 80); continue; }
+      if (res.status >= 500 || res.status === 429) { last = "HTTP " + res.status; continue; }
+      let data = null; try { data = JSON.parse(text); } catch { /* */ }
+      if (!res.ok && !data?.error) throw Object.assign(new Error(`W2: сховище відхилило запит (HTTP ${res.status})`), { code: "W2_UNAVAILABLE" });
+      if (data?.error) {
+        const e = data.error, k = e.key ?? body.key;
+        if (e.code === "CONFLICT") throw new StoreConflictError(k, e.expected ?? null, e.actual ?? null);
+        if (e.code === "STALE_LEASE") throw new StoreFencedError(k, String(e.message || ""));
+        if (e.code === "CC_KEY_SEALED") throw new StoreSealedError(k, String(e.message || "").replace(/^CC_KEY_SEALED: «[^»]*» — /, ""));
+        if (e.code === "CC_TICKET_REJECTED") throw new TicketRejectedError(k, Array.isArray(e.reasons) ? e.reasons : [String(e.message || "")]);
+        throw Object.assign(new Error(String(e.message || e.code)), { code: e.code || "W2_ERROR" });
+      }
+      if (!data || typeof data.result !== "object" || data.result === null) throw Object.assign(new Error("W2: відповідь сховища без результату"), { code: "W2_UNAVAILABLE" });
+      return data.result;
+    }
+    throw Object.assign(new Error(`W2: сховище недоступне після ${this.retries + 1} спроб (${last})`), { code: "W2_UNAVAILABLE" });
+  }
+  async getJsonVersioned(key) {
+    const r = await this.#call({ op: "get", key: checkKey(key) });
+    return { value: clone(r.value), version: r.version ?? null };
+  }
+  async putJsonIfVersion(key, value, version) {
+    if (sealedWithoutDesk(key)) throw new StoreSealedError(key, "запис без оренди й квитка заборонено");
+    checkKey(key);
+    return { version: (await this.#call({ op: "cas", key, value: clone(value), version: version ?? null })).version };
+  }
+  async putJsonIfVersionFenced(key, value, version, fence) {
+    sealedFenced(key);
+    checkKey(key);
+    const leaseKey = checkKey(fence?.leaseKey ?? "");
+    if (leaseKey === key) throw new Error("fenced-запис: ключ оренди не можна писати fenced-записом");
+    if (!fence || !Number.isInteger(fence.token)) throw new Error("fenced-запис: потрібні leaseKey і token");
+    const point = key === SEALED_CHECKPOINT_KEY;
+    if (point && fence.leaseId === undefined) throw new StoreSealedError(key, "запис точки без leaseId оренди заборонено");
+    const nonce = point ? checkTicketClient(this, key, value, version, fence) : null;
+    const r = await this.#call({ op: "fenced", key, value: clone(value), version: version ?? null, fence: fenceOf(fence), ...(point ? { ticket: nonce, leaseNow: DESKS.get(this).now() } : {}) });
+    if (nonce) spend(this, nonce);
+    return { version: r.version };
+  }
+  /** ENG-23: стіл квитків цього екземпляра (один, прив'язаний до сховища фідів). */
+  claimDesk(opts) { return claimDeskOf(this, opts); }
+  async [HEAD_WRITE](value, version, fence) {
+    checkKey(fence?.leaseKey ?? "");
+    if (fence?.leaseId === undefined) throw new StoreSealedError(SERVING_HEAD_KEY, "запис head без leaseId оренди заборонено");
+    if (!Number.isInteger(fence.token)) throw new Error("fenced-запис: потрібні leaseKey і token");
+    return { version: (await this.#call({ op: "head", value: clone(value), version: version ?? null, fence: fenceOf(fence) })).version };
   }
 }

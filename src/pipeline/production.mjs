@@ -12,8 +12,12 @@
  *  не вважається довіреним.
  *  runCatalogControls (CC R7 G3) — корінь запуску CC: readiness (committer / store шлюзу W2 + publisher cc-publisher-v2), integrity
  *  (M3), publication (активні версії фідів), той самий контракт; apply — лише якщо CC активовано й готовність підтверджено.
- *  w2Coordinator — W2: координатора записів МІЖ машинами немає (Cloudflare DO не активовано). Запис дозволено лише в явному
- *  однохостовому режимі (MM_W2_MODE=single-host + постійний MM_SAFE_WRITE_DIR, не в GitHub Actions); інакше — відмова. */
+ *  w2Coordinator — W2: координатор записів. ENG-29 (переїзд на сервер, рішення власника 02.11): MM_W2_MODE=do — спільне сховище W2
+ *  у Cloudflare Durable Object (MM_W2_URL + MM_W2_KEY), дозволено й у GitHub Actions. Однохостовий режим (MM_W2_MODE=single-host +
+ *  постійний MM_SAFE_WRITE_DIR) — лише локально й лише поки сховище не перенесено в DO (позначка MOVED-TO-DO.json у каталозі → відмова:
+ *  два координатори одночасно = дві черги записувачів). Інакше — відмова. */
+import fs from "node:fs";
+import path from "node:path";
 import { catalogControlsAdapter, publicationFrom } from "./controls-adapter.mjs";
 import { readServedVersions } from "../publish/publisher.mjs";
 import { cardIntegrity } from "../core/owner-priority.mjs";
@@ -76,11 +80,18 @@ export async function loadCatalogControls({ loadBook, store, config, feedStore =
   });
 }
 
-/** W2: координатор записів. Між машинами — не реалізовано (явний блокер); лише однохостовий режим за явного налаштування. */
-export function w2Coordinator(env = process.env) {
-  if (env.GITHUB_ACTIONS === "true") throw new Error("W2: координатора записів між машинами немає (Cloudflare DO не активовано) — запис із GitHub Actions заборонено");
+/** W2: координатор записів. Між машинами — спільне сховище в Durable Object (MM_W2_MODE=do); інакше — лише однохостовий режим за
+ *  явного налаштування. */
+export function w2Coordinator(env = process.env, { exists = (p) => fs.existsSync(p) } = {}) {
+  if (env.MM_W2_MODE === "do") {
+    if (!/^https:\/\//.test(env.MM_W2_URL || "")) throw new Error("W2: режим do без адреси сховища (MM_W2_URL, https://) — запис без оренди й журналу заборонено");
+    if (String(env.MM_W2_KEY || "").length < 20) throw new Error("W2: режим do без ключа сховища (MM_W2_KEY) — запис без оренди й журналу заборонено");
+    return { kind: "durable-object", url: env.MM_W2_URL, key: env.MM_W2_KEY };
+  }
+  if (env.GITHUB_ACTIONS === "true") throw new Error("W2: у GitHub Actions — лише спільне сховище Durable Object (MM_W2_MODE=do); однохостовий запис із GitHub Actions заборонено");
   if (env.MM_W2_MODE !== "single-host") throw new Error("W2: координатора записів між машинами немає — запис дозволено лише в явному однохостовому режимі (MM_W2_MODE=single-host)");
   if (!env.MM_SAFE_WRITE_DIR) throw new Error("W2: однохостовий режим без постійного сховища (MM_SAFE_WRITE_DIR) — запис без оренди й журналу заборонено");
+  if (exists(path.join(env.MM_SAFE_WRITE_DIR, "MOVED-TO-DO.json"))) throw new Error("W2: сховище перенесено в Durable Object (MOVED-TO-DO.json) — однохостовий запис заборонено, лише MM_W2_MODE=do");
   return { kind: "single-host-file", dir: env.MM_SAFE_WRITE_DIR };
 }
 

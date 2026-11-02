@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "note": "ENG-29: погоджені власником файли поза репозиторієм для операцій кнопок (ті самі, що в першому реальному запуску TEST 02.11 — ENG-28d-run). Вміст зберігається в Durable Object mm-ops (/inputs), тут — лише відбитки: запускач відмовляється працювати, якщо SHA-256 не збігся.",
+  "inputs": {
+    "MM_FREEZE_IDS": { "name": "freeze-ids", "sha256": "6a3460c13df8c290505143bd9047cf66db94d2e92aaf1b1e5f27273a9a4d7330", "source": "FZ freeze-protected-rev5.candidate.json" },
+    "MM_FROZEN_ATTRS": { "name": "frozen-attrs", "sha256": "98ab49cfe7cee9858a2df3d0ad4897fab9726c3c2e61f9ffec5725fec52efa0c", "source": "FZ frozen-attributes-rev1.candidate.json" },
+    "MM_OWNER_VALUES": { "name": "owner-values", "sha256": "22d12e0d4391c3c207c23855dfd6588b0cf1a00fdcbbf51dfe14d8c66325e756", "source": "OV owner-values-rev9.candidate.json" },
+    "MM_A3_PAIRS": { "name": "a3-pairs", "sha256": "6507b9f0f8368763f7244495f55fafcef8e6dabb43355d0f140b3bffa1ea73f3", "source": "A3 a3-exact-pairs-rev2.json" },
+    "CC_CONTRACT": { "name": "cc-contract-test", "sha256": "36eac5833c6e20e96ee470d4b5995ba27af83e3d20e175903ac1d5994f935119", "source": "cc-contract-TEST.activated.candidate.json (R7.4.2 + activated 2026-11-01)" }
+  }
+}

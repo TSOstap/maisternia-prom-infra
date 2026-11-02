@@ -1,0 +1,19 @@
+// «mm-ops» — диспетчер кнопок таблиці TEST + сховище W2 (ENG-29). Cloudflare Workers Free, SQLite Durable Object, без розкладу.
+{
+  "name": "mm-ops",
+  "main": "src/index.mjs",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "triggers": { "crons": [] },
+  "durable_objects": {
+    "bindings": [{ "name": "OPS_DO", "class_name": "OpsDO" }]
+  },
+  // Free: лише Durable Objects зі сховищем SQLite.
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["OpsDO"] }],
+  "vars": {
+    "GITHUB_REPO": "TSOstap/maisternia-prom-infra",
+    "GITHUB_WORKFLOW": "ops.yml",
+    "GITHUB_REF": "main"
+  }
+  // Секрети (wrangler secret put, не в репозиторій): BUTTON_KEY, RUNNER_KEY, ADMIN_KEY, GITHUB_TOKEN.
+}
