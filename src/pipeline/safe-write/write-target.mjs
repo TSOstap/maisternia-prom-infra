@@ -62,7 +62,9 @@ export function guardedSheets(sheets, { spreadsheetId, policy, headers = {} }) {
   const hdr = Object.fromEntries(Object.entries(headers).map(([k, v]) => [k, (v || []).map(mtText)]));
   const check = (op, title) => {
     assertWriteTarget(spreadsheetId);
-    if (op === "deleteRows") block("видалення рядків заборонено", { title });
+    // ENG-29 (рішення власника 02.11, змінює B6): видалення рядків — лише де політика режиму явно це дозволяє для САМЕ цього аркуша
+    // (deleteRows: true; зараз — лише «Перенести затверджені» → «Нові товари», за ключем зі знімком рядка через шлюз W2). Інакше — BLOCK.
+    if (op === "deleteRows" && !(policy[title]?.deleteRows === true && (policy[title].ops || []).includes("deleteRows"))) block("видалення рядків заборонено", { title });
     const p = policy[title] || policy["*"];
     if (!p) block(`аркуш «${title}» не дозволено цією операцією`, { op });
     if (!(p.ops || []).includes(op)) block(`операція ${op} для «${title}» не дозволена`, { op });
@@ -115,4 +117,10 @@ export const MODE_POLICIES = Object.freeze({
   // ENG-28c: «Знайти нові товари» — лише черга «Нові товари» (колонки стереже контракт власності intake) і «Журнал»; основного каталогу —
   // жодної операції.
   "find-new": { "Нові товари": { ops: ["ensureColumns", "updateRanges", "appendRows", "setPercentFormat"], columns: "*", header: true }, "Журнал": { ops: ["appendRows"] } },
+  // ENG-29: «Перенести затверджені» — «Основний каталог»: лише дописування нових карток (за ключем, без зміни наявних рядків і колонок);
+  // «Нові товари»: лише «Перевірка» (причини «НЕ ПЕРЕНЕСЕНО») і прибирання перенесених рядків (deleteByKeys зі знімком; appendRows — лише
+  // повернення чужого рядка зі знімка, якщо видалення лягло не туди); паспорт; «Журнал».
+  transfer: { "Основний каталог": { ops: ["appendRows"] },
+    "Нові товари": { ops: ["updateRanges", "deleteRows", "appendRows"], columns: ["Перевірка"], deleteRows: true },
+    "Паспорт каталогу": { ops: ["ensureSheet", "updateRanges"], columns: "*", header: true }, "Журнал": JOURNAL_KEYED },
 });

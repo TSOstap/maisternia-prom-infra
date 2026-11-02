@@ -25,6 +25,8 @@ export const JOURNAL_HEADER = Object.freeze(["Дата / час", "Аркуш", 
 export const RUN_PLAN_KEY = "state/run-plan/current.json";
 /** Контрольний план перенесення NEW92 (F-28B-2). */
 export const TRANSFER_PLAN_KEY = "state/transfer-new92/plan.json";
+/** ENG-29: контрольний план «Перенести затверджені» (src/core/transfer-approved.mjs — той самий ключ). */
+export const TRANSFER_APPROVED_KEY = "state/transfer-approved/plan.json";
 export const PLAN = Object.freeze({ PLANNED: "PLANNED", PRODUCT_DONE: "PRODUCT_DONE", DONE: "DONE", ABANDONED: "ABANDONED" });
 /** Закриті стани; будь-який інший (PLANNED / PRODUCT_DONE запуску; MAIN_DONE / MARKS_DONE / PASSPORT_DONE перенесення) — відкритий. */
 const CLOSED = new Set([PLAN.DONE, PLAN.ABANDONED]);
@@ -165,6 +167,9 @@ export async function openPlansGate({ store, session, readBook, stamp, recover =
   if (!store?.getJsonVersioned) return null;
   const t = (await loadPlan(store, TRANSFER_PLAN_KEY)).plan;
   if (isOpen(t)) return { state: "BLOCKED", reason: `незавершене перенесення ${t.opId} (${t.status}) — спершу --mode=merge (контрольоване продовження або рішення власника); інших записів немає`, transferPlan: { opId: t.opId, status: t.status } };
+  // ENG-29: незавершене «Перенести затверджені» — спершу його продовження (та сама кнопка); інших товарних записів немає.
+  const ta = (await loadPlan(store, TRANSFER_APPROVED_KEY)).plan;
+  if (isOpen(ta)) return { state: "BLOCKED", reason: `незавершене «Перенести затверджені» ${ta.opId} (${ta.status}) — спершу натисніть «Перенести затверджені» ще раз (продовження); інших записів немає`, transferPlan: { opId: ta.opId, status: ta.status } };
   const r = (await loadPlan(store, RUN_PLAN_KEY)).plan;
   if (!isOpen(r)) return null;
   if (!recover) return { state: "BLOCKED", reason: `незавершений запуск ${r.runId} (${r.status}) — спершу відновлення журналу («Оновити товари» або QA після reconcile)`, plan: brief(r) };

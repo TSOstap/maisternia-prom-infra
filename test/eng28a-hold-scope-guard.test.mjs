@@ -114,7 +114,11 @@ test("ENG-28a охорона: політика є для кожного режи
   const src = fs.readFileSync(path.join(root, "tools", "sheet-sync.mjs"), "utf8");
   const modes = JSON.parse(src.match(/const WRITE_MODES = (\[[^\]]*\]);/)[1]);
   for (const m of modes) assert.ok(WT.MODE_POLICIES[m], "немає політики для режиму " + m);
-  for (const [m, pol] of Object.entries(WT.MODE_POLICIES)) for (const [title, p] of Object.entries(pol)) assert.ok(!(p.ops || []).includes("deleteRows"), `${m}/${title}: deleteRows`);
+  // ENG-29 (рішення власника 02.11, змінює B6): видалення рядків — лише «Перенести затверджені» і лише «Нові товари».
+  for (const [m, pol] of Object.entries(WT.MODE_POLICIES)) for (const [title, p] of Object.entries(pol)) {
+    const allowed = m === "transfer" && title === SHEET.queue;
+    assert.equal((p.ops || []).includes("deleteRows") || p.deleteRows === true, allowed, `${m}/${title}: deleteRows`);
+  }
   assert.deepEqual(Object.keys(WT.MODE_POLICIES.structure).sort(), [SHEET.journal, SHEET.queue, SHEET.passport].sort());
   assert.deepEqual(WT.MODE_POLICIES.structure[SHEET.queue].columns, ["Перевірка"]);
   assert.deepEqual(WT.MODE_POLICIES.correction[SHEET.main].columns, ["Опис UA", "Опис RU", "Запити UA", "Запити RU"]);

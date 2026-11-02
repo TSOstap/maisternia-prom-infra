@@ -26,6 +26,7 @@ const KEEP_RUNS = 200;
 
 const SCHEMA = [
   "CREATE TABLE IF NOT EXISTS w2 (k TEXT PRIMARY KEY, version TEXT NOT NULL, v TEXT NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS w2_chunk (k TEXT NOT NULL, i INTEGER NOT NULL, part TEXT NOT NULL, PRIMARY KEY (k, i))",
   "CREATE TABLE IF NOT EXISTS w2_req (id TEXT PRIMARY KEY, at INTEGER NOT NULL, res TEXT NOT NULL)",
   "CREATE TABLE IF NOT EXISTS runs (id TEXT PRIMARY KEY, op TEXT NOT NULL, status TEXT NOT NULL, at INTEGER NOT NULL, updated INTEGER NOT NULL, info TEXT NOT NULL)",
   "CREATE TABLE IF NOT EXISTS inputs (name TEXT PRIMARY KEY, sha TEXT NOT NULL, size INTEGER NOT NULL, at INTEGER NOT NULL, body TEXT NOT NULL)",
@@ -52,11 +53,34 @@ export function roleFor(req, env) {
   return need && sameKey(key, env[need]) ? need : null;
 }
 
-/** SQL-адаптер сховища W2 для w2-engine (ті самі методи, що memKv у тестах). */
+/** Рядок SQLite у Durable Object — до 2 МБ. Більше значення (журнал операцій W2 росте до 5000 записів) зберігається частинами по
+ *  CHUNK символів (UTF-16: ≤ 3 байти UTF-8 на одиницю → ≤ 1,5 МБ на частину) у w2_chunk; у w2.v тоді — позначка «#chunks:N», яка не може бути JSON. */
+export const CHUNK = 500_000;
+// JSON.stringify ніколи не починається з «#» (лише { [ " цифра - t f n), а NUL у тексті SQLite обрізає рядок — тому «#».
+const CHUNKED = "#chunks:";
+/** SQL-адаптер сховища W2 для w2-engine (ті самі методи, що memKv у тестах). Виклики — у transactionSync (атомарно разом із частинами). */
 export function w2Kv(sql) {
   return {
-    get(k) { const r = sql.exec("SELECT version, v FROM w2 WHERE k = ?", k).toArray()[0]; return r ? { version: r.version, value: JSON.parse(r.v) } : null; },
-    set(k, value, version) { sql.exec("INSERT INTO w2 (k, version, v) VALUES (?, ?, ?) ON CONFLICT(k) DO UPDATE SET version = excluded.version, v = excluded.v", k, version, JSON.stringify(value ?? null)); },
+    get(k) {
+      const r = sql.exec("SELECT version, v FROM w2 WHERE k = ?", k).toArray()[0];
+      if (!r) return null;
+      if (!r.v.startsWith(CHUNKED)) return { version: r.version, value: JSON.parse(r.v) };
+      const n = Number(r.v.slice(CHUNKED.length));
+      const parts = sql.exec("SELECT i, part FROM w2_chunk WHERE k = ? ORDER BY i", k).toArray();
+      if (parts.length !== n || parts.some((p, i) => Number(p.i) !== i)) throw new Error("W2: пошкоджене значення частинами: " + k);
+      return { version: r.version, value: JSON.parse(parts.map((p) => p.part).join("")) };
+    },
+    set(k, value, version) {
+      const s = JSON.stringify(value ?? null);
+      sql.exec("DELETE FROM w2_chunk WHERE k = ?", k);
+      let v = s;
+      if (s.length > CHUNK) {
+        const n = Math.ceil(s.length / CHUNK);
+        for (let i = 0; i < n; i++) sql.exec("INSERT INTO w2_chunk (k, i, part) VALUES (?, ?, ?)", k, i, s.slice(i * CHUNK, (i + 1) * CHUNK));
+        v = CHUNKED + n;
+      }
+      sql.exec("INSERT INTO w2 (k, version, v) VALUES (?, ?, ?) ON CONFLICT(k) DO UPDATE SET version = excluded.version, v = excluded.v", k, version, v);
+    },
     getReq(id) { const r = sql.exec("SELECT res FROM w2_req WHERE id = ?", id).toArray()[0]; return r ? JSON.parse(r.res) : null; },
     putReq(id, at, res) { sql.exec("INSERT INTO w2_req (id, at, res) VALUES (?, ?, ?)", id, at, JSON.stringify(res)); },
     count() { return Number(sql.exec("SELECT COUNT(*) AS n FROM w2").toArray()[0].n); },
@@ -86,7 +110,7 @@ export class OpsCore {
       if (m === "PUT" && p.startsWith("/admin/inputs/")) return json(await this.putInput(decodeURIComponent(p.slice(14)), await req.text()));
       if (m === "GET" && p === "/admin/inputs") return json({ inputs: this.rows("SELECT name, sha, size, at FROM inputs ORDER BY name") });
       if (m === "POST" && p === "/admin/w2-seed") { const b = await req.json().catch(() => null); const r = this.tx(() => w2Seed(this.kv, b?.entries)); return json(r, r.error ? 409 : 200); }
-      if (m === "GET" && p === "/admin/w2-dump") return json({ entries: this.rows("SELECT k, version, v FROM w2 ORDER BY k").map((r) => ({ key: r.k, version: r.version, value: JSON.parse(r.v) })) });
+      if (m === "GET" && p === "/admin/w2-dump") return json({ entries: this.rows("SELECT k FROM w2 ORDER BY k").map((r) => { const e = this.kv.get(r.k); return { key: r.k, version: e.version, value: e.value }; }) });
       if (m === "GET" && p === "/admin/runs") return json({ runs: this.recentRuns(50) });
       return json({ error: { code: "NOT_FOUND", message: "не знайдено" } }, 404);
     } catch (e) {

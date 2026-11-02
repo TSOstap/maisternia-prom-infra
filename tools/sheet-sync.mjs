@@ -39,6 +39,7 @@ import { updateProductsRun } from "../src/pipeline/update-products.mjs";
 import { migrateQueueForTransfer, applyOwnerCorrection } from "../src/pipeline/eng28a-steps.mjs";
 import { qaProducts, QA_IDS_0111 } from "../src/pipeline/qa-products.mjs";
 import { findNewProducts } from "../src/pipeline/find-new.mjs";
+import { transferApproved } from "../src/pipeline/transfer-approved.mjs";
 import { feedScopeOf } from "../src/core/supplier-presence.mjs";
 import { assertWriteTarget, guardedSheets, writerAccessToken, MODE_POLICIES, TEST_SHEET_ID, LIVE_SHEET_ID } from "../src/pipeline/safe-write/write-target.mjs";
 import { obtainToken, assertTokenScope, COPY_SA } from "./copy-access-check.mjs";
@@ -60,7 +61,9 @@ const mode = arg("mode", "sync");
 //   qa        — QA погоджених товарів (лише їхні рядки; src/pipeline/qa-products.mjs). sync / intake — застарілі комбіновані режими.
 //   reconcile — ENG-28d: з'ясування невідомих результатів записів W2 (лише читання таблиці; пише лише журнал операцій W2); рішення
 //               людини щодо NEEDS_DECISION — лише явно: --decide=<opId> --note="пояснення".
-const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile"];
+//   transfer  — ENG-29: «Перенести затверджені» (кнопка): затверджені рядки черги → «Основний каталог», перенесені прибираються з черги
+//               (src/pipeline/transfer-approved.mjs; план у сховищі W2, продовження після збою — той самий режим).
+const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer"];
 /** ENG-28c (М1): межа HTTP-запитів записувача на запуск. Типово 40 (GoogleSheetsWriter); «Оновити товари» / sync — 120: перший повний
  *  прохід пріоритету власника на 5 121 рядках потребує ≈ 45 запитів (з М2; без М2 — ≈ 69), темп записувача ≤ 50 запитів/хв (квота
  *  Google — 60 запитів запису / хв на користувача проєкту). Перед першим записом — оцінка (budgetCheck): більше за межу → нічого не пишемо. */
@@ -215,6 +218,11 @@ try {
     if (!arg("snapshot-date")) fail("merge: ", new Error("потрібен --snapshot-date=<дата останнього оновлення LIVE> (для позначки «відсутній у знімку»)"));
     const session = await new WriteGateway({ sheets, read: readBook, store: w2Store }).open({ writer: "sync" });
     try { report.result = await transferNew92({ sheets, readBook, stamp, snapshotDate: arg("snapshot-date"), session, approvedBy: arg("by", "власник"), decisionRef: arg("note", "доручення власника 01.11.2026"), expectCount: Number(arg("expect-new92", "92")) }); }
+    finally { await session.close?.().catch(() => {}); }
+  } else if (mode === "transfer") {
+    // ENG-29: «Перенести затверджені» — сесія «sync» (оренда + журнал + fencing); політика охоронця MODE_POLICIES.transfer.
+    const session = await new WriteGateway({ sheets, read: readBook, store: w2Store }).open({ writer: "sync" });
+    try { report.result = await transferApproved({ readBook, stamp, session, controls, config }); }
     finally { await session.close?.().catch(() => {}); }
   } else if (mode === "structure") {
     // ENG-28a, крок 1: «Нові товари» → заголовок черги + «ОЧІКУЄ ПЕРЕНЕСЕННЯ» (рядки не видаляються; sync / intake їх не змінюють).

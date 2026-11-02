@@ -9,7 +9,8 @@
  *   - 6 колонок без визначеного записувача (B6 «?») — безпечна відмова до затвердження контракту;
  *   - колонки sync (код Prom, статус імпорту, печатка рядка) і «лише при додаванні» (ідентичність, валюта, GTIN, країна, «Виявлено»).
  *  «Рішення» — gate "cmd-consume": записувач лише СПОЖИВАЄ команду власника (очищує клітинку, у якій досі саме вона: expect).
- *  Нові рядки — appendWriters (intake), повні початкові значення. Видалення рядків черги цим розділом не дозволено.
+ *  Нові рядки — appendWriters (intake), повні початкові значення. Видалення рядків черги — лише sync за ключем зі знімком рядка
+ *  (ENG-29, рішення власника 02.11: перенесені в «Основний каталог» рядки прибираються; охоронець цілі дозволяє це лише режиму transfer).
  *  ENG-27 (Hermes INT N3): sync — теж записувач СИСТЕМНИХ колонок (сирі дані, ціни / наявність, умовне SEO, характеристики, стан
  *  черги) — лише за Offer ID з очікуваними значеннями (updateByKey), без позиційного перезапису. «Рішення», ручні колонки власника,
  *  6 колонок B6 «?», колонки «лише при додаванні» й видалення рядків sync НЕ дозволено. Записувач sync поряд з intake — тимчасово,
@@ -41,7 +42,9 @@ function buildSpec() {
     if (columns.has(col)) throw new Error(`тимчасовий контракт черги: колонка «${col}» у двох групах`);
     columns.set(col, { group: g.name, writers: Object.freeze([...g.writers]), gate: g.gate || "" });
   }
-  return Object.freeze({ key: "Offer ID", identity: Object.freeze(["ID постачальника"]), appendWriters: Object.freeze(["intake"]), deleteWriters: Object.freeze([]), columns, provisional: true });
+  // ENG-29 (рішення власника 02.11, змінює B6): перенесені рядки прибираються з черги — видаляти може лише sync (за ключем зі знімком
+  // рядка, deleteByKeys); охоронець цілі дозволяє саме видалення лише режиму «Перенести затверджені» (MODE_POLICIES.transfer).
+  return Object.freeze({ key: "Offer ID", identity: Object.freeze(["ID постачальника"]), appendWriters: Object.freeze(["intake"]), deleteWriters: Object.freeze(["sync"]), columns, provisional: true });
 }
 export const PROVISIONAL_QUEUE_SPEC = buildSpec();
 

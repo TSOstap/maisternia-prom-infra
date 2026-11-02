@@ -176,7 +176,8 @@ test("F05 / тимчасовий контракт черги (B6): покрив�
   for (const col of [...UNDEFINED_B6_COLUMNS, "Запити UA", "Група ID", "Категорія Prom ID", "Виробник", "Код товару Prom", "Статус імпорту", "Виявлено", "ID постачальника"]) assert.deepEqual(spec.columns.get(col).writers, [], col);
   assert.deepEqual(spec.columns.get("Рішення"), { group: spec.columns.get("Рішення").group, writers: ["intake"], gate: "cmd-consume" });
   assert.deepEqual(spec.appendWriters, ["intake"]);
-  assert.deepEqual(spec.deleteWriters, []);
+  // ENG-29 (рішення власника 02.11, змінює B6): перенесені рядки прибирає з черги лише sync (за ключем зі знімком; охоронець — лише режим transfer).
+  assert.deepEqual(spec.deleteWriters, ["sync"]);
   const approved = { ...own, sheets: new Map([[SHEET.queue, { ...spec, provisional: false }]]) };
   assert.equal(withProvisionalQueue(approved), approved, "затверджений розділ «Нові товари» — без підміни");
 });

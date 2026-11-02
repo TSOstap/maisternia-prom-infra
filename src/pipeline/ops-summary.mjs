@@ -37,6 +37,8 @@ export function ownerSummary(op, report) {
     if (r.removedFromQueue !== undefined) lines.push(`Прибрано з «Нових товарів»: ${n(r.removedFromQueue)}`);
     for (const p of (r.notTransferred || []).slice(0, 30)) lines.push(`Не перенесено ${mtText(p.offerId)}: ${clip(p.problems?.join("; ") || p.reason, 300)}`);
     if ((r.notTransferred || []).length > 30) lines.push(`… ще ${r.notTransferred.length - 30} — див. колонку «Перевірка» в «Нових товарах»`);
+    for (const c of (r.conflicts || []).slice(0, 10)) lines.push(`Не прибрано з «Нових товарів» ${mtText(c.offerId)}: ${clip(c.why, 200)}`);
+    if (r.next) lines.push("Далі: " + r.next);
   }
   if (op === "reconcile") {
     if (Array.isArray(r.results)) lines.push(`Звірено записів: ${r.results.length}; нерозв'язаних: ${n(r.unresolved)}`);

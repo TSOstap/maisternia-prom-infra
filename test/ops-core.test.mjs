@@ -117,6 +117,19 @@ test("W2 через Durable Object (SQL): RemoteStore → /w2 — оренда, 
   assert.equal(lease.released, true);
 });
 
+test("W2: значення понад межу рядка SQLite (журнал операцій) зберігається частинами й читається цілим; менше значення прибирає частини", { skip }, async () => {
+  const { core } = setup();
+  const store = new RemoteStore({ url: "https://ops.test", key: ENV.RUNNER_KEY, fetchImpl: async (url, init) => core.fetch(new Request(url, init)), sleep: async () => {} });
+  const big = { entries: Array.from({ length: 3000 }, (_, i) => ({ i, text: "Опис товару українською ".repeat(20) })) };
+  assert.ok(JSON.stringify(big).length > 1_000_000);
+  const v1 = (await store.putJsonIfVersion("state/write-journal/sheets-main.json", big, null)).version;
+  assert.deepEqual((await store.getJsonVersioned("state/write-journal/sheets-main.json")).value, big);
+  assert.ok(core.rows("SELECT COUNT(*) AS n FROM w2_chunk")[0].n >= 3);
+  await store.putJsonIfVersion("state/write-journal/sheets-main.json", { entries: [] }, v1);
+  assert.deepEqual((await store.getJsonVersioned("state/write-journal/sheets-main.json")).value, { entries: [] });
+  assert.equal(core.rows("SELECT COUNT(*) AS n FROM w2_chunk")[0].n, 0);
+});
+
 test("вхідні файли й перенесення стану W2: SHA-256 на сервері, лише в порожнє сховище, вивантаження для звірки", { skip }, async () => {
   const { call } = setup();
   const body = JSON.stringify({ v: 1, owner: "значення" });
