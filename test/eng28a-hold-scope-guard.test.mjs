@@ -116,7 +116,7 @@ test("ENG-28a охорона: політика є для кожного режи
   for (const m of modes) assert.ok(WT.MODE_POLICIES[m], "немає політики для режиму " + m);
   // ENG-29 (рішення власника 02.11, змінює B6): видалення рядків — лише «Перенести затверджені» і лише «Нові товари».
   for (const [m, pol] of Object.entries(WT.MODE_POLICIES)) for (const [title, p] of Object.entries(pol)) {
-    const allowed = m === "transfer" && title === SHEET.queue;
+    const allowed = (m === "transfer" && title === SHEET.queue) || (m === "deferred" && title === SHEET.deferred); // ENG-29: рішення власника 02.11 / 03.11
     assert.equal((p.ops || []).includes("deleteRows") || p.deleteRows === true, allowed, `${m}/${title}: deleteRows`);
   }
   assert.deepEqual(Object.keys(WT.MODE_POLICIES.structure).sort(), [SHEET.journal, SHEET.queue, SHEET.passport].sort());

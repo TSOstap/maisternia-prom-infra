@@ -48,8 +48,18 @@ function buildSpec() {
 }
 export const PROVISIONAL_QUEUE_SPEC = buildSpec();
 
-/** Контракт для записів через шлюз: затверджений розділ «Нові товари» має пріоритет; немає — додається тимчасовий (позначка provisional). */
+/** ENG-29 (рішення власника 03.11): «Відкладені товари» розбираються — перенесені рядки прибирає лише sync за ключем зі знімком рядка
+ *  (deleteByKeys); жодна колонка не пишеться й рядки не дописуються. Охоронець дозволяє видалення лише режиму deferred. */
+export const DEFERRED_TITLE = SHEET.deferred;
+export const PROVISIONAL_DEFERRED_SPEC = Object.freeze({ key: "Offer ID", identity: Object.freeze(["ID постачальника"]), appendWriters: Object.freeze([]), deleteWriters: Object.freeze(["sync"]), columns: new Map(), provisional: true });
+
+/** Контракт для записів через шлюз: затверджені розділи «Нові товари» / «Відкладені товари» мають пріоритет; немає — додаються
+ *  тимчасові (позначка provisional). */
 export function withProvisionalQueue(contract) {
-  if (!contract?.sheets || contract.sheets.has(QUEUE_TITLE)) return contract;
-  return Object.freeze({ ...contract, sheets: new Map([...contract.sheets, [QUEUE_TITLE, PROVISIONAL_QUEUE_SPEC]]), provisional: Object.freeze([QUEUE_TITLE]) });
+  if (!contract?.sheets) return contract;
+  const add = [];
+  if (!contract.sheets.has(QUEUE_TITLE)) add.push([QUEUE_TITLE, PROVISIONAL_QUEUE_SPEC]);
+  if (!contract.sheets.has(DEFERRED_TITLE)) add.push([DEFERRED_TITLE, PROVISIONAL_DEFERRED_SPEC]);
+  if (!add.length) return contract;
+  return Object.freeze({ ...contract, sheets: new Map([...contract.sheets, ...add]), provisional: Object.freeze(add.map(([k]) => k)) });
 }

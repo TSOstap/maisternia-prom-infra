@@ -15,9 +15,13 @@ export const OPS = Object.freeze({
   "find-new": "Знайти нові товари",
   update: "Оновити товари",
   reconcile: "Звірити незавершені записи",
+  "deferred-plan": "Відкладені товари: план",
+  deferred: "Відкладені товари: розібрати",
 });
 /** Типова тривалість (виміряно на TEST 02.11: «Оновити» ≈ 18 хв, «Знайти нові» ≈ 3 хв, «Перенести» 3–13 хв залежно від кількості). */
 const DURATION = Object.freeze({ transfer: "3–15 хвилин", "find-new": "3–5 хвилин", update: "15–20 хвилин", reconcile: "2–4 хвилини" });
+/** Кнопки меню (ключ кнопок) — лише ці дії; разові операції (відкладені товари) — лише вручну з GitHub. */
+const BUTTON_OPS = new Set(["transfer", "find-new", "update", "reconcile"]);
 const ACTIVE = new Set(["DISPATCHING", "QUEUED", "RUNNING"]);
 /** Після цього часу без звісток запуск вважається завислим (job ops.yml має timeout-minutes 60) — кнопка знову доступна.
  *  Захист таблиці від цього не залежить: оренда W2 і журнал операцій не дадуть двом записувачам писати одночасно. */
@@ -207,7 +211,7 @@ export class OpsCore {
   async button(body) {
     if (body?.op === "status") return this.status();
     const op = String(body?.op || "");
-    if (!OPS[op]) return { state: "ERROR", message: "Невідома дія: " + op.slice(0, 40) };
+    if (!BUTTON_OPS.has(op)) return { state: "ERROR", message: "Невідома дія: " + op.slice(0, 40) };
     const now = this.now(), active = this.activeRun(now);
     if (active) return { state: "BUSY", message: `Уже виконується «${active.label}» (з ${new Date(active.at).toISOString().slice(11, 16)} UTC). Дочекайтеся завершення й натисніть ще раз.` };
     const id = randomHex(8);

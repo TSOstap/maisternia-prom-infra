@@ -40,6 +40,7 @@ import { migrateQueueForTransfer, applyOwnerCorrection } from "../src/pipeline/e
 import { qaProducts, QA_IDS_0111 } from "../src/pipeline/qa-products.mjs";
 import { findNewProducts } from "../src/pipeline/find-new.mjs";
 import { transferApproved } from "../src/pipeline/transfer-approved.mjs";
+import { resolveDeferred } from "../src/pipeline/deferred-resolve.mjs";
 import { feedScopeOf } from "../src/core/supplier-presence.mjs";
 import { assertWriteTarget, guardedSheets, writerAccessToken, MODE_POLICIES, TEST_SHEET_ID, LIVE_SHEET_ID } from "../src/pipeline/safe-write/write-target.mjs";
 import { obtainToken, assertTokenScope, COPY_SA } from "./copy-access-check.mjs";
@@ -63,7 +64,9 @@ const mode = arg("mode", "sync");
 //               людини щодо NEEDS_DECISION — лише явно: --decide=<opId> --note="пояснення".
 //   transfer  — ENG-29: «Перенести затверджені» (кнопка): затверджені рядки черги → «Основний каталог», перенесені прибираються з черги
 //               (src/pipeline/transfer-approved.mjs; план у сховищі W2, продовження після збою — той самий режим).
-const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer"];
+//   deferred  — ENG-29: розбір «Відкладених товарів» (рішення власника 03.11): у фіді — в «Основний каталог», немає — у «Видалені товари»;
+//               --plan-only — лише план.
+const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer", "deferred"];
 /** ENG-28c (М1): межа HTTP-запитів записувача на запуск. Типово 40 (GoogleSheetsWriter); «Оновити товари» / sync — 120: перший повний
  *  прохід пріоритету власника на 5 121 рядках потребує ≈ 45 запитів (з М2; без М2 — ≈ 69), темп записувача ≤ 50 запитів/хв (квота
  *  Google — 60 запитів запису / хв на користувача проєкту). Перед першим записом — оцінка (budgetCheck): більше за межу → нічого не пишемо. */
@@ -239,7 +242,7 @@ try {
     if (!arg("expected")) fail("correction: ", new Error("потрібен --expected=<план dry-run>, погоджений власником"));
     const expected = JSON.parse(fs.readFileSync(arg("expected"), "utf8"));
     report.result = await underMaintenanceLease(() => applyOwnerCorrection({ sheets, readBook, stamp, expected }));
-  } else if (mode === "update" || mode === "qa" || mode === "find-new") {
+  } else if (mode === "update" || mode === "qa" || mode === "find-new" || mode === "deferred") {
     // ENG-28: ПОВНИЙ сирий фід постачальника (MM_SUPPLIER_FEED_URL або --supplier-full-file). Адреса — лише секрет у пам'яті;
     // охоплення (group_ids тощо) визначається з адреси. Локальний файл адреси не має: охоплення задає --feed-scope=full|filtered
     // (типово filtered — невідоме джерело не доводить повноти, «видалений у постачальника» з нього не ставиться).
@@ -251,7 +254,13 @@ try {
     if (source === "api") { const c = []; for await (const x of new HttpSupplierSource(full, { timeoutMs: 180000, maxBytes: 300_000_000 }).chunks()) c.push(x); fullXml = Buffer.concat(c).toString("utf8"); }
     else fullXml = fs.readFileSync(full, "utf8");
     report.metrics.supplierFetchMs = Date.now() - tf;
-    if (mode === "update") {
+    if (mode === "deferred") {
+      // ENG-29: розбір «Відкладених товарів» — сесія «sync»; --plan-only — без сесії й без записів.
+      const planOnly = process.argv.includes("--plan-only");
+      const session = planOnly ? null : await new WriteGateway({ sheets, read: readBook, store: w2Store }).open({ writer: "sync" });
+      try { report.result = await resolveDeferred({ readBook, xml: fullXml, stamp, session, config, planOnly }); }
+      finally { await session?.close?.().catch(() => {}); }
+    } else if (mode === "update") {
       // ENG-28c: «Оновити товари» — лише основний каталог (сесія «sync»); новинки — окремою командою --mode=find-new.
       if (process.argv.includes("--intake")) fail("update: ", new Error("новинки в чергу додає лише окрема команда --mode=find-new"));
       const openSession = (writer) => new WriteGateway({ sheets, read: readBook, store: w2Store }).open({ writer });
@@ -431,4 +440,4 @@ if (arg("summary")) {
   if ([...secrets].some((x) => lines.includes(x)) || /\d{10,}/.test(lines)) { process.stderr.write("ЗАХИСТ ВІД ВИТОКУ: summary не записано\n"); process.exit(3); }
   fs.appendFileSync(arg("summary"), lines);
 }
-process.exitCode = process.exitCode === 3 ? 3 : mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "TRANSFERRED", "MIGRATED", "CORRECTED", "NOTHING", "NO_CHANGES", "SYNCED", "REFRESHED", "INTAKE_DONE", "NOTHING_TO_WRITE", "SKIPPED", "SHADOW", "COMMITTED", "ARCHIVED", "RECOVERED", "QA_DONE", "PLANNED", "NOTHING_NEW", "WAITING_STABILITY", "NOTHING_COMPLETE", "RECONCILED", "JOURNAL_RECOVERED", "RUN_PLAN_ABANDONED"].includes(report.result?.state) ? 0 : 1;
+process.exitCode = process.exitCode === 3 ? 3 : mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "TRANSFERRED", "MIGRATED", "CORRECTED", "NOTHING", "NO_CHANGES", "SYNCED", "REFRESHED", "INTAKE_DONE", "NOTHING_TO_WRITE", "SKIPPED", "SHADOW", "COMMITTED", "ARCHIVED", "RECOVERED", "QA_DONE", "PLANNED", "NOTHING_NEW", "WAITING_STABILITY", "NOTHING_COMPLETE", "RECONCILED", "JOURNAL_RECOVERED", "RUN_PLAN_ABANDONED", "DEFERRED_RESOLVED"].includes(report.result?.state) ? 0 : 1;

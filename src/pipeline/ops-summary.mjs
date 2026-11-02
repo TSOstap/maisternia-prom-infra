@@ -9,6 +9,7 @@ export const STATE_UA = Object.freeze({
   ABORTED: "Зупинено — нічого не записано", BLOCKED: "Заблоковано — потрібна звірка незавершених записів", BUSY: "Таблиця зайнята іншою операцією",
   RECONCILE_REQUIRED: "Потрібна звірка незавершених записів", ERROR: "Помилка", HOLD_SUPPLIER_DISAPPEARANCE: "Зупинено: забагато товарів зникло у постачальника",
   CONFLICT_OWNER_EDIT: "Зупинено: таблицю змінено під час операції", INCOMPLETE: "Виконано частково — потрібна звірка",
+  DEFERRED_RESOLVED: "Відкладені товари розібрано", PLANNED: "План готовий — нічого не записано", PRECONDITION_FAILED: "Не виконано — умови не виконані",
 });
 const n = (v) => Number(v || 0);
 const clip = (s, max = 600) => { const t = mtText(s); return t.length > max ? t.slice(0, max) + "…" : t; };
@@ -54,6 +55,15 @@ export function ownerSummary(op, report) {
     if ((r.notTransferred || []).length > 30) lines.push(`… ще ${r.notTransferred.length - 30} — див. колонку «Перевірка» в «Нових товарах»`);
     if ((r.droppedColumns || []).length && n(r.moved)) lines.push(`Колонок немає в «Основному каталозі» — їх не перенесено: ${r.droppedColumns.join(", ")}`);
     for (const c of (r.conflicts || []).slice(0, 10)) lines.push(`Не прибрано з «Нових товарів» ${mtText(c.offerId)}: ${clip(c.why, 200)}`);
+    if (r.next) lines.push("Далі: " + r.next);
+  }
+  if (op === "deferred" || op === "deferred-plan") {
+    const toMain = r.toMain || [], toArchive = r.toArchive || [];
+    lines.push(`${op === "deferred-plan" ? "За планом — " : ""}повернуто в «Основний каталог»: ${toMain.length}${toMain.length ? " (" + toMain.join(", ") + ")" : ""}`);
+    lines.push(`${op === "deferred-plan" ? "За планом — " : ""}у «Видалені товари»: ${toArchive.length}${toArchive.length ? " (" + toArchive.join(", ") + ")" : ""}`);
+    for (const k of (r.keep || []).slice(0, 30)) lines.push(`Лишено у «Відкладених» ${mtText(k.offerId)}: ${clip(k.reason, 300)}`);
+    if (r.deferredLeft !== undefined) lines.push(`У «Відкладених товарах» лишилось рядків: ${n(r.deferredLeft)}`);
+    for (const c of (r.conflicts || []).slice(0, 10)) lines.push(`Не прибрано ${mtText(c.offerId)}: ${clip(c.why, 200)}`);
     if (r.next) lines.push("Далі: " + r.next);
   }
   if (op === "reconcile") {

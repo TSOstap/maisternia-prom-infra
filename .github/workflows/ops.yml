@@ -10,7 +10,7 @@ on:
         description: "Операція"
         required: true
         type: choice
-        options: [reconcile, transfer, find-new, update]
+        options: [reconcile, transfer, find-new, update, deferred-plan, deferred]
       run_id:
         description: "ID запуску в mm-ops (порожній — запуск вручну)"
         required: false

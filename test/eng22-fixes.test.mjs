@@ -171,7 +171,7 @@ test("F03 / комміт синхронізації: перехоплення о
 test("F05 / тимчасовий контракт черги (B6): покриває всі 53 колонки; intake не пише ручні колонки, колонки sync і 6 невизначених (B6 «?»); затверджений розділ має пріоритет", async () => {
   assert.deepEqual([...PROVISIONAL_QUEUE_SPEC.columns.keys()].sort(), [...QUEUE_HEADERS].sort());
   const own = withProvisionalQueue(loadOwnership());
-  assert.deepEqual(own.provisional, [SHEET.queue]);
+  assert.deepEqual(own.provisional, [SHEET.queue, SHEET.deferred]); // ENG-29: + тимчасовий розділ «Відкладені товари» (лише видалення sync)
   const spec = own.sheets.get(SHEET.queue);
   for (const col of [...UNDEFINED_B6_COLUMNS, "Запити UA", "Група ID", "Категорія Prom ID", "Виробник", "Код товару Prom", "Статус імпорту", "Виявлено", "ID постачальника"]) assert.deepEqual(spec.columns.get(col).writers, [], col);
   assert.deepEqual(spec.columns.get("Рішення"), { group: spec.columns.get("Рішення").group, writers: ["intake"], gate: "cmd-consume" });
@@ -179,7 +179,7 @@ test("F05 / тимчасовий контракт черги (B6): покрив�
   // ENG-29 (рішення власника 02.11, змінює B6): перенесені рядки прибирає з черги лише sync (за ключем зі знімком; охоронець — лише режим transfer).
   assert.deepEqual(spec.deleteWriters, ["sync"]);
   const approved = { ...own, sheets: new Map([[SHEET.queue, { ...spec, provisional: false }]]) };
-  assert.equal(withProvisionalQueue(approved), approved, "затверджений розділ «Нові товари» — без підміни");
+  assert.equal(withProvisionalQueue(approved).sheets.get(SHEET.queue), approved.sheets.get(SHEET.queue), "затверджений розділ «Нові товари» — без підміни");
 });
 
 async function queueWorld() {

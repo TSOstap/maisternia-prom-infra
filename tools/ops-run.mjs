@@ -22,6 +22,9 @@ export const OP_MODES = Object.freeze({
   update: { mode: "update", cc: true },
   "find-new": { mode: "find-new", cc: true },
   transfer: { mode: "transfer", cc: true },
+  // ENG-29: розбір «Відкладених товарів» (разова операція власника; не в меню) — спершу план, потім виконання.
+  "deferred-plan": { mode: "deferred", cc: true, extra: ["--plan-only"] },
+  deferred: { mode: "deferred", cc: true },
 });
 const op = arg("op");
 const env = process.env;
@@ -86,10 +89,11 @@ for (const [varName, x] of Object.entries(manifest.inputs)) {
 say("Погоджені файли: " + Object.keys(files).length + " / " + Object.keys(manifest.inputs).length + " (SHA OK)");
 
 // 3. Операція.
-const { mode, cc } = OP_MODES[op];
+const { mode, cc, extra = [] } = OP_MODES[op];
 const reportFile = path.join(tmp, "ops-report.json");
 const args = ["--max-old-space-size=6144", path.join(root, "tools", "sheet-sync.mjs"), "--source=api", `--mode=${mode}`, `--report-file=${reportFile}`];
 if (cc) args.push(`--cc-contract=${files.CC_CONTRACT}`);
+args.push(...extra);
 if (env.GITHUB_STEP_SUMMARY) args.push(`--summary=${env.GITHUB_STEP_SUMMARY}`);
 // Ціль — лише тестова копія, зафіксована в коді охоронця (write-target.mjs); секрет репозиторію MM_TEST_SHEET_ID (стара копія S1) не
 // використовується.

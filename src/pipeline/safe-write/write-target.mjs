@@ -146,4 +146,10 @@ export const MODE_POLICIES = Object.freeze({
   transfer: { "Основний каталог": { ops: ["appendRows"] },
     "Нові товари": { ops: ["updateRanges", "deleteRows", "appendRows"], columns: ["Перевірка"], deleteRows: true },
     "Паспорт каталогу": { ops: ["ensureSheet", "updateRanges"], columns: "*", header: true }, "Журнал": JOURNAL_KEYED },
+  // ENG-29 (рішення власника 03.11): розбір «Відкладених товарів» — повернення в «Основний каталог» (лише дописування нових карток),
+  // відсутні у фіді — у «Видалені товари» (створення аркуша й дописування), прибирання перенесених із «Відкладених» (за ключем зі знімком;
+  // appendRows — лише повернення чужого рядка зі знімка), паспорт, «Журнал».
+  deferred: { "Основний каталог": { ops: ["appendRows"] }, "Видалені товари": { ops: ["ensureSheet", "appendRows"] },
+    "Відкладені товари": { ops: ["deleteRows", "appendRows"], deleteRows: true },
+    "Паспорт каталогу": { ops: ["ensureSheet", "updateRanges"], columns: "*", header: true }, "Журнал": JOURNAL_KEYED },
 });
