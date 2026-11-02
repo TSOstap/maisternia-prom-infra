@@ -2,10 +2,10 @@
  * Майстерня Маркет — кнопки нової системи в таблиці TEST (ENG-29).
  * Скрипт НІЧОГО не рахує й не пише в таблицю: лише надсилає сигнал серверу mm-ops (Cloudflare), а всю роботу виконує сервер
  * (GitHub Actions через шлюз запису W2). Повторне натискання під час виконання — сервер відповідає «уже виконується».
- * Адреса й ключ підставляються в локальну копію файла (у репозиторії — заглушки; ключ кнопки дає доступ лише до /button і /status).
+ * Ключ кнопок — НЕ в коді, а у «Властивостях скрипта» (Налаштування проєкту → Властивості скрипта → MM_OPS_KEY): у редакторі
+ * й на знімках екрана його не видно. Ключ дає доступ лише до запуску кнопок і їхнього стану.
  */
 var MM_OPS_URL = "__MM_OPS_URL__";
-var MM_OPS_KEY = "__BUTTON_KEY__";
 
 function onOpen() {
   SpreadsheetApp.getUi().createMenu("Майстерня")
@@ -42,14 +42,17 @@ function mmStatusUa_(s) {
 }
 
 function mmCall_(body) {
+  var key = PropertiesService.getScriptProperties().getProperty("MM_OPS_KEY");
+  if (!key) return { message: "Ключ кнопок не налаштовано: Apps Script → Налаштування проєкту → Властивості скрипта → MM_OPS_KEY." };
   try {
     var res = UrlFetchApp.fetch(MM_OPS_URL + "/button", {
       method: "post",
       contentType: "application/json",
-      headers: { Authorization: "Bearer " + MM_OPS_KEY },
+      headers: { Authorization: "Bearer " + key },
       payload: JSON.stringify(body),
       muteHttpExceptions: true,
     });
+    if (res.getResponseCode() === 401) return { message: "Сервер не прийняв ключ кнопок (ключ замінено?) — оновіть MM_OPS_KEY у Властивостях скрипта." };
     if (res.getResponseCode() !== 200) return { message: "Сервер не відповів (HTTP " + res.getResponseCode() + "). Спробуйте пізніше." };
     return JSON.parse(res.getContentText());
   } catch (e) {
