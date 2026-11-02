@@ -347,7 +347,9 @@ test("ENG-29 «Оновити товари»: постачальник змін�
   assert.match(mtText(warn["Було (постачальник)"]), new RegExp(`${m[3]}: ${m[5]}`));
   assert.match(mtText(warn["Стало (постачальник)"]), new RegExp(`${m[3]}: ${m[5]}9`));
   assert.ok(!(r.report.conflicts?.isolated), "без ізоляції");
-  assert.ok(r.report.products.changed >= 1 && r.report.products.withWarnings >= 1, JSON.stringify(r.report.products));
+  // Позначка часу «Оновлено» змінюється в усіх рядках — не рахується: змінено лише товар, у якого постачальник змінив характеристику.
+  assert.equal(r.report.products.changed, 1, JSON.stringify(r.report.products));
+  assert.ok(r.report.products.withWarnings >= 1, JSON.stringify(r.report.products));
   const text = ownerSummary("update", { result: r });
   assert.match(text, /Оновлено товарів: \d+/);
   assert.match(text, /Товари з попередженнями: \d+/);

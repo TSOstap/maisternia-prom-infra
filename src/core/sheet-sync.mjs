@@ -995,7 +995,8 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
     supplierPriceChanged: diff("Ціна постачальника"), salePriceChanged: diff("Ціна кінцева"), availabilityChanged: diff("Наявність"),
     becameAvailable, becameUnavailable, quantityChanged: diff("Кількість постачальника"), missingInFeed: missing,
     // ENG-29: скільки товарів змінено цим запуском (ціни / наявність / кількість або дані постачальника в рядку) — для підсумку власнику.
-    changedProducts: new Set([...mainPlan.map((p, i) => (p.before.some((v, j) => mtText(v) !== mtText(p.next[j])) ? i : -1)).filter((i) => i >= 0), ...mainRaw.changed]).size,
+    // «Оновлено» (час успішного оновлення) змінюється в кожному рядку щоразу — це не зміна товару; не рахується.
+    changedProducts: new Set([...mainPlan.map((p, i) => (p.before.some((v, j) => LIVE_COLUMNS[j] !== "Оновлено" && mtText(v) !== mtText(p.next[j])) ? i : -1)).filter((i) => i >= 0), ...mainRaw.changed]).size,
   };
   // Захист від пошкодженого/помилкового фіду: масове зникнення або масова зміна наявності — нічого не пишемо.
   if (missing > 0 && missing >= missingLimit) return stop("МАСОВЕ ЗНИКНЕННЯ", `зникло ${missing} товарів основного каталогу (поріг ${missingLimit}) — схоже на збій постачальника; нічого не записано`, missing, missingLimit);
