@@ -29,7 +29,14 @@ export function ownerSummary(op, report) {
   }
   if (op === "find-new" && rep) {
     lines.push(`Нових ID у фіді: ${n(rep.found?.total)} (повних ${n(rep.found?.complete)}, без повних даних ${n(rep.found?.incomplete)})`);
-    if (rep.intake) lines.push(`Додано в «Нові товари»: ${n(rep.intake.added)}; можливих дублів: ${n(rep.intake.possibleDuplicates)}`);
+    if (rep.intake) {
+      lines.push(`Додано в «Нові товари»: ${n(rep.intake.added)}; можливих дублів: ${n(rep.intake.possibleDuplicates)}`);
+      const res = Object.entries(rep.intake.results || {}).filter(([, v]) => n(v));
+      if (res.length) lines.push("Кандидати: " + res.map(([k, v]) => `${k} — ${n(v)}`).join("; "));
+      if (rep.intake.reason) lines.push("Причина: " + clip(rep.intake.reason, 300));
+    }
+    const ex = Object.entries(rep.excluded || {}).filter(([, v]) => n(v));
+    if (ex.length) lines.push("Не нові (уже відомі): " + ex.map(([k, v]) => `${k} — ${n(v)}`).join("; "));
     if (n(rep.found?.waiting)) lines.push(`Чекають повторної перевірки: ${n(rep.found.waiting)} — натисніть «Знайти нові товари» ще раз пізніше (товар має бути у фіді двічі поспіль без змін)`);
   }
   if (op === "transfer") {
