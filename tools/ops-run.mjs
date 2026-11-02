@@ -100,6 +100,8 @@ delete childEnv.MM_SAFE_WRITE_DIR;
 const child = spawnSync(process.execPath, args, { cwd: root, env: childEnv, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 // Вивід sheet-sync уже захищено від витоку (лише агрегати, ID — #ID); у журнал GitHub — лише стан і помилки.
 const outState = /"state":\s*"([A-Z_]+)"/.exec(child.stdout || "")?.[1] || "";
+// Звіт sheet-sync у журнал GitHub: він уже пройшов захист від витоку (лише агрегати, довгі числа — #ID, секрети — блок виводу).
+if (child.stdout) say(String(child.stdout).slice(0, 60_000));
 if (child.stderr) say(String(child.stderr).split("\n").filter(Boolean).slice(-5).join("\n"));
 let report = null;
 try { report = JSON.parse(fs.readFileSync(reportFile, "utf8")); } catch { /* звіту немає — збій до запису звіту */ }

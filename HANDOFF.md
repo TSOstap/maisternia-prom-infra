@@ -1,6 +1,15 @@
 # HANDOFF — точка продовження (Claude → Codex або інший агент)
 
-## АВТОРИТЕТНИЙ ПОТОЧНИЙ РЕЖИМ — 28.10.2026 (читати першим)
+## АВТОРИТЕТНИЙ ПОТОЧНИЙ РЕЖИМ — 02.11.2026: ENG-29 — система на сервері (читати першим)
+
+- Доручення власника 02.11: «переносимо систему на сервер, варіант 2 повний (Cloudflare Durable Object), безплатно; роби все що потрібно, тільки не чіпай інші репозиторії». `main` = гілка `feature/server-ops` (база ENG-28d + виправлення 429 + ENG-29).
+- Схема: меню «Майстерня» в TEST (`apps-script/ops-menu.gs`, лише сигнал) → Worker `workers/ops` (`mm-ops`, Workers Free + SQLite DO: диспетчер, сховище W2, погоджені файли з SHA — `config/ops-inputs.json`) → `.github/workflows/ops.yml` (WIF-провайдер `maisternia-prom-ops`, лише ops.yml@main → mm-sheets-copy) → `tools/ops-run.mjs` → `tools/sheet-sync.mjs --mode=transfer|find-new|update|reconcile`. Ціль — лише TEST (з коду охоронця), LIVE — заборона.
+- Сховище W2 — лише Durable Object (`MM_W2_MODE=do`); локальний FileStore TEST перенесено (позначка `MOVED-TO-DO.json`, однохостовий запис — відмова).
+- Нове: `src/pipeline/safe-write/w2-engine.mjs` + `RemoteStore` (store.mjs); `transfer` («Перенести затверджені», src/core|pipeline/transfer-approved.mjs; рішення власника 02.11 — перенесені рядки прибираються з черги); звуження охоронця (Hermes F-28C-2 / F-28C-3); журнал W2 — відбитки довгих значень у намірі й стиснення завершених операцій.
+- Звіт, запуски, ключі (де лежать, без значень): `E:/Prom Maisternia Market/Матеріали/Аудит/2026-10-29/ENG/ENG-29-server/README.uk.md`; стан — `…/ENG/ENG-STATE.md`.
+- Відкрито: fine-grained токен GitHub для Worker (власник) → кнопки запускаються з таблиці; встановлення меню власником; ревю Hermes ENG-29; R-N3W, F08-1 — відкриті (успадковано).
+
+## ІСТОРИЧНЕ (замінено 02.11): АВТОРИТЕТНИЙ ПОТОЧНИЙ РЕЖИМ — 28.10.2026
 
 - **Поточний пакет — OV** (застосування підтверджених рішень власника щодо характеристик) під координацією Hermes. Розділ «OV1 — ПРИЙНЯТО Hermes ЛОКАЛЬНО» нижче; повний стан — `E:/Prom Maisternia Market/Матеріали/Аудит/2026-10-28/OV/OV-STATE.md`.
 - Ролі: чинний Claude2 — сесія `d6bb2acb-fda6-41a1-812e-8ad1784a5c6e`, термінал Orca `term_878e2fda-cb23-4bc2-8dce-271d3670d3c5`; Hermes — `term_e1bc29c0-8014-4bee-88d0-1ba3a4317ed9`. Нових агентів не запускати.
