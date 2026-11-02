@@ -5,13 +5,14 @@
  *  3. tools/sheet-sync.mjs у режимі операції: ціль — лише TEST, сховище W2 — Durable Object mm-ops (MM_W2_MODE=do), токен запису —
  *     mm-sheets-copy (gcloud з обліковими даними WIF → generateAccessToken; перевірку scope робить sheet-sync).
  *  4. Підсумок для власника — у mm-ops (POST /run/finish). У журнал GitHub — лише стан (без ID товарів і секретів).
- *  Змінні: MM_OPS_URL, MM_OPS_RUNNER_KEY, MM_OPS_RUN_ID (може бути порожнім), MM_TEST_SHEET_ID, MM_SUPPLIER_FEED_URL; облікові дані gcloud — WIF. */
+ *  Змінні: MM_OPS_URL, MM_OPS_RUNNER_KEY, MM_OPS_RUN_ID (може бути порожнім), MM_SUPPLIER_FEED_URL (ціль — TEST_SHEET_ID з коду); облікові дані gcloud — WIF. */
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { ownerSummary } from "../src/pipeline/ops-summary.mjs";
+import { TEST_SHEET_ID } from "../src/pipeline/safe-write/write-target.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const arg = (k, d = "") => process.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3) ?? d;
@@ -78,7 +79,9 @@ const reportFile = path.join(tmp, "ops-report.json");
 const args = ["--max-old-space-size=6144", path.join(root, "tools", "sheet-sync.mjs"), "--source=api", `--mode=${mode}`, `--report-file=${reportFile}`];
 if (cc) args.push(`--cc-contract=${files.CC_CONTRACT}`);
 if (env.GITHUB_STEP_SUMMARY) args.push(`--summary=${env.GITHUB_STEP_SUMMARY}`);
-const childEnv = { ...env, MM_W2_MODE: "do", MM_W2_URL: base, MM_W2_KEY: env.MM_OPS_RUNNER_KEY };
+// Ціль — лише тестова копія, зафіксована в коді охоронця (write-target.mjs); секрет репозиторію MM_TEST_SHEET_ID (стара копія S1) не
+// використовується.
+const childEnv = { ...env, MM_TEST_SHEET_ID: TEST_SHEET_ID, MM_W2_MODE: "do", MM_W2_URL: base, MM_W2_KEY: env.MM_OPS_RUNNER_KEY };
 for (const k of ["MM_FREEZE_IDS", "MM_FROZEN_ATTRS", "MM_OWNER_VALUES", "MM_A3_PAIRS"]) childEnv[k] = files[k];
 delete childEnv.GOOGLE_OAUTH_ACCESS_TOKEN;
 delete childEnv.MM_SAFE_WRITE_DIR;

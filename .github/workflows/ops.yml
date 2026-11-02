@@ -31,12 +31,10 @@ jobs:
         env:
           WIF: ${{ vars.GCP_WIF_PROVIDER_OPS }}
           OPS_SET: ${{ secrets.MM_OPS_URL != '' && secrets.MM_OPS_RUNNER_KEY != '' }}
-          TEST_SET: ${{ secrets.MM_TEST_SHEET_ID != '' }}
           FEED_SET: ${{ secrets.MM_SUPPLIER_FEED_URL != '' }}
         run: |
           test -n "$WIF" || { echo "Не задано змінну GCP_WIF_PROVIDER_OPS"; exit 2; }
           [ "$OPS_SET" = "true" ] || { echo "Не задано секрети MM_OPS_URL / MM_OPS_RUNNER_KEY"; exit 2; }
-          [ "$TEST_SET" = "true" ] || { echo "Не задано секрет MM_TEST_SHEET_ID"; exit 2; }
           [ "$FEED_SET" = "true" ] || { echo "Не задано секрет MM_SUPPLIER_FEED_URL"; exit 2; }
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -59,7 +57,6 @@ jobs:
           MM_OPS_RUN_ID: ${{ inputs.run_id }}
           MM_OPS_URL: ${{ secrets.MM_OPS_URL }}
           MM_OPS_RUNNER_KEY: ${{ secrets.MM_OPS_RUNNER_KEY }}
-          MM_TEST_SHEET_ID: ${{ secrets.MM_TEST_SHEET_ID }}
           MM_SUPPLIER_FEED_URL: ${{ secrets.MM_SUPPLIER_FEED_URL }}
         run: |
           command -v gcloud >/dev/null || { echo "На runner немає gcloud"; exit 2; }
