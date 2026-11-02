@@ -190,3 +190,19 @@ test("«Основний каталог» без службових колоно
   for (const k of drop) assert.ok(r.droppedColumns.includes(k), k);
   assert.ok(mainRows(w).some((x) => mtText(x["Offer ID"]) === a));
 });
+
+test("Hermes F-28C-2 / F-28C-3 (ENG-29): update не дописує рядки в каталог і не чіпає чергу та «Заморожені ID»; find-new може лише очищувати «Рішення»", async () => {
+  const w = await world();
+  const headers = Object.fromEntries(Object.entries(w.raw.book).map(([k, v]) => [k, (v[0] || []).slice()]));
+  const g = (mode) => guardedSheets(w.raw, { spreadsheetId: TEST_SHEET_ID, policy: MODE_POLICIES[mode], headers });
+  const mh = headers[SHEET.main].map(mtText), qhh = headers[SHEET.queue].map(mtText);
+  await assert.rejects(g("update").appendRows(SHEET.main, [mh.map(() => "x")]), /appendRows/);
+  await assert.rejects(g("update").updateRanges([{ title: SHEET.queue, row: 2, col: 1, values: [["x"]] }]), /не дозволено/);
+  await assert.rejects(g("update").appendRows(SHEET.frozen, [["123"]]), /не дозволено/);
+  await g("update").updateRanges([{ title: SHEET.main, row: 2, col: mh.indexOf("Характеристики JSON") + 1, values: [["[]"]] }]);
+  const dc = qhh.indexOf("Рішення") + 1;
+  await assert.rejects(g("find-new").updateRanges([{ title: SHEET.queue, row: 2, col: dc, values: [[DECISION.APPROVE]] }]), /лише очищувати/);
+  await g("find-new").updateRanges([{ title: SHEET.queue, row: 2, col: dc, values: [[""]] }]);
+  await assert.rejects(g("find-new").appendRows(SHEET.queue, [qhh.map((k) => (k === "Рішення" ? DECISION.APPROVE : "1"))]), /лише очищувати/);
+  await assert.rejects(g("find-new").appendRows(SHEET.main, [["1"]]), /не дозволено/);
+});

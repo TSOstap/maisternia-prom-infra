@@ -34,8 +34,20 @@ async function ops(p, body, { method = "POST" } = {}) {
   const res = await fetch(new URL(p, base), { method, redirect: "error", headers: { authorization: "Bearer " + env.MM_OPS_RUNNER_KEY, "content-type": "application/json" }, ...(body ? { body: JSON.stringify(body) } : {}) });
   return res;
 }
+/** Звіт про завершення — з повторами (перший реальний запуск 02.11: одноразова мережева помилка після 13 хв роботи — запуск лишився
+ *  «виконується» в mm-ops, хоча операція завершилась). Повтор безпечний: той самий runId лише оновлює запис запуску. */
 async function finish(ok, state, summary) {
-  try { await ops("/run/finish", { runId, ok, state, summary }); } catch { say("mm-ops: звіт про завершення не надіслано"); }
+  let last = "";
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    try {
+      const r = await ops("/run/finish", { runId, ok, state, summary });
+      if (r.ok) return;
+      last = "HTTP " + r.status;
+      if (r.status < 500 && r.status !== 429) break;
+    } catch (e) { last = String(e?.cause?.code || e?.name || "мережа").slice(0, 40); }
+    await new Promise((res) => setTimeout(res, 2000 * attempt));
+  }
+  say("mm-ops: звіт про завершення не надіслано (" + last + ")");
 }
 async function stop(code, state, summary) {
   say(`СТАН: ${state}`);

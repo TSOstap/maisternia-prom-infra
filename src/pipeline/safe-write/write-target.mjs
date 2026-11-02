@@ -70,10 +70,20 @@ export function guardedSheets(sheets, { spreadsheetId, policy, headers = {} }) {
     if (!(p.ops || []).includes(op)) block(`операція ${op} для «${title}» не дозволена`, { op });
     return p;
   };
+  // ENG-29 (Hermes F-28C-3): clearOnly — колонки, які режим може лише ОЧИЩУВАТИ (спожити команду власника), але не записувати значення.
+  const clearOnlyCheck = (p, title, header, col0, rows, row0) => {
+    if (!p.clearOnly?.length) return;
+    if (!header) block(`немає прочитаного заголовка «${title}» — колонки блоку не перевірити`);
+    for (const [i, r] of (rows || []).entries()) (r || []).forEach((v, j) => {
+      const c = colOf(header, col0 + j);
+      if (p.clearOnly.includes(c) && mtText(v) !== "") block(`колонку «${c}» аркуша «${title}» цей режим може лише очищувати`, { row: row0 + i });
+    });
+  };
   const checkBlock = (b) => {
     const p = check("updateRanges", b.title);
     const width = Math.max(0, ...(b.values || []).map((r) => r.length));
     if (b.row === 1) { if (!p.header) block(`запис заголовка «${b.title}» не дозволено`); hdr[b.title] = (b.values[0] || []).map(mtText); return; }
+    clearOnlyCheck(p, b.title, hdr[b.title], b.col, b.values, b.row);
     if (p.columns === "*") return;
     const header = hdr[b.title];
     if (!header) block(`немає прочитаного заголовка «${b.title}» — колонки блоку не перевірити`);
@@ -87,7 +97,8 @@ export function guardedSheets(sheets, { spreadsheetId, policy, headers = {} }) {
       if (!WRITE_OPS.includes(prop)) return () => block(`невідома операція записувача «${String(prop)}» — заборонено за замовчуванням`);
       return async (...args) => {
         if (prop === "updateRanges") for (const b of args[0] || []) checkBlock(b);
-        else if (prop === "appendRows" || prop === "ensureColumns" || prop === "ensureSheet" || prop === "deleteRows" || prop === "setPercentFormat") check(prop, String(args[0]));
+        else if (prop === "appendRows") { const p = check(prop, String(args[0])); clearOnlyCheck(p, String(args[0]), hdr[String(args[0])], 1, args[1], 0); }
+        else if (prop === "ensureColumns" || prop === "ensureSheet" || prop === "deleteRows" || prop === "setPercentFormat") check(prop, String(args[0]));
         return v.apply(target, args);
       };
     },
@@ -106,7 +117,11 @@ export const MODE_POLICIES = Object.freeze({
   correction: { "Основний каталог": { ops: ["updateRanges"], columns: ["Опис UA", "Опис RU", "Запити UA", "Запити RU"] }, "Журнал": { ops: ["appendRows"] } },
   merge: { "Основний каталог": { ops: ["ensureColumns", "updateRanges", "appendRows"], columns: ["Стан у постачальника", "Знімок постачальника JSON"], header: true },
     "Нові товари": { ops: ["ensureColumns", "updateRanges"], columns: ["Перевірка"], header: true }, "Паспорт каталогу": { ops: ["ensureSheet", "updateRanges"], columns: "*", header: true }, "Журнал": JOURNAL_KEYED },
-  sync: broad(SYNC_TITLES), update: broad(SYNC_TITLES), intake: broad(SYNC_TITLES), scenario: broad(SYNC_TITLES), "scenario-mass": broad(SYNC_TITLES),
+  sync: broad(SYNC_TITLES), intake: broad(SYNC_TITLES), scenario: broad(SYNC_TITLES), "scenario-mass": broad(SYNC_TITLES),
+  // ENG-29 (Hermes F-28C-2): «Оновити товари» — без черги й «Заморожених ID» (ENG-28c: update їх не змінює) і без дописування рядків
+  // в «Основний каталог» (нові картки — лише «Перенести затверджені»). «Характеристики JSON» лишено: оновлення характеристик постачальника
+  // за схемою Prom зі збереженням ручних значень і FZ — погоджена поведінка update (S1-PLAN р. 13–14), не помилка.
+  update: { ...broad(SYNC_TITLES.filter((x) => x !== "Нові товари" && x !== "Заморожені ID")), "Основний каталог": { ...BROAD, ops: BROAD.ops.filter((o) => o !== "appendRows") } },
   controls: { "*": BROAD }, recover: { "*": BROAD }, archive: { "*": BROAD }, refresh: { "*": BROAD },
   // ENG-28c: QA погоджених товарів — лише системні / сирі колонки постачальника й печатка «Основного каталогу» (за ключем), паспорт,
   // «Журнал»; жодних SEO / описів / характеристик / рішень, нових колонок чи аркушів.
@@ -116,7 +131,8 @@ export const MODE_POLICIES = Object.freeze({
   reconcile: {},
   // ENG-28c: «Знайти нові товари» — лише черга «Нові товари» (колонки стереже контракт власності intake) і «Журнал»; основного каталогу —
   // жодної операції.
-  "find-new": { "Нові товари": { ops: ["ensureColumns", "updateRanges", "appendRows", "setPercentFormat"], columns: "*", header: true }, "Журнал": { ops: ["appendRows"] } },
+  // ENG-29 (Hermes F-28C-3): «Рішення» — лише очищення (споживання команди власника), жодного запису значення (автозатвердження неможливе).
+  "find-new": { "Нові товари": { ops: ["ensureColumns", "updateRanges", "appendRows", "setPercentFormat"], columns: "*", header: true, clearOnly: ["Рішення"] }, "Журнал": { ops: ["appendRows"] } },
   // ENG-29: «Перенести затверджені» — «Основний каталог»: лише дописування нових карток (за ключем, без зміни наявних рядків і колонок);
   // «Нові товари»: лише «Перевірка» (причини «НЕ ПЕРЕНЕСЕНО») і прибирання перенесених рядків (deleteByKeys зі знімком; appendRows — лише
   // повернення чужого рядка зі знімка, якщо видалення лягло не туди); паспорт; «Журнал».
