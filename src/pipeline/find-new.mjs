@@ -71,7 +71,16 @@ export async function findNewProducts({ sheets, readBook, xml, source = "", fetc
   const ready = [], incomplete = [];
   for (const id of fresh) (completeness(scan.offers.get(id) || {}).length ? incomplete : ready).push(id);
   const stableIn = (s, id) => Boolean(s?.fp?.[id]) && s.fp[id] === snapshot.fp?.[id];
-  const sinceOf = (id) => (stableIn(seen, id) ? seen.fetchedAt || stamp : confirmed?.fetchedAt || confirmed?.confirmedAt || stamp);
+  // ENG-29 (рішення власника 02.11): стабільність — від ПЕРШОГО виявлення без змін. Попередній знімок зберігає since[id] (коли товар
+  // уперше побачено з цим самим відбитком); повторні натискання його не скидають. Береться найраніший із підтверджених моментів:
+  // since попереднього знімка, сам попередній знімок, підтверджений знімок «Оновити товари». Змінився відбиток — відлік з нуля.
+  const sinceOf = (id) => {
+    const at = [];
+    if (stableIn(seen, id)) { at.push(seen.since?.[id], seen.fetchedAt); }
+    if (stableIn(confirmed, id)) at.push(confirmed?.fetchedAt || confirmed?.confirmedAt);
+    const ok = at.filter((t) => Number.isFinite(Date.parse(t || "")));
+    return ok.length ? ok.reduce((a, b) => (Date.parse(a) <= Date.parse(b) ? a : b)) : stamp;
+  };
   const stable = ready.filter((id) => stableIn(seen, id) || stableIn(confirmed, id));
   const candidates = stable.map((id) => ({ id, fp: watchFingerprint(scan.offers.get(id), profile), firstSeen: sinceOf(id), lastChange: sinceOf(id) }));
 
@@ -82,7 +91,9 @@ export async function findNewProducts({ sheets, readBook, xml, source = "", fetc
   // Знімок цієї операції — база стабільності наступного запуску; лише якщо intake завершився штатно (інакше — повтор із тією самою базою).
   let seenSaved = false, seenError = null;
   if (!intake || ["INTAKE_DONE", "NOTHING_TO_WRITE"].includes(intake.state)) {
-    try { await snapshotStore.putJsonIfVersion(FIND_NEW_SEEN_KEY, { ...snapshot, seenAt: stamp }, seenRec?.version ?? null); seenSaved = true; }
+    // since — момент першого виявлення (з тим самим відбитком) для нових ID цього знімка; лише для нових (не для всього каталогу).
+    const since = Object.fromEntries(fresh.map((id) => [id, sinceOf(id)]));
+    try { await snapshotStore.putJsonIfVersion(FIND_NEW_SEEN_KEY, { ...snapshot, seenAt: stamp, since }, seenRec?.version ?? null); seenSaved = true; }
     catch (e) { seenError = e?.code === "CONFLICT" ? "знімок записано паралельно іншим запуском — повтор наступного запуску" : mtText(e?.message || e).slice(0, 200); }
   }
   const results = intake?.stats?.results || {};
@@ -95,5 +106,5 @@ export async function findNewProducts({ sheets, readBook, xml, source = "", fetc
     intake: intake ? { state: intake.state, reason: intake.reason ?? "", added: intake.stats?.added ?? 0, results, possibleDuplicates: intake.stats?.possibleDuplicates ?? 0 } : null,
     seenSaved, seenError,
   };
-  return { state, reason: intake?.reason ?? (state === "WAITING_STABILITY" ? `нові ID чекають стабільності (${ready.length}): мають бути в попередньому знімку з тим самим відбитком — наступний запуск` : ""), report, intake, newIds: { stable, waiting: ready.filter((id) => !stable.includes(id)), incomplete } };
+  return { state, reason: intake?.reason ?? (state === "WAITING_STABILITY" ? `нові ID чекають стабільності (${ready.length}): додаються, коли пробудуть у фіді без змін ≥ 10 хв від першого виявлення — наступне натискання пізніше` : ""), report, intake, newIds: { stable, waiting: ready.filter((id) => !stable.includes(id)), incomplete } };
 }

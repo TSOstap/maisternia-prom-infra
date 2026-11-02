@@ -117,7 +117,7 @@ test("mtMatch + mtPlan: однакові статуси та F:M, включно
   }
 });
 
-async function buildBoth(s, mutate) {
+async function buildBoth(s, mutate, opts = {}) {
   const stamp = new Date(NOW).toISOString();
   const parsed = await parseSupplierText(s.supplierXml());
   const values = s.sheets["Основний каталог"];
@@ -136,7 +136,8 @@ async function buildBoth(s, mutate) {
   try {
     mine = await buildYml({
       rows: objectsFromValues(updated, YML_HEADERS), groups: objectsFromValues(s.groups, GROUP_HEADERS), meta, manifest: m,
-      config: config.yml, pricing: config.pricing, maximumBytes: 50_000_000, sink,
+      // ENG-29: паритет із LIVE — базовий формат; «Готово до відправки» (in_stock) — свідома відмінність, перевіряється окремо.
+      config: { ...config.yml, readyToShip: opts.readyToShip === true }, pricing: config.pricing, maximumBytes: 50_000_000, sink,
     });
   } catch (e) { mineError = e.message; }
   return { live, liveError, mine, mineError, xml: sink.text() };
@@ -177,4 +178,17 @@ test("mtBuildYml_: ті самі відмови (відсутній товар, 
   const r = await buildBoth(missing);
   assert.match(r.liveError, /Непідтверджений статус/);
   assert.equal(r.mineError, r.liveError);
+});
+
+test("ENG-29 «Готово до відправки» (рішення власника 02.11): кожен товар у наявності — available=\"true\" in_stock=\"true\"; не в наявності — без in_stock; решта YML — як у LIVE", async () => {
+  const s = generateSynthetic({ products: 250, queue: 10, seed: 5, now: NOW });
+  const base = await buildBoth(s);
+  const ready = await buildBoth(s, null, { readyToShip: true });
+  assert.equal(ready.mineError, undefined, ready.mineError);
+  const avail = (ready.xml.match(/<offer [^>]*available="true"[^>]*>/g) || []);
+  const unavail = (ready.xml.match(/<offer [^>]*available="false"[^>]*>/g) || []);
+  assert.ok(avail.length > 0 && unavail.length > 0);
+  assert.ok(avail.every((t) => / in_stock="true"/.test(t)), "у наявності — готово до відправки");
+  assert.ok(unavail.every((t) => !/in_stock/.test(t)), "не в наявності — без in_stock");
+  assert.equal(ready.xml.replace(/ in_stock="true"/g, ""), base.xml, "інших відмінностей немає");
 });

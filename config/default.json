@@ -40,7 +40,8 @@
     "maximumSyncAgeHours": 12,
     "shopName": "Майстерня Маркет",
     "company": "Майстерня Маркет",
-    "timeZone": "Europe/Kyiv"
+    "timeZone": "Europe/Kyiv",
+    "readyToShip": true
   },
   "feeds": [
     {

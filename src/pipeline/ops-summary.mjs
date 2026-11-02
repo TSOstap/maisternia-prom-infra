@@ -41,11 +41,11 @@ export function ownerSummary(op, report) {
       const why = {};
       for (const x of Object.values(r.intake?.ack?.results || {})) if (x?.status === "ВІДМОВА" && x.reason) why[x.reason.replace(/:.*$/, "")] = (why[x.reason.replace(/:.*$/, "")] || 0) + 1;
       for (const [k, v] of Object.entries(why).sort((a, b) => b[1] - a[1]).slice(0, 5)) lines.push(`Відмова (${v}): ${clip(k, 200)}`);
-      if (Object.keys(why).some((k) => /стабільність не підтверджена/.test(k))) lines.push("Підказка: натисніть «Знайти нові товари» ще раз не раніше ніж через 10 хвилин після попереднього натискання (товар має пробути у фіді без змін ≥ 10 хв).");
+      if (Object.keys(why).some((k) => /стабільність не підтверджена/.test(k))) lines.push("Підказка: товар додається, коли пробуде у фіді без змін 10 хвилин від ПЕРШОГО виявлення; натисніть «Знайти нові товари» ще раз пізніше (повторні натискання відлік не скидають).");
     }
     const ex = Object.entries(rep.excluded || {}).filter(([, v]) => n(v));
     if (ex.length) lines.push("Не нові (уже відомі): " + ex.map(([k, v]) => `${k} — ${n(v)}`).join("; "));
-    if (n(rep.found?.waiting)) lines.push(`Чекають повторної перевірки: ${n(rep.found.waiting)} — натисніть «Знайти нові товари» ще раз пізніше (товар має бути у фіді двічі поспіль без змін)`);
+    if (n(rep.found?.waiting)) lines.push(`Чекають перевірки стабільності: ${n(rep.found.waiting)} — додамо, коли пробудуть у фіді без змін 10 хв від першого виявлення; натисніть «Знайти нові товари» ще раз пізніше`);
   }
   if (op === "transfer") {
     if (r.moved !== undefined) lines.push(`Перенесено в «Основний каталог»: ${n(r.moved)}${r.count ? `; у каталозі тепер ${n(r.count)}` : ""}`);

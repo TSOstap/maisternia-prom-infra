@@ -359,3 +359,24 @@ test("ENG-29 «Оновити товари»: постачальник змін�
   assert.equal((await update(w, 360, { xml: xml2 })).state, "SYNCED");
   assert.equal(sheetRows(w.sheets.book["Попередження постачальника"]).length, n0);
 });
+
+test("ENG-29 «Знайти нові товари» (рішення власника 02.11): стабільність від ПЕРШОГО виявлення — повторне натискання раніше 10 хв не скидає відлік; зміна товару — відлік з нуля", async () => {
+  const w = world();
+  await structure(w); await correction(w); await qa(w, 3); await transfer(w);
+  const xml = w.xml.replace("\n</offers>", "\n" + offer("2990000701") + "\n</offers>");
+  const cc = okCc();
+  const f1 = await findNew(w, 20, { xml, controls: cc });   // перше виявлення (хвилина 20)
+  assert.equal(f1.state, "WAITING_STABILITY", JSON.stringify(f1).slice(0, 300));
+  const f2 = await findNew(w, 25, { xml, controls: cc });   // через 5 хв — ще рано
+  assert.notEqual(f2.state, "INTAKE_DONE", JSON.stringify(f2).slice(0, 300));
+  assert.ok(!queue(w).some((r) => mtText(r["Offer ID"]) === "2990000701"));
+  const f3 = await findNew(w, 31, { xml, controls: cc });   // 11 хв від ПЕРШОГО виявлення (6 хв від попереднього натискання) — додано
+  assert.equal(f3.state, "INTAKE_DONE", JSON.stringify(f3).slice(0, 300));
+  assert.equal(queue(w).filter((r) => mtText(r["Offer ID"]) === "2990000701").length, 1);
+  // Інший новий товар змінився між натисканнями — відлік з нуля від зміни.
+  const xmlA = w.xml.replace("\n</offers>", "\n" + offer("2990000701") + "\n" + offer("2990000702") + "\n</offers>");
+  const xmlB = xmlA.replace("<name_ua>Новий 2990000702</name_ua>", "<name_ua>Змінена назва 2990000702</name_ua>");
+  assert.equal((await findNew(w, 40, { xml: xmlA, controls: cc })).state, "WAITING_STABILITY");
+  assert.notEqual((await findNew(w, 52, { xml: xmlB, controls: cc })).state, "INTAKE_DONE", "змінений товар — відлік заново");
+  assert.equal((await findNew(w, 63, { xml: xmlB, controls: cc })).state, "INTAKE_DONE", "11 хв без змін після зміни — додано");
+});

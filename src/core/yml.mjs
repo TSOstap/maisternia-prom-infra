@@ -158,7 +158,8 @@ export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missin
   const params = jsonArray(r["Характеристики JSON"], "Характеристики JSON", id);
   if (!photos.length || photos.length > 10 || params.length > 100) throw new Error("Кількість фото/характеристик не підтримується Prom; ID " + id);
   const body = [
-    '<offer id="' + id + '" available="' + available + '" selling_type="r">',
+    // ENG-29 (рішення власника 02.11): «Готово до відправки» для товарів у наявності — available="true" in_stock="true" (довідка Prom).
+    '<offer id="' + id + '" available="' + available + '"' + (available && opts.inStock === true ? ' in_stock="true"' : "") + ' selling_type="r">',
     element("name", r["Назва RU"]),
     element("name_ua", r["Назва UA"]),
     element("price", (available ? expected.final : expected.base).toFixed(2)),
@@ -313,7 +314,7 @@ export async function buildYml({ rows, groups, meta, manifest, config, pricing =
       continue;
     }
     let xml;
-    try { xml = offerXml(r, success, groupMap, pricing, missingPolicy, conflictPolicy, { held: forced }); }
+    try { xml = offerXml(r, success, groupMap, pricing, missingPolicy, conflictPolicy, { held: forced, inStock: config.readyToShip === true }); }
     catch (e) {
       if (!isolateRows) throw e;
       const lg = lastGood?.get(id);
