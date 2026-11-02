@@ -7,8 +7,11 @@
  *  Кнопка (Apps Script) → POST /button {op} → якщо нічого не виконується — запуск GitHub workflow ops.yml (workflow_dispatch);
  *  повторне натискання під час виконання — «уже виконується», нового запуску немає. Сам запис у таблицю робить лише запускач
  *  у GitHub Actions — через шлюз W2 (оренда + журнал + fencing), сховищем якого є цей самий об'єкт.
- *  Увесь код роботи зі сховищем синхронний (SQL API Durable Object) і виконується в transactionSync — атомарно. */
+ *  Увесь код роботи зі сховищем синхронний (SQL API Durable Object) і виконується в transactionSync — атомарно.
+ *  Автопошук новинок (рішення власника 03.11) — alarm цього ж об'єкта (new-items.mjs): кожні 15 хв ID фіду проти знімка
+ *  «Знайти нові товари»; є нові — запуск тієї самої операції, що й кнопка (op find-new). Вмикає / вимикає оператор (/admin/watch). */
 import { w2Handle, w2Seed, REQ_KEEP_MS } from "../../../src/pipeline/safe-write/w2-engine.mjs";
+import { WATCH, MIN, AUTO_BY, FIND_NEW_SEEN_KEY, fetchIds, watchPrecheck, decideWatch, markWatchDispatch } from "./new-items.mjs";
 
 export const OPS = Object.freeze({
   transfer: "Перенести затверджені",
@@ -140,6 +143,10 @@ export class OpsCore {
       if (m === "GET" && p === "/admin/w2-stats") return json({ keys: this.rows("SELECT w2.k AS k, w2.version AS version, length(w2.v) AS v, (SELECT COUNT(*) FROM w2_chunk c WHERE c.k = w2.k) AS parts, (SELECT COALESCE(SUM(length(c.part)), 0) FROM w2_chunk c WHERE c.k = w2.k) AS chunked FROM w2 ORDER BY w2.k") });
       // Сире значення ключа (текст JSON частинами, без розбору) — для локального аналізу оператором.
       if (m === "GET" && p === "/admin/w2-raw") return this.rawValue(url.searchParams.get("key") || "");
+      // Автопошук новинок: стан, увімкнути / вимкнути, разова перевірка (dry — без запуску операції).
+      if (m === "GET" && p === "/admin/watch") return json(await this.watchInfo());
+      if (m === "POST" && p === "/admin/watch") { const b = await req.json().catch(() => ({})); return json(await this.watchSwitch(b?.on === true)); }
+      if (m === "POST" && p === "/admin/watch-check") { const b = await req.json().catch(() => ({})); return json(await this.watchCheck(this.now(), { dry: b?.dry !== false })); }
       return json({ error: { code: "NOT_FOUND", message: "не знайдено" } }, 404);
     } catch (e) {
       return json({ error: { code: "INTERNAL", message: String(e?.message || e).slice(0, 300) } }, 500);
@@ -193,7 +200,10 @@ export class OpsCore {
 
   // ---------- запуски кнопок ----------
   recentRuns(limit = 5) {
-    return this.rows("SELECT id, op, status, at, updated, info FROM runs ORDER BY at DESC LIMIT ?", limit).map((r) => ({ id: r.id, op: r.op, label: OPS[r.op] || r.op, status: r.status, at: r.at, updated: r.updated, ...JSON.parse(r.info) }));
+    return this.rows("SELECT id, op, status, at, updated, info FROM runs ORDER BY at DESC LIMIT ?", limit).map((r) => {
+      const info = JSON.parse(r.info);
+      return { id: r.id, op: r.op, label: (OPS[r.op] || r.op) + (info.by === AUTO_BY ? " (автоматично)" : ""), status: r.status, at: r.at, updated: r.updated, ...info };
+    });
   }
   activeRun(now = this.now()) {
     return this.recentRuns(10).find((r) => ACTIVE.has(r.status) && now - r.updated < ACTIVE_MS) || null;
@@ -207,7 +217,11 @@ export class OpsCore {
   }
   status() {
     const runs = this.recentRuns(5), active = this.activeRun();
-    return { active: active ? { op: active.op, label: active.label, status: active.status, at: active.at } : null, last: runs.map((r) => ({ op: r.op, label: r.label, status: r.status, at: r.at, updated: r.updated, summary: r.summary || r.reason || "" })) };
+    const last = runs.map((r) => ({ op: r.op, label: r.label, status: r.status, at: r.at, updated: r.updated, summary: r.summary || r.reason || "" }));
+    // Остання автоперевірка новинок — окремим рядком у тому самому списку (меню «Стан останньої операції» показує його без змін скрипта).
+    const w = this.watchGet();
+    if (w.on && w.last) last.push({ op: "watch", label: "Автоперевірка новинок (кожні " + WATCH.everyMinutes + " хв)", status: "увімкнено", at: w.last.at, updated: w.last.at, summary: w.last.message || w.last.result || "" });
+    return { active: active ? { op: active.op, label: active.label, status: active.status, at: active.at } : null, last };
   }
   async button(body) {
     if (body?.op === "status") return this.status();
@@ -256,5 +270,56 @@ export class OpsCore {
     const patch = { state: String(b?.state || "").slice(0, 40), summary: String(b?.summary || "").slice(0, 6000) };
     if (!this.setRun(id, ok ? "DONE" : "FAILED", patch)) return { error: { code: "NOT_FOUND", message: "запуску немає" } };
     return { result: { runId: id } };
+  }
+
+  // ---------- автопошук новинок (alarm) ----------
+  watchGet() {
+    const r = this.rows("SELECT v FROM meta WHERE k = 'watch'")[0];
+    return r ? JSON.parse(r.v) : { on: false };
+  }
+  watchPut(w) { this.sql.exec("INSERT INTO meta (k, v) VALUES ('watch', ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v", JSON.stringify(w)); }
+  async watchInfo() {
+    const w = this.watchGet();
+    return { ...w, everyMinutes: WATCH.everyMinutes, maxPerDay: WATCH.maxPerDay, alarmAt: await this.storage.getAlarm() };
+  }
+  /** Увімкнути: перша перевірка за хвилину, далі кожні WATCH.everyMinutes хв. Вимкнути: alarm видаляється. */
+  async watchSwitch(on) {
+    this.watchPut({ ...this.watchGet(), on });
+    if (on) await this.storage.setAlarm(this.now() + MIN);
+    else await this.storage.deleteAlarm();
+    return this.watchInfo();
+  }
+  /** Alarm: спершу наступний alarm (збій перевірки не зупиняє розклад), потім перевірка; помилки не кидаються (без повторів alarm). */
+  async alarm() {
+    if (!this.watchGet().on) return;
+    const now = this.now();
+    await this.storage.setAlarm(now + WATCH.everyMinutes * MIN);
+    let r;
+    try { r = await this.watchCheck(now, { dry: false }); }
+    catch (e) { r = { result: "ERROR", message: "помилка перевірки: " + String(e?.message || e).slice(0, 200) }; }
+    this.watchPut({ ...this.watchGet(), last: { at: now, ...r } });
+  }
+  /** Один цикл автоперевірки. dry — лише рішення, без запуску операції (перевірка оператором). */
+  async watchCheck(now, { dry = true } = {}) {
+    const w = this.watchGet();
+    if (w.backoffUntil > now) return { result: "PAUSE", message: "постачальник обмежив частоту запитів — пауза до " + new Date(w.backoffUntil).toISOString().slice(11, 16) + " UTC" };
+    const active = this.activeRun(now);
+    if (active) return { result: "BUSY", message: `виконується «${active.label}» — перевірка наступного разу` };
+    const seen = this.kv.get(FIND_NEW_SEEN_KEY)?.value || null;
+    const pre = watchPrecheck({ seen, feedUrl: this.env.SUPPLIER_FEED_URL });
+    if (pre) return pre;
+    const feed = await fetchIds(this.env.SUPPLIER_FEED_URL, this.fetchImpl);
+    if (feed.backoff) {
+      if (!dry) this.watchPut({ ...this.watchGet(), backoffUntil: now + WATCH.backoffMinutes * MIN });
+      return { result: "PAUSE", message: `постачальник відповів HTTP ${feed.httpStatus} — пауза ${WATCH.backoffMinutes} хв` };
+    }
+    if (feed.error) return { result: "FEED_ERROR", message: feed.error };
+    const lastAuto = this.recentRuns(30).find((r) => r.by === AUTO_BY) || null;
+    const d = decideWatch({ seen, ids: feed.ids, now, w, lastAuto });
+    if (d.result !== "DISPATCH" || dry) return d;
+    const b = await this.button({ op: "find-new", by: AUTO_BY });
+    if (b.state !== "STARTED") return { ...d, result: b.state === "BUSY" ? "BUSY" : "DISPATCH_FAILED", message: b.message };
+    this.watchPut(markWatchDispatch(this.watchGet(), now));
+    return { ...d, result: "DISPATCHED", runId: b.runId };
   }
 }

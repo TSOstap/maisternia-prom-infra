@@ -1,4 +1,5 @@
-// «mm-ops» — диспетчер кнопок таблиці TEST + сховище W2 (ENG-29). Cloudflare Workers Free, SQLite Durable Object, без розкладу.
+// «mm-ops» — диспетчер кнопок таблиці TEST + сховище W2 (ENG-29). Cloudflare Workers Free, SQLite Durable Object.
+// Cron Triggers немає: автопошук новинок — alarm самого Durable Object (вмикає оператор: POST /admin/watch).
 {
   "name": "mm-ops",
   "main": "src/index.mjs",
@@ -15,5 +16,5 @@
     "GITHUB_WORKFLOW": "ops.yml",
     "GITHUB_REF": "main"
   }
-  // Секрети (wrangler secret put, не в репозиторій): BUTTON_KEY, RUNNER_KEY, ADMIN_KEY, GITHUB_TOKEN.
+  // Секрети (wrangler secret put, не в репозиторій): BUTTON_KEY, RUNNER_KEY, ADMIN_KEY, GITHUB_TOKEN, SUPPLIER_FEED_URL.
 }

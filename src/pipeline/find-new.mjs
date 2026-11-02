@@ -93,7 +93,12 @@ export async function findNewProducts({ sheets, readBook, xml, source = "", fetc
   if (!intake || ["INTAKE_DONE", "NOTHING_TO_WRITE"].includes(intake.state)) {
     // since — момент першого виявлення (з тим самим відбитком) для нових ID цього знімка; лише для нових (не для всього каталогу).
     const since = Object.fromEntries(fresh.map((id) => [id, sinceOf(id)]));
-    try { await snapshotStore.putJsonIfVersion(FIND_NEW_SEEN_KEY, { ...snapshot, seenAt: stamp, since }, seenRec?.version ?? null); seenSaved = true; }
+    // Автопошук новинок (рішення власника 03.11): повні новинки, які ще НЕ додано лише через час — не стабільні в цьому запуску,
+    // або intake відмовив через стабільність / ліміт запуску. За цим списком сервер mm-ops повторює операцію через ≥ 12 хв.
+    // Інші відмови (дублі, неповні за повним XML тощо) сюди не входять — інакше повтор щоразу витрачав би хвилини GitHub.
+    const res = intake?.ack?.results || {};
+    const waiting = ready.filter((id) => (res[id] ? res[id].status === "ВІДМОВА" && /^(стабільність не підтверджена|ліміт \d+ нових)/.test(res[id].reason || "") : !stable.includes(id)));
+    try { await snapshotStore.putJsonIfVersion(FIND_NEW_SEEN_KEY, { ...snapshot, seenAt: stamp, since, waiting }, seenRec?.version ?? null); seenSaved = true; }
     catch (e) { seenError = e?.code === "CONFLICT" ? "знімок записано паралельно іншим запуском — повтор наступного запуску" : mtText(e?.message || e).slice(0, 200); }
   }
   const results = intake?.stats?.results || {};

@@ -24,7 +24,7 @@ import { perturb } from "../src/verify/supplier-shadow.mjs";
 import { productionConfig } from "../src/pipeline/production.mjs";
 import { updateProducts } from "../src/pipeline/update-products.mjs";
 import { qaProducts, explainSeal, QA_COLUMNS } from "../src/pipeline/qa-products.mjs";
-import { findNewProducts } from "../src/pipeline/find-new.mjs";
+import { findNewProducts, FIND_NEW_SEEN_KEY } from "../src/pipeline/find-new.mjs";
 import * as steps from "../src/pipeline/eng28a-steps.mjs";
 import { ARCHIVE_SHEET } from "../src/core/archive.mjs";
 import { EMPTY_CATALOG } from "./helpers/intake.mjs";
@@ -367,12 +367,17 @@ test("ENG-29 «Знайти нові товари» (рішення власни
   const cc = okCc();
   const f1 = await findNew(w, 20, { xml, controls: cc });   // перше виявлення (хвилина 20)
   assert.equal(f1.state, "WAITING_STABILITY", JSON.stringify(f1).slice(0, 300));
+  // Автопошук новинок (03.11): знімок називає новинки, що чекають стабільності, — сервер повторить операцію через ≥ 12 хв.
+  const waitingNow = async () => (await w.store.getJsonVersioned(FIND_NEW_SEEN_KEY)).value.waiting;
+  assert.deepEqual(await waitingNow(), ["2990000701"]);
   const f2 = await findNew(w, 25, { xml, controls: cc });   // через 5 хв — ще рано
   assert.notEqual(f2.state, "INTAKE_DONE", JSON.stringify(f2).slice(0, 300));
   assert.ok(!queue(w).some((r) => mtText(r["Offer ID"]) === "2990000701"));
+  assert.deepEqual(await waitingNow(), ["2990000701"], "відмова через стабільність — новинка й далі чекає");
   const f3 = await findNew(w, 31, { xml, controls: cc });   // 11 хв від ПЕРШОГО виявлення (6 хв від попереднього натискання) — додано
   assert.equal(f3.state, "INTAKE_DONE", JSON.stringify(f3).slice(0, 300));
   assert.equal(queue(w).filter((r) => mtText(r["Offer ID"]) === "2990000701").length, 1);
+  assert.deepEqual(await waitingNow(), [], "додано — більше не чекає");
   // Інший новий товар змінився між натисканнями — відлік з нуля від зміни.
   const xmlA = w.xml.replace("\n</offers>", "\n" + offer("2990000701") + "\n" + offer("2990000702") + "\n</offers>");
   const xmlB = xmlA.replace("<name_ua>Новий 2990000702</name_ua>", "<name_ua>Змінена назва 2990000702</name_ua>");
