@@ -181,7 +181,7 @@ if (WRITE_MODES.includes(mode)) {
   try {
     const policy = MODE_POLICIES[mode];
     if (!policy) throw new Error("немає політики запису для режиму " + mode);
-    const need = Object.entries(policy).filter(([t, p]) => t !== "*" && (Array.isArray(p.columns) || p.clearOnly?.length)).map(([t]) => t);
+    const need = Object.entries(policy).filter(([t, p]) => t !== "*" && (Array.isArray(p.columns) || p.clearOnly?.length || p.deny?.length)).map(([t]) => t);
     const hb = need.length ? await readBook(need) : {};
     sheets = guardedSheets(sheets, { spreadsheetId: source === "api" ? process.env.MM_TEST_SHEET_ID : TEST_SHEET_ID, policy, headers: Object.fromEntries(need.map((t) => [t, hb[t]?.[0] || []])) });
   } catch (e) { fail("ОХОРОНА ЦІЛІ ЗАПИСУ: ", e); }

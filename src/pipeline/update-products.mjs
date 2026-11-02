@@ -84,6 +84,8 @@ export function updateReport(r, intake = null) {
   const s = r.sync || {}, st = s.stats || {}, m = st.main || {}, raw = st.mainRaw || {}, p = r.presence || {};
   return {
     state: r.state, reason: r.reason ?? "", feed: r.snapshot ? { id: r.snapshot.id, date: r.snapshot.feedDate, offers: r.snapshot.count } : null, scope: r.newItems?.scope ?? null,
+    // ENG-29: підсумок для власника — скільки товарів змінено і скільки з попередженнями постачальника (деталі — аркуш «Попередження постачальника»).
+    products: { changed: m.changedProducts ?? null, withWarnings: s.ownerPriority?.productsWithWarnings ?? 0, warnings: s.ownerPriority?.warnings ?? 0, warningsRecorded: s.ownerPriority?.warningsRecorded ?? null },
     prices: { supplierPriceChanged: m.supplierPriceChanged ?? 0, salePriceChanged: m.salePriceChanged ?? 0 },
     availability: { changed: m.availabilityChanged ?? 0, becameAvailable: m.becameAvailable ?? 0, becameUnavailable: m.becameUnavailable ?? 0 },
     outOfFeedScope: st.outOfFeedScope ?? 0,

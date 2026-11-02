@@ -18,7 +18,7 @@ import { buildCharacteristics, cleanDescription } from "./prom-attributes.mjs";
 import { CATEGORY_CONFIRMED } from "./prom-categories.mjs";
 import { PRESENCE_COLUMNS, holdLimit } from "./supplier-presence.mjs";
 import { enabled as ownerPriorityEnabled, OP_MAIN_COLUMNS, prepareRow, finishRow, stateCell, markCell, approvalState } from "./owner-priority.mjs";
-import { STATE_COLUMN, WARNING_MARK_COLUMN, acceptSupplier, markCustom } from "./field-control.mjs";
+import { STATE_COLUMN, WARNING_MARK_COLUMN, PARAMS_FIELD, acceptSupplier, markCustom, parseParams, hv } from "./field-control.mjs";
 import { WARN_SHEET, pendingActions, CLASSIFY_SHEET, CLASSIFY, pendingClassifications } from "../pipeline/supplier-warnings.mjs";
 import { ARCHIVE_SHEET } from "./archive.mjs";
 /** Рядки архіву «Видалені товари» як об'єкти — лише для «відомих» ID (анти-повторне створення). */
@@ -776,6 +776,29 @@ export const OUT_OF_SCOPE = "ПОЗА_ОХОПЛЕННЯМ_ФІДУ";
 /** ENG-28c (рішення власника: три незалежні операції): queueMode "off" — «Оновити товари» не чіпає «Нові товари»: сирі дані черги не
  *  оновлюються, рішення черги (затвердження / відхилення / прив'язки / скасування) не виконуються (лише кількість у звіті), записів
  *  «Журналу» про чергу немає. Типово "full" — як раніше (застарілий комбінований --mode=sync і тести). */
+/** ENG-29 (логіка власника 02.11): «Оновити товари» підготовлені характеристики не змінює (characteristics = "preserve"); якщо постачальник
+ *  змінив свої характеристики (попередній ↔ новий стан «Характеристики постачальника JSON»), — попередження на товарі: які характеристики,
+ *  було → стало, і наше значення тієї самої характеристики. Без ізоляції; товар лишається придатним до експорту. Перше заповнення сирої
+ *  колонки — не зміна (М2). Повтор із тим самим сирим значенням — той самий ключ (нового попередження немає). */
+export function supplierParamsWarning({ original, rawAfter, at, ctx }) {
+  const before = parseParams(original[RAW_PARAMS]), after = parseParams(rawAfter);
+  if (!mtText(original[RAW_PARAMS]).trim() || !before.ok || !after.ok) return null;
+  const fmt = (p) => `${mtText(p.name).trim()}: ${[mtText(p.value).trim(), mtText(p.unit ?? "").trim()].filter(Boolean).join(" ")}`;
+  const ours = parseParams(original[PARAMS_FIELD]);
+  const was = [], now = [], mine = [];
+  for (const k of new Set([...before.map.keys(), ...after.map.keys()])) {
+    const a = before.map.get(k), b = after.map.get(k);
+    if (a && b && fmt(a) === fmt(b)) continue;
+    was.push(a ? fmt(a) : `${mtText(b.name).trim()}: (не було)`);
+    now.push(b ? fmt(b) : `${mtText(a.name).trim()}: (прибрано)`);
+    const o = ours.ok ? ours.map.get(k) : null;
+    mine.push(o ? fmt(o) : `${mtText((a || b).name).trim()}: (у нас немає)`);
+  }
+  if (!was.length) return null;
+  return { key: `${ctx.offerId}|${PARAMS_FIELD}|${hv(rawAfter)}`, at, offerId: ctx.offerId, sku: ctx.sku ?? "", name: ctx.name ?? "",
+    field: `${PARAMS_FIELD} (змінено характеристик постачальника: ${was.length})`, before: was.join("; "), after: now.join("; "), custom: mine.join("; "), source: ctx.source ?? "постачальник" };
+}
+
 export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fullById = new Map(), catalog = null, controls = null, queueCommands = true, presenceColumns = false, feedScope = "full", queueMode = "full", resumeStateMigration = false }) {
   const queueOff = queueMode === "off";
   const cleanDescriptions = config.characteristics?.cleanDescriptions === true; // очищення сирої копії опису — окреме погодження
@@ -889,6 +912,7 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
   out.supplierParamChanges = supplierParamRows.map((i) => ({ offerId: mtText(mainRows[i]["Offer ID"]), supplierId: mtText(mainRows[i]["ID постачальника"]), name: mtText(mainRows[i]["Назва UA"]) }));
   out.frozenPending = refreshedMain.map((m, i) => (m?.frozenPending ? mtText(mainRows[i]["Offer ID"]) : null)).filter(Boolean);
   out.characteristicsMode = charMode;
+  const paramsMass = supplierParamRows.length > paramsLim;
   if (charMode === "preserve" && supplierParamRows.length > paramsLim) {
     if (catalog?.frozenInfo?.active) return stop(FZ_BLOCK, `НЕ ВИКОНАНО — МАСОВА ЗМІНА ХАРАКТЕРИСТИК ПОСТАЧАЛЬНИКА за активного FZ: ${supplierParamRows.length} товарів (поріг ${paramsLim}); схоже на помилку у фіді; нічого не записано`, supplierParamRows.length, paramsLim);
     out.warnings.push(`МАСОВА ЗМІНА ХАРАКТЕРИСТИК ПОСТАЧАЛЬНИКА: ${supplierParamRows.length} товарів (поріг ${paramsLim}) — зафіксовано, характеристики не змінено`);
@@ -910,6 +934,9 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
       if (isolated.has(i) || undo.changedMain.has(i) || bind.changedMain.has(i)) return m;
       const original = mainRows[i];
       const f = finishRow({ original, refreshed: m?.changed ? m.row : original, state: opPrep[i].state, ctx: { offerId: mtText(original["Offer ID"]), sku: mtText(original["Артикул постачальника"]), name: mtText(original["Назва UA"]), source: "YML постачальника" }, at: stamp, hold: Boolean(opPrep[i].migrated) });
+      // ENG-29: зміна характеристик постачальника (preserve) — попередження на товарі; при масовій зміні (понад поріг) — лише загальне.
+      const pw = charMode === "preserve" && m?.rawParams && !paramsMass ? supplierParamsWarning({ original, rawAfter: m.row[RAW_PARAMS], at: stamp, ctx: { offerId: mtText(original["Offer ID"]), sku: mtText(original["Артикул постачальника"]), name: mtText(original["Назва UA"]), source: "YML постачальника" } }) : null;
+      if (pw) f.warnings.push(pw);
       f.row[WARNING_MARK_COLUMN] = markCell(original[WARNING_MARK_COLUMN], f.warnings);
       f.row[SEAL_COLUMN] = rowSeal(f.row);
       opOut.warnings.push(...f.warnings); opOut.rawChanged += f.rawChanged.length; if (f.rawChanged.length) opOut.productsWithRawChanges++;
@@ -967,6 +994,8 @@ export function planSheetSync({ book, parsed, stamp, config, now, groupsRows, fu
     rows: mainRows.length, match: tally(mainPlan.map((p) => p.match)), changedCells: changeEntries(stamp, SHEET.main, mainPlan).filter((e) => e[3] !== "ПОМИЛКА").length,
     supplierPriceChanged: diff("Ціна постачальника"), salePriceChanged: diff("Ціна кінцева"), availabilityChanged: diff("Наявність"),
     becameAvailable, becameUnavailable, quantityChanged: diff("Кількість постачальника"), missingInFeed: missing,
+    // ENG-29: скільки товарів змінено цим запуском (ціни / наявність / кількість або дані постачальника в рядку) — для підсумку власнику.
+    changedProducts: new Set([...mainPlan.map((p, i) => (p.before.some((v, j) => mtText(v) !== mtText(p.next[j])) ? i : -1)).filter((i) => i >= 0), ...mainRaw.changed]).size,
   };
   // Захист від пошкодженого/помилкового фіду: масове зникнення або масова зміна наявності — нічого не пишемо.
   if (missing > 0 && missing >= missingLimit) return stop("МАСОВЕ ЗНИКНЕННЯ", `зникло ${missing} товарів основного каталогу (поріг ${missingLimit}) — схоже на збій постачальника; нічого не записано`, missing, missingLimit);

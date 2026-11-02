@@ -105,6 +105,7 @@ if (child.stdout) say(String(child.stdout).slice(0, 60_000));
 if (child.stderr) say(String(child.stderr).split("\n").filter(Boolean).slice(-5).join("\n"));
 let report = null;
 try { report = JSON.parse(fs.readFileSync(reportFile, "utf8")); } catch { /* звіту немає — збій до запису звіту */ }
+if (report?.metrics) say("МЕТРИКИ: " + JSON.stringify(report.metrics)); // лише числа (час, запити, пам'ять)
 const state = report?.result?.state || outState || "ERROR";
 const ok = child.status === 0;
 const summary = report ? ownerSummary(op, report) : `Помилка виконання (код ${child.status ?? "—"})` + (child.stderr ? ": " + String(child.stderr).split("\n").filter(Boolean).slice(-1)[0].slice(0, 300) : "");

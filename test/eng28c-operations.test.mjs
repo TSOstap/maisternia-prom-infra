@@ -323,3 +323,37 @@ test("ENG-28c «Знайти нові товари»: лише дозволен�
   assert.equal(JSON.stringify(w.sheets.book[SHEET.queue]), qSnap); assert.equal(journal(w).length, jn);
   await assert.rejects(guarded(w, "find-new").updateRanges([{ title: SHEET.main, row: 2, col: 1, values: [["x"]] }]), /не дозволено/);
 });
+
+// ================================================================ ENG-29: логіка власника 02.11 (характеристики)
+test("ENG-29 «Оновити товари»: постачальник змінив характеристику → наші «Характеристики JSON» без змін, попередження на товарі (було → стало, наше значення), без ізоляції; підсумок — скільки товарів оновлено й з попередженнями", async () => {
+  const { ownerSummary } = await import("../src/pipeline/ops-summary.mjs");
+  const w = world();
+  await structure(w); await correction(w); await qa(w, 3); await transfer(w);
+  assert.equal((await update(w, 10)).state, "SYNCED");
+  const target = main(w).find((r) => /<param|\[\{/.test(mtText(r["Характеристики постачальника JSON"])) && mtText(r["Характеристики постачальника JSON"]).length > 5) || main(w)[20];
+  const id = mtText(target["Offer ID"]), sid = mtText(target["ID постачальника"]);
+  const paramsBefore = mtText(target["Характеристики JSON"]);
+  const block = new RegExp(`(<offer\\b[^>]*\\bid="${sid}"[^>]*>[\\s\\S]*?)(<param name="([^"]+)"([^>]*)>)([^<]*)(</param>)`);
+  const m = block.exec(w.xml);
+  assert.ok(m, "у синтетичному фіді товар має характеристики: sid " + sid + " у фіді: " + w.xml.includes(`id="${sid}"`) + "; raw: " + mtText(target["Характеристики постачальника JSON"]).slice(0, 80));
+  const xml2 = w.xml.replace(block, (_, pre, open, name, attrs, val, close) => `${pre}${open}${val}9${close}`);
+  const r = await update(w, 300, { xml: xml2 });
+  assert.equal(r.state, "SYNCED", JSON.stringify(r).slice(0, 300));
+  const after = main(w).find((x) => mtText(x["Offer ID"]) === id);
+  assert.equal(mtText(after["Характеристики JSON"]), paramsBefore, "підготовлені характеристики не змінено");
+  assert.match(mtText(after["Попередження постачальника"]), /⚠ .*Характеристики JSON/);
+  const warn = sheetRows(w.sheets.book["Попередження постачальника"]).find((x) => mtText(x["Offer ID"]) === id && /^Характеристики JSON/.test(mtText(x["Поле"])));
+  assert.ok(warn, "рядок попередження про характеристики");
+  assert.match(mtText(warn["Було (постачальник)"]), new RegExp(`${m[3]}: ${m[5]}`));
+  assert.match(mtText(warn["Стало (постачальник)"]), new RegExp(`${m[3]}: ${m[5]}9`));
+  assert.ok(!(r.report.conflicts?.isolated), "без ізоляції");
+  assert.ok(r.report.products.changed >= 1 && r.report.products.withWarnings >= 1, JSON.stringify(r.report.products));
+  const text = ownerSummary("update", { result: r });
+  assert.match(text, /Оновлено товарів: \d+/);
+  assert.match(text, /Товари з попередженнями: \d+/);
+  assert.match(text, /Попередження постачальника/);
+  // Повтор із тим самим фідом — нового попередження немає (той самий ключ).
+  const n0 = sheetRows(w.sheets.book["Попередження постачальника"]).length;
+  assert.equal((await update(w, 360, { xml: xml2 })).state, "SYNCED");
+  assert.equal(sheetRows(w.sheets.book["Попередження постачальника"]).length, n0);
+});

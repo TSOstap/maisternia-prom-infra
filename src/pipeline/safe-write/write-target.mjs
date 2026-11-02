@@ -84,6 +84,12 @@ export function guardedSheets(sheets, { spreadsheetId, policy, headers = {} }) {
     const width = Math.max(0, ...(b.values || []).map((r) => r.length));
     if (b.row === 1) { if (!p.header) block(`запис заголовка «${b.title}» не дозволено`); hdr[b.title] = (b.values[0] || []).map(mtText); return; }
     clearOnlyCheck(p, b.title, hdr[b.title], b.col, b.values, b.row);
+    // ENG-29: deny — колонки, які режим не пише ніколи (навіть за columns "*").
+    if (p.deny?.length) {
+      const header = hdr[b.title];
+      if (!header) block(`немає прочитаного заголовка «${b.title}» — колонки блоку не перевірити`);
+      for (let j = 0; j < width; j++) { const c = colOf(header, b.col + j); if (p.deny.includes(c)) block(`колонку «${c}» аркуша «${b.title}» цей режим не змінює`, { row: b.row }); }
+    }
     if (p.columns === "*") return;
     const header = hdr[b.title];
     if (!header) block(`немає прочитаного заголовка «${b.title}» — колонки блоку не перевірити`);
@@ -119,9 +125,10 @@ export const MODE_POLICIES = Object.freeze({
     "Нові товари": { ops: ["ensureColumns", "updateRanges"], columns: ["Перевірка"], header: true }, "Паспорт каталогу": { ops: ["ensureSheet", "updateRanges"], columns: "*", header: true }, "Журнал": JOURNAL_KEYED },
   sync: broad(SYNC_TITLES), intake: broad(SYNC_TITLES), scenario: broad(SYNC_TITLES), "scenario-mass": broad(SYNC_TITLES),
   // ENG-29 (Hermes F-28C-2): «Оновити товари» — без черги й «Заморожених ID» (ENG-28c: update їх не змінює) і без дописування рядків
-  // в «Основний каталог» (нові картки — лише «Перенести затверджені»). «Характеристики JSON» лишено: оновлення характеристик постачальника
-  // за схемою Prom зі збереженням ручних значень і FZ — погоджена поведінка update (S1-PLAN р. 13–14), не помилка.
-  update: { ...broad(SYNC_TITLES.filter((x) => x !== "Нові товари" && x !== "Заморожені ID")), "Основний каталог": { ...BROAD, ops: BROAD.ops.filter((o) => o !== "appendRows") } },
+  // в «Основний каталог» (нові картки — лише «Перенести затверджені»). Логіка власника 02.11 (ENG-28b preserve): «Оновити товари» не
+  // перегенеровує й не перезаписує підготовлені характеристики — «Характеристики JSON» і їхнє походження цей режим не пише ніколи
+  // (зміни характеристик постачальника — лише попередження на товарі).
+  update: { ...broad(SYNC_TITLES.filter((x) => x !== "Нові товари" && x !== "Заморожені ID")), "Основний каталог": { ...BROAD, ops: BROAD.ops.filter((o) => o !== "appendRows"), deny: ["Характеристики JSON", "Походження характеристик JSON"] } },
   controls: { "*": BROAD }, recover: { "*": BROAD }, archive: { "*": BROAD }, refresh: { "*": BROAD },
   // ENG-28c: QA погоджених товарів — лише системні / сирі колонки постачальника й печатка «Основного каталогу» (за ключем), паспорт,
   // «Журнал»; жодних SEO / описів / характеристик / рішень, нових колонок чи аркушів.

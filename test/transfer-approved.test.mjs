@@ -199,7 +199,10 @@ test("Hermes F-28C-2 / F-28C-3 (ENG-29): update не дописує рядки �
   await assert.rejects(g("update").appendRows(SHEET.main, [mh.map(() => "x")]), /appendRows/);
   await assert.rejects(g("update").updateRanges([{ title: SHEET.queue, row: 2, col: 1, values: [["x"]] }]), /не дозволено/);
   await assert.rejects(g("update").appendRows(SHEET.frozen, [["123"]]), /не дозволено/);
-  await g("update").updateRanges([{ title: SHEET.main, row: 2, col: mh.indexOf("Характеристики JSON") + 1, values: [["[]"]] }]);
+  // Логіка власника 02.11: «Оновити товари» не перезаписує підготовлені характеристики (і їхнє походження) — BLOCK; ціни — можна.
+  await assert.rejects(g("update").updateRanges([{ title: SHEET.main, row: 2, col: mh.indexOf("Характеристики JSON") + 1, values: [["[]"]] }]), /не змінює/);
+  if (mh.includes("Походження характеристик JSON")) await assert.rejects(g("update").updateRanges([{ title: SHEET.main, row: 2, col: mh.indexOf("Походження характеристик JSON") + 1, values: [["{}"]] }]), /не змінює/);
+  await g("update").updateRanges([{ title: SHEET.main, row: 2, col: mh.indexOf("Ціна") + 1, values: [["123"]] }]);
   const dc = qhh.indexOf("Рішення") + 1;
   await assert.rejects(g("find-new").updateRanges([{ title: SHEET.queue, row: 2, col: dc, values: [[DECISION.APPROVE]] }]), /лише очищувати/);
   await g("find-new").updateRanges([{ title: SHEET.queue, row: 2, col: dc, values: [[""]] }]);

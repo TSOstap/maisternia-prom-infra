@@ -21,8 +21,11 @@ export function ownerSummary(op, report) {
   else if (r.reason) lines.push("Причина: " + clip(r.reason));
   const rep = r.report || null;
   if (op === "update" && rep) {
+    if (rep.products?.changed != null) lines.push(`Оновлено товарів: ${n(rep.products.changed)} (ціни, наявність або дані постачальника)`);
     lines.push(`Ціни: постачальника ${n(rep.prices?.supplierPriceChanged)}, продажу ${n(rep.prices?.salePriceChanged)}; наявність: ${n(rep.availability?.changed)} (з'явились ${n(rep.availability?.becameAvailable)}, зникли ${n(rep.availability?.becameUnavailable)})`);
     if (rep.supplierChanges?.rows) lines.push(`Зміни постачальника в картках: ${n(rep.supplierChanges.rows)}`);
+    if (n(rep.products?.withWarnings)) lines.push(`Товари з попередженнями: ${n(rep.products.withWarnings)} (полів: ${n(rep.products.warnings)}) — постачальник змінив поле, яке у вас своє (наше значення збережено), або характеристики. Що саме й з якого значення на яке — аркуш «Попередження постачальника» (Поле, Було → Стало, Наше значення) і колонка «Попередження постачальника» в «Основному каталозі».`);
+    if (n(rep.supplierChanges?.params)) lines.push(`Характеристики постачальника змінились у ${n(rep.supplierChanges.params)} товарах — наші характеристики не змінено.`);
     if (rep.presence?.gone || rep.presence?.returned) lines.push(`Зникли у постачальника: ${n(rep.presence.gone)}; повернулися: ${n(rep.presence.returned)}`);
     if (rep.queue?.pendingDecisions) lines.push(`У «Нових товарах» чекають перенесення: ${n(rep.queue.pendingDecisions)} (кнопка «Перенести затверджені»)`);
     if (rep.conflicts?.isolated) lines.push(`Ізольовано рядків (не змінювались): ${n(rep.conflicts.isolated)}`);
