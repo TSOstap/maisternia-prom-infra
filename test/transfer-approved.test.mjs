@@ -174,3 +174,19 @@ test("підсумок для власника (вікно «Стан остан
   assert.match(s, /Не перенесено 324325435: не заповнено: колонка E «Назва UA»/);
   assert.match(ownerSummary("transfer", { result: { state: "INCOMPLETE", error: "x", next: "натисніть ще раз" } }), /Далі: натисніть ще раз/);
 });
+
+test("«Основний каталог» без службових колонок вмісту (як у TEST): картка пишеться в наявні колонки, структура не змінюється, у звіті — які колонки не перенесено", async () => {
+  const w = await world();
+  const drop = ["Опис постачальника UA", "Опис постачальника RU", "Характеристики постачальника JSON"];
+  const mv = w.raw.book[SHEET.main], keep = mv[0].map((k, i) => (drop.includes(mtText(k)) ? -1 : i)).filter((i) => i >= 0);
+  w.raw.book[SHEET.main] = mv.map((r) => keep.map((i) => r[i] ?? ""));
+  const width = w.raw.book[SHEET.main][0].length;
+  const [a] = qRows(w).map((r) => mtText(r["Offer ID"]));
+  approve(w, a);
+  const r = await press(w);
+  assert.equal(r.state, "TRANSFERRED", JSON.stringify(r).slice(0, 300));
+  assert.equal(r.moved, 1);
+  assert.equal(w.raw.book[SHEET.main][0].length, width, "колонки не додано");
+  for (const k of drop) assert.ok(r.droppedColumns.includes(k), k);
+  assert.ok(mainRows(w).some((x) => mtText(x["Offer ID"]) === a));
+});

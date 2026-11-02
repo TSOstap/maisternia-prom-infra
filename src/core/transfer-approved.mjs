@@ -14,7 +14,7 @@
 import crypto from "node:crypto";
 import { mtText } from "./text.mjs";
 import { readSheet } from "./sync-plan.mjs";
-import { rowSeal, SEAL_COLUMN, approvalManifest, GROUP_HEADERS } from "./seal.mjs";
+import { rowSeal, SEAL_COLUMN, approvalManifest, GROUP_HEADERS, YML_HEADERS } from "./seal.mjs";
 import { objectsFromValues } from "./yml.mjs";
 import { SHEET, QUEUE_HEADERS, MAIN_HEADERS, DECISION, PENDING_TRANSFER_MARK, approvalProblems, toMainRow, gateFor } from "./sheet-sync.mjs";
 import { buildDupIndex, findDuplicates, rowEntry } from "./dup-check.mjs";
@@ -55,7 +55,9 @@ export function planTransferApproved({ book, stamp, cc = null }) {
   const checks = [];
   const check = (name, ok, detail) => { checks.push({ name, ok: Boolean(ok), ...(detail === undefined ? {} : { detail }) }); return ok; };
   check("«Нові товари» у форматі черги", QUEUE_HEADERS.every((k) => queueHeader.includes(k)), QUEUE_HEADERS.filter((k) => !queueHeader.includes(k)));
-  check("«Основний каталог» має всі колонки картки", MAIN_HEADERS.every((k) => mainHeader.includes(k)), MAIN_HEADERS.filter((k) => !mainHeader.includes(k)));
+  // Колонки картки (YML) — обов'язкові. Службових колонок вмісту в «Основному каталозі» може не бути (TEST: так само, як при перенесенні
+  // NEW92 02.11) — рядок пишеться лише в наявні колонки; структуру каталогу ця операція не змінює (у звіті — droppedColumns).
+  check("«Основний каталог» має всі колонки картки (YML)", YML_HEADERS.every((k) => mainHeader.includes(k)), YML_HEADERS.filter((k) => !mainHeader.includes(k)));
   if (!checks.every((c) => c.ok)) return { state: "PRECONDITION_FAILED", checks };
   const main = readSheet(book[SHEET.main], SHEET.main), queue = readSheet(qv, SHEET.queue);
   const mainIdList = main.rows.map((r) => t(r["Offer ID"]));
@@ -107,9 +109,10 @@ export function planTransferApproved({ book, stamp, cc = null }) {
     removeRows.push({ offerId: id, row: r, earlier: false });
   }
   const passportAfter = approvalManifest([...main.rows, ...moveRows], groups);
+  const droppedColumns = MAIN_HEADERS.filter((k) => !mainHeader.includes(k));
   const counts = { mainBefore: main.rows.length, moved: moveRows.length, mainAfter: main.rows.length + moveRows.length, removeFromQueue: removeRows.length, removeEarlier: removeRows.filter((x) => x.earlier).length, notTransferred: notTransferred.length, queueBefore: queue.rows.length };
   const state = moveRows.length || removeRows.length || marks.length ? "READY" : "NOTHING";
-  return { state, checks, moveRows, removeRows, notTransferred, marks, mainHeader, queueHeader, passportAfter, counts };
+  return { state, checks, moveRows, removeRows, notTransferred, marks, mainHeader, queueHeader, passportAfter, counts, droppedColumns: moveRows.length ? droppedColumns : [] };
 }
 
 /** Контрольний план у сховищі W2 (до першого запису): усе, що потрібно для продовження після збою без нового планування. */
@@ -121,6 +124,6 @@ export function controlPlanOf(plan, { stamp, opId, events }) {
     moveValues: plan.moveRows.map((r) => plan.mainHeader.map((k) => mtText(r[k] ?? ""))),
     // Лише відбиток рядка черги (план — у сховищі W2, без повних описів); знімок для видалення береться зі свіжого читання, якщо відбиток збігся.
     remove: plan.removeRows.map((x) => ({ offerId: x.offerId, earlier: x.earlier, hash: rowHash(x.row, plan.queueHeader) })),
-    marks: plan.marks, notTransferred: plan.notTransferred, passportAfter: plan.passportAfter, counts: plan.counts, events,
+    marks: plan.marks, notTransferred: plan.notTransferred, passportAfter: plan.passportAfter, counts: plan.counts, droppedColumns: plan.droppedColumns || [], events,
   };
 }

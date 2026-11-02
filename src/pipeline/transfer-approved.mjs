@@ -55,7 +55,7 @@ async function execute({ cp, ver, store, session, readBook, stamp, resumed }) {
   const W = session.sheets;
   const progress = async (status) => { ver = await savePlan(store, TRANSFER_APPROVED_KEY, { ...cp, status, progressAt: stamp, ...(resumed ? { resumedAt: stamp } : {}) }, ver); cp = { ...cp, status }; };
   const done = [], conflicts = [];
-  const base = { opId: cp.opId, resumed, notTransferred: cp.notTransferred };
+  const base = { opId: cp.opId, resumed, notTransferred: cp.notTransferred, droppedColumns: cp.droppedColumns || [] };
   try {
     if (cp.moveIds.length) {
       const ar = await session.appendMissingByKey({ title: SHEET.main, rows: cp.moveValues, generation: "transfer-approved:" + cp.opId });
