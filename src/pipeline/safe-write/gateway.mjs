@@ -151,15 +151,17 @@ class WriteSession {
   // ENG-22 (F05): для черги «Нові товари» без затвердженого розділу — тимчасовий розділ B6 (queue-ownership.mjs, fail-closed).
   #ctx() { return { sheets: this.gw.sheets, read: this.gw.read, contract: withProvisionalQueue(this.gw.contract), writer: this.writer, assertCurrent: () => this.assertCurrent(), journal: this.journal, lease: this.lease, now: this.gw.now, settleMs: this.gw.settleMs }; }
 
-  async updateByKey({ title, changes, generation = "" }) {
+  // ENG-29: read — необов'язкове вузьке читання цього аркуша (лише ключ, ідентичність і колонки зміни; решта клітинок порожні) замість
+  // повного; з'ясування (reconcile) завжди читає повністю (gw.read).
+  async updateByKey({ title, changes, generation = "", read = null }) {
     this.#ready();
-    const r = await keyedUpdate({ ...this.#ctx(), title, changes, generation });
+    const r = await keyedUpdate({ ...this.#ctx(), ...(read ? { read } : {}), title, changes, generation });
     await this.refreshState();
     return r;
   }
-  async appendMissingByKey({ title, rows, generation = "" }) {
+  async appendMissingByKey({ title, rows, generation = "", read = null }) {
     this.#ready();
-    const r = await appendMissingByKey({ ...this.#ctx(), title, rows, generation });
+    const r = await appendMissingByKey({ ...this.#ctx(), ...(read ? { read } : {}), title, rows, generation });
     await this.refreshState();
     return r;
   }

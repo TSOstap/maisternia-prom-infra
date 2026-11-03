@@ -39,17 +39,25 @@ async function prices(w, min, o = {}) {
   const sheets = WT.guardedSheets(w.sheets, { spreadsheetId: WT.TEST_SHEET_ID, policy: WT.MODE_POLICIES.prices, headers: headers(w) });
   const session = await new WriteGateway({ sheets, read: o.readBook || w.readBook, store: w.w2 }).open({ writer: "sync" });
   const stamp = new Date(NOW + min * 60_000).toISOString();
-  try { return await updatePrices({ readBook: o.readBook || w.readBook, xml: o.xml || w.xml, stamp, now: NOW + min * 60_000, config: o.config || cfg(), controls: o.controls || okCc(), session, snapshotStore: w.w2 }); }
+  try { return await updatePrices({ readBook: o.readBook || w.readBook, xml: o.xml || w.xml, stamp, now: NOW + min * 60_000, config: o.config || cfg(), controls: o.controls || okCc(), session, snapshotStore: w.w2, readColumns: o.narrow ? sparse(w) : null }); }
   finally { await session.close(); }
 }
+/** Вузьке читання, як GoogleSheetsCatalogSource.loadColumns: заголовок повністю, у рядках — лише вибрані колонки. */
+const sparse = (w) => async (title, cols) => {
+  const v = (await w.sheets.read())[title];
+  if (!v) return null;
+  const keep = new Set(cols.map((c) => v[0].indexOf(c)).filter((i) => i >= 0));
+  return [v[0].slice(), ...v.slice(1).map((r) => v[0].map((_, j) => (keep.has(j) ? r[j] ?? "" : "")))];
+};
 const nonLive = (r) => Object.fromEntries(Object.entries(r).filter(([k]) => !LIVE_COLUMNS.includes(k)));
 
-test("«Ціни й наявність»: лише змінені рядки й лише 8 колонок LIVE; назви / артикул змінені, відсутні, видалені (CC), «видалений у постачальника» — не чіпаються; «Журнал» — події з ID; повтор — без змін", async () => {
+for (const narrow of [false, true]) test(`«Ціни й наявність»${narrow ? " (вузьке читання колонок)" : ""}: лише змінені рядки й лише 8 колонок LIVE; назви / артикул змінені, відсутні, видалені (CC), «видалений у постачальника» — не чіпаються; «Журнал» — події з ID; повтор — без змін`, async () => {
   const w = world();
+  const P = (ww, min, o = {}) => prices(ww, min, { ...o, narrow });
   // Вирівнювання: перший запуск приводить ціни до чинних правил (синтетика може відрізнятись).
-  const r0 = await prices(w, 0);
+  const r0 = await P(w, 0);
   assert.ok(["PRICES_UPDATED", "NO_CHANGES"].includes(r0.state), JSON.stringify(r0).slice(0, 400));
-  assert.equal((await prices(w, 1)).state, "NO_CHANGES");
+  assert.equal((await P(w, 1)).state, "NO_CHANGES");
 
   const before = rows(w);
   const sid = (i) => mtText(before[i]["ID постачальника"]);
@@ -72,7 +80,7 @@ test("«Ціни й наявність»: лише змінені рядки й 
   assert.equal(Object.values(plan.stats.skipped.mismatch).reduce((a, b) => a + b, 0), 1);
   assert.equal(plan.stats.skipped.gone, 1);
 
-  const r = await prices(w, 10, { xml: dated(xml, 10), controls: okCc([oid(5)]) });
+  const r = await P(w, 10, { xml: dated(xml, 10), controls: okCc([oid(5)]) });
   assert.equal(r.state, "PRICES_UPDATED", JSON.stringify(r).slice(0, 500));
   assert.equal(r.stats.written, 2); assert.equal(r.stats.supplierPriceChanged, 1); assert.equal(r.stats.availabilityChanged, 1);
   const after = rows(w);
@@ -92,7 +100,7 @@ test("«Ціни й наявність»: лише змінені рядки й 
   assert.deepEqual([...new Set(ev.map((e) => mtText(e[2])))].sort(), [oid(1), oid(2)].sort());
   assert.equal((await w.w2.getJsonVersioned(RUN_PLAN_KEY)).value.status, "DONE");
   // Повтор тим самим фідом — нічого.
-  assert.equal((await prices(w, 11, { xml: dated(xml, 11), controls: okCc([oid(5)]) })).state, "NO_CHANGES");
+  assert.equal((await P(w, 11, { xml: dated(xml, 11), controls: okCc([oid(5)]) })).state, "NO_CHANGES");
   assert.equal(r.stats.skipped.gone, 1);
 });
 
@@ -124,4 +132,31 @@ test("«Ціни й наявність»: масова зміна наявнос
   assert.deepEqual(r.notWritten.map((x) => x.offerId), [mtText(before[1]["Offer ID"])]);
   assert.equal(Number(rows(w)[1]["Ціна постачальника"]), 12345, "правку людини не перезаписано");
   assert.equal(Number(rows(w)[2]["Ціна постачальника"]), Number(before[2]["Ціна постачальника"]) + 100);
+});
+
+test("«Ціни й наявність» (вузьке читання колонок): правка людини між читанням і записом → цей рядок не пишеться; «Журнал» дописано лише для записаного", async () => {
+  const w = world();
+  await prices(w, 0, { narrow: true });
+  const before = rows(w);
+  const sid = (i) => mtText(before[i]["ID постачальника"]);
+  let xml = perturb.tag(w.xml, sid(1), "price", String(Number(before[1]["Ціна постачальника"]) + 100));
+  xml = perturb.tag(xml, sid(2), "price", String(Number(before[2]["Ціна постачальника"]) + 100));
+  const base = sparse(w);
+  let mainReads = 0;
+  const readColumns = async (title, cols) => {
+    if (title === MAIN && ++mainReads === 2) { const h = w.sheets.book[MAIN][0].map(mtText); w.sheets.book[MAIN][2][h.indexOf("Ціна постачальника")] = 12345; }
+    return base(title, cols);
+  };
+  const sheets = WT.guardedSheets(w.sheets, { spreadsheetId: WT.TEST_SHEET_ID, policy: WT.MODE_POLICIES.prices, headers: headers(w) });
+  const session = await new WriteGateway({ sheets, read: w.readBook, store: w.w2 }).open({ writer: "sync" });
+  const stamp = new Date(NOW + 10 * 60_000).toISOString();
+  let r;
+  try { r = await updatePrices({ readBook: w.readBook, xml: dated(xml, 10), stamp, now: NOW + 10 * 60_000, config: cfg(), controls: okCc(), session, snapshotStore: w.w2, readColumns }); }
+  finally { await session.close(); }
+  assert.equal(r.state, "PARTIAL", JSON.stringify(r).slice(0, 400));
+  assert.equal(Number(rows(w)[1]["Ціна постачальника"]), 12345, "правку людини не перезаписано");
+  assert.equal(Number(rows(w)[2]["Ціна постачальника"]), Number(before[2]["Ціна постачальника"]) + 100);
+  const jh = w.sheets.book[JOURNAL][0].map(mtText);
+  const ev = w.sheets.book[JOURNAL].slice(1).filter((e) => String(e[jh.indexOf("ID події")] || "").startsWith("prices:" + stamp));
+  assert.deepEqual([...new Set(ev.map((e) => mtText(e[2])))], [mtText(before[2]["Offer ID"])]);
 });

@@ -181,12 +181,13 @@ export async function openPlansGate({ store, session, readBook, stamp, recover =
 }
 
 /** Дописування подій за ключем «ID події» (через сесію W2: reconcile за ключами). → { ok, outcome, appended }. */
-export async function appendEvents({ session, journalValues, rows, generation }) {
+export async function appendEvents({ session, journalValues, rows, generation, read = null }) {
   if (!rows.length) return { ok: true, outcome: OP.NOTHING, appended: 0 };
   const idx = await ensureEventIdColumn(session.sheets, journalValues);
   const header = (journalValues?.[0] || []).map(mtText);
   const h = Array.from({ length: Math.max(header.length, idx + 1) }, (_, j) => header[j] ?? "");
   h[idx] = EVENT_ID_COLUMN;
-  const r = await session.appendMissingByKey({ title: JOURNAL_SHEET, rows: rowsForJournal(rows, h), generation });
+  // ENG-29: read — вузьке читання «Журналу» (заголовок + «ID події»): дописуванню за ключем більше нічого не потрібно.
+  const r = await session.appendMissingByKey({ title: JOURNAL_SHEET, rows: rowsForJournal(rows, h), generation, ...(read ? { read } : {}) });
   return { ok: [OP.VERIFIED, OP.NOTHING].includes(r.outcome), outcome: r.outcome, appended: r.appended?.length ?? 0 };
 }

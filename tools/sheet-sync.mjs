@@ -132,7 +132,7 @@ if (WRITE_MODES.includes(mode) && source === "api") {
 }
 
 // ---------- таблиця ----------
-let sheets, readBook, readLive, journalTail = null;
+let sheets, readBook, readLive, readHeaders = null, journalTail = null;
 const readStats = { calls: 0, ms: 0, sheets: {}, reader: null }; // ENG-29: розбивка часу (читання таблиці)
 try {
   if (source === "api") {
@@ -151,6 +151,9 @@ try {
     // спільний темп ≤ 40 / хв (запас для мета-запитів записувача) і спільна межа 1000 запитів на запуск. Лише читання.
     // ENG-29: порції великих аркушів — за розміром відповіді (≈ 4 МБ, як порція основного каталогу), не за клітинками.
     const testReader = new GoogleSheetsCatalogSource({ spreadsheetId: process.env.MM_TEST_SHEET_ID, getAccessToken, maxRequests: 1000, maxRequestsPerMinute: 40, targetBytes: 4_000_000 });
+    readStats.reader = testReader;
+    // ENG-29: охоронцю цілі потрібні лише заголовки — один запит замість повного читання аркушів.
+    readHeaders = async (names) => { testReader.metaCache = null; const t0 = Date.now(); const v = await testReader.loadHeaders(names); readStats.ms += Date.now() - t0; return v; };
     readBook = async (names) => {
       testReader.metaCache = null; // свіжі розміри аркушів щоразу (після дописування / нових колонок / аркушів); спільні лише темп і межа
       const t0 = Date.now(); // ENG-29: розбивка часу операції (для розкладу перед імпортом Prom)
@@ -196,7 +199,7 @@ if (WRITE_MODES.includes(mode)) {
     const policy = MODE_POLICIES[mode];
     if (!policy) throw new Error("немає політики запису для режиму " + mode);
     const need = Object.entries(policy).filter(([t, p]) => t !== "*" && (Array.isArray(p.columns) || p.clearOnly?.length || p.deny?.length)).map(([t]) => t);
-    const hb = need.length ? await readBook(need) : {};
+    const hb = need.length ? await (readHeaders || readBook)(need) : {};
     sheets = guardedSheets(sheets, { spreadsheetId: source === "api" ? process.env.MM_TEST_SHEET_ID : TEST_SHEET_ID, policy, headers: Object.fromEntries(need.map((t) => [t, hb[t]?.[0] || []])) });
   } catch (e) { fail("ОХОРОНА ЦІЛІ ЗАПИСУ: ", e); }
 }
@@ -301,7 +304,9 @@ try {
     } else xml = fs.readFileSync(arg("supplier-file"), "utf8");
     report.metrics.supplierFetchMs = Date.now() - tf;
     const session = await new WriteGateway({ sheets, read: readBook, store: w2Store }).open({ writer: "sync" });
-    try { report.result = await updatePrices({ readBook, xml, stamp, now: NOW, config, controls, session, snapshotStore: w2Store }); }
+    // Вузьке читання (лише потрібні колонки) — лише для Sheets API; локальна книга читається цілою.
+    const readColumns = readStats.reader ? async (title, columns) => { readStats.reader.metaCache = null; const t0 = Date.now(); const v = await readStats.reader.loadColumns(title, columns); readStats.ms += Date.now() - t0; readStats.sheets[title + " (колонки)"] = (readStats.sheets[title + " (колонки)"] || 0) + 1; return v; } : null;
+    try { report.result = await updatePrices({ readBook, xml, stamp, now: NOW, config, controls, session, snapshotStore: w2Store, readColumns }); }
     finally { await session.close?.().catch(() => {}); }
   } else if (mode === "reconcile") {
     // ENG-28d: невідомий результат API → наступні записи BLOCKED, доки reconcile не з'ясує стан читанням за ключем (із вікном settle);
@@ -462,4 +467,4 @@ if (arg("summary")) {
   if ([...secrets].some((x) => lines.includes(x)) || /\d{10,}/.test(lines)) { process.stderr.write("ЗАХИСТ ВІД ВИТОКУ: summary не записано\n"); process.exit(3); }
   fs.appendFileSync(arg("summary"), lines);
 }
-process.exitCode = process.exitCode === 3 ? 3 : mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "TRANSFERRED", "MIGRATED", "CORRECTED", "NOTHING", "NO_CHANGES", "SYNCED", "REFRESHED", "INTAKE_DONE", "NOTHING_TO_WRITE", "SKIPPED", "SHADOW", "COMMITTED", "ARCHIVED", "RECOVERED", "QA_DONE", "PLANNED", "NOTHING_NEW", "WAITING_STABILITY", "NOTHING_COMPLETE", "RECONCILED", "JOURNAL_RECOVERED", "RUN_PLAN_ABANDONED", "DEFERRED_RESOLVED", "SHEET_REMOVED"].includes(report.result?.state) ? 0 : 1;
+process.exitCode = process.exitCode === 3 ? 3 : mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "TRANSFERRED", "MIGRATED", "CORRECTED", "NOTHING", "NO_CHANGES", "SYNCED", "REFRESHED", "INTAKE_DONE", "NOTHING_TO_WRITE", "SKIPPED", "SHADOW", "COMMITTED", "ARCHIVED", "RECOVERED", "QA_DONE", "PLANNED", "NOTHING_NEW", "WAITING_STABILITY", "NOTHING_COMPLETE", "RECONCILED", "JOURNAL_RECOVERED", "RUN_PLAN_ABANDONED", "DEFERRED_RESOLVED", "SHEET_REMOVED", "PRICES_UPDATED"].includes(report.result?.state) ? 0 : 1;

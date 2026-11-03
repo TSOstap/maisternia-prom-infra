@@ -34,13 +34,14 @@ function fakeSheetsApi(book, { extraRows = 50, extraCols = 3, failures = [], log
       assert.equal(u.searchParams.get("valueRenderOption"), "UNFORMATTED_VALUE");
       assert.equal(u.searchParams.get("dateTimeRenderOption"), "FORMATTED_STRING");
       const valueRanges = u.searchParams.getAll("ranges").map((range) => {
-        const m = /^'((?:[^']|'')+)'!A(\d+):([A-Z]+)(\d+)$/.exec(range);
+        // ENG-29: діапазон може починатися не з колонки A (вузьке читання колонок).
+        const m = /^'((?:[^']|'')+)'!([A-Z]+)(\d+):([A-Z]+)(\d+)$/.exec(range);
         const title = m[1].replace(/''/g, "'");
-        const from = Number(m[2]), to = Number(m[4]), cols = colIndex(m[3]);
+        const c0 = colIndex(m[2]) - 1, from = Number(m[3]), to = Number(m[5]), cols = colIndex(m[4]);
         const src = book[title] || [];
         let rows = [];
         for (let i = from - 1; i < to; i++) {
-          const r = (src[i] || []).slice(0, cols);
+          const r = (src[i] || []).slice(c0, cols);
           let w = r.length;
           while (w > 0 && (r[w - 1] === "" || r[w - 1] == null)) w--;
           rows.push(r.slice(0, w));
@@ -177,6 +178,34 @@ test("ENG-29 порції за розміром відповіді (targetBytes)
   const heavy = source(bookFrom(s2), { chunkRows: 50, src: { targetBytes: 60_000 } });
   const h = await heavy.src.load([SHEETS.main]);
   assert.deepEqual(h.sheets[SHEETS.main], bookFrom(s2)[SHEETS.main]);
+});
+
+test("ENG-29 вузьке читання: лише заголовки (один запит); лише вибрані колонки — повна ширина, решта порожні, позиції як у повному читанні; суміжні колонки — одним діапазоном", async () => {
+  const s = generateSynthetic({ products: 120, seed: 21, now: Date.now() });
+  const book = bookFrom(s);
+  const log = [];
+  const { src } = source(book, { api: { log } });
+  const heads = await src.loadHeaders([SHEETS.main, SHEETS.queue, "Немає такого"]);
+  assert.deepEqual(heads[SHEETS.main], [book[SHEETS.main][0]]);
+  assert.deepEqual(heads[SHEETS.queue], [book[SHEETS.queue][0]]);
+  assert.equal(heads["Немає такого"], undefined);
+  assert.equal(src.metrics.requests, 2, "metadata + один batchGet заголовків");
+  const h = book[SHEETS.main][0];
+  const want = ["Offer ID", "ID постачальника", "Ціна постачальника", "Ціна", "Ціна кінцева", "Знижка", "Наявність", "Кількість постачальника", "Стан синхронізації", "Оновлено", "Немає колонки"];
+  const before = src.metrics.requests;
+  const v = await src.loadColumns(SHEETS.main, want);
+  assert.equal(src.metrics.requests - before, 2, "заголовок + один batchGet колонок");
+  assert.deepEqual(v[0], h);
+  assert.equal(v.length, book[SHEETS.main].length);
+  const keep = new Set(want.map((c) => h.indexOf(c)).filter((i) => i >= 0));
+  for (let r = 1; r < v.length; r++) {
+    assert.equal(v[r].length, h.length);
+    for (let c = 0; c < h.length; c++) assert.deepEqual(v[r][c], keep.has(c) ? book[SHEETS.main][r][c] ?? "" : "", "рядок " + r + ", колонка " + h[c]);
+  }
+  // 8 колонок LIVE суміжні — один діапазон; Offer ID і ID постачальника — свої.
+  const ranges = log.at(-1).params.filter(([k]) => k === "ranges").map(([, x]) => x);
+  assert.ok(ranges.length <= 3, ranges.join(" | "));
+  assert.equal(await src.loadColumns("Немає такого", ["Offer ID"]), null);
 });
 
 test("вузький аркуш (1 колонка, тисячі рядків) читається одним запитом", async () => {

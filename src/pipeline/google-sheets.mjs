@@ -164,6 +164,47 @@ export class GoogleSheetsCatalogSource {
     return rows();
   }
 
+  /** ENG-29: лише рядки заголовків аркушів (один запит) — { назва: [[заголовок]] }; відсутній аркуш пропускається. */
+  async loadHeaders(titles) {
+    const meta = await this.metadata();
+    const found = meta.filter((s) => titles.includes(s.title));
+    const byTitle = Object.fromEntries(found.map((s) => [s.title, []]));
+    if (found.length) await this.#fetch(found.map((s) => this.#range(s, 1, 1)), byTitle);
+    return Object.fromEntries(found.map((s) => [s.title, rectangular(byTitle[s.title])]));
+  }
+
+  /**
+   * ENG-29: лише вибрані колонки аркуша (два запити: заголовок + колонки одним batchGet). Повертає повноширинний 2D-масив: заголовок
+   * повністю, у рядках — значення лише цих колонок, решта клітинок порожні (позиції колонок і рядків — як у повному читанні).
+   * Для запису за ключем, якому потрібні лише ключ, ідентичність і колонки зміни. Колонки, якої немає, — порожня (вирішує викликач).
+   */
+  async loadColumns(title, columns) {
+    const s = (await this.metadata()).find((x) => x.title === title);
+    if (!s) return null;
+    const head = { [title]: [] };
+    await this.#fetch([this.#range(s, 1, 1)], head);
+    const header = (head[title][0] || []).map((v) => (v == null ? "" : String(v)));
+    const idx = [...new Set(columns.map((c) => header.indexOf(c)).filter((i) => i >= 0))].sort((a, b) => a - b);
+    const rows = Math.max(1, s.rows);
+    const out = [header];
+    if (idx.length && rows > 1) {
+      // Суміжні колонки — одним діапазоном.
+      const runs = [];
+      for (const i of idx) { const last = runs.at(-1); if (last && last.to === i - 1) last.to = i; else runs.push({ from: i, to: i }); }
+      const params = runs.map((r) => ["ranges", `${a1Range(title, 2, rows, r.to + 1).replace(/!A2:/, "!" + columnLetter(r.from + 1) + "2:")}`]);
+      params.push(["valueRenderOption", "UNFORMATTED_VALUE"], ["dateTimeRenderOption", "FORMATTED_STRING"], ["majorDimension", "ROWS"]);
+      const res = await this.#get("/values:batchGet", params);
+      const vr = res.valueRanges || [];
+      if (vr.length !== runs.length) throw new Error("Sheets API: кількість діапазонів у відповіді не збігається із запитом");
+      const n = Math.max(0, ...vr.map((v) => (v.values || []).length));
+      if (n > rows - 1) throw new Error("Sheets API: діапазон повернув більше рядків, ніж запитано");
+      for (let k = 0; k < n; k++) out.push(Array.from({ length: header.length }, () => ""));
+      runs.forEach((r, j) => (vr[j].values || []).forEach((row, k) => { for (let c = r.from; c <= r.to; c++) out[k + 1][c] = row[c - r.from] ?? ""; }));
+      this.metrics.ranges += runs.length;
+    }
+    return out;
+  }
+
   /** Один batchGet; значення кладуться на абсолютні позиції рядків. Повертає кількість отриманих рядків на діапазон. */
   async #fetch(batch, byTitle) {
     const params = batch.map((r) => ["ranges", r.a1]);

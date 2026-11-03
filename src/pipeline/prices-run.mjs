@@ -9,23 +9,26 @@
  *     (keyedUpdate: правка людини між читанням і записом — рядок не пишеться) → перевірка читанням → «Журнал» за «ID події».
  *  Назви, фото, характеристики, присутність, попередження — не змінюються (це «Оновити товари»). */
 import { parseSupplierText, validateFeed } from "../core/supplier-feed.mjs";
-import { CONFIRMED_SNAPSHOT_KEY } from "../core/supplier-presence.mjs";
+import { CONFIRMED_SNAPSHOT_KEY, PRESENCE_COLUMN } from "../core/supplier-presence.mjs";
 import { syncControls } from "../core/sheet-sync.mjs";
 import { LIVE_COLUMNS } from "../core/sync-plan.mjs";
 import { mtText } from "../core/text.mjs";
 import { planPrices, MAIN_TITLE } from "../core/prices-only.mjs";
 import { OP, ITEM } from "./safe-write/keyed-update.mjs";
-import { RUN_PLAN_KEY, PLAN, RECOVERY_DONE, openPlansGate, loadPlan, savePlan, withEventIds, evidenceCell, appendEvents, JOURNAL_SHEET } from "./run-plan.mjs";
+import { RUN_PLAN_KEY, PLAN, RECOVERY_DONE, EVENT_ID_COLUMN, openPlansGate, loadPlan, savePlan, withEventIds, evidenceCell, appendEvents, JOURNAL_SHEET } from "./run-plan.mjs";
 import { sheetDiscount, journalRow, syncControlsState, ccUnchanged } from "./sheet-sync-run.mjs";
 
 const DISCOUNT = "Знижка";
+/** Колонки «Основного каталогу», потрібні плану й запису за ключем (зіставлення з offer — як mtMatch, 8 колонок LIVE, присутність). */
+export const PRICE_READ_COLUMNS = Object.freeze(["Offer ID", "ID постачальника", "Артикул постачальника", "Назва постачальника UA", "Назва постачальника RU", "URL постачальника", ...LIVE_COLUMNS, PRESENCE_COLUMN]);
 const cellFor = (k, v) => (k === DISCOUNT ? sheetDiscount(v) : v);
 
 /**
- * session — сесія шлюзу W2 (writer «sync», READY); readBook — свіже читання аркушів; xml — операційний фід; snapshotStore — W2.
+ * session — сесія шлюзу W2 (writer «sync», READY); readBook — свіже читання аркушів; xml — операційний фід; snapshotStore — W2;
+ * readColumns(title, columns) — необов'язкове вузьке читання (Sheets API: лише потрібні колонки — у рази менше запитів), інакше readBook.
  * → { state, reason, report }
  */
-export async function updatePrices({ readBook, xml, stamp, now, config, controls, session, snapshotStore }) {
+export async function updatePrices({ readBook, xml, stamp, now, config, controls, session, snapshotStore, readColumns = null }) {
   if (!session || session.state !== "READY") return { state: "BLOCKED", reason: `шлюз запису: ${session?.state ?? "немає сесії"} — спершу з'ясування попередніх операцій` };
   const store = session.gw?.store;
   if (!store?.getJsonVersioned) return { state: "BLOCKED", reason: "немає сховища W2 для контрольного плану" };
@@ -45,7 +48,10 @@ export async function updatePrices({ readBook, xml, stamp, now, config, controls
   const cc = syncControls(ccState);
   if (!cc || cc.blocked) return { state: "BLOCKED", reason: "стан Catalog Controls " + (cc ? "недостовірний: " + (cc.reasons.join("; ") || "blocked") : "не підключено") + " — видалені товари неможливо відрізнити; нічого не записано", recovery };
 
-  const book = await readBook([MAIN_TITLE]);
+  // Вузьке читання: «Основний каталог» — лише PRICE_READ_COLUMNS (план і запис за ключем); «Журнал» — заголовок і «ID події».
+  const readMain = readColumns ? async () => ({ [MAIN_TITLE]: await readColumns(MAIN_TITLE, PRICE_READ_COLUMNS) }) : null;
+  const readJournal = readColumns ? async () => ({ [JOURNAL_SHEET]: await readColumns(JOURNAL_SHEET, [EVENT_ID_COLUMN]) }) : null;
+  const book = readMain ? await readMain() : await readBook([MAIN_TITLE]);
   const p = planPrices({ values: book[MAIN_TITLE], offers: parsed.offers, stamp, pricing: config.pricing, removed: cc.removed, anomaly: config.policy?.anomaly });
   const base = { feed: { offers: parsed.count, date: parsed.date }, stats: p.stats, recovery };
   if (p.abort) return { state: "ABORTED", reason: p.abort.reason, block: p.abort, ...base };
@@ -74,7 +80,7 @@ export async function updatePrices({ readBook, xml, stamp, now, config, controls
   catch (e) { return { state: "BLOCKED", reason: "контрольний план не записано (W2): " + mtText(e?.message || e).slice(0, 200) + " — нічого не записано", ...base }; }
 
   let res;
-  try { res = await session.updateByKey({ title: MAIN_TITLE, changes, generation: runId }); }
+  try { res = await session.updateByKey({ title: MAIN_TITLE, changes, generation: runId, read: readMain }); }
   catch (e) { return { state: "INCOMPLETE", reason: "запис цін: " + mtText(e?.message || e).slice(0, 200) + " — план лишається відкритим; наступний запуск після reconcile з'ясує стан", ...base }; }
   const written = new Set(res.items.filter((x) => x.status === ITEM.VERIFIED || x.status === ITEM.ALREADY).map((x) => x.key));
   const notWritten = res.items.filter((x) => !written.has(x.key)).map((x) => ({ offerId: x.key, status: x.status }));
@@ -89,7 +95,8 @@ export async function updatePrices({ readBook, xml, stamp, now, config, controls
   version = await savePlan(store, RUN_PLAN_KEY, { ...runPlan, status: PLAN.PRODUCT_DONE, events: doneEvents, productDoneAt: stamp }, version);
   let journal = { planned: doneEvents.length, ok: false, outcome: null };
   try {
-    const jr = await appendEvents({ session, journalValues: (await readBook([JOURNAL_SHEET]))[JOURNAL_SHEET], rows: doneEvents, generation: "journal:" + runId });
+    const jv = (readJournal ? await readJournal() : await readBook([JOURNAL_SHEET]))[JOURNAL_SHEET];
+    const jr = await appendEvents({ session, journalValues: jv, rows: doneEvents, generation: "journal:" + runId, read: readJournal });
     journal = { ...journal, ok: jr.ok, outcome: jr.outcome, appended: jr.appended };
     if (jr.ok) await savePlan(store, RUN_PLAN_KEY, { ...runPlan, status: PLAN.DONE, events: doneEvents, productDoneAt: stamp, closedAt: stamp }, version);
   } catch (e) { journal = { ...journal, error: mtText(e?.message || e).slice(0, 200) }; }
