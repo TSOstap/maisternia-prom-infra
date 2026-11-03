@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13040605" nameRU="Окрасочный агрегат" nameUK="Фарбувальний агрегат">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="5000" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+    </attribute>
+    <attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="5000" measureUnitUK="об/хв"/>
+    <attribute id="103" nameRU="Диаметр сопла" type="real" nameUK="Діаметр сопла" measureUnitRU="мм" min="0" max="10" measureUnitUK="мм"/>
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="500" measureUnitUK="бар"/>
+    <attribute id="116" nameRU="Количество цилиндров" type="singleselect" nameUK="Кількість циліндрів">
+      <attribute_value id="7047" nameRU="1" nameUK="1"/>
+      <attribute_value id="7048" nameRU="2" nameUK="2"/>
+      <attribute_value id="7049" nameRU="3" nameUK="3"/>
+      <attribute_value id="7050" nameRU="4" nameUK="4"/>
+    </attribute>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="160" nameRU="Регулировка подачи распыляемой смеси" type="bool" nameUK="Регулювання подачі розпилюваної суміші"/>
+    <attribute id="161" nameRU="Регулировка ширины факела" type="bool" nameUK="Регулювання ширини факела"/>
+    <attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="200" measureUnitUK="куб. см"/>
+    <attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="л. с." min="0" max="10" measureUnitUK="к. с."/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+      <attribute_value id="9284" nameRU="Бензиновый" nameUK="Бензиновий"/>
+      <attribute_value id="9285" nameRU="Дизельный" nameUK="Дизельний"/>
+    </attribute>
+    <attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+      <attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+      <attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+    </attribute>
+    <attribute id="1079" nameRU="Марка двигателя" type="free" nameUK="Марка двигуна"/>
+    <attribute id="5073" nameRU="Производительность" type="real" nameUK="Продуктивність" measureUnitRU="литр/мин" min="0" max="10" measureUnitUK="літр/хв"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="18393" nameRU="Угол распыления сопла" type="real" nameUK="Кут розпилення сопла" measureUnitRU="град." min="0" max="300" measureUnitUK="град."/>
+  </category>
+</categories>

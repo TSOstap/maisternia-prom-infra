@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141718" nameRU="Штроборезы" nameUK="Штроборізи">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="6500" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="15" measureUnitUK="кг"/>
+    <attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+    <attribute id="10" nameRU="Ограничение пускового тока" type="bool" nameUK="Обмеження пускового струму"/>
+    <attribute id="12" nameRU="Поддержка постоянного количества оборотов под нагрузкой" type="bool" nameUK="Підтримка постійного числа обертів під навантаженням"/>
+    <attribute id="20" nameRU="Подключение пылесборника / пылесоса" type="bool" nameUK="Підключення пилозбірника/пилососа"/>
+    <attribute id="24" nameRU="Блокировка кнопки включения" type="bool" nameUK="Блокування кнопки включення"/>
+    <attribute id="25" nameRU="Блокировка шпинделя" type="bool" nameUK="Блокування шпинделя"/>
+    <attribute id="55" nameRU="Количество рабочих дисков" type="singleselect" nameUK="Кількість робочих дисків">
+      <attribute_value id="6937" nameRU="1" nameUK="1"/>
+      <attribute_value id="6938" nameRU="2" nameUK="2"/>
+      <attribute_value id="276271" nameRU="4" nameUK="4"/>
+    </attribute>
+    <attribute id="56" nameRU="Максимальная глубина пропила" type="real" nameUK="Максимальна глибина пропілу" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="57" nameRU="Максимальная ширина паза" type="real" nameUK="Максимальна ширина паза" measureUnitRU="мм" min="0" max="60" measureUnitUK="мм"/>
+    <attribute id="58" nameRU="Максимальный диаметр диска" type="real" nameUK="Максимальний діаметр диска" measureUnitRU="мм" min="0" max="550" measureUnitUK="мм"/>
+    <attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="15000" measureUnitUK="об/хв"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>
