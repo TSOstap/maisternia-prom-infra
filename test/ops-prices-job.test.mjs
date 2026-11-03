@@ -161,7 +161,10 @@ test("кнопка «Ціни» (PRICES_RUNNER=do): черга DO → alarm → 
   const run = core.recentRuns(1)[0];
   assert.equal(run.status, "DONE"); assert.match(run.summary, /Оновлено товарів: 3/); assert.match(run.summary, /сервер Cloudflare, 61 с/);
   assert.equal(github.length, 0, "GitHub не запускався");
-  assert.equal(core.metaGet(PRICES_JOB_KEY), null); assert.equal(await storage.getAlarm(), null, "автопошук вимкнено — alarm не потрібен");
+  assert.equal(core.metaGet(PRICES_JOB_KEY), null);
+  // Ціни записано → у черзі оновлення цін у YML (наступний виклик alarm).
+  assert.equal(core.metaGet("feed-job").kind, "sync"); assert.equal(await storage.getAlarm(), c.t + 1000);
+  core.metaDel("feed-job");
   // Передача на GitHub: той самий запуск, op prices.
   next = { fallback: "github", reason: "незавершений попередній запис" };
   await core.button({ op: "prices" });
@@ -215,4 +218,33 @@ test("розклад «Цін» на сервері: типово вимкнен
   assert.equal(await storage.getAlarm(), c.t + 120 * 60_000);
   await core.pricesSchedule({ on: false });
   assert.equal(await storage.getAlarm(), null);
+});
+
+test("YML на сервері: після «Оновити товари» (GitHub) — повна збірка; після «Цін» із записом — оновлення цін у фіді; одне важке завдання за виклик alarm; рядок YML у стані", { skip }, async () => {
+  const { FEED_JOB_KEY } = await import("../workers/ops/src/ops-core.mjs");
+  const c = { t: NOW }, feedJobs = [];
+  const storage = fakeStorage();
+  const core = new OpsCore(storage, ENV, { now: () => c.t, fetchImpl: async () => new Response(null, { status: 204 }),
+    pricesJobImpl: async () => ({ result: { state: "PRICES_UPDATED", stats: { written: 2, skipped: {} } }, metrics: { ms: 1000 } }),
+    feedJobImpl: async ({ kind, feed }) => { feedJobs.push(kind); feed.putMeta({ ver: 1, count: 5127, changedAt: c.t, header: "" }); return { state: kind === "build" ? "BUILT" : "SYNCED", count: 5127 }; } });
+  // GitHub завершив «Оновити товари» → повна збірка в черзі.
+  core.sql.exec("INSERT INTO runs (id, op, status, at, updated, info) VALUES ('u1', 'update', 'RUNNING', ?, ?, '{}')", c.t, c.t);
+  await core.runFinish({ runId: "u1", ok: true, state: "SYNCED" });
+  assert.equal(core.metaGet(FEED_JOB_KEY).kind, "build");
+  // Кнопка «Ціни» до того, як alarm виконав збірку: за виклик — лише «Ціни»; збірка — наступним викликом (і поглинає оновлення цін).
+  await core.button({ op: "prices" });
+  c.t += 1000; await core.alarm();
+  assert.deepEqual(feedJobs, []); assert.equal(core.metaGet(FEED_JOB_KEY).kind, "build");
+  c.t += 1000; await core.alarm();
+  assert.deepEqual(feedJobs, ["build"]); assert.equal(core.metaGet(FEED_JOB_KEY), null);
+  // Наступні «Ціни» із записом → оновлення цін у фіді.
+  await core.button({ op: "prices" });
+  c.t += 1000; await core.alarm(); c.t += 1000; await core.alarm();
+  assert.deepEqual(feedJobs, ["build", "sync"]);
+  assert.equal(await storage.getAlarm(), null, "черга порожня, розкладів немає");
+  const st = core.status();
+  assert.ok(st.last.some((x) => x.op === "yml" && /товарів у файлі: 5127/.test(x.summary)));
+  // Віддача через внутрішній маршрут (вхідний Worker перевіряє секрет в адресі).
+  const res = await core.fetch(new Request("https://ops.test/internal/feed", { method: "HEAD" }));
+  assert.equal(res.status, 200);
 });

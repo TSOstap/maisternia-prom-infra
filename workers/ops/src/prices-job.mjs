@@ -50,6 +50,36 @@ export function sheetsReaders(reader) {
 }
 
 /**
+ * Catalog Controls із вузького «Основного каталогу» (CC_MAIN_COLUMNS) + невеликих аркушів CC; контрольна точка — зі сховища W2.
+ * notQuiet — причина, чому серверу не можна покладатися на вузьке читання (наміри в точці або команди власника в колонках рішень):
+ * тоді операцію виконує GitHub (повне читання). → { controls, state, notQuiet }
+ */
+export async function narrowControls({ store, contract, readBook, readColumns }) {
+  const cp = (await store.getJsonVersioned(CC_CHECKPOINT_KEY))?.value;
+  if (cp?.pending?.length) return { notQuiet: "Catalog Controls має незавершені наміри — перевірку виконає GitHub" };
+  let ccBook = null;
+  const loadCcBook = async () => {
+    const small = await readBook([...CC_SMALL_SHEETS]);
+    ccBook = { ...small, [MAIN]: await readColumns(MAIN, CC_MAIN_COLUMNS) };
+    return ccBook;
+  };
+  const controls = catalogControlsAdapter({ loadBook: loadCcBook, store, contract, api: { controlsState, verifyControlsSnapshot }, integrity: null, requireActive: true });
+  const state = await controls.state();
+  const h = ccBook?.[MAIN]?.[0] || [];
+  const commands = [SEO_DECISION, SALE_DECISION].map((c) => h.indexOf(c)).filter((i) => i >= 0);
+  if (commands.length && ccBook[MAIN].slice(1).some((r) => commands.some((i) => mtText(r[i])))) return { notQuiet: "у «Основному каталозі» є команди Catalog Controls — їх перевірку виконає GitHub" };
+  return { controls, state };
+}
+
+/** Перевірка погодженого контракту CC (SHA-256 з config/ops-inputs.json) → { contract } | { reason }. */
+export async function approvedContract(ccContractText, sha256Hex, ccSha = inputsManifest.inputs.CC_CONTRACT.sha256) {
+  if (!ccContractText || (await sha256Hex(ccContractText)) !== ccSha) return { reason: "контракт Catalog Controls на сервері не збігається з погодженим" };
+  const contract = JSON.parse(ccContractText);
+  if (validateContract(contract).length) return { reason: "контракт Catalog Controls недійсний" };
+  return { contract };
+}
+
+/**
  * env — секрети / змінні Worker (GOOGLE_SA_KEY, SUPPLIER_FEED_URL); store — сховище W2 (той самий DO, RemoteStore поверх w2-engine);
  * ccContractText — погоджений контракт CC (вхідний файл DO, SHA-256 звіряється); dry — лише план (без сесії й записів).
  * deps — підміна читача / записувача (тести). → { result, fallback?, reason?, metrics }
@@ -77,19 +107,9 @@ export async function runPricesJob({ env, store, ccContractText, sha256Hex, ccSh
   // 1. Незавершені плани / команди CC — на GitHub (там повне читання для відновлення й перевірки).
   const gate = await openPlansGate({ store, session: null, readBook, stamp, recover: false });
   if (gate) return { ...fallback("незавершений попередній запис: " + mtText(gate.reason).slice(0, 200)), metrics: metrics() };
-  const cp = (await store.getJsonVersioned(CC_CHECKPOINT_KEY))?.value;
-  if (cp?.pending?.length) return { ...fallback("Catalog Controls має незавершені наміри — перевірку виконає GitHub"), metrics: metrics() };
-  let ccBook = null;
-  const loadCcBook = async () => {
-    const small = await readBook([...CC_SMALL_SHEETS]);
-    ccBook = { ...small, [MAIN]: await readColumns(MAIN, CC_MAIN_COLUMNS) };
-    return ccBook;
-  };
-  const controls = catalogControlsAdapter({ loadBook: loadCcBook, store, contract, api: { controlsState, verifyControlsSnapshot }, integrity: null, requireActive: true });
-  const ccState = await controls.state();
-  const h = ccBook?.[MAIN]?.[0] || [];
-  const commands = [SEO_DECISION, SALE_DECISION].map((c) => h.indexOf(c)).filter((i) => i >= 0);
-  if (commands.length && ccBook[MAIN].slice(1).some((r) => commands.some((i) => mtText(r[i])))) return { ...fallback("у «Основному каталозі» є команди Catalog Controls — їх перевірку виконає GitHub"), metrics: metrics() };
+  const cc = await narrowControls({ store, contract, readBook, readColumns });
+  if (cc.notQuiet) return { ...fallback(cc.notQuiet), metrics: metrics() };
+  const { controls, state: ccState } = cc;
 
   // 2. Операційний фід.
   let xml;

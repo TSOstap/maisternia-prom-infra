@@ -11,10 +11,11 @@
  *  Автопошук новинок (рішення власника 03.11) — alarm цього ж об'єкта (new-items.mjs): кожні 15 хв ID фіду проти знімка
  *  «Знайти нові товари»; є нові — запуск тієї самої операції, що й кнопка (op find-new). Вмикає / вимикає оператор (/admin/watch). */
 import { w2Handle, w2Seed, REQ_KEEP_MS } from "../../../src/pipeline/safe-write/w2-engine.mjs";
-import { WATCH, MIN, AUTO_BY, FIND_NEW_SEEN_KEY, fetchIds, watchPrecheck, decideWatch, markWatchDispatch } from "./new-items.mjs";
+import { WATCH, MIN, AUTO_BY, FIND_NEW_SEEN_KEY, fetchIds, watchPrecheck, decideWatch, markWatchDispatch, INCOMPLETE_CHECK_MINUTES, fetchContentFeed, completedNow, dispatchBlock } from "./new-items.mjs";
 import { runPricesJob } from "./prices-job.mjs";
 import { RemoteStore } from "../../../src/pipeline/safe-write/store.mjs";
 import { ownerSummary } from "../../../src/pipeline/ops-summary.mjs";
+import { FeedStore, runFeedJob, serveFeed } from "./yml-feed.mjs";
 
 export const OPS = Object.freeze({
   transfer: "Перенести затверджені",
@@ -34,6 +35,10 @@ export const PRICES_JOB_KEY = "prices-job";
 /** Розклад «Ціни й наявність» на сервері (рішення власника: кожні 2 год — після підключення Prom; типово вимкнено). */
 export const PRICES_SCHEDULE_KEY = "prices-schedule";
 export const SCHEDULE_BY = "Розклад (сервер)";
+/** YML для Prom на сервері (yml-feed.mjs): черга завдань «build» (повна збірка) / «sync» (ціни й наявність у готових offer). */
+export const FEED_JOB_KEY = "feed-job";
+/** Операції GitHub, що змінюють картки «Основного каталогу», — після них повна збірка YML. */
+const CONTENT_OPS = new Set(["update", "transfer", "deferred"]);
 /** Кнопки меню (ключ кнопок) — лише ці дії; разові операції (відкладені товари) — лише вручну з GitHub. */
 const BUTTON_OPS = new Set(["transfer", "find-new", "update", "prices", "reconcile"]);
 const ACTIVE = new Set(["DISPATCHING", "QUEUED", "RUNNING"]);
@@ -109,11 +114,12 @@ export function w2Kv(sql) {
 
 export class OpsCore {
   /** storage — ctx.storage SQLite Durable Object ({ sql.exec, transactionSync }); env — змінні й секрети Worker. */
-  constructor(storage, env, { now = () => Date.now(), fetchImpl = (...a) => fetch(...a), pricesJobImpl = runPricesJob } = {}) {
-    this.storage = storage; this.env = env; this.now = now; this.fetchImpl = fetchImpl; this.pricesJobImpl = pricesJobImpl;
+  constructor(storage, env, { now = () => Date.now(), fetchImpl = (...a) => fetch(...a), pricesJobImpl = runPricesJob, feedJobImpl = runFeedJob } = {}) {
+    this.storage = storage; this.env = env; this.now = now; this.fetchImpl = fetchImpl; this.pricesJobImpl = pricesJobImpl; this.feedJobImpl = feedJobImpl;
     this.sql = storage.sql;
     for (const q of SCHEMA) this.sql.exec(q);
     this.kv = w2Kv(this.sql);
+    this.feed = new FeedStore(this.sql, (fn) => this.tx(fn));
   }
   rows(q, ...b) { return this.sql.exec(q, ...b).toArray(); }
   tx(fn) { return this.storage.transactionSync(fn); }
@@ -126,7 +132,10 @@ export class OpsCore {
       if (m === "POST" && p === "/w2") return this.w2(await req.json().catch(() => null));
       if (m === "GET" && p.startsWith("/inputs/")) return this.getInput(decodeURIComponent(p.slice(8)));
       if (m === "POST" && p === "/run/start") return json(this.runStart(await req.json().catch(() => ({}))));
-      if (m === "POST" && p === "/run/finish") return json(this.runFinish(await req.json().catch(() => ({}))));
+      if (m === "POST" && p === "/run/finish") return json(await this.runFinish(await req.json().catch(() => ({}))));
+      // YML для Prom: віддача — лише через вхідний Worker після перевірки секрету в адресі (index.mjs); адміністрування — ключ адміністратора.
+      if ((m === "GET" || m === "HEAD") && p === "/internal/feed") return serveFeed(this.feed, { method: m });
+      if (m === "POST" && p === "/admin/yml") return json(await this.ymlAdmin(await req.json().catch(() => ({}))));
       if (m === "PUT" && p.startsWith("/admin/inputs/")) return json(await this.putInput(decodeURIComponent(p.slice(14)), await req.text()));
       if (m === "GET" && p === "/admin/inputs") return json({ inputs: this.rows("SELECT name, sha, size, at FROM inputs ORDER BY name") });
       if (m === "POST" && p === "/admin/w2-seed") { const b = await req.json().catch(() => null); const r = this.tx(() => w2Seed(this.kv, b?.entries)); return json(r, r.error ? 409 : 200); }
@@ -232,6 +241,8 @@ export class OpsCore {
     const last = runs.map((r) => ({ op: r.op, label: r.label, status: r.status, at: r.at, updated: r.updated, summary: r.summary || r.reason || "" }));
     // Остання автоперевірка новинок — окремим рядком у тому самому списку (меню «Стан останньої операції» показує його без змін скрипта).
     const w = this.watchGet();
+    const ym = this.feed.meta(), fl = this.metaGet("feed-last");
+    if (ym?.ver) last.push({ op: "yml", label: "YML для Prom", status: fl?.state === "ERROR" ? "помилка" : "готово", at: ym.changedAt, updated: ym.changedAt, summary: `товарів у файлі: ${ym.count}; остання зміна цін — ${new Date(ym.changedAt).toISOString().slice(0, 16).replace("T", " ")} UTC` + (fl?.state === "ERROR" ? "; помилка: " + fl.reason : "") });
     if (w.on && w.last) last.push({ op: "watch", label: "Автоперевірка новинок (кожні " + WATCH.everyMinutes + " хв)", status: "увімкнено", at: w.last.at, updated: w.last.at, summary: w.last.message || w.last.result || "" });
     return { active: active ? { op: active.op, label: active.label, status: active.status, at: active.at } : null, last };
   }
@@ -282,11 +293,15 @@ export class OpsCore {
     this.sql.exec("INSERT INTO runs (id, op, status, at, updated, info) VALUES (?, ?, 'RUNNING', ?, ?, ?) ON CONFLICT(id) DO UPDATE SET status = 'RUNNING', updated = excluded.updated", nid, op, now, now, JSON.stringify({ ...gh, by: "GitHub вручну" }));
     return { result: { runId: nid } };
   }
-  runFinish(b) {
+  async runFinish(b) {
     const id = String(b?.runId || "");
     const ok = b?.ok === true;
     const patch = { state: String(b?.state || "").slice(0, 40), summary: String(b?.summary || "").slice(0, 6000) };
     if (!this.setRun(id, ok ? "DONE" : "FAILED", patch)) return { error: { code: "NOT_FOUND", message: "запуску немає" } };
+    // YML для Prom: картки змінились (GitHub) — повна збірка; ціни через GitHub (запасний шлях) — оновлення цін у фіді.
+    const op = this.rows("SELECT op FROM runs WHERE id = ?", id)[0]?.op;
+    if (ok && CONTENT_OPS.has(op)) await this.enqueueFeed("build", "після «" + (OPS[op] || op) + "»");
+    else if (ok && op === "prices") await this.enqueueFeed("sync", "після «Ціни й наявність» (GitHub)");
     return { result: { runId: id } };
   }
 
@@ -314,7 +329,7 @@ export class OpsCore {
     const now = this.now(), times = [];
     const w = this.watchGet();
     if (w.on) times.push(Math.max(now + 1000, Number(w.nextAt) || now + MIN));
-    if (this.metaGet(PRICES_JOB_KEY)) times.push(now + 1000);
+    if (this.metaGet(PRICES_JOB_KEY) || this.metaGet(FEED_JOB_KEY)) times.push(now + 1000);
     const ps = this.metaGet(PRICES_SCHEDULE_KEY);
     if (ps?.on) times.push(Math.max(now + 1000, Number(ps.nextAt) || now + MIN));
     if (times.length) await this.storage.setAlarm(Math.min(...times)); else await this.storage.deleteAlarm();
@@ -333,6 +348,9 @@ export class OpsCore {
     }
     const job = this.metaGet(PRICES_JOB_KEY);
     if (job) { this.metaDel(PRICES_JOB_KEY); await this.runPricesQueued(job); }
+    // Одне важке завдання на виклик (межа Free — 50 запитів): YML — у наступному виклику, якщо щойно виконувались «Ціни».
+    const fj = job ? null : this.metaGet(FEED_JOB_KEY);
+    if (fj) { this.metaDel(FEED_JOB_KEY); await this.runFeedQueued(fj); }
     const w = this.watchGet();
     if (w.on && now >= (Number(w.nextAt) || 0) - 5000) {
       this.watchPut({ ...w, nextAt: now + WATCH.everyMinutes * MIN });
@@ -379,6 +397,36 @@ export class OpsCore {
     const summary = ownerSummary("prices", { result: out.result }) + (out.metrics ? `
 (сервер Cloudflare, ${Math.round(out.metrics.ms / 1000)} с)` : "");
     this.setRun(id, ok ? "DONE" : "FAILED", { state, summary: summary.slice(0, 6000), metrics: out.metrics || null });
+    if (state === "PRICES_UPDATED" || state === "PARTIAL") await this.enqueueFeed("sync", "після «Ціни й наявність»");
+  }
+
+  // ---------- YML для Prom ----------
+  /** Черга: повна збірка поглинає оновлення цін (вона й так бере свіжі ціни). */
+  async enqueueFeed(kind, reason) {
+    const cur = this.metaGet(FEED_JOB_KEY);
+    this.metaPut(FEED_JOB_KEY, { kind: cur?.kind === "build" ? "build" : kind, reason, at: this.now() });
+    await this.scheduleAlarm();
+  }
+  async feedJob(kind) {
+    const cc = this.rows("SELECT body FROM inputs WHERE name = 'cc-contract-test'")[0]?.body || "";
+    try { return await this.feedJobImpl({ kind, env: this.env, store: this.localStore(), feed: this.feed, ccContractText: cc, sha256Hex, fetchImpl: this.fetchImpl, now: this.now() }); }
+    catch (e) { return { state: "ERROR", reason: String(e?.message || e).slice(0, 300) }; }
+  }
+  async runFeedQueued(fj) {
+    const out = await this.feedJob(fj.kind);
+    this.metaPut("feed-last", { at: this.now(), kind: fj.kind, why: fj.reason || "", state: out.state, reason: out.reason || "", count: out.count ?? null, patched: out.patched ?? null, metrics: out.metrics || null });
+    return out;
+  }
+  /** Оператор: status | build | sync (одразу, з результатом) | hold {ids} (тимчасово не публікувати — рішення власника) → збірка. */
+  async ymlAdmin(b) {
+    const action = String(b?.action || "status");
+    if (action === "build" || action === "sync") { const out = await this.feedJob(action); this.metaPut("feed-last", { at: this.now(), kind: action, why: "оператор", state: out.state, reason: out.reason || "", count: out.count ?? null, patched: out.patched ?? null, metrics: out.metrics || null }); return out; }
+    if (action === "hold") {
+      if (!Array.isArray(b?.ids) || b.ids.some((x) => !/^\d+$/.test(String(x)))) return { error: { code: "BAD_REQUEST", message: "ids — масив Offer ID" } };
+      this.feed.setHold(b.ids); await this.enqueueFeed("build", "зміна списку тимчасово не публікованих");
+    }
+    const m = this.feed.meta();
+    return { meta: m ? { ...m, header: undefined } : null, offers: m?.ver ? this.feed.count(m.ver) : 0, hold: [...this.feed.hold()], queued: this.metaGet(FEED_JOB_KEY), last: this.metaGet("feed-last") };
   }
   /** Один цикл автоперевірки. dry — лише рішення, без запуску операції (перевірка оператором). */
   async watchCheck(now, { dry = true } = {}) {
@@ -396,7 +444,18 @@ export class OpsCore {
     }
     if (feed.error) return { result: "FEED_ERROR", message: feed.error };
     const lastAuto = this.recentRuns(30).find((r) => r.by === AUTO_BY) || null;
-    const d = decideWatch({ seen, ids: feed.ids, now, w, lastAuto });
+    let d = decideWatch({ seen, ids: feed.ids, now, w, lastAuto });
+    // Неповні новинки (рішення власника 03.11): нових ID немає — раз на годину перевірити, чи постачальник доповнив картки.
+    const incomplete = (Array.isArray(seen.incomplete) ? seen.incomplete : []).filter((id) => feed.ids.has(String(id)));
+    if (d.result === "NOTHING_NEW" && incomplete.length && now - (Number(w.incompleteAt) || 0) >= INCOMPLETE_CHECK_MINUTES * MIN) {
+      if (!dry) this.watchPut({ ...this.watchGet(), incompleteAt: now });
+      const cf = await fetchContentFeed(this.env.SUPPLIER_FEED_URL, this.fetchImpl);
+      if (cf.error || cf.backoff) return { ...d, message: d.message + "; неповні новинки не перевірено (" + (cf.error || "постачальник обмежив частоту") + ")" };
+      const done = completedNow(cf.text, incomplete);
+      if (!done.length) return { ...d, message: `нових товарів немає; неповних новинок: ${incomplete.length} — постачальник ще не доповнив` };
+      const block = dispatchBlock({ now, w, lastAuto });
+      d = block ? { ...d, ...block } : { ...d, result: "DISPATCH", message: `постачальник доповнив новинки (${done.length}) — запуск «Знайти нові товари»`, completed: done.length };
+    }
     if (d.result !== "DISPATCH" || dry) return d;
     const b = await this.button({ op: "find-new", by: AUTO_BY });
     if (b.state !== "STARTED") return { ...d, result: b.state === "BUSY" ? "BUSY" : "DISPATCH_FAILED", message: b.message };

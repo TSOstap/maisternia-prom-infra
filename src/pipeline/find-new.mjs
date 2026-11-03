@@ -98,7 +98,7 @@ export async function findNewProducts({ sheets, readBook, xml, source = "", fetc
     // Інші відмови (дублі, неповні за повним XML тощо) сюди не входять — інакше повтор щоразу витрачав би хвилини GitHub.
     const res = intake?.ack?.results || {};
     const waiting = ready.filter((id) => (res[id] ? res[id].status === "ВІДМОВА" && /^(стабільність не підтверджена|ліміт \d+ нових)/.test(res[id].reason || "") : !stable.includes(id)));
-    try { await snapshotStore.putJsonIfVersion(FIND_NEW_SEEN_KEY, { ...snapshot, seenAt: stamp, since, waiting }, seenRec?.version ?? null); seenSaved = true; }
+    try { await snapshotStore.putJsonIfVersion(FIND_NEW_SEEN_KEY, { ...snapshot, seenAt: stamp, since, waiting, incomplete }, seenRec?.version ?? null); seenSaved = true; }
     catch (e) { seenError = e?.code === "CONFLICT" ? "знімок записано паралельно іншим запуском — повтор наступного запуску" : mtText(e?.message || e).slice(0, 200); }
   }
   const results = intake?.stats?.results || {};

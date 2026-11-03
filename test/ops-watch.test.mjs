@@ -180,3 +180,35 @@ test("автопошук у mm-ops: маршрути оператора лише
   assert.equal(roleFor(req("/admin/watch", ENV.BUTTON_KEY), ENV), null);
   assert.equal(roleFor(req("/admin/watch-check", ENV.RUNNER_KEY), ENV), null);
 });
+
+test("неповні новинки (рішення власника 03.11): нових ID немає — раз на годину фід із фото й характеристиками; поки картка неповна — без запуску; доповнили — запуск «Знайти нові товари»", { skip }, async () => {
+  const c = { t: Date.parse("2026-11-03T10:00:00Z") }, M = 60_000;
+  const calls = { ids: 0, content: 0, github: [] };
+  const NEWID = "2000000009";
+  let complete = false;
+  const offer = (id, full) => `<offer id="${id}" available="true"><url>https://market-tools.com.ua/p${id}.html</url><price>500</price><currencyId>UAH</currencyId><name>Новий ${id}</name><name_ua>Новий ${id}</name_ua><vendorCode>N-${id}</vendorCode>${full ? `<picture>https://images.prom.ua/${id}.jpg</picture><param name="Потужність">10</param>` : ""}</offer>`;
+  const feedXml = () => `<?xml version="1.0"?><yml_catalog date="2026-11-03 12:00"><shop><offers>\n${[...BASE.map((id) => offer(id, true)), offer(NEWID, complete)].join("\n")}\n</offers></shop></yml_catalog>`;
+  const fetchImpl = async (url, init) => {
+    if (String(url).startsWith("https://market-tools.com.ua/")) {
+      const u = new URL(url);
+      if (u.searchParams.get("exclude_fields") === "description,keywords") calls.content++; else calls.ids++;
+      return new Response(feedXml(), { status: 200 });
+    }
+    calls.github.push(JSON.parse(init.body)); return new Response(null, { status: 204 });
+  };
+  const core = new OpsCore(fakeStorage(), ENV, { now: () => c.t, fetchImpl });
+  core.tx(() => core.kv.set(FIND_NEW_SEEN_KEY, seenOf([...BASE, NEWID], c.t - 60 * M, { waiting: [], incomplete: [NEWID] }), "1"));
+  // 1. Картка неповна — перевірено фід із фото, запуску немає.
+  let r = await core.watchCheck(c.t, { dry: false });
+  assert.equal(r.result, "NOTHING_NEW"); assert.match(r.message, /ще не доповнив/); assert.equal(calls.content, 1); assert.equal(calls.github.length, 0);
+  // 2. Через 15 хв — повторно фід із фото не завантажується (раз на годину).
+  c.t += 15 * M;
+  r = await core.watchCheck(c.t, { dry: false });
+  assert.equal(r.result, "NOTHING_NEW"); assert.equal(calls.content, 1);
+  // 3. Постачальник доповнив картку; через годину від першої перевірки — запуск «Знайти нові товари».
+  complete = true;
+  c.t += 46 * M;
+  r = await core.watchCheck(c.t, { dry: false });
+  assert.equal(r.result, "DISPATCHED", JSON.stringify(r)); assert.equal(r.completed, 1); assert.equal(calls.content, 2);
+  assert.equal(calls.github.length, 1); assert.equal(calls.github[0].inputs.op, "find-new");
+});

@@ -177,23 +177,25 @@ export class GoogleSheetsCatalogSource {
    * ENG-29: лише вибрані колонки аркуша (два запити: заголовок + колонки одним batchGet). Повертає повноширинний 2D-масив: заголовок
    * повністю, у рядках — значення лише цих колонок, решта клітинок порожні (позиції колонок і рядків — як у повному читанні).
    * Для запису за ключем, якому потрібні лише ключ, ідентичність і колонки зміни. Колонки, якої немає, — порожня (вирішує викликач).
+   * rows { from, to, header } — лише рядки from..to (номери аркуша; out[k + 1] — рядок from + k) з уже прочитаним заголовком (без
+   * повторного запиту) — для читання великого аркуша порціями (YML на сервері: пам'ять Worker).
    */
-  async loadColumns(title, columns) {
+  async loadColumns(title, columns, rows = null) {
     const s = (await this.metadata()).find((x) => x.title === title);
     if (!s) return null;
     // Відкриті діапазони (рядок 1 цілком; колонки «F2:M» без номера останнього рядка): API повертає все з даними — розміри сітки з
     // метаданих (могли застаріти після дописування рядків / колонок) не обрізають читання. Метадані — лише чи є аркуш.
     const q = `'${title.replace(/'/g, "''")}'!`;
     const opts = [["valueRenderOption", "UNFORMATTED_VALUE"], ["dateTimeRenderOption", "FORMATTED_STRING"], ["majorDimension", "ROWS"]];
-    const head = await this.#get("/values:batchGet", [["ranges", q + "1:1"], ...opts]);
-    const header = (head.valueRanges?.[0]?.values?.[0] || []).map((v) => (v == null ? "" : String(v)));
+    const header = rows?.header ? rows.header.slice() : ((await this.#get("/values:batchGet", [["ranges", q + "1:1"], ...opts])).valueRanges?.[0]?.values?.[0] || []).map((v) => (v == null ? "" : String(v)));
     const idx = [...new Set(columns.map((c) => header.indexOf(c)).filter((i) => i >= 0))].sort((a, b) => a - b);
     const out = [header];
-    if (idx.length) {
+    const from = rows ? Math.max(2, rows.from) : 2, to = rows?.to ? String(rows.to) : "";
+    if (idx.length && (!rows?.to || rows.to >= from)) {
       // Суміжні колонки — одним діапазоном.
       const runs = [];
       for (const i of idx) { const last = runs.at(-1); if (last && last.to === i - 1) last.to = i; else runs.push({ from: i, to: i }); }
-      const res = await this.#get("/values:batchGet", [...runs.map((r) => ["ranges", `${q}${columnLetter(r.from + 1)}2:${columnLetter(r.to + 1)}`]), ...opts]);
+      const res = await this.#get("/values:batchGet", [...runs.map((r) => ["ranges", `${q}${columnLetter(r.from + 1)}${from}:${columnLetter(r.to + 1)}${to}`]), ...opts]);
       const vr = res.valueRanges || [];
       if (vr.length !== runs.length) throw new Error("Sheets API: кількість діапазонів у відповіді не збігається із запитом");
       const n = Math.max(0, ...vr.map((v) => (v.values || []).length));

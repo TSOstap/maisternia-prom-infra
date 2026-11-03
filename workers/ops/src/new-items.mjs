@@ -8,6 +8,8 @@
  *  Звідси в таблицю нічого не пишеться: стабільність, повноту, дублі, «Нові товари» й «Журнал» робить сама операція.
  *  Ліміти — щоб не витрачати безкоштовні хвилини GitHub Actions (приватний репозиторій: 2000 хв/міс). Чисті функції — тестуються в Node. */
 
+import { scanFeed, completeness } from "../../../src/core/intake.mjs";
+
 export const MIN = 60_000;
 export const WATCH = Object.freeze({
   everyMinutes: 15,       // як часто сервер дивиться у фід (рішення 03.11: 15–30 хв)
@@ -26,6 +28,11 @@ export const FEED_URL_RE = /^https:\/\/market-tools\.com\.ua\//i;
 export const FILTER_PARAMS = Object.freeze(["group_ids", "nested_group_ids", "product_ids", "label_ids"]);
 /** = config.supplier.operationalParams: лише ID і короткі поля. */
 export const ID_PARAMS = Object.freeze({ exclude_fields: "description,picture,param,keywords", html_description: "0", extra_fields: "0" });
+/** Неповні новинки (немає фото / характеристик тощо — completeness, як у find-new): перевірка не частіше разу на годину;
+ *  фід — без описів і ключових слів (фото й характеристики є; = FEED_PROFILES.medium у src/core/intake.mjs). */
+export const INCOMPLETE_CHECK_MINUTES = 60;
+export const CONTENT_PARAMS = Object.freeze({ exclude_fields: "description,keywords", html_description: "0", extra_fields: "0" });
+
 /** Стани find-new, після яких знімок збережено (наступна перевірка порівнює з новим знімком). Інший стан — пауза failHoldMinutes. */
 export const OK_STATES = new Set(["INTAKE_DONE", "NOTHING_TO_WRITE", "NOTHING_NEW", "WAITING_STABILITY", "NOTHING_COMPLETE"]);
 export const AUTO_BY = "Автоперевірка новинок (сервер)";
@@ -34,11 +41,42 @@ const DAY = (t) => new Date(t).toISOString().slice(0, 10);
 const hhmm = (t) => new Date(t).toISOString().slice(11, 16) + " UTC";
 
 /** Адреса фіду лише з ID: без фільтра охоплення (як повний фід «Знайти нові товари»), без описів / фото / характеристик. */
-export function idsFeedUrl(base) {
+export function idsFeedUrl(base, params = ID_PARAMS) {
   const u = new URL(base);
   for (const p of FILTER_PARAMS) if (u.searchParams.has(p)) u.searchParams.set(p, "");
-  for (const [k, v] of Object.entries(ID_PARAMS)) u.searchParams.set(k, v);
+  for (const [k, v] of Object.entries(params)) u.searchParams.set(k, v);
   return u.toString();
+}
+
+/** Текст фіду з фото й характеристиками (без описів) — { text } | { backoff } | { error }. */
+export async function fetchContentFeed(base, fetchImpl) {
+  if (!base || !FEED_URL_RE.test(base)) return { error: "немає адреси фіду Market Tools" };
+  let res;
+  try { res = await fetchImpl(idsFeedUrl(base, CONTENT_PARAMS), { redirect: "manual", headers: { "accept-encoding": "gzip" } }); }
+  catch (e) { return { error: "фід недоступний: " + String(e?.message || e).slice(0, 100) }; }
+  if (res.status === 429 || res.status === 503) return { backoff: true, httpStatus: res.status };
+  if (res.status !== 200) return { error: "фід: HTTP " + res.status };
+  const text = await res.text();
+  if (text.length > WATCH.maxFeedChars) return { error: "фід завеликий" };
+  if (!text.slice(-512).includes("</yml_catalog>")) return { error: "фід неповний" };
+  return { text };
+}
+
+/** Які з неповних новинок тепер повні (ті самі правила completeness, що й у «Знайти нові товари»). */
+export function completedNow(text, ids) {
+  const want = new Set(ids.map(String));
+  const scan = scanFeed(text, (id) => want.has(id));
+  return [...want].filter((id) => scan.offers.has(id) && completeness(scan.offers.get(id)).length === 0);
+}
+
+/** Межі автозапусків (доба, інтервал, пауза після невдачі) → null (можна) | { result, message }. */
+export function dispatchBlock({ now, w = {}, lastAuto = null }) {
+  const count = w.day === DAY(now) ? Number(w.count) || 0 : 0;
+  if (count >= WATCH.maxPerDay) return { result: "LIMIT", message: `ліміт автозапусків на добу (${WATCH.maxPerDay}) вичерпано — новинки знайде кнопка або завтрашня перевірка` };
+  if (w.lastDispatchAt && now - w.lastDispatchAt < WATCH.stableMinutes * MIN) return { result: "GAP", message: `попередній автозапуск о ${hhmm(w.lastDispatchAt)} — наступний не раніше ніж через ${WATCH.stableMinutes} хв` };
+  if (lastAuto && (lastAuto.status !== "DONE" || !OK_STATES.has(lastAuto.state)) && now - Number(lastAuto.updated) < WATCH.failHoldMinutes * MIN)
+    return { result: "HOLD", message: `останній автозапуск не вдався (${lastAuto.state || lastAuto.status}) — пауза ${WATCH.failHoldMinutes} хв` };
+  return null;
 }
 /** Те, з чим порівнюється знімок find-new: хост + шлях (без параметрів, як maskSource). */
 export const hostPath = (base) => { const u = new URL(base); return u.host + u.pathname; };
@@ -102,11 +140,8 @@ export function decideWatch({ seen, ids, now, w = {}, lastAuto = null }) {
   if (!fresh && !waiting) return { result: "NOTHING_NEW", message: "нових товарів у фіді немає", ...counts };
   const seenAt = Date.parse(seen.seenAt || seen.fetchedAt || "") || 0;
   if (!fresh && now - seenAt < WATCH.stableMinutes * MIN) return { result: "WAITING", message: `новинки (${waiting}) чекають ${WATCH.stableMinutes} хв стабільності`, ...counts };
-  const count = w.day === DAY(now) ? Number(w.count) || 0 : 0;
-  if (count >= WATCH.maxPerDay) return { result: "LIMIT", message: `ліміт автозапусків на добу (${WATCH.maxPerDay}) вичерпано — новинки знайде кнопка або завтрашня перевірка`, ...counts };
-  if (w.lastDispatchAt && now - w.lastDispatchAt < WATCH.stableMinutes * MIN) return { result: "GAP", message: `попередній автозапуск о ${hhmm(w.lastDispatchAt)} — наступний не раніше ніж через ${WATCH.stableMinutes} хв`, ...counts };
-  if (lastAuto && (lastAuto.status !== "DONE" || !OK_STATES.has(lastAuto.state)) && now - Number(lastAuto.updated) < WATCH.failHoldMinutes * MIN)
-    return { result: "HOLD", message: `останній автозапуск не вдався (${lastAuto.state || lastAuto.status}) — пауза ${WATCH.failHoldMinutes} хв`, ...counts };
+  const block = dispatchBlock({ now, w, lastAuto });
+  if (block) return { ...block, ...counts };
   return { result: "DISPATCH", message: fresh ? `у фіді нових ID: ${fresh} — запуск «Знайти нові товари»` : `новинки (${waiting}) пройшли ${WATCH.stableMinutes} хв стабільності — повторний запуск`, ...counts };
 }
 
