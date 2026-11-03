@@ -8,6 +8,7 @@
 - Нове: `src/pipeline/safe-write/w2-engine.mjs` + `RemoteStore` (store.mjs); `transfer` («Перенести затверджені», src/core|pipeline/transfer-approved.mjs; рішення власника 02.11 — перенесені рядки прибираються з черги); звуження охоронця (Hermes F-28C-2 / F-28C-3); журнал W2 — відбитки довгих значень у намірі й стиснення завершених операцій.
 - Звіт, запуски, ключі (де лежать, без значень): `E:/Prom Maisternia Market/Матеріали/Аудит/2026-10-29/ENG/ENG-29-server/README.uk.md`; стан — `…/ENG/ENG-STATE.md`.
 - Відкрито: fine-grained токен GitHub для Worker (власник) → кнопки запускаються з таблиці; встановлення меню власником; ревю Hermes ENG-29; R-N3W, F08-1 — відкриті (успадковано).
+- 03.11: автопошук новинок — alarm DO `mm-ops` кожні 15 хв (`workers/ops/src/new-items.mjs`: ID фіду проти знімка find-new, запуск find-new лише при нових ID або новинках, що чекають стабільності; ліміт 8 / добу; вмикає оператор `/admin/watch`). Кнопка «Оновити ціни й наявність» — op `prices` (`src/core/prices-only.mjs`, `src/pipeline/prices-run.mjs`, політика `MODE_POLICIES.prices`: лише 8 колонок LIVE і «Журнал»). Читач Sheets: `targetBytes` (порції за розміром), `loadHeaders`, `loadColumns`; сесія W2 приймає вузьке `read` для запису за ключем. Стан і заміри — ENG-STATE, запис 0d.
 
 ## ІСТОРИЧНЕ (замінено 02.11): АВТОРИТЕТНИЙ ПОТОЧНИЙ РЕЖИМ — 28.10.2026
 
