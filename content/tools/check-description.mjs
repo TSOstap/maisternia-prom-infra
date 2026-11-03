@@ -15,14 +15,15 @@
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 
-const ALLOWED_TAGS = new Set(["div", "span", "strong", "p", "ul", "li"]);
+// h2 — «Заголовок 2» редактора Prom (рішення власника 03.11: заголовки блоків — Заголовок 2, жирні, 16 px)
+const ALLOWED_TAGS = new Set(["div", "span", "strong", "p", "ul", "li", "h2"]);
 const ALLOWED_CLASS = new Set(["ck-alert", "ck-alert__title", "ck-alert ck-alert_theme_blue"]);
 // font-size:16px — на <span> заголовка; font-weight:bold — лише на <strong> заголовка (явна жирність, рішення власника 29.10)
 const ALLOWED_STYLE = new Set(["font-size:16px", "font-weight:bold"]);
 const ENTITIES = { quot: '"', mdash: "—", ndash: "–", middot: "·", nbsp: " ", amp: "&", lt: "<", gt: ">", laquo: "«", raquo: "»" };
 const PREFIX = '<div class="ck-alert"><span class="ck-alert__title"></span>\n<div class="ck-alert ck-alert_theme_blue"><strong>';
 const SUFFIX = "</ul>\n</div>\n\n<p>&nbsp;</p>";
-const HEADING = /<p><span style="font-size:16px">([\s\S]*?)<\/span><\/p>/g;
+const HEADING = /<(?:p|h2)><span style="font-size:16px">([\s\S]*?)<\/span><\/(?:p|h2)>/g;
 const TECH_HEADINGS = new Set(["Технічні характеристики", "Технические характеристики"]);
 
 const results = [];
