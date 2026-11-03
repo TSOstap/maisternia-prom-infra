@@ -59,6 +59,13 @@ export class GoogleSheetsCatalogSource {
     this.getAccessToken = o.getAccessToken;
     this.groupsSheet = o.groupsSheet || "Групи";
     this.chunkCells = (o.chunkRows || 400) * 40;
+    // ENG-29 (метрики 02.11: «Журнал» ≈ 52 тис. рядків × 26 колонок — 84 запити на одне читання, бо порція рахується в клітинках):
+    // targetBytes — порція великого аркуша за РОЗМІРОМ відповіді: після кожної порції наступна підбирається так, щоб відповідь була
+    // ≈ targetBytes (виміряно на попередній), але зростала не більш ніж ×4 за крок і не перевищувала maxChunkRows рядків. Важкі
+    // рядки (основний каталог ≈ 10 КБ) — як раніше; легкі («Журнал») — у рази менше запитів. Значення й позиції ті самі. Без
+    // targetBytes — колишня поведінка.
+    this.targetBytes = o.targetBytes || 0;
+    this.maxChunkRows = o.maxChunkRows || 5000;
     this.maxRequestsPerMinute = o.maxRequestsPerMinute || 50;
     this.maxRequests = o.maxRequests || 60;
     this.maxAttempts = o.maxAttempts || 5;
@@ -202,9 +209,10 @@ export class GoogleSheetsCatalogSource {
     // щойно порція повернула менше рядків, ніж запитано, увесь залишок перевіряється ОДНИМ запитом
     // (порожня відповідь майже нічого не важить), а не десятками порцій.
     for (const s of found.filter((x) => !fits(x))) {
-      const step = Math.max(1, Math.floor(this.chunkCells / Math.max(1, s.columns)));
-      for (let from = 1; from <= rowsOf(s); from += step) {
+      let step = Math.max(1, Math.floor(this.chunkCells / Math.max(1, s.columns)));
+      for (let from = 1; from <= rowsOf(s);) {
         const to = Math.min(rowsOf(s), from + step - 1);
+        const bytes0 = this.metrics.bytes;
         const [got] = await this.#fetch([this.#range(s, from, to)], byTitle);
         if (got < to - from + 1 && to < rowsOf(s)) {
           this.metrics.tailProbes = (this.metrics.tailProbes || 0) + 1;
@@ -212,6 +220,12 @@ export class GoogleSheetsCatalogSource {
           // Дані після порожнього проміжку — аномалія (readSheet зупинить як «порожній рядок усередині»), але позиції збережено.
           if (tail > 0) this.metrics.dataAfterGap = (this.metrics.dataAfterGap || 0) + 1;
           break;
+        }
+        from = to + 1;
+        if (this.targetBytes && got > 0) {
+          const perRow = Math.max(1, (this.metrics.bytes - bytes0) / got);
+          step = Math.max(1, Math.min(this.maxChunkRows, step * 4, Math.floor(this.targetBytes / perRow)));
+          this.metrics.adaptiveMaxRows = Math.max(this.metrics.adaptiveMaxRows || 0, step);
         }
       }
     }

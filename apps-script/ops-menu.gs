@@ -12,6 +12,7 @@ function onOpen() {
     .addItem("Знайти нові товари", "mmFindNew")
     .addItem("Перенести затверджені", "mmTransfer")
     .addItem("Оновити товари", "mmUpdate")
+    .addItem("Оновити ціни й наявність", "mmPrices")
     .addSeparator()
     .addItem("Стан останньої операції", "mmStatus")
     .addToUi();
@@ -20,6 +21,7 @@ function onOpen() {
 function mmFindNew() { mmRun_("find-new"); }
 function mmTransfer() { mmRun_("transfer"); }
 function mmUpdate() { mmRun_("update"); }
+function mmPrices() { mmRun_("prices"); }
 
 function mmRun_(op) {
   var r = mmCall_({ op: op });

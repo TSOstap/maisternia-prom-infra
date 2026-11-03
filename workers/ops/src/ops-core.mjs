@@ -17,15 +17,16 @@ export const OPS = Object.freeze({
   transfer: "Перенести затверджені",
   "find-new": "Знайти нові товари",
   update: "Оновити товари",
+  prices: "Оновити ціни й наявність",
   reconcile: "Звірити незавершені записи",
   "deferred-plan": "Відкладені товари: план",
   deferred: "Відкладені товари: розібрати",
   "drop-deferred": "Відкладені товари: прибрати вкладку",
 });
 /** Типова тривалість (виміряно на TEST 02.11: «Оновити» ≈ 18 хв, «Знайти нові» ≈ 3 хв, «Перенести» 3–13 хв залежно від кількості). */
-const DURATION = Object.freeze({ transfer: "3–15 хвилин", "find-new": "3–5 хвилин", update: "15–20 хвилин", reconcile: "2–4 хвилини" });
+const DURATION = Object.freeze({ transfer: "3–15 хвилин", "find-new": "3–5 хвилин", update: "15–20 хвилин", prices: "3–5 хвилин", reconcile: "2–4 хвилини" });
 /** Кнопки меню (ключ кнопок) — лише ці дії; разові операції (відкладені товари) — лише вручну з GitHub. */
-const BUTTON_OPS = new Set(["transfer", "find-new", "update", "reconcile"]);
+const BUTTON_OPS = new Set(["transfer", "find-new", "update", "prices", "reconcile"]);
 const ACTIVE = new Set(["DISPATCHING", "QUEUED", "RUNNING"]);
 /** Після цього часу без звісток запуск вважається завислим (job ops.yml має timeout-minutes 60) — кнопка знову доступна.
  *  Захист таблиці від цього не залежить: оренда W2 і журнал операцій не дадуть двом записувачам писати одночасно. */

@@ -30,7 +30,7 @@ export async function syncControlsState(controls, config) {
   } catch (e) { return { blocked: true, reasons: ["стан Catalog Controls не прочитано: " + (e?.message || e)] }; }
 }
 /** Перед записом: стан CC той самий, що під час планування (новий tombstone між плануванням і записом → нічого не пишемо). */
-async function ccUnchanged(controls, st) {
+export async function ccUnchanged(controls, st) {
   if (!st || typeof controls?.verify !== "function") return { ok: true };
   try { const v = await controls.verify(st.fingerprint); return v?.ok ? { ok: true } : { ok: false, reason: (v?.reasons || []).join("; ") || "відбиток змінився" }; }
   catch (e) { return { ok: false, reason: "перевірку не виконано: " + (e?.message || e) }; }

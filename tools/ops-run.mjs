@@ -20,6 +20,8 @@ const arg = (k, d = "") => process.argv.find((a) => a.startsWith(`--${k}=`))?.sl
 export const OP_MODES = Object.freeze({
   reconcile: { mode: "reconcile", cc: false },
   update: { mode: "update", cc: true },
+  // ENG-29 (рішення власника 03.11): «Оновити ціни й наявність» — операційний фід, лише 8 колонок LIVE.
+  prices: { mode: "prices", cc: true },
   "find-new": { mode: "find-new", cc: true },
   transfer: { mode: "transfer", cc: true },
   // ENG-29: розбір «Відкладених товарів» (разова операція власника; не в меню) — спершу план, потім виконання.

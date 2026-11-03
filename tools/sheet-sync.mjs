@@ -39,6 +39,7 @@ import { updateProductsRun } from "../src/pipeline/update-products.mjs";
 import { migrateQueueForTransfer, applyOwnerCorrection } from "../src/pipeline/eng28a-steps.mjs";
 import { qaProducts, QA_IDS_0111 } from "../src/pipeline/qa-products.mjs";
 import { findNewProducts } from "../src/pipeline/find-new.mjs";
+import { updatePrices } from "../src/pipeline/prices-run.mjs";
 import { transferApproved } from "../src/pipeline/transfer-approved.mjs";
 import { resolveDeferred, dropDeferredSheet } from "../src/pipeline/deferred-resolve.mjs";
 import { feedScopeOf } from "../src/core/supplier-presence.mjs";
@@ -59,6 +60,7 @@ const mode = arg("mode", "sync");
 //   merge     — «Перенести підготовлені товари» (NEW92 «ОЧІКУЄ ПЕРЕНЕСЕННЯ» → «Основний каталог»);
 //   find-new  — «Знайти нові товари» (лише «Нові товари» + «Журнал»; src/pipeline/find-new.mjs);
 //   update    — «Оновити товари» (основний каталог: ціни, наявність, зміни постачальника; без новинок і без черги);
+//   prices    — «Оновити ціни й наявність» (операційний фід; лише 8 колонок LIVE змінених рядків + «Журнал»; src/pipeline/prices-run.mjs);
 //   qa        — QA погоджених товарів (лише їхні рядки; src/pipeline/qa-products.mjs). sync / intake — застарілі комбіновані режими.
 //   reconcile — ENG-28d: з'ясування невідомих результатів записів W2 (лише читання таблиці; пише лише журнал операцій W2); рішення
 //               людини щодо NEEDS_DECISION — лише явно: --decide=<opId> --note="пояснення".
@@ -67,7 +69,7 @@ const mode = arg("mode", "sync");
 //   deferred  — ENG-29: розбір «Відкладених товарів» (рішення власника 03.11): у фіді — в «Основний каталог», немає — у «Видалені товари»;
 //               --plan-only — лише план.
 //   drop-deferred — ENG-29: прибрати порожню вкладку «Відкладені товари» (лише 0 рядків даних; --maintenance, оренда W2).
-const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer", "deferred", "drop-deferred"];
+const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer", "deferred", "drop-deferred", "prices"];
 /** ENG-28c (М1): межа HTTP-запитів записувача на запуск. Типово 40 (GoogleSheetsWriter); «Оновити товари» / sync — 120: перший повний
  *  прохід пріоритету власника на 5 121 рядках потребує ≈ 45 запитів (з М2; без М2 — ≈ 69), темп записувача ≤ 50 запитів/хв (квота
  *  Google — 60 запитів запису / хв на користувача проєкту). Перед першим записом — оцінка (budgetCheck): більше за межу → нічого не пишемо. */
@@ -147,7 +149,8 @@ try {
     // перенесення читають його кілька разів («Журнал» за ключем «ID події»). Окремий читач на кожне читання мав власні межу 60 і
     // темп 50 / хв — разом вони перевищували квоту Google (60 читань / хв на користувача: HTTP 429). Тому — ОДИН читач на процес:
     // спільний темп ≤ 40 / хв (запас для мета-запитів записувача) і спільна межа 1000 запитів на запуск. Лише читання.
-    const testReader = new GoogleSheetsCatalogSource({ spreadsheetId: process.env.MM_TEST_SHEET_ID, getAccessToken, maxRequests: 1000, maxRequestsPerMinute: 40 });
+    // ENG-29: порції великих аркушів — за розміром відповіді (≈ 4 МБ, як порція основного каталогу), не за клітинками.
+    const testReader = new GoogleSheetsCatalogSource({ spreadsheetId: process.env.MM_TEST_SHEET_ID, getAccessToken, maxRequests: 1000, maxRequestsPerMinute: 40, targetBytes: 4_000_000 });
     readBook = async (names) => {
       testReader.metaCache = null; // свіжі розміри аркушів щоразу (після дописування / нових колонок / аркушів); спільні лише темп і межа
       const t0 = Date.now(); // ENG-29: розбивка часу операції (для розкладу перед імпортом Prom)
@@ -284,6 +287,22 @@ try {
       try { report.result = await findNewProducts({ sheets, readBook, xml: fullXml, source: scopeSource, fetchedAt: stamp, stamp, now: NOW, config, profile: config.intake?.profile || "medium", controls, snapshotStore: w2Store, session }); }
       finally { await session.close?.().catch(() => {}); }
     }
+  } else if (mode === "prices") {
+    // ENG-29 (рішення власника 03.11): «Оновити ціни й наявність» — ОПЕРАЦІЙНИЙ фід (ціни / наявність, без описів і фото), лише 8 колонок
+    // LIVE «Основного каталогу» змінених рядків (сесія «sync», за ключем) і «Журнал». Решту даних постачальника — «Оновити товари».
+    const full = source === "api" ? process.env.MM_SUPPLIER_FEED_URL || "" : "";
+    let xml;
+    const tf = Date.now();
+    if (source === "api") {
+      const op = operationalUrl(full, config.supplier);
+      addUrlSecrets(full); addUrlSecrets(op);
+      const c = []; for await (const x of new HttpSupplierSource(op, { timeoutMs: 180000, maxBytes: config.supplier.maximumChars * 2 }).chunks()) c.push(x);
+      xml = Buffer.concat(c).toString("utf8");
+    } else xml = fs.readFileSync(arg("supplier-file"), "utf8");
+    report.metrics.supplierFetchMs = Date.now() - tf;
+    const session = await new WriteGateway({ sheets, read: readBook, store: w2Store }).open({ writer: "sync" });
+    try { report.result = await updatePrices({ readBook, xml, stamp, now: NOW, config, controls, session, snapshotStore: w2Store }); }
+    finally { await session.close?.().catch(() => {}); }
   } else if (mode === "reconcile") {
     // ENG-28d: невідомий результат API → наступні записи BLOCKED, доки reconcile не з'ясує стан читанням за ключем (із вікном settle);
     // сліпого повтору немає. Таблиця лише читається (політика режиму: жодної операції запису).

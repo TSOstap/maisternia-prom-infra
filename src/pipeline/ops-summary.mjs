@@ -9,7 +9,7 @@ export const STATE_UA = Object.freeze({
   ABORTED: "Зупинено — нічого не записано", BLOCKED: "Заблоковано — потрібна звірка незавершених записів", BUSY: "Таблиця зайнята іншою операцією",
   RECONCILE_REQUIRED: "Потрібна звірка незавершених записів", ERROR: "Помилка", HOLD_SUPPLIER_DISAPPEARANCE: "Зупинено: забагато товарів зникло у постачальника",
   CONFLICT_OWNER_EDIT: "Зупинено: таблицю змінено під час операції", INCOMPLETE: "Виконано частково — потрібна звірка",
-  DEFERRED_RESOLVED: "Відкладені товари розібрано", PLANNED: "План готовий — нічого не записано", PRECONDITION_FAILED: "Не виконано — умови не виконані",
+  DEFERRED_RESOLVED: "Відкладені товари розібрано", PRICES_UPDATED: "Ціни й наявність оновлено", PARTIAL: "Оновлено частково", NOT_APPLIED: "Нічого не записано", JOURNAL_INCOMPLETE: "Записано, але «Журнал» неповний", SKIPPED_CONCURRENT_EDIT: "Пропущено: таблицю змінено під час операції", PLANNED: "План готовий — нічого не записано", PRECONDITION_FAILED: "Не виконано — умови не виконані",
 });
 const n = (v) => Number(v || 0);
 const clip = (s, max = 600) => { const t = mtText(s); return t.length > max ? t.slice(0, max) + "…" : t; };
@@ -30,6 +30,16 @@ export function ownerSummary(op, report) {
     if (rep.presence?.gone || rep.presence?.returned) lines.push(`Зникли у постачальника: ${n(rep.presence.gone)}; повернулися: ${n(rep.presence.returned)}`);
     if (rep.queue?.pendingDecisions) lines.push(`У «Нових товарах» чекають перенесення: ${n(rep.queue.pendingDecisions)} (кнопка «Перенести затверджені»)`);
     if (rep.conflicts?.isolated) lines.push(`Ізольовано рядків (не змінювались): ${n(rep.conflicts.isolated)}`);
+  }
+  if (op === "prices" && r.stats) {
+    const st = r.stats, sk = st.skipped || {};
+    if (st.written != null) lines.push(`Оновлено товарів: ${n(st.written)}${n(st.notWritten) ? `; не записано ${n(st.notWritten)} (таблицю змінено під час операції)` : ""}`);
+    lines.push(`Ціни: постачальника ${n(st.supplierPriceChanged)}, продажу ${n(st.salePriceChanged)}; наявність: ${n(st.availabilityChanged)} (з'явились ${n(st.becameAvailable)}, зникли ${n(st.becameUnavailable)}); кількість: ${n(st.quantityChanged)}`);
+    const mism = Object.values(sk.mismatch || {}).reduce((a, b) => a + n(b), 0);
+    if (mism) lines.push(`Не змінено ${mism}: у постачальника змінились назва / артикул тощо — спершу «Оновити товари»`);
+    if (n(sk.missing)) lines.push(`Немає у фіді постачальника: ${n(sk.missing)} — їх перевіряє «Оновити товари»`);
+    if (n(sk.removed) || n(sk.gone)) lines.push(`Пропущено видалені: ${n(sk.removed) + n(sk.gone)}`);
+    if (r.feed?.offers) lines.push(`Товарів у фіді: ${n(r.feed.offers)}`);
   }
   if (op === "find-new" && rep) {
     lines.push(`Нових ID у фіді: ${n(rep.found?.total)} (повних ${n(rep.found?.complete)}, без повних даних ${n(rep.found?.incomplete)})`);

@@ -152,6 +152,33 @@ test("дані після порожнього проміжку: позиції 
   assert.throws(() => readSheet(loaded.sheets[SHEETS.main], SHEETS.main), /Порожній рядок/);
 });
 
+test("ENG-29 порції за розміром відповіді (targetBytes): легкі рядки — у рази менше запитів, ріст ≤ ×4 за крок і ≤ maxChunkRows; важкі — не більші за ціль; значення ті самі", async () => {
+  const journal = [["Дата / час", "Аркуш", "Offer ID", "Поле", "Було", "Стало", "Статус"], ...Array.from({ length: 12000 }, (_, i) => ["02.11.2026 10:00", "Основний каталог", String(1500000000 + i), "Ціна", i, i + 1, "ЗІСТАВЛЕНО"])];
+  const s = generateSynthetic({ products: 5, seed: 3, now: Date.now() });
+  const book = { "Журнал": journal, [SHEETS.groups]: s.groups };
+  const fixed = source(book, { chunkRows: 50, api: { extraRows: 0, extraCols: 0 } });
+  const a = await fixed.src.load(["Журнал"]);
+  const adaptive = source(book, { chunkRows: 50, api: { extraRows: 0, extraCols: 0 }, src: { targetBytes: 400_000, maxChunkRows: 3000 } });
+  const b = await adaptive.src.load(["Журнал"]);
+  assert.deepEqual(b.sheets["Журнал"], journal);
+  assert.deepEqual(b.sheets["Журнал"], a.sheets["Журнал"]);
+  assert.ok(adaptive.src.metrics.requests * 5 < fixed.src.metrics.requests, JSON.stringify({ fixed: fixed.src.metrics.requests, adaptive: adaptive.src.metrics.requests }));
+  assert.equal(adaptive.src.metrics.adaptiveMaxRows, 3000, "межа рядків на порцію");
+  // Перша порція — за клітинками (2000 / 7 = 285 рядків), друга — не більше ×4.
+  const sizes = [];
+  const log = [];
+  const watched = source(book, { chunkRows: 50, api: { extraRows: 0, extraCols: 0, log }, src: { targetBytes: 400_000, maxChunkRows: 3000 } });
+  await watched.src.load(["Журнал"]);
+  for (const x of log) for (const [k, v] of x.params) if (k === "ranges" && v.startsWith("'Журнал'")) { const m = /A(\d+):[A-Z]+(\d+)$/.exec(v); sizes.push(Number(m[2]) - Number(m[1]) + 1); }
+  assert.equal(sizes[0], 285);
+  for (let i = 1; i < sizes.length - 1; i++) assert.ok(sizes[i] <= sizes[i - 1] * 4 && sizes[i] <= 3000, sizes.join(","));
+  // Важкі рядки (основний каталог синтетики): порція не росте понад ціль.
+  const s2 = generateSynthetic({ products: 300, seed: 4, now: Date.now() });
+  const heavy = source(bookFrom(s2), { chunkRows: 50, src: { targetBytes: 60_000 } });
+  const h = await heavy.src.load([SHEETS.main]);
+  assert.deepEqual(h.sheets[SHEETS.main], bookFrom(s2)[SHEETS.main]);
+});
+
 test("вузький аркуш (1 колонка, тисячі рядків) читається одним запитом", async () => {
   const frozen = [["Offer ID"], ...Array.from({ length: 5143 }, (_, i) => [String(1500000000 + i)])];
   const s = generateSynthetic({ products: 5, seed: 2, now: Date.now() });
