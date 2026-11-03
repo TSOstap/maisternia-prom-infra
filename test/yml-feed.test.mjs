@@ -85,8 +85,13 @@ test("збірка: усі товари в порядку аркуша, крім
   const b = book(), feed = db(), rows = rowsOf(b), ids = rows.map((r) => mtText(r["Offer ID"]));
   feed.setHold([ids[0]]);
   const rd = reader(b);
-  const r = await buildFeed({ feed, reader: rd, cc: cc0({ removed: [ids[1]], held: [ids[2]] }), now: NOW, config, chunkRows: 12 });
+  const r = await buildFeed({ feed, reader: rd, cc: cc0({ removed: [ids[1]], held: [ids[2]] }), now: NOW, config, chunkRows: 12, chunkBytes: 40000 });
   assert.equal(r.count, rows.length - 2); assert.ok(rd.calls.chunks >= 4, "порції рядків");
+  // 04.11: offer зберігаються пачками (ліміт записаних рядків Workers Free) — рядків SQLite значно менше, ніж offer.
+  const packs = feed.rows("SELECT COUNT(*) AS n FROM yml_chunk WHERE ver = ?", r.ver)[0].n;
+  assert.ok(packs > 1 && packs < r.count / 2, `пачок ${packs} на ${r.count} offer`);
+  assert.equal(feed.count(r.ver), r.count);
+  assert.equal(feed.get(r.ver, ids[5]), offersById(await served(feed)).get(ids[5]));
   const xml = await served(feed);
   const v = await verifyYmlStream(Readable.from([xml]));
   assert.equal(v.count, rows.length - 2);
@@ -104,7 +109,7 @@ test("збірка: усі товари в порядку аркуша, крім
 test("оновлення цін після «Цін»: змінені offer = повне формування; знятий / видалений не оновлюється; нова версія лише повною збіркою; неповне читання — стара версія лишається", { skip }, async () => {
   const b = book(), feed = db(), rows = rowsOf(b), ids = rows.map((r) => mtText(r["Offer ID"]));
   feed.setHold([]);
-  await buildFeed({ feed, reader: reader(b), cc: cc0({ held: [ids[2]] }), now: NOW, config });
+  await buildFeed({ feed, reader: reader(b), cc: cc0({ held: [ids[2]] }), now: NOW, config, chunkBytes: 40000 });
   const before = offersById(await served(feed));
   // Ціна товару 5 і наявність товару 6 змінились у таблиці (як записала «Ціни й наявність»); знятий 2 — теж змінився в таблиці.
   const h = b[MAIN][0], col = (k) => h.indexOf(k);
@@ -145,4 +150,21 @@ test("віддача: до першої збірки — 503; HEAD — без т
   assert.equal(h.status, 200); assert.equal(h.body, null);
   assert.match(h.headers.get("content-type"), /application\/xml/);
   assert.equal(h.headers.get("x-yml-offers"), String(feed.meta().count));
+});
+
+test("04.11: версія у старій таблиці yml_offer (до пачок) віддається без змін; оновлення цін — через повну збірку в пачки", { skip }, async () => {
+  const b = book(), feed = db(), rows = rowsOf(b), ids = rows.map((r) => mtText(r["Offer ID"]));
+  feed.setHold([]);
+  await buildFeed({ feed, reader: reader(b), cc: cc0(), now: NOW, config });
+  const xml = await served(feed), ver = feed.meta().ver;
+  // Імітація стану до 04.11: та сама версія — рядок на offer у yml_offer, пачок немає.
+  feed.sql.exec("CREATE TABLE IF NOT EXISTS yml_offer (ver INTEGER NOT NULL, ord INTEGER NOT NULL, id TEXT NOT NULL, xml TEXT NOT NULL, PRIMARY KEY (ver, id))");
+  [...offersById(xml)].forEach(([id, x], i) => feed.sql.exec("INSERT INTO yml_offer (ver, ord, id, xml) VALUES (?, ?, ?, ?)", ver, i, id, x));
+  feed.dropVersion(ver);
+  const legacyFeed = new FeedStore(feed.sql, feed.tx);
+  assert.equal(await served(legacyFeed), xml, "старий фід віддається байт-у-байт");
+  assert.equal(legacyFeed.count(ver), rows.length);
+  const s = await syncFeed({ feed: legacyFeed, reader: reader(b), cc: cc0(), now: NOW + 1, config });
+  assert.equal(s.needBuild, true);
+  assert.ok(ids.length);
 });

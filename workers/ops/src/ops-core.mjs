@@ -117,7 +117,9 @@ export class OpsCore {
   constructor(storage, env, { now = () => Date.now(), fetchImpl = (...a) => fetch(...a), pricesJobImpl = runPricesJob, feedJobImpl = runFeedJob } = {}) {
     this.storage = storage; this.env = env; this.now = now; this.fetchImpl = fetchImpl; this.pricesJobImpl = pricesJobImpl; this.feedJobImpl = feedJobImpl;
     this.sql = storage.sql;
-    for (const q of SCHEMA) this.sql.exec(q);
+    // 04.11: вичерпаний ліміт записів Workers Free (100 000 рядків / добу) не має «класти» DO цілком — схема вже створена раніше,
+    // а читання (віддача фіду Prom, стан) працюють і без записів; операції із записом повернуть помилку самі.
+    try { for (const q of SCHEMA) this.sql.exec(q); } catch (e) { this.schemaError = String(e?.message || e); }
     this.kv = w2Kv(this.sql);
     this.feed = new FeedStore(this.sql, (fn) => this.tx(fn));
   }
@@ -170,6 +172,7 @@ export class OpsCore {
       if (m === "POST" && p === "/admin/watch-check") { const b = await req.json().catch(() => ({})); return json(await this.watchCheck(this.now(), { dry: b?.dry !== false })); }
       return json({ error: { code: "NOT_FOUND", message: "не знайдено" } }, 404);
     } catch (e) {
+      console.error("mm-ops", p, String(e?.stack || e).slice(0, 800));
       return json({ error: { code: "INTERNAL", message: String(e?.message || e).slice(0, 300) } }, 500);
     }
   }
