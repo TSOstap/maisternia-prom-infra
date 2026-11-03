@@ -133,8 +133,10 @@ test("автопошук у mm-ops: alarm → нові ID → запуск «З�
   // GitHub завершив перший запуск: новинка зафіксована у знімку й чекає стабільності.
   core.runStart({ runId: run1.id, op: "find-new" });
   core.runFinish({ runId: run1.id, ok: true, state: "WAITING_STABILITY", summary: "нові ID чекають стабільності (1)" });
-  core.tx(() => core.kv.set(FIND_NEW_SEEN_KEY, seenOf(feedIds, c.t - 2 * M, { waiting: ["2000000001"] }), "2"));
-  c.t += 5 * M;
+  // Наступний alarm — за розкладом автопошуку (nextAt); знімок зроблено за 5 хв до нього — ще рано (< 12 хв).
+  const due = core.watchGet().nextAt;
+  core.tx(() => core.kv.set(FIND_NEW_SEEN_KEY, seenOf(feedIds, due - 5 * M, { waiting: ["2000000001"] }), "2"));
+  c.t = due;
   await core.alarm();
   assert.equal(core.watchGet().last.result, "WAITING", JSON.stringify(core.watchGet().last));
   c.t += 15 * M;

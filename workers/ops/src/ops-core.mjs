@@ -12,6 +12,9 @@
  *  «Знайти нові товари»; є нові — запуск тієї самої операції, що й кнопка (op find-new). Вмикає / вимикає оператор (/admin/watch). */
 import { w2Handle, w2Seed, REQ_KEEP_MS } from "../../../src/pipeline/safe-write/w2-engine.mjs";
 import { WATCH, MIN, AUTO_BY, FIND_NEW_SEEN_KEY, fetchIds, watchPrecheck, decideWatch, markWatchDispatch } from "./new-items.mjs";
+import { runPricesJob } from "./prices-job.mjs";
+import { RemoteStore } from "../../../src/pipeline/safe-write/store.mjs";
+import { ownerSummary } from "../../../src/pipeline/ops-summary.mjs";
 
 export const OPS = Object.freeze({
   transfer: "Перенести затверджені",
@@ -25,6 +28,12 @@ export const OPS = Object.freeze({
 });
 /** Типова тривалість (виміряно на TEST 02.11: «Оновити» ≈ 18 хв, «Знайти нові» ≈ 3 хв, «Перенести» 3–13 хв залежно від кількості). */
 const DURATION = Object.freeze({ transfer: "3–15 хвилин", "find-new": "3–5 хвилин", update: "15–20 хвилин", prices: "3–5 хвилин", reconcile: "2–4 хвилини" });
+/** «Ціни й наявність» на самому сервері Cloudflare (PRICES_RUNNER="do") — без хвилин GitHub. */
+const DO_DURATION = "1–2 хвилини";
+export const PRICES_JOB_KEY = "prices-job";
+/** Розклад «Ціни й наявність» на сервері (рішення власника: кожні 2 год — після підключення Prom; типово вимкнено). */
+export const PRICES_SCHEDULE_KEY = "prices-schedule";
+export const SCHEDULE_BY = "Розклад (сервер)";
 /** Кнопки меню (ключ кнопок) — лише ці дії; разові операції (відкладені товари) — лише вручну з GitHub. */
 const BUTTON_OPS = new Set(["transfer", "find-new", "update", "prices", "reconcile"]);
 const ACTIVE = new Set(["DISPATCHING", "QUEUED", "RUNNING"]);
@@ -100,8 +109,8 @@ export function w2Kv(sql) {
 
 export class OpsCore {
   /** storage — ctx.storage SQLite Durable Object ({ sql.exec, transactionSync }); env — змінні й секрети Worker. */
-  constructor(storage, env, { now = () => Date.now(), fetchImpl = (...a) => fetch(...a) } = {}) {
-    this.storage = storage; this.env = env; this.now = now; this.fetchImpl = fetchImpl;
+  constructor(storage, env, { now = () => Date.now(), fetchImpl = (...a) => fetch(...a), pricesJobImpl = runPricesJob } = {}) {
+    this.storage = storage; this.env = env; this.now = now; this.fetchImpl = fetchImpl; this.pricesJobImpl = pricesJobImpl;
     this.sql = storage.sql;
     for (const q of SCHEMA) this.sql.exec(q);
     this.kv = w2Kv(this.sql);
@@ -147,6 +156,8 @@ export class OpsCore {
       // Автопошук новинок: стан, увімкнути / вимкнути, разова перевірка (dry — без запуску операції).
       if (m === "GET" && p === "/admin/watch") return json(await this.watchInfo());
       if (m === "POST" && p === "/admin/watch") { const b = await req.json().catch(() => ({})); return json(await this.watchSwitch(b?.on === true)); }
+      if (m === "POST" && p === "/admin/prices-job") return json(await this.pricesJob({ dry: true }));
+      if (m === "POST" && p === "/admin/prices-schedule") { const b = await req.json().catch(() => ({})); return json(await this.pricesSchedule(b)); }
       if (m === "POST" && p === "/admin/watch-check") { const b = await req.json().catch(() => ({})); return json(await this.watchCheck(this.now(), { dry: b?.dry !== false })); }
       return json({ error: { code: "NOT_FOUND", message: "не знайдено" } }, 404);
     } catch (e) {
@@ -233,6 +244,12 @@ export class OpsCore {
     const id = randomHex(8);
     this.sql.exec("INSERT INTO runs (id, op, status, at, updated, info) VALUES (?, ?, 'DISPATCHING', ?, ?, ?)", id, op, now, now, JSON.stringify({ by: String(body?.by || "").slice(0, 80) }));
     this.sql.exec("DELETE FROM runs WHERE id NOT IN (SELECT id FROM runs ORDER BY at DESC LIMIT ?)", KEEP_RUNS);
+    if (op === "prices" && this.env.PRICES_RUNNER === "do") {
+      this.metaPut(PRICES_JOB_KEY, { runId: id, at: now });
+      this.setRun(id, "QUEUED", { runner: "cloudflare" });
+      await this.scheduleAlarm();
+      return { state: "STARTED", runId: id, message: `Запущено «${OPS[op]}» (на сервері). Зазвичай це ${DO_DURATION}; результат — у меню «Стан останньої операції» і в аркуші «Журнал».` };
+    }
     const d = await this.dispatch(op, id);
     if (!d.ok) {
       this.setRun(id, "DISPATCH_FAILED", { reason: d.reason });
@@ -285,20 +302,83 @@ export class OpsCore {
   }
   /** Увімкнути: перша перевірка за хвилину, далі кожні WATCH.everyMinutes хв. Вимкнути: alarm видаляється. */
   async watchSwitch(on) {
-    this.watchPut({ ...this.watchGet(), on });
-    if (on) await this.storage.setAlarm(this.now() + MIN);
-    else await this.storage.deleteAlarm();
+    this.watchPut({ ...this.watchGet(), on, nextAt: on ? this.now() + MIN : null });
+    await this.scheduleAlarm();
     return this.watchInfo();
   }
-  /** Alarm: спершу наступний alarm (збій перевірки не зупиняє розклад), потім перевірка; помилки не кидаються (без повторів alarm). */
+  metaGet(k) { const r = this.rows("SELECT v FROM meta WHERE k = ?", k)[0]; return r ? JSON.parse(r.v) : null; }
+  metaPut(k, v) { this.sql.exec("INSERT INTO meta (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v", k, JSON.stringify(v)); }
+  metaDel(k) { this.sql.exec("DELETE FROM meta WHERE k = ?", k); }
+  /** Один alarm на об'єкт: найближчий із (черга «Цін» — одразу; автопошук — його nextAt). Нічого — alarm видаляється. */
+  async scheduleAlarm() {
+    const now = this.now(), times = [];
+    const w = this.watchGet();
+    if (w.on) times.push(Math.max(now + 1000, Number(w.nextAt) || now + MIN));
+    if (this.metaGet(PRICES_JOB_KEY)) times.push(now + 1000);
+    const ps = this.metaGet(PRICES_SCHEDULE_KEY);
+    if (ps?.on) times.push(Math.max(now + 1000, Number(ps.nextAt) || now + MIN));
+    if (times.length) await this.storage.setAlarm(Math.min(...times)); else await this.storage.deleteAlarm();
+  }
+  /** Alarm: страховий наступний alarm (збій не зупиняє розклад) → черга «Цін» → автопошук, якщо настав його час → точний наступний
+   *  alarm. Помилки не кидаються (без повторів alarm). */
   async alarm() {
-    if (!this.watchGet().on) return;
     const now = this.now();
     await this.storage.setAlarm(now + WATCH.everyMinutes * MIN);
-    let r;
-    try { r = await this.watchCheck(now, { dry: false }); }
-    catch (e) { r = { result: "ERROR", message: "помилка перевірки: " + String(e?.message || e).slice(0, 200) }; }
-    this.watchPut({ ...this.watchGet(), last: { at: now, ...r } });
+    // Розклад «Цін»: настав час і нічого не виконується — запуск того самого шляху, що й кнопка (черга → одразу тут).
+    const ps = this.metaGet(PRICES_SCHEDULE_KEY);
+    if (ps?.on && now >= (Number(ps.nextAt) || 0) - 5000) {
+      this.metaPut(PRICES_SCHEDULE_KEY, { ...ps, nextAt: now + ps.everyMinutes * MIN });
+      const b = this.metaGet(PRICES_JOB_KEY) ? null : await this.button({ op: "prices", by: SCHEDULE_BY });
+      this.metaPut(PRICES_SCHEDULE_KEY, { ...this.metaGet(PRICES_SCHEDULE_KEY), last: { at: now, state: b?.state ?? "QUEUED", message: String(b?.message || "").slice(0, 200) } });
+    }
+    const job = this.metaGet(PRICES_JOB_KEY);
+    if (job) { this.metaDel(PRICES_JOB_KEY); await this.runPricesQueued(job); }
+    const w = this.watchGet();
+    if (w.on && now >= (Number(w.nextAt) || 0) - 5000) {
+      this.watchPut({ ...w, nextAt: now + WATCH.everyMinutes * MIN });
+      let r;
+      try { r = await this.watchCheck(this.now(), { dry: false }); }
+      catch (e) { r = { result: "ERROR", message: "помилка перевірки: " + String(e?.message || e).slice(0, 200) }; }
+      this.watchPut({ ...this.watchGet(), last: { at: now, ...r } });
+    }
+    await this.scheduleAlarm();
+  }
+
+  // ---------- «Оновити ціни й наявність» на сервері ----------
+  /** Розклад: { on, everyMinutes ≥ 60 }. Вимкнення — on:false. Перший запуск — за хвилину після ввімкнення. */
+  async pricesSchedule(b) {
+    const cur = this.metaGet(PRICES_SCHEDULE_KEY) || { on: false, everyMinutes: 120 };
+    const every = Number.isFinite(Number(b?.everyMinutes)) ? Math.max(60, Math.round(Number(b.everyMinutes))) : cur.everyMinutes;
+    const on = b?.on === true;
+    this.metaPut(PRICES_SCHEDULE_KEY, { ...cur, on, everyMinutes: every, nextAt: on ? this.now() + MIN : null });
+    await this.scheduleAlarm();
+    return { ...this.metaGet(PRICES_SCHEDULE_KEY), runner: this.env.PRICES_RUNNER === "do" ? "cloudflare" : "github", alarmAt: await this.storage.getAlarm() };
+  }
+  /** Сховище W2 цього ж об'єкта через той самий протокол, що й у запускача GitHub (RemoteStore → w2-engine), без мережі. */
+  localStore() {
+    return new RemoteStore({ url: "https://mm-ops.internal", key: "do-local-" + "x".repeat(24), retries: 1, fetchImpl: async (_url, init) => this.w2(JSON.parse(init.body)) });
+  }
+  async pricesJob({ dry = false } = {}) {
+    const cc = this.rows("SELECT body FROM inputs WHERE name = 'cc-contract-test'")[0]?.body || "";
+    try { return await this.pricesJobImpl({ env: this.env, store: this.localStore(), ccContractText: cc, sha256Hex, fetchImpl: this.fetchImpl, now: this.now(), dry }); }
+    catch (e) { return { result: { state: "ERROR", reason: "сервер: " + String(e?.message || e).slice(0, 300) }, metrics: null }; }
+  }
+  /** Запуск із черги кнопки: результат — у стан запуску (підсумок для власника); передано на GitHub — той самий запуск чекає звіту GitHub. */
+  async runPricesQueued(job) {
+    const id = job.runId;
+    this.setRun(id, "RUNNING", { runner: "cloudflare" });
+    const out = await this.pricesJob();
+    if (out.fallback) {
+      const d = await this.dispatch("prices", id);
+      if (!d.ok) { this.setRun(id, "DISPATCH_FAILED", { reason: `сервер: ${out.reason}; GitHub: ${d.reason}` }); return; }
+      this.setRun(id, "QUEUED", { runner: "github", fallback: out.reason });
+      return;
+    }
+    const state = out.result?.state || "ERROR";
+    const ok = ["PRICES_UPDATED", "NO_CHANGES"].includes(state);
+    const summary = ownerSummary("prices", { result: out.result }) + (out.metrics ? `
+(сервер Cloudflare, ${Math.round(out.metrics.ms / 1000)} с)` : "");
+    this.setRun(id, ok ? "DONE" : "FAILED", { state, summary: summary.slice(0, 6000), metrics: out.metrics || null });
   }
   /** Один цикл автоперевірки. dry — лише рішення, без запуску операції (перевірка оператором). */
   async watchCheck(now, { dry = true } = {}) {

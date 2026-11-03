@@ -34,11 +34,16 @@ function fakeSheetsApi(book, { extraRows = 50, extraCols = 3, failures = [], log
       assert.equal(u.searchParams.get("valueRenderOption"), "UNFORMATTED_VALUE");
       assert.equal(u.searchParams.get("dateTimeRenderOption"), "FORMATTED_STRING");
       const valueRanges = u.searchParams.getAll("ranges").map((range) => {
-        // ENG-29: діапазон може починатися не з колонки A (вузьке читання колонок).
-        const m = /^'((?:[^']|'')+)'!([A-Z]+)(\d+):([A-Z]+)(\d+)$/.exec(range);
-        const title = m[1].replace(/''/g, "'");
-        const c0 = colIndex(m[2]) - 1, from = Number(m[3]), to = Number(m[5]), cols = colIndex(m[4]);
+        // ENG-29: діапазон може починатися не з колонки A (вузьке читання колонок) і бути відкритим: «F2:M» (до кінця даних), «1:1» (рядок).
+        const title = /^'((?:[^']|'')+)'!/.exec(range)[1].replace(/''/g, "'");
         const src = book[title] || [];
+        let c0, from, to, cols;
+        const whole = /!(\d+):(\d+)$/.exec(range);
+        if (whole) { c0 = 0; from = Number(whole[1]); to = Number(whole[2]); cols = 702; }
+        else {
+          const m = /!([A-Z]+)(\d+):([A-Z]+)(\d*)$/.exec(range);
+          c0 = colIndex(m[1]) - 1; from = Number(m[2]); cols = colIndex(m[3]); to = m[4] ? Number(m[4]) : src.length;
+        }
         let rows = [];
         for (let i = from - 1; i < to; i++) {
           const r = (src[i] || []).slice(c0, cols);

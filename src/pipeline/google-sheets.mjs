@@ -181,23 +181,22 @@ export class GoogleSheetsCatalogSource {
   async loadColumns(title, columns) {
     const s = (await this.metadata()).find((x) => x.title === title);
     if (!s) return null;
-    const head = { [title]: [] };
-    await this.#fetch([this.#range(s, 1, 1)], head);
-    const header = (head[title][0] || []).map((v) => (v == null ? "" : String(v)));
+    // Відкриті діапазони (рядок 1 цілком; колонки «F2:M» без номера останнього рядка): API повертає все з даними — розміри сітки з
+    // метаданих (могли застаріти після дописування рядків / колонок) не обрізають читання. Метадані — лише чи є аркуш.
+    const q = `'${title.replace(/'/g, "''")}'!`;
+    const opts = [["valueRenderOption", "UNFORMATTED_VALUE"], ["dateTimeRenderOption", "FORMATTED_STRING"], ["majorDimension", "ROWS"]];
+    const head = await this.#get("/values:batchGet", [["ranges", q + "1:1"], ...opts]);
+    const header = (head.valueRanges?.[0]?.values?.[0] || []).map((v) => (v == null ? "" : String(v)));
     const idx = [...new Set(columns.map((c) => header.indexOf(c)).filter((i) => i >= 0))].sort((a, b) => a - b);
-    const rows = Math.max(1, s.rows);
     const out = [header];
-    if (idx.length && rows > 1) {
+    if (idx.length) {
       // Суміжні колонки — одним діапазоном.
       const runs = [];
       for (const i of idx) { const last = runs.at(-1); if (last && last.to === i - 1) last.to = i; else runs.push({ from: i, to: i }); }
-      const params = runs.map((r) => ["ranges", `${a1Range(title, 2, rows, r.to + 1).replace(/!A2:/, "!" + columnLetter(r.from + 1) + "2:")}`]);
-      params.push(["valueRenderOption", "UNFORMATTED_VALUE"], ["dateTimeRenderOption", "FORMATTED_STRING"], ["majorDimension", "ROWS"]);
-      const res = await this.#get("/values:batchGet", params);
+      const res = await this.#get("/values:batchGet", [...runs.map((r) => ["ranges", `${q}${columnLetter(r.from + 1)}2:${columnLetter(r.to + 1)}`]), ...opts]);
       const vr = res.valueRanges || [];
       if (vr.length !== runs.length) throw new Error("Sheets API: кількість діапазонів у відповіді не збігається із запитом");
       const n = Math.max(0, ...vr.map((v) => (v.values || []).length));
-      if (n > rows - 1) throw new Error("Sheets API: діапазон повернув більше рядків, ніж запитано");
       for (let k = 0; k < n; k++) out.push(Array.from({ length: header.length }, () => ""));
       runs.forEach((r, j) => (vr[j].values || []).forEach((row, k) => { for (let c = r.from; c <= r.to; c++) out[k + 1][c] = row[c - r.from] ?? ""; }));
       this.metrics.ranges += runs.length;

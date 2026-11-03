@@ -4,6 +4,8 @@
   "name": "mm-ops",
   "main": "src/index.mjs",
   "compatibility_date": "2026-10-01",
+  // node:crypto (відбитки W2 / CC) і Buffer у спільному коді — для «Ціни й наявність» на сервері (prices-job.mjs).
+  "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
   "triggers": { "crons": [] },
   "durable_objects": {
@@ -14,7 +16,10 @@
   "vars": {
     "GITHUB_REPO": "TSOstap/maisternia-prom-infra",
     "GITHUB_WORKFLOW": "ops.yml",
-    "GITHUB_REF": "main"
+    "GITHUB_REF": "main",
+    // «Оновити ціни й наявність» — на цьому сервері (без хвилин GitHub); "github" — як раніше через ops.yml.
+    "PRICES_RUNNER": "do"
   }
-  // Секрети (wrangler secret put, не в репозиторій): BUTTON_KEY, RUNNER_KEY, ADMIN_KEY, GITHUB_TOKEN, SUPPLIER_FEED_URL.
+  // Секрети (wrangler secret put, не в репозиторій): BUTTON_KEY, RUNNER_KEY, ADMIN_KEY, GITHUB_TOKEN, SUPPLIER_FEED_URL, GOOGLE_SA_KEY
+  // (JSON ключа сервісного акаунта mm-sheets-copy — «Ціни й наявність» на сервері). PRICES_RUNNER="do" — кнопка «Ціни» виконується тут.
 }

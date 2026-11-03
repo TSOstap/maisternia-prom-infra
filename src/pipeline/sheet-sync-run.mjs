@@ -18,23 +18,9 @@ import { enabled as ownerPriorityEnabled, cardVerdict } from "../core/owner-prio
 import { planPresence, planScopeMarks, presenceInputRows, PRESENCE_COLUMN, PRESENCE_META_COLUMN } from "../core/supplier-presence.mjs";
 import { estimateRequests, DEFAULT_MAX_CHUNK_CHARS } from "./sheets-writer.mjs";
 import { RUN_PLAN_KEY, TRANSFER_PLAN_KEY, PLAN, EVENT_ID_COLUMN, JOURNAL_SHEET, RECOVERY_DONE, openPlansGate, loadPlan, savePlan, isOpen, withEventIds, evidenceCell, appendEvents, journalIds } from "./run-plan.mjs";
+import { sheetDiscount, journalRow, syncControlsState, ccUnchanged } from "./sync-helpers.mjs";
+export { sheetDiscount, journalRow, syncControlsState, ccUnchanged };
 
-/** CC R6: стан Catalog Controls для синхронізації / intake. controls — адаптер { state(), verify(fp) } (controls-adapter.mjs) або
- *  готовий стан. Будь-яка помилка читання → blocked (fail-closed). Без режиму пріоритету власника — не потрібен (null). */
-export async function syncControlsState(controls, config) {
-  if (!ownerPriorityEnabled(config)) return null;
-  if (!controls) return null;
-  try {
-    const s = typeof controls.state === "function" ? await controls.state() : controls;
-    return s && typeof s === "object" ? s : { blocked: true, reasons: ["стан Catalog Controls порожній"] };
-  } catch (e) { return { blocked: true, reasons: ["стан Catalog Controls не прочитано: " + (e?.message || e)] }; }
-}
-/** Перед записом: стан CC той самий, що під час планування (новий tombstone між плануванням і записом → нічого не пишемо). */
-export async function ccUnchanged(controls, st) {
-  if (!st || typeof controls?.verify !== "function") return { ok: true };
-  try { const v = await controls.verify(st.fingerprint); return v?.ok ? { ok: true } : { ok: false, reason: (v?.reasons || []).join("; ") || "відбиток змінився" }; }
-  catch (e) { return { ok: false, reason: "перевірку не виконано: " + (e?.message || e) }; }
-}
 
 /** Схеми категорій Prom із репозиторію (schemas/prom); помилки схем — лише попередження (така схема не використовується). */
 export function catalogFor(catalog, warnings) {
@@ -57,18 +43,8 @@ export const groupsOf = (book) => objectsFromValues(book[SHEET.groups], GROUP_HE
 const JOURNAL_CHUNK = 2000;
 const DISCOUNT = "Знижка";
 
-/** Знижка в таблиці — як у mtUpdate: ЧИСЛО (0.2) з форматом «0%» (Google показує «20%»).
- *  План (порт mtPlan) повертає «20%» — це рядок, який Apps Script при setValues сам перетворює на число 0.2;
- *  запис RAW цього не робить, тож перетворюємо тут. Формули цін і план не змінюються. */
-export function sheetDiscount(v) {
-  if (typeof v !== "string") return v;
-  const m = /^\s*(\d+(?:[.,]\d+)?)\s*%\s*$/.exec(v);
-  return m ? Math.round(Number(m[1].replace(",", ".")) * 10000) / 1000000 : v;
-}
 /** Рядок значень під заголовок: колонка «Знижка» — числом. */
 const forSheet = (header, values) => values.map((v, j) => (header[j] === DISCOUNT ? sheetDiscount(v) : v));
-/** Запис «Журналу»: для поля «Знижка» «було/стало» — числа, як у mtUpdate. */
-export const journalRow = (e) => (e[3] === DISCOUNT ? [e[0], e[1], e[2], e[3], sheetDiscount(e[4]), sheetDiscount(e[5]), e[6]] : e);
 
 /** Запис у «Журнал» у форматі mtUpdate: значення як є («+», «-» — текст). Формули не виконуються, бо запис іде лише в режимі
  *  RAW (GoogleSheetsWriter.VALUE_INPUT_OPTION): Google зберігає рядок буквально — і «=…» від постачальника лишається текстом.

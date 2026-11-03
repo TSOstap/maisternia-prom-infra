@@ -16,7 +16,7 @@ import { mtText } from "../core/text.mjs";
 import { planPrices, MAIN_TITLE } from "../core/prices-only.mjs";
 import { OP, ITEM } from "./safe-write/keyed-update.mjs";
 import { RUN_PLAN_KEY, PLAN, RECOVERY_DONE, EVENT_ID_COLUMN, openPlansGate, loadPlan, savePlan, withEventIds, evidenceCell, appendEvents, JOURNAL_SHEET } from "./run-plan.mjs";
-import { sheetDiscount, journalRow, syncControlsState, ccUnchanged } from "./sheet-sync-run.mjs";
+import { sheetDiscount, journalRow, syncControlsState, ccUnchanged } from "./sync-helpers.mjs";
 
 const DISCOUNT = "Знижка";
 /** Колонки «Основного каталогу», потрібні плану й запису за ключем (зіставлення з offer — як mtMatch, 8 колонок LIVE, присутність). */

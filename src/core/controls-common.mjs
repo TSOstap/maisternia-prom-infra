@@ -40,7 +40,8 @@ export const PROM_SEO_IMPORT = Object.freeze({
 export const PROM_TITLE_ADVICE = 70;
 
 // ---------- контракт активації ----------
-export const CONTRACT_FILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../schemas/catalog-controls-contract.json");
+// ENG-29: у Cloudflare Workers import.meta.url немає — там контракт передається об'єктом (validateContract), шлях — лише в Node.
+export const CONTRACT_FILE = import.meta.url ? path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../schemas/catalog-controls-contract.json") : "";
 /** Погоджені власником максимуми (28.10.2026): конфігурація може лише зменшити їх. */
 export const APPROVED_LIMITS = Object.freeze({ maxSaleChangesPerRun: 50, maxPermanentPerRun: 10 });
 /** R6 (рішення власника 29.10.2026): видалений товар — без жодного <offer> у новому YML; перенесення в архів одразу після

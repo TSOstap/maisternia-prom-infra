@@ -5,10 +5,15 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { OUTCOME, WriteOutcomeError } from "../write-outcome.mjs";
 
-export const OWNERSHIP_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../../schemas/sheets/ownership-contract.json");
+// ENG-29: у Cloudflare Workers import.meta.url немає — там контракт передається об'єктом (ownershipFrom), шлях до файлу — лише в Node.
+export const OWNERSHIP_FILE = import.meta.url ? path.join(path.dirname(fileURLToPath(import.meta.url)), "../../../schemas/sheets/ownership-contract.json") : "";
 
 export function loadOwnership(file = OWNERSHIP_FILE) {
-  const c = JSON.parse(fs.readFileSync(file, "utf8"));
+  return ownershipFrom(JSON.parse(fs.readFileSync(file, "utf8")));
+}
+
+/** Контракт з уже розібраного JSON (той самий формат файлу). */
+export function ownershipFrom(c) {
   if (c.v !== 1 || !c.sheets) throw new Error("контракт власності колонок: невідомий формат");
   const sheets = new Map();
   for (const [title, s] of Object.entries(c.sheets)) {
