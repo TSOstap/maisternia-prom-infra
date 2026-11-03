@@ -15,3 +15,6 @@ node_modules/
 
 # Облікові дані google-github-actions/auth (не створюються: create_credentials_file=false; про всяк випадок)
 gha-creds-*.json
+
+# Реальні тексти описів — не в Git (правило 29.10); копія: Матеріали\Описи\Еталон T-1.0
+content/templates/T-1.0/example-*
