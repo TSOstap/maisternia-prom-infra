@@ -126,9 +126,13 @@ test("ENG-28a охорона: політика є для кожного режи
   // Токен запису в CLI — лише через writerAccessToken (mm-sheets-copy, generateAccessToken), не зі змінної оточення.
   assert.match(src, /WRITE_MODES\.includes\(mode\) \? await writerAccessToken\(\{ obtain: obtainToken, scopeOf: assertTokenScope, account: COPY_SA \}\)/);
   // Разові кроки структури й виправлення — лише з --maintenance і під орендою W2.
-  assert.match(src, /const MAINTENANCE_MODES = \[[^\]]*"structure", "correction"\]/);
+  assert.match(src, /const MAINTENANCE_MODES = \[[^\]]*"structure", "correction"[^\]]*\]/);
   assert.match(src, /underMaintenanceLease\(\(\) => migrateQueueForTransfer\(/);
   assert.match(src, /underMaintenanceLease\(\(\) => applyOwnerCorrection\(/);
+  // Рішення власника 03.11: точкові правки власника — теж лише з --maintenance і під орендою W2; лише перелічені колонки.
+  assert.match(src, /const MAINTENANCE_MODES = \[[^\]]*"owner-edits"[^\]]*\]/);
+  assert.match(src, /underMaintenanceLease\(\(\) => applyOwnerEdits\(/);
+  assert.deepEqual(WT.MODE_POLICIES["owner-edits"][SHEET.main].columns, ["Назва UA", "Назва RU", "Опис UA", "Опис RU", "Характеристики JSON", "Фото JSON", "Виробник", "Попередження постачальника"]);
   // Кожен режим запису — записувач, обгорнутий охоронцем (до будь-якого кроку запису).
   assert.match(src, /if \(WRITE_MODES\.includes\(mode\)\) \{\s*try \{\s*const policy = MODE_POLICIES\[mode\];[\s\S]{0,400}sheets = guardedSheets\(sheets, \{ spreadsheetId:/);
 });
