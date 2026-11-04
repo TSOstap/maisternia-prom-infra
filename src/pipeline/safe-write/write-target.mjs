@@ -157,6 +157,8 @@ export const MODE_POLICIES = Object.freeze({
   "sheet-style": { "Попередження постачальника": { ops: ["formatColumns"] }, "Попередження — архів": { ops: ["formatColumns"] }, "Журнал": { ops: ["appendRows"] } },
   // 04.11 (виправлення): очищення зсунутих копій в архіві попереджень (лише значення, без видалення рядків).
   "warnings-archive-fix": { "Попередження — архів": { ops: ["updateRanges"], columns: "*" }, "Журнал": { ops: ["appendRows"] } },
+  // Рішення власника 04.11: нова підгрупа — лише дописування рядка в «Групи».
+  "group-add": { "Групи": { ops: ["appendRows"] }, "Журнал": { ops: ["appendRows"] } },
   "warnings-archive": { ...WARN_ARCHIVE, "Журнал": { ops: ["appendRows"] } },
   "row-highlight": { "Основний каталог": { ops: ["addRowHighlight"] }, "Журнал": { ops: ["appendRows"] } },
   "prosale-tariffs": { "Тарифи ProSale": { ops: ["updateRanges"], columns: "*" }, "Журнал": { ops: ["appendRows"] } },
