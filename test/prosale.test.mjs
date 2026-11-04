@@ -109,3 +109,32 @@ test("тарифи категорій (аркуш «Тарифи ProSale»): к�
   assert.equal(rows[1][2], "ставка невідома"); assert.equal(rows[1][8], "—");
   assert.equal(rows[0].length, PROSALE_SHEET_HEADER.length);
 });
+
+test("04.11: «Тарифи ProSale» — лише «за замовлення», «Турбо» обраним категоріям; запис на місці, хвіст очищено; повтор — NOTHING; невідома категорія — BLOCKED", async () => {
+  const { prosaleTariffPlan, applyProsaleTariffs } = await import("../src/pipeline/prosale-columns.mjs");
+  const H = ["Категорія Prom ID", "Категорія Prom", "Комісія", "Ставка Економ", "Товарів", "Тариф", "Націнка Звичайний %", "Націнка Більше продажів %", "Націнка Турбо %"];
+  let sheet = [H,
+    ["410402", "Електрогенератори", "за замовлення", "5.52%", 144, "", "6.21%", "9.61%", "13.23%"],
+    ["4305", "Фуганки", "за перехід 1.27 грн", "", 17, "", "—", "—", "—"],
+    ["14400105", "Зварювальні напівавтомати", "за замовлення", "4.72%", 71, "", "5.21%", "8.03%", "11%"],
+    ["240432", "", "ставка невідома", "", 12, "", "—", "—", "—"],
+    ["141717", "Шліфувальні машини", "за замовлення", "5.56%", 390, "Більше продажів", "6.26%", "9.69%", "13.35%"]];
+  const set = { "410402": "Турбо", "14400105": "Турбо" };
+  const p = prosaleTariffPlan(sheet, { set });
+  assert.deepEqual(p.removed, ["4305", "240432"]);
+  assert.deepEqual(p.values.map((r) => [r[0], r[5]]), [["410402", "Турбо"], ["14400105", "Турбо"], ["141717", "Більше продажів"]], "тариф власника інших категорій збережено");
+  assert.throws(() => prosaleTariffPlan(sheet, { set: { "410402": "Супер" } }), /невідомий тариф/);
+  const writes = [], journal = [];
+  const sheets = {
+    async updateRanges(list) { for (const u of list) { writes.push(u); u.values.forEach((row, i) => { sheet[u.row - 1 + i] = row.slice(); }); } },
+    async appendRows(title, rows) { journal.push(...rows); },
+  };
+  const readBook = async () => ({ "Тарифи ProSale": sheet.map((r) => r.slice()) });
+  const r = await applyProsaleTariffs({ sheets, readBook, stamp: "2026-11-04", set });
+  assert.equal(r.state, "PROSALE_TARIFFS_SET"); assert.equal(r.kept, 3); assert.equal(r.removed, 2);
+  assert.equal(writes.length, 1); assert.equal(writes[0].row, 2);
+  assert.deepEqual(sheet[4], Array(9).fill("")); assert.deepEqual(sheet[5], Array(9).fill(""), "звільнений хвіст очищено");
+  assert.equal(journal.length, 1);
+  assert.equal((await applyProsaleTariffs({ sheets, readBook, stamp: "x", set })).state, "NOTHING");
+  assert.equal((await applyProsaleTariffs({ sheets, readBook, stamp: "x", set: { "4305": "Турбо" } })).state, "BLOCKED", "категорія «за перехід» — не ставиться");
+});

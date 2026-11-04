@@ -23,6 +23,49 @@ export function prosaleSheetRows(mainValues, rates = RATES) {
   });
 }
 
+/** Рішення власника 04.11 (пізніше): на аркуші лишаються лише категорії «за замовлення» (оплату за перехід власник не вмикає);
+ *  set — { "Категорія Prom ID": "Турбо" | "" } для колонки «Тариф». Решта значень рядків — як були.
+ *  → { values (новий вміст без заголовка), removed (ID), changed ([{id, from, to}]), missing (ID із set, яких немає серед «за замовлення») }. */
+export function prosaleTariffPlan(sheetValues, { set = {}, orderOnly = true } = {}) {
+  const h = sheetValues[0].map((x) => mtText(x).trim());
+  const ci = h.indexOf("Категорія Prom ID"), ki = h.indexOf("Комісія"), ti = h.indexOf("Тариф");
+  if (ci < 0 || ki < 0 || ti < 0) throw new Error("аркуш «" + PROSALE_SHEET + "»: немає колонок «Категорія Prom ID» / «Комісія» / «Тариф»");
+  for (const t of Object.values(set)) if (t !== "" && !(TARIFFS[String(t).toLowerCase()] > 0)) throw new Error("невідомий тариф: " + t);
+  const values = [], removed = [], changed = [], seen = new Set();
+  for (const r of sheetValues.slice(1)) {
+    const id = mtText(r[ci]).trim();
+    if (!id && r.every((x) => mtText(x).trim() === "")) continue;
+    if (orderOnly && mtText(r[ki]).trim() !== "за замовлення") { removed.push(id); continue; }
+    const row = h.map((_, i) => r[i] ?? "");
+    if (Object.prototype.hasOwnProperty.call(set, id)) {
+      seen.add(id);
+      const from = mtText(row[ti]).trim(), to = set[id];
+      if (from !== to) { row[ti] = to; changed.push({ id, from, to }); }
+    }
+    values.push(row);
+  }
+  return { values, removed, changed, missing: Object.keys(set).filter((id) => !seen.has(id)) };
+}
+
+export async function applyProsaleTariffs({ sheets, readBook, stamp, set = {}, orderOnly = true }) {
+  const book = await readBook([PROSALE_SHEET]);
+  const before = book[PROSALE_SHEET];
+  if (!before?.length) return { state: "BLOCKED", reason: "немає аркуша «" + PROSALE_SHEET + "»" };
+  const plan = prosaleTariffPlan(before, { set, orderOnly });
+  if (plan.missing.length) return { state: "BLOCKED", reason: "категорій немає серед «за замовлення»: " + plan.missing.join(", ") };
+  if (!plan.removed.length && !plan.changed.length) return { state: "NOTHING", reason: "аркуш уже такий" };
+  const width = before[0].length, oldRows = before.length - 1;
+  // Рядки — на тих самих місцях зверху; хвіст, що звільнився, очищається (рядки аркуша не видаляються).
+  const body = plan.values.concat(Array.from({ length: Math.max(0, oldRows - plan.values.length) }, () => Array(width).fill("")));
+  await sheets.updateRanges([{ title: PROSALE_SHEET, row: 2, col: 1, values: body }]);
+  const after = (await readBook([PROSALE_SHEET]))[PROSALE_SHEET];
+  const again = prosaleTariffPlan(after, { set, orderOnly });
+  const ok = !again.removed.length && !again.changed.length && !again.missing.length && again.values.length === plan.values.length;
+  const note = [plan.removed.length ? `прибрано ${plan.removed.length} категорій не «за замовлення»` : "", ...plan.changed.map((c) => `${c.id}: тариф «${c.from || "Економ"}» → «${c.to || "Економ"}»`)].filter(Boolean).join("; ");
+  await sheets.appendRows("Журнал", [[stamp, "СИСТЕМА", "", "СТРУКТУРА", "", note.slice(0, 1000), "рішення власника 04.11: ProSale — лише «за замовлення»; Турбо для обраних категорій"]]);
+  return { state: ok ? "PROSALE_TARIFFS_SET" : "INCOMPLETE", kept: plan.values.length, removed: plan.removed.length, changed: plan.changed };
+}
+
 export async function addProsaleColumns({ sheets, readBook, stamp }) {
   const book = await readBook([MAIN, PROSALE_SHEET]);
   const header = (book[MAIN]?.[0] || []).map((x) => mtText(x));
