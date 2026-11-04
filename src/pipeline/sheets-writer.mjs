@@ -294,6 +294,26 @@ export class GoogleSheetsWriter {
     return { outcome: OUTCOME.APPLIED, calls: 1, replaced: old.length };
   }
 
+  /** Рішення власника 04.11: лише ОФОРМЛЕННЯ аркуша (дані не змінюються) — закріплений заголовок, ширини / приховані колонки,
+   *  перенесення тексту, вигляд заголовка, спадний список колонки й висота рядків під вміст. Колонки — індекси з 0. */
+  async formatColumns(title, spec) {
+    const s = await this.#sheet(title), id = s.sheetId;
+    const col = (c) => ({ sheetId: id, startColumnIndex: c, endColumnIndex: c + 1 });
+    const req = [];
+    if (spec.frozenRows != null) req.push({ updateSheetProperties: { properties: { sheetId: id, gridProperties: { frozenRowCount: spec.frozenRows } }, fields: "gridProperties.frozenRowCount" } });
+    for (const [c, px] of Object.entries(spec.widths || {})) req.push({ updateDimensionProperties: { range: { sheetId: id, dimension: "COLUMNS", startIndex: +c, endIndex: +c + 1 }, properties: { pixelSize: px }, fields: "pixelSize" } });
+    for (const c of spec.hidden || []) req.push({ updateDimensionProperties: { range: { sheetId: id, dimension: "COLUMNS", startIndex: c, endIndex: c + 1 }, properties: { hiddenByUser: true }, fields: "hiddenByUser" } });
+    for (const [c, w] of Object.entries(spec.wrap || {})) req.push({ repeatCell: { range: { ...col(+c), startRowIndex: 1 }, cell: { userEnteredFormat: { wrapStrategy: w, verticalAlignment: "TOP" } }, fields: "userEnteredFormat.wrapStrategy,userEnteredFormat.verticalAlignment" } });
+    for (const [c, bg] of Object.entries(spec.columnBg || {})) req.push({ repeatCell: { range: { ...col(+c), startRowIndex: 1 }, cell: { userEnteredFormat: { backgroundColor: bg } }, fields: "userEnteredFormat.backgroundColor" } });
+    if (spec.header) req.push({ repeatCell: { range: { sheetId: id, startRowIndex: 0, endRowIndex: 1 }, cell: { userEnteredFormat: { textFormat: { bold: true }, backgroundColor: spec.header.bg, wrapStrategy: "WRAP", verticalAlignment: "MIDDLE" } }, fields: "userEnteredFormat.textFormat.bold,userEnteredFormat.backgroundColor,userEnteredFormat.wrapStrategy,userEnteredFormat.verticalAlignment" } });
+    if (spec.list) req.push({ setDataValidation: { range: { ...col(spec.list.col), startRowIndex: 1 }, rule: { condition: { type: "ONE_OF_LIST", values: spec.list.values.map((v) => ({ userEnteredValue: v })) }, strict: true, showCustomUi: true } } });
+    if (spec.autoRows) req.push({ autoResizeDimensions: { dimensions: { sheetId: id, dimension: "ROWS", startIndex: 0, endIndex: Math.max(1, s.rows) } } });
+    if (!req.length) return { outcome: OUTCOME.APPLIED, calls: 0 };
+    this.metrics.writes++;
+    await this.#call("POST", ":batchUpdate", { requests: req }, [], this.policies.write, "formatColumns");
+    return { outcome: OUTCOME.APPLIED, calls: 1, requests: req.length };
+  }
+
   async ensureColumns(title, n) {
     const s = await this.#sheet(title);
     if (s.columns >= n) return;
@@ -421,6 +441,11 @@ export class MemorySheets {
   async ensureColumns() {}
   async setPercentFormat(title, col, fromRow, toRow) {
     await this.#write("setPercentFormat", () => { (this.formats ||= {})[title + "!" + col] = { type: "PERCENT", pattern: "0%", fromRow, toRow }; }, { title, col });
+  }
+  async formatColumns(title, spec) {
+    if (!this.book[title]) throw new WriteOutcomeError("Немає аркуша " + title, { outcome: OUTCOME.NOT_APPLIED, op: "formatColumns", code: "NO_SHEET" });
+    await this.#write("formatColumns", () => { (this.styles ||= {})[title] = structuredClone(spec); }, { title });
+    return { outcome: OUTCOME.APPLIED, calls: 1 };
   }
   async addRowHighlight(title, formula, rgb) {
     const list = ((this.highlights ||= {})[title] ||= []);
