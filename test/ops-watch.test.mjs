@@ -212,3 +212,23 @@ test("неповні новинки (рішення власника 03.11): н�
   assert.equal(r.result, "DISPATCHED", JSON.stringify(r)); assert.equal(r.completed, 1); assert.equal(calls.content, 2);
   assert.equal(calls.github.length, 1); assert.equal(calls.github[0].inputs.op, "find-new");
 });
+
+test("04.11: самовідновлення будильника (cron кожні 30 хв): будильника немає або розклад «Цін» прострочено > 30 хв — ставиться заново; усе гаразд — нічого не змінюється", async () => {
+  const c = { t: Date.parse("2026-11-04T10:00:00Z") }, M = 60_000;
+  const storage = fakeStorage();
+  const core = new OpsCore(storage, ENV, { now: () => c.t, fetchImpl: async () => { throw new Error("мережа не потрібна"); } });
+  // Нічого не ввімкнено — будильник не потрібен.
+  assert.equal((await core.heal()).healed, true); assert.equal(await storage.getAlarm(), null);
+  // Розклад «Цін» увімкнено; Cloudflare «загубив» будильник (після збою DO).
+  await core.fetch(new Request("https://x/admin/prices-schedule", { method: "POST", body: JSON.stringify({ on: true, everyMinutes: 120 }) }));
+  await storage.deleteAlarm();
+  const h = await core.heal();
+  assert.equal(h.healed, true); assert.equal(h.reason, "будильника не було"); assert.ok(await storage.getAlarm());
+  // Будильник є, розклад не прострочено — без змін.
+  const a = await storage.getAlarm();
+  assert.equal((await core.heal()).healed, false); assert.equal(await storage.getAlarm(), a);
+  // Розклад прострочено > 30 хв (будильник «завис» далеко попереду) — будильник на найближчий час.
+  await storage.setAlarm(c.t + 600 * M); c.t += 3 * 60 * M;
+  const h2 = await core.heal();
+  assert.equal(h2.healed, true); assert.equal(h2.reason, "розклад прострочено"); assert.ok(h2.alarmAt <= c.t + 1000);
+});

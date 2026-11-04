@@ -328,6 +328,15 @@ export class OpsCore {
   metaPut(k, v) { this.sql.exec("INSERT INTO meta (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v", k, JSON.stringify(v)); }
   metaDel(k) { this.sql.exec("DELETE FROM meta WHERE k = ?", k); }
   /** Один alarm на об'єкт: найближчий із (черга «Цін» — одразу; автопошук — його nextAt). Нічого — alarm видаляється. */
+  /** Будильника немає (Cloudflare припинив повтори після збою) або розклад «Цін» прострочено > 30 хв — поставити заново. */
+  async heal() {
+    const now = this.now(), a = await this.storage.getAlarm();
+    const ps = this.metaGet(PRICES_SCHEDULE_KEY), w = this.watchGet();
+    const overdue = (ps?.on && now > (Number(ps.nextAt) || 0) + 30 * MIN) || (w.on && now > (Number(w.nextAt) || 0) + 30 * MIN);
+    if (a && !overdue) return { healed: false, alarmAt: a };
+    await this.scheduleAlarm();
+    return { healed: true, alarmAt: await this.storage.getAlarm(), reason: a ? "розклад прострочено" : "будильника не було" };
+  }
   async scheduleAlarm() {
     const now = this.now(), times = [];
     const w = this.watchGet();

@@ -7,7 +7,7 @@
   // node:crypto (відбитки W2 / CC) і Buffer у спільному коді — для «Ціни й наявність» на сервері (prices-job.mjs).
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
-  "triggers": { "crons": [] },
+  "triggers": { "crons": ["*/30 * * * *"] },
   "durable_objects": {
     "bindings": [{ "name": "OPS_DO", "class_name": "OpsDO" }]
   },

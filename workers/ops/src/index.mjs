@@ -14,9 +14,15 @@ export class OpsDO extends DurableObject {
   }
   fetch(req) { return this.core.fetch(req); }
   alarm() { return this.core.alarm(); }
+  /** 04.11: самовідновлення будильника (cron Worker кожні 30 хв) — після збою DO Cloudflare після кількох повторів alarm не ставить. */
+  heal() { return this.core.heal(); }
 }
 
 export default {
+  // 04.11: cron (wrangler.jsonc) — будильник DO має стояти завжди, коли увімкнено автоперевірку або розклад «Цін».
+  async scheduled(_event, env, ctx) {
+    ctx.waitUntil(env.OPS_DO.get(env.OPS_DO.idFromName("main")).heal().catch(() => {}));
+  },
   async fetch(req, env) {
     // YML для Prom: лише GET / HEAD і лише з правильним секретом в адресі; інакше — 404 (без підказки, що адреса існує).
     const feed = /^\/yml\/([A-Za-z0-9_-]{24,})\.xml$/.exec(new URL(req.url).pathname);
