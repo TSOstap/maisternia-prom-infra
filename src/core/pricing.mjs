@@ -2,6 +2,7 @@
  *  Final = round2(ціна постачальника + extra); Base = round2(round(Final × (1 + markup) / rounding) × rounding).
  *  Знижка «20%» і наявність «+» — лише для available=true. */
 import { mtText } from "./text.mjs";
+import { prosaleFinal } from "./prosale.mjs";
 
 export const DEFAULT_PRICING = Object.freeze({ extra: 5, markup: 0.25, discount: 20, rounding: 0.01 });
 
@@ -9,9 +10,11 @@ export function mtMoney(v) {
   return Math.round(v * 100) / 100;
 }
 
-export function mtPrices(price, available, pricing = DEFAULT_PRICING) {
+/** prosale — { k, rate } тарифу ProSale рядка (src/core/prosale.mjs prosaleFor) або null: тоді формула точно як раніше. */
+export function mtPrices(price, available, pricing = DEFAULT_PRICING, prosale = null) {
   if (!Number.isFinite(price) || price <= 0 || typeof available !== "boolean") throw new Error("Невалідні ціна або наявність");
-  const final = mtMoney(price + pricing.extra);
+  const final0 = mtMoney(price + pricing.extra);
+  const final = prosale ? prosaleFinal(final0, prosale) : final0;
   return {
     final,
     base: mtMoney(Math.round((final * (1 + pricing.markup)) / pricing.rounding) * pricing.rounding),

@@ -17,10 +17,11 @@ import { planPrices, MAIN_TITLE } from "../core/prices-only.mjs";
 import { OP, ITEM } from "./safe-write/keyed-update.mjs";
 import { RUN_PLAN_KEY, PLAN, RECOVERY_DONE, EVENT_ID_COLUMN, openPlansGate, loadPlan, savePlan, withEventIds, evidenceCell, appendEvents, JOURNAL_SHEET } from "./run-plan.mjs";
 import { sheetDiscount, journalRow, syncControlsState, ccUnchanged } from "./sync-helpers.mjs";
+import { PROSALE_SHEET, withProsale } from "../core/prosale.mjs";
 
 const DISCOUNT = "Знижка";
 /** Колонки «Основного каталогу», потрібні плану й запису за ключем (зіставлення з offer — як mtMatch, 8 колонок LIVE, присутність). */
-export const PRICE_READ_COLUMNS = Object.freeze(["Offer ID", "ID постачальника", "Артикул постачальника", "Назва постачальника UA", "Назва постачальника RU", "URL постачальника", ...LIVE_COLUMNS, PRESENCE_COLUMN]);
+export const PRICE_READ_COLUMNS = Object.freeze(["Offer ID", "Категорія Prom ID", "Тариф ProSale", "ID постачальника", "Артикул постачальника", "Назва постачальника UA", "Назва постачальника RU", "URL постачальника", ...LIVE_COLUMNS, PRESENCE_COLUMN]);
 const cellFor = (k, v) => (k === DISCOUNT ? sheetDiscount(v) : v);
 
 /**
@@ -52,7 +53,9 @@ export async function updatePrices({ readBook, xml, stamp, now, config, controls
   const readMain = readColumns ? async () => ({ [MAIN_TITLE]: await readColumns(MAIN_TITLE, PRICE_READ_COLUMNS) }) : null;
   const readJournal = readColumns ? async () => ({ [JOURNAL_SHEET]: await readColumns(JOURNAL_SHEET, [EVENT_ID_COLUMN]) }) : null;
   const book = readMain ? await readMain() : await readBook([MAIN_TITLE]);
-  const p = planPrices({ values: book[MAIN_TITLE], offers: parsed.offers, stamp, pricing: config.pricing, removed: cc.removed, anomaly: config.policy?.anomaly });
+  // Рішення власника 04.11 (ProSale): тарифи категорій — з аркуша «Тарифи ProSale» (немає аркуша — без націнок; збій читання — виняток, нічого не пишеться).
+  const pricing = withProsale(config.pricing, (await readBook([PROSALE_SHEET]))?.[PROSALE_SHEET]);
+  const p = planPrices({ values: book[MAIN_TITLE], offers: parsed.offers, stamp, pricing, removed: cc.removed, anomaly: config.policy?.anomaly });
   const base = { feed: { offers: parsed.count, date: parsed.date }, stats: p.stats, recovery };
   if (p.abort) return { state: "ABORTED", reason: p.abort.reason, block: p.abort, ...base };
   if (!p.changed.length) return { state: "NO_CHANGES", reason: "ціни й наявність без змін — нічого не записано", ...base };

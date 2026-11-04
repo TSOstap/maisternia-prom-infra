@@ -2,6 +2,7 @@
  *  Точні порти mtMatch / mtPlan / mtHeaders з Code.LIVE-CURRENT.gs. */
 import { mtKey, mtSku, mtText } from "./text.mjs";
 import { DEFAULT_PRICING, mtPrices, mtSameDiscount } from "./pricing.mjs";
+import { prosaleFor } from "./prosale.mjs";
 
 /** Операційні колонки F:M — єдине, що оновлення має право змінювати. Порядок фіксований. */
 export const LIVE_COLUMNS = Object.freeze([
@@ -61,7 +62,7 @@ export function planRows(rows, offers, stamp, pricing = DEFAULT_PRICING) {
     const match = matchOffer(row, offer);
     let next = before.slice();
     if (match === MATCH.OK) {
-      const p = mtPrices(offer.price, offer.available, pricing);
+      const p = mtPrices(offer.price, offer.available, pricing, prosaleFor(row, pricing));
       next = [offer.price, p.base, p.final, p.discount, p.availability, offer.quantity === "" ? before[5] : Number(offer.quantity), match, stamp];
       // Та сама знижка в іншому поданні (0.2 у %-клітинці = «20%») — не зміна.
       if (mtSameDiscount(before[3], next[3])) next[3] = before[3];

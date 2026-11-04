@@ -23,6 +23,7 @@ import { operationalUrl, parseSupplierText, validateFeed } from "../../../src/co
 import { CONFIRMED_SNAPSHOT_KEY } from "../../../src/core/supplier-presence.mjs";
 import { planPrices } from "../../../src/core/prices-only.mjs";
 import { updatePrices, PRICE_READ_COLUMNS } from "../../../src/pipeline/prices-run.mjs";
+import { PROSALE_SHEET, withProsale } from "../../../src/core/prosale.mjs";
 import { openPlansGate, JOURNAL_SHEET } from "../../../src/pipeline/run-plan.mjs";
 import { syncControls } from "../../../src/core/sheet-sync.mjs";
 import { mtText } from "../../../src/core/text.mjs";
@@ -127,7 +128,8 @@ export async function runPricesJob({ env, store, ccContractText, sha256Hex, ccSh
     try { validateFeed(parsed, confirmed?.count ?? null, now, config.supplier); } catch (e) { return { result: { state: "ABORTED", reason: "фід не пройшов перевірку: " + mtText(e?.message || e) }, metrics: metrics() }; }
     const cc = syncControls(ccState);
     const values = await readColumns(MAIN, PRICE_READ_COLUMNS);
-    const p = planPrices({ values, offers: parsed.offers, stamp, pricing: config.pricing, removed: cc?.removed || new Set(), anomaly: config.policy?.anomaly });
+    const pricing = withProsale(config.pricing, (await readBook([PROSALE_SHEET]))?.[PROSALE_SHEET]);
+    const p = planPrices({ values, offers: parsed.offers, stamp, pricing, removed: cc?.removed || new Set(), anomaly: config.policy?.anomaly });
     return { result: { state: p.abort ? "ABORTED" : "PLANNED", reason: p.abort?.reason || "", stats: p.stats, feed: { offers: parsed.count }, cc: { blocked: cc?.blocked ?? null, removed: cc?.removed?.size ?? null } }, metrics: metrics() };
   }
 

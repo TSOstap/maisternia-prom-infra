@@ -8,6 +8,7 @@
 import crypto from "node:crypto";
 import { mtText } from "./text.mjs";
 import { DEFAULT_PRICING, mtPrices } from "./pricing.mjs";
+import { prosaleFor } from "./prosale.mjs";
 import { formatYmlDate } from "./time.mjs";
 import { FROZEN_COLUMNS, GROUP_HEADERS, YML_HEADERS, canonicalGroups, contentSha, idsSha, rowSeal, SEAL_COLUMN } from "./seal.mjs";
 import { sha256 } from "./text.mjs";
@@ -142,6 +143,17 @@ function statusAllowed(r, missingPolicy, conflictPolicy) {
 
 /** opts.held (S7): знятий / виключений товар — available="false" незалежно від стану синхронізації, власного залишку й
  *  значень «Наявність» / «Знижка» / «Ціна кінцева» рядка; потрібна лише перевірена «Ціна постачальника». */
+/** Ціни рядка за формулою: з націнкою ProSale тарифу рядка, а в перехідний період (тариф змінено, «Ціни» ще не перерахували)
+ *  — і без неї; повертає той варіант, якому відповідають колонки рядка (інакше — варіант із націнкою, і перевірка дасть помилку). */
+function expectedPrices(r, price, available, pricing) {
+  const ps = prosaleFor(r, pricing);
+  const withTariff = mtPrices(price, available, pricing, ps);
+  if (!ps) return withTariff;
+  const plain = mtPrices(price, available, pricing);
+  const same = (e) => Number(r["Ціна"]) === e.base && Number(r["Ціна кінцева"]) === e.final;
+  return same(withTariff) || !same(plain) ? withTariff : plain;
+}
+
 export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missingPolicy = "block", conflictPolicy = "block", opts = {}) {
   const id = mtText(r["Offer ID"]);
   const held = opts.held === true;
@@ -151,7 +163,7 @@ export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missin
   const available = held ? false : r["Наявність"] === "+";
   const price = Number(r["Ціна постачальника"]);
   if (held && !(price > 0)) throw new Error("Знятий товар без перевіреної ціни; ID " + id);
-  const expected = mtPrices(price, available, pricing);
+  const expected = expectedPrices(r, price, available, pricing);
   const discountOk = mtText(r["Знижка"]) === expected.discount
     || (expected.discount === pricing.discount + "%" && typeof r["Знижка"] === "number" && Math.abs(r["Знижка"] - pricing.discount / 100) < 1e-9);
   if (!held && (mtText(r["Ціна"]).trim() === "" || mtText(r["Ціна кінцева"]).trim() === "" || Number(r["Ціна"]) !== expected.base
@@ -380,7 +392,7 @@ export function patchOfferLive(offer, r, { pricing = DEFAULT_PRICING, inStock = 
   if (!id || id !== mtText(r["Offer ID"])) throw new Error("offer не того товару");
   if (r["Стан синхронізації"] !== "ЗІСТАВЛЕНО" || r["Статус імпорту"] !== "ДОЗВОЛЕНО" || ["+", "-"].indexOf(r["Наявність"]) < 0) throw new Error("Непідтверджений статус; ID " + id);
   const available = r["Наявність"] === "+";
-  const expected = mtPrices(Number(r["Ціна постачальника"]), available, pricing);
+  const expected = expectedPrices(r, Number(r["Ціна постачальника"]), available, pricing);
   const discountOk = mtText(r["Знижка"]) === expected.discount
     || (expected.discount === pricing.discount + "%" && typeof r["Знижка"] === "number" && Math.abs(r["Знижка"] - pricing.discount / 100) < 1e-9);
   if (mtText(r["Ціна"]).trim() === "" || mtText(r["Ціна кінцева"]).trim() === "" || Number(r["Ціна"]) !== expected.base || Number(r["Ціна кінцева"]) !== expected.final || !discountOk || expected.base > 9999999999) {

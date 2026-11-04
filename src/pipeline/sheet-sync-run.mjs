@@ -8,6 +8,7 @@ import { objectsFromValues } from "../core/yml.mjs";
 import { GROUP_HEADERS } from "../core/seal.mjs";
 import { SHEET, QUEUE_HEADERS, PASSPORT_HEADER, BINDINGS_SHEET, BINDINGS_HEADERS, ackFor, finalizeSheetSync, passportValues, planIntake, planSheetSync, readPassport, samePassport } from "../core/sheet-sync.mjs";
 import { loadPromCatalog } from "./prom-schemas.mjs";
+import { PROSALE_SHEET, withProsale } from "../core/prosale.mjs";
 import { keyedUpdate, appendMissingByKey, OP, ITEM } from "./safe-write/keyed-update.mjs";
 import { WARN_SHEET, WARN_HEADER, warningRow, CLASSIFY_SHEET, CLASSIFY_HEADER, classifyRow } from "./supplier-warnings.mjs";
 import { ARCHIVE_SHEET } from "../core/archive.mjs";
@@ -269,7 +270,10 @@ export async function syncSheet(o) {
   }
   return syncSheetRun(o);
 }
-async function syncSheetRun({ sheets, readBook, parsed, fetchFull, stamp, config, now, profile = "medium", catalog = null, session = null, contract = null, controls = null, presence = null, feedScope = null, queueMode = "full", writeBudget = null }) {
+async function syncSheetRun({ sheets, readBook, parsed, fetchFull, stamp, config: config0, now, profile = "medium", catalog = null, session = null, contract = null, controls = null, presence = null, feedScope = null, queueMode = "full", writeBudget = null }) {
+  // Рішення власника 04.11 (ProSale): тарифи категорій з аркуша «Тарифи ProSale» — ті самі ціни, що в «Цінах» і фіді (інакше
+  // «Оновити товари» повертало б ціни без націнки). Немає аркуша — без націнок; збій читання — виняток (нічого не пишеться).
+  const config = { ...config0, pricing: withProsale(config0.pricing, (await readBook([PROSALE_SHEET]))?.[PROSALE_SHEET]) };
   const planStore = session?.gw?.store?.getJsonVersioned ? session.gw.store : null;
   // CC R6: стан CC читається ДО книги — tombstone, зареєстрований після цього читання, ловить перевірка відбитка перед записом.
   const ccState = await syncControlsState(controls, config);

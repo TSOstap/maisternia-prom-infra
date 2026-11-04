@@ -15,6 +15,7 @@ import { groupsForYml, headerXml, YML_FOOTER, renderOffer, patchOfferLive, objec
 import { formatYmlDate } from "../../../src/core/time.mjs";
 import { PRESENCE, PRESENCE_COLUMN } from "../../../src/core/supplier-presence.mjs";
 import { mtText } from "../../../src/core/text.mjs";
+import { PROSALE_SHEET, withProsale } from "../../../src/core/prosale.mjs";
 import { GoogleSheetsCatalogSource } from "../../../src/pipeline/google-sheets.mjs";
 import { TEST_SHEET_ID } from "../../../src/pipeline/safe-write/write-target.mjs";
 import { googleTokenSource } from "./google-auth.mjs";
@@ -22,11 +23,11 @@ import { sheetsReaders, narrowControls, approvedContract } from "./prices-job.mj
 
 const MAIN = "Основний каталог";
 /** Колонки, які читає offerXml (+ присутність у постачальника). */
-export const YML_COLUMNS = Object.freeze(["Offer ID", "Статус імпорту", "Стан синхронізації", "Оновлено", "Валюта", "Наявність", "Ціна постачальника", "Знижка", "Ціна", "Ціна кінцева",
+export const YML_COLUMNS = Object.freeze(["Offer ID", "Тариф ProSale", "Статус імпорту", "Стан синхронізації", "Оновлено", "Валюта", "Наявність", "Ціна постачальника", "Знижка", "Ціна", "Ціна кінцева",
   "Назва UA", "Назва RU", "Опис UA", "Опис RU", "Група ID", "Категорія Prom ID", "Категорія Prom URL", "Фото JSON", "Характеристики JSON", "Код товару Prom", "Виробник", "Країна", "GTIN",
   "Запити RU", "Запити UA", "Модель", "Кількість постачальника", PRESENCE_COLUMN]);
 /** Колонки для оновлення цін у готових offer. */
-export const LIVE_SYNC_COLUMNS = Object.freeze(["Offer ID", "Статус імпорту", "Стан синхронізації", "Наявність", "Ціна постачальника", "Знижка", "Ціна", "Ціна кінцева", "Кількість постачальника", PRESENCE_COLUMN]);
+export const LIVE_SYNC_COLUMNS = Object.freeze(["Offer ID", "Категорія Prom ID", "Тариф ProSale", "Статус імпорту", "Стан синхронізації", "Наявність", "Ціна постачальника", "Знижка", "Ціна", "Ціна кінцева", "Кількість постачальника", PRESENCE_COLUMN]);
 /** Тимчасово не публікуються — як у LIVE (Yml.gs MTY_TEMP_EXCLUDE_IDS); рішення власника 03.11: «поки не змінюй їхній статус публікації». */
 export const HOLD_DEFAULT = Object.freeze(["1561514532", "2560360931", "2689669665", "2894494274", "3166947187"]);
 export const DATE_MARK = "{{YML_DATE}}";
@@ -109,14 +110,15 @@ export async function buildFeed({ feed, reader, cc, now = Date.now(), config = c
   if (!cc || cc.blocked) throw new Error("стан Catalog Controls недостовірний — фід не формується");
   const meta = feed.meta() || {};
   const prevVer = Number(meta.ver) || 0, ver = Math.max(prevVer, Number(meta.lastVer) || 0) + 1;
-  const { groups } = await reader.load(["Групи"]);
+  const { sheets: small, groups } = await reader.load(["Групи", PROSALE_SHEET]);
+  const pricing = withProsale(config.pricing, small[PROSALE_SHEET]);
   const { groupMap, categories } = groupsForYml(objectsFromValues(groups, GROUP_HEADERS));
   const header = (await reader.loadHeaders([MAIN]))[MAIN]?.[0];
   if (!header?.includes("Offer ID")) throw new Error("немає заголовка «Основного каталогу»");
   const total = (await reader.metadata()).find((s) => s.title === MAIN)?.rows || 0;
   const hold = feed.hold();
   const lastGood = { get: (id) => (prevVer ? feed.get(prevVer, id) : null) };
-  const opts = { groupMap, pricing: config.pricing, missingPolicy: config.policy?.missing || "block", conflictPolicy: config.policy?.conflict || "block", removed: cc.removed, inStock: config.yml.readyToShip === true, isolateRows: true, lastGood };
+  const opts = { groupMap, pricing, missingPolicy: config.policy?.missing || "block", conflictPolicy: config.policy?.conflict || "block", removed: cc.removed, inStock: config.yml.readyToShip === true, isolateRows: true, lastGood };
   const stats = { published: 0, removed: 0, excluded: 0, held: 0, gone: 0, hold: 0, issues: [] };
   const seen = new Set();
   let ord = 0;
@@ -176,6 +178,7 @@ export async function syncFeed({ feed, reader, cc, now = Date.now(), config = co
   // Версія до 04.11 (стара таблиця) — оновлення цін через повну збірку в пачки.
   if (feed.legacy(meta.ver)) return { needBuild: true, patched: 0 };
   const hold = feed.hold();
+  const pricing = withProsale(config.pricing, (await reader.load([PROSALE_SHEET])).sheets?.[PROSALE_SHEET]);
   const rows = objects(await reader.loadColumns(MAIN, LIVE_SYNC_COLUMNS));
   const byId = new Map();
   for (const r of rows) {
@@ -193,7 +196,7 @@ export async function syncFeed({ feed, reader, cc, now = Date.now(), config = co
       if (!r) return;
       seen++;
       let next;
-      try { next = patchOfferLive(c.offers[i], r, { pricing: config.pricing, inStock: config.yml.readyToShip === true }); } catch { skipped++; return; }
+      try { next = patchOfferLive(c.offers[i], r, { pricing, inStock: config.yml.readyToShip === true }); } catch { skipped++; return; }
       if (next !== c.offers[i]) { c.offers[i] = next; updates.push(id); touched = true; }
     });
     if (touched) changed.push(c);

@@ -41,6 +41,7 @@ import { qaProducts, QA_IDS_0111 } from "../src/pipeline/qa-products.mjs";
 import { findNewProducts } from "../src/pipeline/find-new.mjs";
 import { updatePrices } from "../src/pipeline/prices-run.mjs";
 import { applyOwnerEdits } from "../src/pipeline/owner-edits.mjs";
+import { addProsaleColumns } from "../src/pipeline/prosale-columns.mjs";
 import { transferApproved } from "../src/pipeline/transfer-approved.mjs";
 import { resolveDeferred, dropDeferredSheet } from "../src/pipeline/deferred-resolve.mjs";
 import { feedScopeOf } from "../src/core/supplier-presence.mjs";
@@ -70,7 +71,7 @@ const mode = arg("mode", "sync");
 //   deferred  — ENG-29: розбір «Відкладених товарів» (рішення власника 03.11): у фіді — в «Основний каталог», немає — у «Видалені товари»;
 //               --plan-only — лише план.
 //   drop-deferred — ENG-29: прибрати порожню вкладку «Відкладені товари» (лише 0 рядків даних; --maintenance, оренда W2).
-const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer", "deferred", "drop-deferred", "prices", "owner-edits"];
+const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer", "deferred", "drop-deferred", "prices", "owner-edits", "prosale-columns"];
 /** ENG-28c (М1): межа HTTP-запитів записувача на запуск. Типово 40 (GoogleSheetsWriter); «Оновити товари» / sync — 120: перший повний
  *  прохід пріоритету власника на 5 121 рядках потребує ≈ 45 запитів (з М2; без М2 — ≈ 69), темп записувача ≤ 50 запитів/хв (квота
  *  Google — 60 запитів запису / хв на користувача проєкту). Перед першим записом — оцінка (budgetCheck): більше за межу → нічого не пишемо. */
@@ -80,7 +81,7 @@ const WRITE_BUDGETS = Object.freeze({ update: 120, sync: 120, scenario: 120, ref
 // ENG-18 (Hermes ENG16-N2): КОЖЕН режим, що пише через API, — лише з допуском W2 (однохостовий координатор). merge / refresh —
 // обслуговування копії: додатково явний --maintenance і оренда W2 на весь час операції (виключення з усіма записувачами).
 // ENG-28a: structure / correction — разові кроки контрольованої міграції: теж лише з --maintenance і орендою W2 (виключення).
-const MAINTENANCE_MODES = ["merge", "refresh", "drop-deferred", "structure", "correction", "owner-edits"];
+const MAINTENANCE_MODES = ["merge", "refresh", "drop-deferred", "structure", "correction", "owner-edits", "prosale-columns"];
 // archive — перенесення за дорученнями CC (moves) і завершення видалень за активними фідами (--feed-store).
 // controls — запуск Catalog Controls (CC R7 G3): тінь типово; --apply — застосування (лише активований CC, готовність, W2).
 // ENG-29: невідомий режим — відмова (раніше потрапляв у гілку sync). Усі режими CLI пишуть, тож перелік — WRITE_MODES.
@@ -242,6 +243,9 @@ try {
     if (!arg("plan")) fail("owner-edits: ", new Error("потрібен --plan=<план правок власника>"));
     const edits = JSON.parse(fs.readFileSync(arg("plan"), "utf8"));
     report.result = await underMaintenanceLease(() => applyOwnerEdits({ sheets, readBook, stamp, edits }));
+  } else if (mode === "prosale-columns") {
+    // Рішення власника 04.11 (ProSale): дві колонки в кінці «Основного каталогу», під орендою обслуговування W2.
+    report.result = await underMaintenanceLease(() => addProsaleColumns({ sheets, readBook, stamp }));
   } else if (mode === "drop-deferred") {
     report.result = await underMaintenanceLease(() => dropDeferredSheet({ sheets, readBook, stamp }));
   } else if (mode === "transfer") {
@@ -473,4 +477,4 @@ if (arg("summary")) {
   if ([...secrets].some((x) => lines.includes(x)) || /\d{10,}/.test(lines)) { process.stderr.write("ЗАХИСТ ВІД ВИТОКУ: summary не записано\n"); process.exit(3); }
   fs.appendFileSync(arg("summary"), lines);
 }
-process.exitCode = process.exitCode === 3 ? 3 : mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "TRANSFERRED", "MIGRATED", "CORRECTED", "NOTHING", "NO_CHANGES", "SYNCED", "REFRESHED", "INTAKE_DONE", "NOTHING_TO_WRITE", "SKIPPED", "SHADOW", "COMMITTED", "ARCHIVED", "RECOVERED", "QA_DONE", "PLANNED", "NOTHING_NEW", "WAITING_STABILITY", "NOTHING_COMPLETE", "RECONCILED", "JOURNAL_RECOVERED", "RUN_PLAN_ABANDONED", "DEFERRED_RESOLVED", "SHEET_REMOVED", "PRICES_UPDATED", "OWNER_EDITS_APPLIED"].includes(report.result?.state) ? 0 : 1;
+process.exitCode = process.exitCode === 3 ? 3 : mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "TRANSFERRED", "MIGRATED", "CORRECTED", "NOTHING", "NO_CHANGES", "SYNCED", "REFRESHED", "INTAKE_DONE", "NOTHING_TO_WRITE", "SKIPPED", "SHADOW", "COMMITTED", "ARCHIVED", "RECOVERED", "QA_DONE", "PLANNED", "NOTHING_NEW", "WAITING_STABILITY", "NOTHING_COMPLETE", "RECONCILED", "JOURNAL_RECOVERED", "RUN_PLAN_ABANDONED", "DEFERRED_RESOLVED", "SHEET_REMOVED", "PRICES_UPDATED", "OWNER_EDITS_APPLIED", "PROSALE_COLUMNS_ADDED"].includes(report.result?.state) ? 0 : 1;
