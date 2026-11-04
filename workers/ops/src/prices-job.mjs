@@ -24,6 +24,8 @@ import { CONFIRMED_SNAPSHOT_KEY } from "../../../src/core/supplier-presence.mjs"
 import { planPrices } from "../../../src/core/prices-only.mjs";
 import { updatePrices, PRICE_READ_COLUMNS } from "../../../src/pipeline/prices-run.mjs";
 import { PROSALE_SHEET, withProsale } from "../../../src/core/prosale.mjs";
+import { archiveWarnings } from "../../../src/pipeline/warnings-archive.mjs";
+import { WARN_SHEET } from "../../../src/pipeline/supplier-warnings.mjs";
 import { openPlansGate, JOURNAL_SHEET } from "../../../src/pipeline/run-plan.mjs";
 import { syncControls } from "../../../src/core/sheet-sync.mjs";
 import { mtText } from "../../../src/core/text.mjs";
@@ -101,7 +103,7 @@ export async function runPricesJob({ env, store, ccContractText, sha256Hex, ccSh
   if (validateContract(contract).length) return { ...fallback("контракт Catalog Controls недійсний"), metrics: metrics() };
 
   const getAccessToken = deps.reader ? null : googleTokenSource(env.GOOGLE_SA_KEY, { fetchImpl: counted });
-  const reader = deps.reader || new GoogleSheetsCatalogSource({ spreadsheetId: TEST_SHEET_ID, getAccessToken, fetchImpl: counted, maxRequests: 45, maxRequestsPerMinute: 40, targetBytes: 4_000_000 });
+  const reader = deps.reader || new GoogleSheetsCatalogSource({ spreadsheetId: TEST_SHEET_ID, getAccessToken, fetchImpl: counted, maxRequests: 70, maxRequestsPerMinute: 40, targetBytes: 4_000_000 });
   const { readBook, readColumns } = sheetsReaders(reader);
   const stamp = new Date(now).toISOString();
 
@@ -134,15 +136,17 @@ export async function runPricesJob({ env, store, ccContractText, sha256Hex, ccSh
   }
 
   // 4. Запис через шлюз W2 (охоронець режиму prices; записувач знає ID живої таблиці й відмовляє в записі туди).
-  const writer = deps.writer || new GoogleSheetsWriter({ spreadsheetId: TEST_SHEET_ID, liveSpreadsheetId: LIVE_SHEET_ID, getAccessToken, fetchImpl: counted, maxRequests: 12 });
-  const headers = await reader.loadHeaders([MAIN, JOURNAL_SHEET]);
-  const sheets = guardedSheets(writer, { spreadsheetId: TEST_SHEET_ID, policy: MODE_POLICIES.prices, headers: Object.fromEntries([MAIN, JOURNAL_SHEET].map((t) => [t, headers[t]?.[0] || []])) });
+  const writer = deps.writer || new GoogleSheetsWriter({ spreadsheetId: TEST_SHEET_ID, liveSpreadsheetId: LIVE_SHEET_ID, getAccessToken, fetchImpl: counted, maxRequests: 24 });
+  const headers = await reader.loadHeaders([MAIN, JOURNAL_SHEET, WARN_SHEET]);
+  const sheets = guardedSheets(writer, { spreadsheetId: TEST_SHEET_ID, policy: MODE_POLICIES.prices, headers: Object.fromEntries([MAIN, JOURNAL_SHEET, WARN_SHEET].map((t) => [t, headers[t]?.[0] || []])) });
   const session = await new WriteGateway({ sheets, read: readBook, store, contract: ownershipFrom(ownershipJson) }).open({ writer: "sync" });
   try {
     if (session.state !== "READY") return { ...fallback("шлюз запису: " + session.state + " — потрібна звірка (GitHub)"), metrics: metrics() };
     // Стан CC для плану — уже прочитаний вище (кілька секунд тому); перед записом — свіжа звірка відбитка (verify).
     const ccOnce = { state: async () => ccState, verify: (fp) => controls.verify(fp) };
     const result = await updatePrices({ readBook, xml, stamp, now, config, controls: ccOnce, session, snapshotStore: store, readColumns });
+    // Рішення власника 04.11: опрацьовані попередження → «Попередження — архів» (збій не змінює результату цін).
+    if (session.state === "READY") result.warningsArchive = await archiveWarnings({ session, readBook, stamp }).catch((e) => ({ state: "ERROR", reason: mtText(e?.message || e).slice(0, 200) }));
     return { result, metrics: metrics() };
   } finally { await session.close?.().catch(() => {}); }
 }

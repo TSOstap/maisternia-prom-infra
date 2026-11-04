@@ -83,7 +83,12 @@ export function guardedSheets(sheets, { spreadsheetId, policy, headers = {} }) {
   const checkBlock = (b) => {
     const p = check("updateRanges", b.title);
     const width = Math.max(0, ...(b.values || []).map((r) => r.length));
-    if (b.row === 1) { if (!p.header) block(`запис заголовка «${b.title}» не дозволено`); hdr[b.title] = (b.values[0] || []).map(mtText); return; }
+    if (b.row === 1) {
+      if (!p.header) block(`запис заголовка «${b.title}» не дозволено`);
+      // Частина заголовка (напр. одна нова колонка в кінці) — на своєму місці; решта прочитаного заголовка лишається.
+      const h = (hdr[b.title] || []).slice(); (b.values[0] || []).forEach((v, j) => { h[b.col - 1 + j] = mtText(v); }); hdr[b.title] = h;
+      return;
+    }
     clearOnlyCheck(p, b.title, hdr[b.title], b.col, b.values, b.row);
     // ENG-29: deny — колонки, які режим не пише ніколи (навіть за columns "*").
     if (p.deny?.length) {
@@ -119,6 +124,12 @@ const BROAD = Object.freeze({ ops: ["updateRanges", "appendRows", "ensureColumns
 /** ENG-28d: «Журнал» з ключем «ID події» — дописування подій і разове додавання колонки ID (лише заголовок; рядки подій не змінюються). */
 const JOURNAL_KEYED = Object.freeze({ ops: ["appendRows", "ensureColumns", "updateRanges"], columns: ["ID події"], header: true });
 const broad = (titles) => Object.fromEntries(titles.map((t) => [t, BROAD]));
+/** Рішення власника 04.11: опрацьовані попередження — в архів (дописування за ключем; з аркуша — deleteByKeys зі знімком; appendRows —
+ *  лише повернення чужого рядка зі знімка), заголовок і значення «Що змінилось». */
+const WARN_ARCHIVE = Object.freeze({
+  "Попередження постачальника": { ops: ["updateRanges", "deleteRows", "appendRows", "ensureColumns"], columns: ["Що змінилось"], header: true, deleteRows: true },
+  "Попередження — архів": { ops: ["ensureSheet", "appendRows"], header: true },
+});
 export const MODE_POLICIES = Object.freeze({
   structure: { "Нові товари": { ops: ["ensureColumns", "updateRanges"], columns: ["Перевірка"], header: true }, "Паспорт каталогу": { ops: ["ensureSheet", "updateRanges"], columns: "*", header: true }, "Журнал": { ops: ["appendRows"] } },
   correction: { "Основний каталог": { ops: ["updateRanges"], columns: ["Опис UA", "Опис RU", "Запити UA", "Запити RU"] }, "Журнал": { ops: ["appendRows"] } },
@@ -129,10 +140,10 @@ export const MODE_POLICIES = Object.freeze({
   // в «Основний каталог» (нові картки — лише «Перенести затверджені»). Логіка власника 02.11 (ENG-28b preserve): «Оновити товари» не
   // перегенеровує й не перезаписує підготовлені характеристики — «Характеристики JSON» і їхнє походження цей режим не пише ніколи
   // (зміни характеристик постачальника — лише попередження на товарі).
-  update: { ...broad(SYNC_TITLES.filter((x) => x !== "Нові товари" && x !== "Заморожені ID")), "Основний каталог": { ...BROAD, ops: BROAD.ops.filter((o) => o !== "appendRows"), deny: ["Характеристики JSON", "Походження характеристик JSON"] } },
+  update: { ...broad(SYNC_TITLES.filter((x) => x !== "Нові товари" && x !== "Заморожені ID")), ...WARN_ARCHIVE, "Попередження постачальника": { ...BROAD, ops: [...BROAD.ops, "deleteRows"], deleteRows: true }, "Основний каталог": { ...BROAD, ops: BROAD.ops.filter((o) => o !== "appendRows"), deny: ["Характеристики JSON", "Походження характеристик JSON"] } },
   // ENG-29 (рішення власника 03.11): «Оновити ціни й наявність» — лише 8 операційних колонок «Основного каталогу» (за ключем) і «Журнал»;
   // жодних назв, фото, характеристик, присутності, черги, нових рядків чи колонок.
-  prices: { "Основний каталог": { ops: ["updateRanges"], columns: ["Ціна постачальника", "Ціна", "Ціна кінцева", "Знижка", "Наявність", "Кількість постачальника", "Стан синхронізації", "Оновлено"] }, "Журнал": JOURNAL_KEYED },
+  prices: { "Основний каталог": { ops: ["updateRanges"], columns: ["Ціна постачальника", "Ціна", "Ціна кінцева", "Знижка", "Наявність", "Кількість постачальника", "Стан синхронізації", "Оновлено"] }, "Журнал": JOURNAL_KEYED, ...WARN_ARCHIVE },
   controls: { "*": BROAD }, recover: { "*": BROAD }, archive: { "*": BROAD }, refresh: { "*": BROAD },
   // Рішення власника 03.11 (перед підключенням Prom): точкові правки власника за планом; 04.11 — також запити й група товару (наведення ладу в групах) — лише перелічені колонки контенту «Основного
   // каталогу» (за ключем), «Дія власника» / «Стан дії» в «Попередженнях постачальника» і «Журнал» (src/pipeline/owner-edits.mjs).
@@ -142,6 +153,7 @@ export const MODE_POLICIES = Object.freeze({
   "prosale-columns": { "Основний каталог": { ops: ["ensureColumns", "updateRanges"], columns: ["Тариф ProSale"], header: true }, "Тарифи ProSale": { ops: ["ensureSheet", "appendRows", "updateRanges"], columns: "*", header: true }, "Журнал": { ops: ["appendRows"] } },
   // Рішення власника 04.11 (пізніше): «Тарифи ProSale» — лише категорії «за замовлення», «Тариф» за планом; основного каталогу — жодної операції.
   // Рішення власника 04.11: жовті рядки «Основного каталогу» з відкритим попередженням постачальника — лише правило умовного форматування.
+  "warnings-archive": { ...WARN_ARCHIVE, "Журнал": { ops: ["appendRows"] } },
   "row-highlight": { "Основний каталог": { ops: ["addRowHighlight"] }, "Журнал": { ops: ["appendRows"] } },
   "prosale-tariffs": { "Тарифи ProSale": { ops: ["updateRanges"], columns: "*" }, "Журнал": { ops: ["appendRows"] } },
   // ENG-28c: QA погоджених товарів — лише системні / сирі колонки постачальника й печатка «Основного каталогу» (за ключем), паспорт,

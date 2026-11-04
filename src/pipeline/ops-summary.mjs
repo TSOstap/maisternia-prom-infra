@@ -41,6 +41,12 @@ export function ownerSummary(op, report) {
     if (n(sk.removed) || n(sk.gone)) lines.push(`Пропущено видалені: ${n(sk.removed) + n(sk.gone)}`);
     if (r.feed?.offers) lines.push(`Товарів у фіді: ${n(r.feed.offers)}`);
   }
+  // Рішення власника 04.11: опрацьовані попередження постачальника переносяться в архів під час «Цін» і «Оновити товари».
+  const wa = r.warningsArchive;
+  if ((op === "prices" || op === "update") && wa) {
+    if (n(wa.archived)) lines.push(`Опрацьовані попередження перенесено в «Попередження — архів»: ${n(wa.archived)}; відкритих лишилось: ${n(wa.open)}`);
+    else if (wa.state === "ERROR" || wa.state === "INCOMPLETE" || wa.state === "BLOCKED") lines.push("Архів попереджень: не виконано (" + clip(wa.reason, 200) + ") — повтор наступного запуску");
+  }
   if (op === "find-new" && rep) {
     lines.push(`Нових ID у фіді: ${n(rep.found?.total)} (повних ${n(rep.found?.complete)}, без повних даних ${n(rep.found?.incomplete)})`);
     if (rep.intake) {

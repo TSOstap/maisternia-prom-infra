@@ -43,6 +43,7 @@ import { updatePrices } from "../src/pipeline/prices-run.mjs";
 import { applyOwnerEdits } from "../src/pipeline/owner-edits.mjs";
 import { addProsaleColumns, applyProsaleTariffs } from "../src/pipeline/prosale-columns.mjs";
 import { addWarningHighlight } from "../src/pipeline/row-highlight.mjs";
+import { archiveWarnings } from "../src/pipeline/warnings-archive.mjs";
 import { transferApproved } from "../src/pipeline/transfer-approved.mjs";
 import { resolveDeferred, dropDeferredSheet } from "../src/pipeline/deferred-resolve.mjs";
 import { feedScopeOf } from "../src/core/supplier-presence.mjs";
@@ -72,7 +73,7 @@ const mode = arg("mode", "sync");
 //   deferred  — ENG-29: розбір «Відкладених товарів» (рішення власника 03.11): у фіді — в «Основний каталог», немає — у «Видалені товари»;
 //               --plan-only — лише план.
 //   drop-deferred — ENG-29: прибрати порожню вкладку «Відкладені товари» (лише 0 рядків даних; --maintenance, оренда W2).
-const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer", "deferred", "drop-deferred", "prices", "owner-edits", "prosale-columns", "prosale-tariffs", "row-highlight"];
+const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer", "deferred", "drop-deferred", "prices", "owner-edits", "prosale-columns", "prosale-tariffs", "row-highlight", "warnings-archive"];
 /** ENG-28c (М1): межа HTTP-запитів записувача на запуск. Типово 40 (GoogleSheetsWriter); «Оновити товари» / sync — 120: перший повний
  *  прохід пріоритету власника на 5 121 рядках потребує ≈ 45 запитів (з М2; без М2 — ≈ 69), темп записувача ≤ 50 запитів/хв (квота
  *  Google — 60 запитів запису / хв на користувача проєкту). Перед першим записом — оцінка (budgetCheck): більше за межу → нічого не пишемо. */
@@ -252,6 +253,18 @@ try {
     if (!arg("plan")) fail("prosale-tariffs: ", new Error("потрібен --plan=<файл із set>"));
     const p = JSON.parse(fs.readFileSync(arg("plan"), "utf8"));
     report.result = await underMaintenanceLease(() => applyProsaleTariffs({ sheets, readBook, stamp, set: p.set || {}, orderOnly: p.orderOnly !== false }));
+  } else if (mode === "warnings-archive") {
+    // Рішення власника 04.11: опрацьовані попередження → «Попередження — архів» (порціями по 40), «Що змінилось» для відкритих.
+    const session = await new WriteGateway({ sheets, read: readBook, store: w2Store }).open({ writer: "sync" });
+    try {
+      if (session.state !== "READY") report.result = { state: "BLOCKED", reason: "шлюз запису: " + session.state };
+      else {
+        const runs = [];
+        for (let k = 0; k < 20; k++) { const r = await archiveWarnings({ session, readBook, stamp }); runs.push(r); if (r.state !== "WARNINGS_ARCHIVED" || !r.resolvedLeft || session.state !== "READY") break; }
+        const last = runs[runs.length - 1];
+        report.result = { state: last.state === "INCOMPLETE" ? "INCOMPLETE" : "WARNINGS_ARCHIVED", archived: runs.reduce((a, r) => a + (r.archived || 0), 0), summarized: runs.reduce((a, r) => a + (r.summarized || 0), 0), conflicts: runs.reduce((a, r) => a + (r.conflicts || 0), 0), open: last.open, resolvedLeft: last.resolvedLeft, runs: runs.length, reason: last.reason || "" };
+      }
+    } finally { await session.close?.().catch(() => {}); }
   } else if (mode === "row-highlight") {
     report.result = await underMaintenanceLease(() => addWarningHighlight({ sheets, readBook, stamp }));
   } else if (mode === "drop-deferred") {
@@ -292,6 +305,10 @@ try {
       if (process.argv.includes("--intake")) fail("update: ", new Error("новинки в чергу додає лише окрема команда --mode=find-new"));
       const openSession = (writer) => new WriteGateway({ sheets, read: readBook, store: w2Store }).open({ writer });
       report.result = await updateProductsRun({ sheets, readBook, xml: fullXml, source: scopeSource, fetchedAt: stamp, stamp, now: NOW, config, profile: config.intake?.profile || "medium", controls, snapshotStore: w2Store, openSession, writeBudget });
+      // Рішення власника 04.11: опрацьовані попередження (у т. ч. щойно виконані «Прийняти…») → архів.
+      const ws = await openSession("sync").catch(() => null);
+      try { if (ws?.state === "READY") report.result.warningsArchive = await archiveWarnings({ session: ws, readBook, stamp }).catch((e) => ({ state: "ERROR", reason: String(e?.message || e).slice(0, 200) })); }
+      finally { await ws?.close?.().catch(() => {}); }
     } else if (mode === "qa") {
       // ENG-28c: QA погоджених товарів — лише їхні рядки; --expected=<план dry-run, погоджений власником> обов'язковий для запису.
       const ids = arg("ids") ? arg("ids").split(",").map((x) => x.trim()).filter(Boolean) : QA_IDS_0111.slice();
@@ -324,8 +341,10 @@ try {
     const session = await new WriteGateway({ sheets, read: readBook, store: w2Store }).open({ writer: "sync" });
     // Вузьке читання (лише потрібні колонки) — лише для Sheets API; локальна книга читається цілою.
     const readColumns = readStats.reader ? async (title, columns) => { readStats.reader.metaCache = null; const t0 = Date.now(); const v = await readStats.reader.loadColumns(title, columns); readStats.ms += Date.now() - t0; readStats.sheets[title + " (колонки)"] = (readStats.sheets[title + " (колонки)"] || 0) + 1; return v; } : null;
-    try { report.result = await updatePrices({ readBook, xml, stamp, now: NOW, config, controls, session, snapshotStore: w2Store, readColumns }); }
-    finally { await session.close?.().catch(() => {}); }
+    try {
+      report.result = await updatePrices({ readBook, xml, stamp, now: NOW, config, controls, session, snapshotStore: w2Store, readColumns });
+      if (session.state === "READY") report.result.warningsArchive = await archiveWarnings({ session, readBook, stamp }).catch((e) => ({ state: "ERROR", reason: String(e?.message || e).slice(0, 200) }));
+    } finally { await session.close?.().catch(() => {}); }
   } else if (mode === "reconcile") {
     // ENG-28d: невідомий результат API → наступні записи BLOCKED, доки reconcile не з'ясує стан читанням за ключем (із вікном settle);
     // сліпого повтору немає. Таблиця лише читається (політика режиму: жодної операції запису).
@@ -485,4 +504,4 @@ if (arg("summary")) {
   if ([...secrets].some((x) => lines.includes(x)) || /\d{10,}/.test(lines)) { process.stderr.write("ЗАХИСТ ВІД ВИТОКУ: summary не записано\n"); process.exit(3); }
   fs.appendFileSync(arg("summary"), lines);
 }
-process.exitCode = process.exitCode === 3 ? 3 : mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "TRANSFERRED", "MIGRATED", "CORRECTED", "NOTHING", "NO_CHANGES", "SYNCED", "REFRESHED", "INTAKE_DONE", "NOTHING_TO_WRITE", "SKIPPED", "SHADOW", "COMMITTED", "ARCHIVED", "RECOVERED", "QA_DONE", "PLANNED", "NOTHING_NEW", "WAITING_STABILITY", "NOTHING_COMPLETE", "RECONCILED", "JOURNAL_RECOVERED", "RUN_PLAN_ABANDONED", "DEFERRED_RESOLVED", "SHEET_REMOVED", "PRICES_UPDATED", "OWNER_EDITS_APPLIED", "PROSALE_COLUMNS_ADDED"].includes(report.result?.state) ? 0 : 1;
+process.exitCode = process.exitCode === 3 ? 3 : mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "TRANSFERRED", "MIGRATED", "CORRECTED", "NOTHING", "NO_CHANGES", "SYNCED", "REFRESHED", "INTAKE_DONE", "NOTHING_TO_WRITE", "SKIPPED", "SHADOW", "COMMITTED", "ARCHIVED", "RECOVERED", "QA_DONE", "PLANNED", "NOTHING_NEW", "WAITING_STABILITY", "NOTHING_COMPLETE", "RECONCILED", "JOURNAL_RECOVERED", "RUN_PLAN_ABANDONED", "DEFERRED_RESOLVED", "SHEET_REMOVED", "PRICES_UPDATED", "OWNER_EDITS_APPLIED", "PROSALE_COLUMNS_ADDED", "PROSALE_TARIFFS_SET", "HIGHLIGHT_ADDED", "WARNINGS_ARCHIVED"].includes(report.result?.state) ? 0 : 1;
