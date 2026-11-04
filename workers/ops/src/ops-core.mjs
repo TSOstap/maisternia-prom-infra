@@ -357,6 +357,8 @@ export class OpsCore {
       this.metaPut(PRICES_SCHEDULE_KEY, { ...ps, nextAt: now + ps.everyMinutes * MIN });
       const b = this.metaGet(PRICES_JOB_KEY) ? null : await this.button({ op: "prices", by: SCHEDULE_BY });
       this.metaPut(PRICES_SCHEDULE_KEY, { ...this.metaGet(PRICES_SCHEDULE_KEY), last: { at: now, state: b?.state ?? "QUEUED", message: String(b?.message || "").slice(0, 200) } });
+      // 04.11: зайнято іншою операцією («Уже виконується») — не чекати весь інтервал, повторити через 10 хв.
+      if (b?.state === "BUSY") this.metaPut(PRICES_SCHEDULE_KEY, { ...this.metaGet(PRICES_SCHEDULE_KEY), nextAt: now + 10 * MIN });
     }
     const job = this.metaGet(PRICES_JOB_KEY);
     if (job) { this.metaDel(PRICES_JOB_KEY); await this.runPricesQueued(job); }

@@ -232,3 +232,17 @@ test("04.11: самовідновлення будильника (cron кожн�
   const h2 = await core.heal();
   assert.equal(h2.healed, true); assert.equal(h2.reason, "розклад прострочено"); assert.ok(h2.alarmAt <= c.t + 1000);
 });
+
+test("04.11: розклад «Цін» натрапив на іншу операцію («Уже виконується») — повтор через 10 хв, а не через весь інтервал", async () => {
+  const c = { t: Date.parse("2026-11-04T10:00:00Z") }, M = 60_000;
+  const fetchImpl = async (url) => { if (String(url).startsWith("https://api.github.com/")) return new Response(null, { status: 204 }); throw new Error("неочікувана адреса: " + url); };
+  const storage = fakeStorage();
+  const core = new OpsCore(storage, { ...ENV, PRICES_RUNNER: "github" }, { now: () => c.t, fetchImpl });
+  await core.fetch(new Request("https://x/admin/prices-schedule", { method: "POST", body: JSON.stringify({ on: true, everyMinutes: 120 }) }));
+  assert.equal((await core.button({ op: "update" })).state, "STARTED");
+  c.t += 2 * M;
+  await core.alarm();
+  const ps = JSON.parse(core.rows("SELECT v FROM meta WHERE k = 'prices-schedule'")[0].v);
+  assert.equal(ps.last.state, "BUSY");
+  assert.equal(ps.nextAt, c.t + 10 * M);
+});
