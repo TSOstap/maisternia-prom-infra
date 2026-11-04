@@ -10,10 +10,12 @@ import { guardedSheets, MODE_POLICIES, TEST_SHEET_ID } from "../src/pipeline/saf
 test("04.11: оформлення попереджень — за заголовками; список дій лише на робочому аркуші; дані не змінюються; лише режим sheet-style", async () => {
   const s = warningsStyle(WARN_HEADER);
   const at = (k) => WARN_HEADER.indexOf(k);
-  assert.deepEqual(s.hidden, [at("Ключ"), at("Джерело")]);
-  assert.equal(s.wrap[at("Було (постачальник)")], "CLIP"); assert.equal(s.wrap[at("Що змінилось")], "WRAP");
+  assert.deepEqual(s.hidden, [at("Джерело")]); assert.deepEqual(s.shown, [at("Ключ")], "перша колонка не прихована — інакше Google дописує рядки зі зсувом");
+  assert.equal(s.cells[at("Було (постачальник)")].body.wrap, "CLIP"); assert.equal(s.cells[at("Що змінилось")].body.wrap, undefined, "«Що змінилось» переноситься");
+  assert.equal(s.rowHeight, 61, "фіксована висота — багаторядковий HTML не розтягує рядок");
+  assert.deepEqual(s.cells[at("Offer ID")].body.bg, { red: 0.14117648, green: 0.23137255, blue: 0.3254902 }, "темно-синій, як у «Нових товарах»");
   assert.deepEqual(s.list, { col: at("Дія власника"), values: [ACTION.KEEP, ACTION.ACCEPT] });
-  assert.equal(s.frozenRows, 1); assert.equal(s.autoRows, true);
+  assert.equal(s.frozenRows, 1);
   const a = warningsStyle([...WARN_HEADER, "Архівовано"], { archive: true });
   assert.equal(a.list, undefined); assert.equal(a.widths[WARN_HEADER.length], 140);
   const rows = [["k1", "t", "1", "s", "n", "Опис UA", "<p>a</p>", "<p>b</p>", "x", "YML", "", "", "", "…"]];

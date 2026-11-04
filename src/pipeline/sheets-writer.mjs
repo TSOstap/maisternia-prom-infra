@@ -295,19 +295,25 @@ export class GoogleSheetsWriter {
   }
 
   /** Рішення власника 04.11: лише ОФОРМЛЕННЯ аркуша (дані не змінюються) — закріплений заголовок, ширини / приховані колонки,
-   *  перенесення тексту, вигляд заголовка, спадний список колонки й висота рядків під вміст. Колонки — індекси з 0. */
+   *  вигляд клітинок колонки (cells: { [col]: { header?, body? } } — фон, текст, вирівнювання, перенесення), рамки, спадний список
+   *  колонки, ФІКСОВАНА висота рядків (rowHeight; багаторядковий HTML не розтягує рядок). Колонки — індекси з 0. */
   async formatColumns(title, spec) {
     const s = await this.#sheet(title), id = s.sheetId;
     const col = (c) => ({ sheetId: id, startColumnIndex: c, endColumnIndex: c + 1 });
     const req = [];
+    const fmt = (f) => ({ backgroundColor: f.bg, textFormat: { foregroundColor: f.fg, bold: Boolean(f.bold), fontFamily: f.font || "Arial", fontSize: f.size || 10 }, horizontalAlignment: f.h || "LEFT", verticalAlignment: f.v || "MIDDLE", wrapStrategy: f.wrap || "WRAP" });
+    const FIELDS = "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment,verticalAlignment,wrapStrategy)";
     if (spec.frozenRows != null) req.push({ updateSheetProperties: { properties: { sheetId: id, gridProperties: { frozenRowCount: spec.frozenRows } }, fields: "gridProperties.frozenRowCount" } });
     for (const [c, px] of Object.entries(spec.widths || {})) req.push({ updateDimensionProperties: { range: { sheetId: id, dimension: "COLUMNS", startIndex: +c, endIndex: +c + 1 }, properties: { pixelSize: px }, fields: "pixelSize" } });
     for (const c of spec.hidden || []) req.push({ updateDimensionProperties: { range: { sheetId: id, dimension: "COLUMNS", startIndex: c, endIndex: c + 1 }, properties: { hiddenByUser: true }, fields: "hiddenByUser" } });
-    for (const [c, w] of Object.entries(spec.wrap || {})) req.push({ repeatCell: { range: { ...col(+c), startRowIndex: 1 }, cell: { userEnteredFormat: { wrapStrategy: w, verticalAlignment: "TOP" } }, fields: "userEnteredFormat.wrapStrategy,userEnteredFormat.verticalAlignment" } });
-    for (const [c, bg] of Object.entries(spec.columnBg || {})) req.push({ repeatCell: { range: { ...col(+c), startRowIndex: 1 }, cell: { userEnteredFormat: { backgroundColor: bg } }, fields: "userEnteredFormat.backgroundColor" } });
-    if (spec.header) req.push({ repeatCell: { range: { sheetId: id, startRowIndex: 0, endRowIndex: 1 }, cell: { userEnteredFormat: { textFormat: { bold: true }, backgroundColor: spec.header.bg, wrapStrategy: "WRAP", verticalAlignment: "MIDDLE" } }, fields: "userEnteredFormat.textFormat.bold,userEnteredFormat.backgroundColor,userEnteredFormat.wrapStrategy,userEnteredFormat.verticalAlignment" } });
+    for (const c of spec.shown || []) req.push({ updateDimensionProperties: { range: { sheetId: id, dimension: "COLUMNS", startIndex: c, endIndex: c + 1 }, properties: { hiddenByUser: false }, fields: "hiddenByUser" } });
+    for (const [c, f] of Object.entries(spec.cells || {})) {
+      if (f.header) req.push({ repeatCell: { range: { ...col(+c), startRowIndex: 0, endRowIndex: 1 }, cell: { userEnteredFormat: fmt(f.header) }, fields: FIELDS } });
+      if (f.body) req.push({ repeatCell: { range: { ...col(+c), startRowIndex: 1 }, cell: { userEnteredFormat: fmt(f.body) }, fields: FIELDS } });
+    }
+    if (spec.borders) { const b = { style: "SOLID", color: spec.borders }; req.push({ updateBorders: { range: { sheetId: id, startRowIndex: 0, startColumnIndex: 0, endColumnIndex: spec.columns || s.columns }, top: b, bottom: b, left: b, right: b, innerHorizontal: b, innerVertical: b } }); }
     if (spec.list) req.push({ setDataValidation: { range: { ...col(spec.list.col), startRowIndex: 1 }, rule: { condition: { type: "ONE_OF_LIST", values: spec.list.values.map((v) => ({ userEnteredValue: v })) }, strict: true, showCustomUi: true } } });
-    if (spec.autoRows) req.push({ autoResizeDimensions: { dimensions: { sheetId: id, dimension: "ROWS", startIndex: 0, endIndex: Math.max(1, s.rows) } } });
+    if (spec.rowHeight) req.push({ updateDimensionProperties: { range: { sheetId: id, dimension: "ROWS", startIndex: 0, endIndex: Math.max(1, s.rows) }, properties: { pixelSize: spec.rowHeight }, fields: "pixelSize" } });
     if (!req.length) return { outcome: OUTCOME.APPLIED, calls: 0 };
     this.metrics.writes++;
     await this.#call("POST", ":batchUpdate", { requests: req }, [], this.policies.write, "formatColumns");

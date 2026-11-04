@@ -43,6 +43,8 @@ test("04.11: опрацьоване — «Залишити наше»; «При�
   assert.equal(isResolved(o("Опрацьовано", "", "")), true);
   assert.equal(isResolved(o("", "Залишити НАШЕ!", "")), false, "невідома дія — не опрацьовано");
   assert.equal(isResolved(o("", "", "")), false);
+  assert.equal(isResolved(o("", "", "ВИКОНАНО 2026-11-03: комплектацію виправлено (рішення власника)")), true, "виконана точкова правка без дії");
+  assert.equal(isResolved(o("", "Залишити НАШЕ!", "ВИКОНАНО 2026-11-03")), false, "невідома дія — навіть із ВИКОНАНО");
 });
 
 test("04.11: перенесення в архів — лише опрацьовані, за ключем зі знімком; заголовок і «Що змінилось» відкритим; повтор — нічого; нове попередження лишається", async () => {
@@ -88,4 +90,22 @@ test("04.11: охоронець — режими «Ціни», «Оновити 
   const w = await world([row("z1", { act: ACTION.KEEP })]);
   const guarded = guardedSheets(w.raw, { spreadsheetId: TEST_SHEET_ID, policy: MODE_POLICIES.prices, headers: {} });
   await assert.rejects(() => guarded.deleteRows("Журнал", [2]), /видалення рядків заборонено/);
+});
+
+test("04.11 (виправлення): очищаються лише зсунуті копії в архіві (порожня A + повний збіг зі зсувом); справжні рядки й неповні збіги — ні", async () => {
+  const { clearShiftedArchiveRows } = await import("../src/pipeline/warnings-archive.mjs");
+  const live = row("s1"); live.push("підсумок");
+  const AH = [...WARN_HEADER, "Архівовано"];
+  const good = ["k0", ...row("k0").slice(1), "", "2026-11-04"];
+  const shifted = ["", ...live, ""];
+  const almost = ["", ...live.slice(0, 5), "інше", ...live.slice(6), ""];
+  const raw = new MemorySheets({ [WARN_SHEET]: [WARN_HEADER.slice(), live], [WARN_ARCHIVE_SHEET]: [AH, good, shifted, almost], "Журнал": [["ID події"]] });
+  const sheets = guardedSheets(raw, { spreadsheetId: TEST_SHEET_ID, policy: MODE_POLICIES["warnings-archive-fix"], headers: {} });
+  const r = await clearShiftedArchiveRows({ sheets, readBook: async () => raw.read(), stamp: "s" });
+  assert.equal(r.state, "SHIFTED_CLEARED"); assert.deepEqual(r.rows, [3]);
+  const a = raw.book[WARN_ARCHIVE_SHEET];
+  assert.equal(a[1][0], "k0", "справжній рядок архіву не зачеплено");
+  assert.ok(a[2].every((c) => c === ""), "зсунуту копію очищено");
+  assert.equal(mtText(a[3][1]), "s1", "неповний збіг — не чіпаємо");
+  assert.deepEqual(keysOf(raw.book[WARN_SHEET]), ["s1"], "робочий аркуш не змінено");
 });
