@@ -87,6 +87,17 @@ export function estimateRequests(ops, { maxChunkChars = DEFAULT_MAX_CHUNK_CHARS 
   return { requests, byOp };
 }
 
+/** Формула умовного форматування — у синтаксисі локалі таблиці: якщо десятковий знак — кома (uk_UA тощо), аргументи
+ *  розділяє «;» (Google інакше відповідає INVALID_ARGUMENT). Коми всередині рядків у лапках не змінюються. */
+export function localizeFormula(formula, locale) {
+  let comma = false;
+  try { comma = new Intl.NumberFormat(String(locale || "en_US").replace("_", "-")).format(1.5).includes(","); } catch { /* невідома локаль — як en */ }
+  if (!comma) return formula;
+  let out = "", q = false;
+  for (const ch of formula) { if (ch === '"') q = !q; out += !q && ch === "," ? ";" : ch; }
+  return out;
+}
+
 export class GoogleSheetsWriter {
   constructor({ spreadsheetId, liveSpreadsheetId, getAccessToken, fetchImpl, sleep, now, random, fence = null, maxRequests = DEFAULT_MAX_REQUESTS, maxAttempts = 4, maxRequestsPerMinute = 50, maxChunkChars = DEFAULT_MAX_CHUNK_CHARS }) {
     if (!spreadsheetId || !/^[A-Za-z0-9_-]{20,}$/.test(spreadsheetId)) throw new Error("Невалідний ID тестової таблиці");
@@ -152,9 +163,10 @@ export class GoogleSheetsWriter {
         }
       }
       if (!write && RETRY.has(res.status) && attempt < policy.maxAttempts) { this.metrics.retries++; await this.sleep(this.#backoff(attempt)); continue; }
-      let reason = "";
-      try { reason = JSON.parse(text)?.error?.status || ""; } catch { /* */ }
-      const hint = res.status === 403 ? "немає права запису: таблиця має бути поділена зі службовим акаунтом як «Редактор» (лише тестова копія)" : "помилка Sheets API";
+      let reason = "", detail = "";
+      try { const e = JSON.parse(text)?.error; reason = e?.status || ""; detail = String(e?.message || "").replace(/ya29\.[A-Za-z0-9._-]+/g, "***").slice(0, 200); } catch { /* */ }
+      // 400: текст Google (без токенів) — щоб було видно, що саме не так у запиті.
+      const hint = res.status === 403 ? "немає права запису: таблиця має бути поділена зі службовим акаунтом як «Редактор» (лише тестова копія)" : "помилка Sheets API" + (res.status === 400 && detail ? " — " + detail : "");
       const message = `Sheets API HTTP ${res.status}${reason ? " " + reason : ""}: ${hint}`;
       if (!write) throw new Error(message);
       // 429 і 5xx — результат запису невідомий (документація не гарантує незастосування); інші 4xx — запит відхилено цілком.
@@ -262,6 +274,24 @@ export class GoogleSheetsWriter {
       range: { sheetId: s.sheetId, startRowIndex: fromRow - 1, endRowIndex: toRow, startColumnIndex: col - 1, endColumnIndex: col },
       cell: { userEnteredFormat: { numberFormat: { type: "PERCENT", pattern: "0%" } } }, fields: "userEnteredFormat.numberFormat",
     } }] }, [], this.policies.write, "setPercentFormat");
+  }
+
+  /** Рішення власника 04.11: умовне форматування — колір фону рядків (з 2-го) за формулою. Те саме правило вже є — нічого (ідемпотентно). */
+  async addRowHighlight(title, formula0, rgb, { replaceMarker = "" } = {}) {
+    const s = await this.#sheet(title);
+    const got = await this.#call("GET", "", null, [["fields", "properties(locale),sheets(properties(sheetId),conditionalFormats)"]], this.policies.read, "readConditionalFormats");
+    const formula = localizeFormula(formula0, got.properties?.locale);
+    const rules = (got.sheets || []).find((x) => x.properties?.sheetId === s.sheetId)?.conditionalFormats || [];
+    const textOf = (r) => r.booleanRule?.condition?.values?.[0]?.userEnteredValue || "";
+    if (rules.some((r) => textOf(r) === formula)) return { outcome: OUTCOME.APPLIED, calls: 0, already: true };
+    // Попередня версія ЦЬОГО правила (за маркером у формулі) — прибирається тим самим запитом (з кінця, щоб індекси не зсувались).
+    const old = replaceMarker ? rules.map((r, i) => [r, i]).filter(([r]) => r.booleanRule?.condition?.type === "CUSTOM_FORMULA" && textOf(r).includes(replaceMarker)).map(([, i]) => i).reverse() : [];
+    this.metrics.writes++;
+    await this.#call("POST", ":batchUpdate", { requests: [...old.map((index) => ({ deleteConditionalFormatRule: { sheetId: s.sheetId, index } })), { addConditionalFormatRule: { index: 0, rule: {
+      ranges: [{ sheetId: s.sheetId, startRowIndex: 1 }],
+      booleanRule: { condition: { type: "CUSTOM_FORMULA", values: [{ userEnteredValue: formula }] }, format: { backgroundColor: rgb } },
+    } } }] }, [], this.policies.write, "addRowHighlight");
+    return { outcome: OUTCOME.APPLIED, calls: 1, replaced: old.length };
   }
 
   async ensureColumns(title, n) {
@@ -391,6 +421,12 @@ export class MemorySheets {
   async ensureColumns() {}
   async setPercentFormat(title, col, fromRow, toRow) {
     await this.#write("setPercentFormat", () => { (this.formats ||= {})[title + "!" + col] = { type: "PERCENT", pattern: "0%", fromRow, toRow }; }, { title, col });
+  }
+  async addRowHighlight(title, formula, rgb) {
+    const list = ((this.highlights ||= {})[title] ||= []);
+    if (list.some((x) => x.formula === formula)) return { outcome: OUTCOME.APPLIED, calls: 0, already: true };
+    await this.#write("addRowHighlight", () => { list.unshift({ formula, rgb }); }, { title });
+    return { outcome: OUTCOME.APPLIED, calls: 1 };
   }
 
   // ---------- дії «людини» для тестів (не через API, без fence) ----------

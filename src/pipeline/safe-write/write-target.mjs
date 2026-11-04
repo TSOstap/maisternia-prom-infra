@@ -12,7 +12,7 @@ export const TEST_SHEET_ID = "1th8VXOUeN08Lk9QNrjdt4GK3Z0nTnU8Awkb5pLvWOxs";
 export const LIVE_SHEET_ID = "1AhQUz1bUB2LiQX4OKBbvTCSmTMWoKPcdQUtr3-TK2L8";
 export const WRITER_ACCOUNTS = Object.freeze(["mm-sheets-copy@maisternia-prom-infra.iam.gserviceaccount.com"]);
 export const WRITE_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
-const WRITE_OPS = Object.freeze(["updateRanges", "appendRows", "deleteRows", "ensureColumns", "ensureSheet", "setPercentFormat", "deleteSheet"]);
+const WRITE_OPS = Object.freeze(["updateRanges", "appendRows", "deleteRows", "ensureColumns", "ensureSheet", "setPercentFormat", "deleteSheet", "addRowHighlight"]);
 /** Методи записувача без запису (читання). Будь-який інший метод — BLOCK (заборонено за замовчуванням). */
 const READ_OPS = Object.freeze(["meta", "read"]);
 /** Короткоживучий токен: не довше за типовий строк IAM generateAccessToken (3600 с). */
@@ -105,7 +105,7 @@ export function guardedSheets(sheets, { spreadsheetId, policy, headers = {} }) {
       return async (...args) => {
         if (prop === "updateRanges") for (const b of args[0] || []) checkBlock(b);
         else if (prop === "appendRows") { const p = check(prop, String(args[0])); clearOnlyCheck(p, String(args[0]), hdr[String(args[0])], 1, args[1], 0); }
-        else if (prop === "ensureColumns" || prop === "ensureSheet" || prop === "deleteRows" || prop === "setPercentFormat" || prop === "deleteSheet") check(prop, String(args[0]));
+        else if (prop === "ensureColumns" || prop === "ensureSheet" || prop === "deleteRows" || prop === "setPercentFormat" || prop === "deleteSheet" || prop === "addRowHighlight") check(prop, String(args[0]));
         return v.apply(target, args);
       };
     },
@@ -141,6 +141,8 @@ export const MODE_POLICIES = Object.freeze({
   // Рішення власника 04.11 (ProSale): разово — колонка «Тариф ProSale» у кінці «Основного каталогу», новий аркуш «Тарифи ProSale» і подія в «Журналі».
   "prosale-columns": { "Основний каталог": { ops: ["ensureColumns", "updateRanges"], columns: ["Тариф ProSale"], header: true }, "Тарифи ProSale": { ops: ["ensureSheet", "appendRows", "updateRanges"], columns: "*", header: true }, "Журнал": { ops: ["appendRows"] } },
   // Рішення власника 04.11 (пізніше): «Тарифи ProSale» — лише категорії «за замовлення», «Тариф» за планом; основного каталогу — жодної операції.
+  // Рішення власника 04.11: жовті рядки «Основного каталогу» з відкритим попередженням постачальника — лише правило умовного форматування.
+  "row-highlight": { "Основний каталог": { ops: ["addRowHighlight"] }, "Журнал": { ops: ["appendRows"] } },
   "prosale-tariffs": { "Тарифи ProSale": { ops: ["updateRanges"], columns: "*" }, "Журнал": { ops: ["appendRows"] } },
   // ENG-28c: QA погоджених товарів — лише системні / сирі колонки постачальника й печатка «Основного каталогу» (за ключем), паспорт,
   // «Журнал»; жодних SEO / описів / характеристик / рішень, нових колонок чи аркушів.
