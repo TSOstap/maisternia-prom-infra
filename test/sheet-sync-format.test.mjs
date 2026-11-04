@@ -122,7 +122,7 @@ test("YML: число 0.2 дає той самий offer, що й «20%»; ін�
   const xmlNum = offerXml(r, success, groups);
   assert.equal(typeof r["Знижка"], "number");
   assert.equal(offerXml({ ...r, "Знижка": "20%" }, success, groups), xmlNum);
-  assert.match(xmlNum, /<oldprice>/);
+  assert.match(xmlNum, /<discount>20%<\/discount>/); // 04.11: знижка тегом, не <oldprice>
   assert.throws(() => offerXml({ ...r, "Знижка": 0.3 }, success, groups), /знижка/);
 });
 

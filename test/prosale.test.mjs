@@ -68,7 +68,7 @@ test("фід: тариф змінено, «Ціни» ще не перераху
   const after = { ...t, "Ціна": p.base, "Ціна кінцева": p.final };
   const x = renderOffer(after, opt(after, groupMap));
   assert.equal(x.kind, "published");
-  assert.match(x.xml, new RegExp("<price>" + p.final.toFixed(2).replace(".", "\\.") + "</price>"));
+  assert.match(x.xml, new RegExp("<price>" + p.base.toFixed(2).replace(".", "\\.") + "</price>"));
   assert.notEqual(x.xml, before.xml);
   // Ціни, що не відповідають жодному варіанту формули, — як і раніше помилка (ізоляція рядка).
   const bad = { ...t, "Ціна кінцева": p.final + 1 };

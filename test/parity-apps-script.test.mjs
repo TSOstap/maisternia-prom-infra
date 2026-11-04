@@ -1,6 +1,7 @@
 /** Паритет з чинною системою: справжній LIVE-код Apps Script проти Node-порту на тих самих даних. */
 import test from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { loadLiveAppsScript, plain } from "./helpers/apps-script-vm.mjs";
 import { mtPrices, mtSameDiscount } from "../src/core/pricing.mjs";
 import { parseSupplierText, validateFeed } from "../src/core/supplier-feed.mjs";
@@ -143,15 +144,23 @@ async function buildBoth(s, mutate, opts = {}) {
   return { live, liveError, mine, mineError, xml: sink.text() };
 }
 
-test("mtBuildYml_: XML байт-у-байт, SHA, байти, sourceDigest — ідентичні LIVE", async () => {
+// 04.11.2026 (інцидент подвійної знижки в Prom): навмисна відмінність від LIVE — замість <price>кінцева</price><oldprice>базова</oldprice>
+// пишемо <price>базова</price><discount>20%</discount>. Решта XML має збігатися з LIVE байт-у-байт.
+const liveWithDiscountTag = (xml) => xml.replace(/<price>[^<]*<\/price><oldprice>([^<]*)<\/oldprice>/g, `<price>$1</price><discount>${config.pricing.discount}%</discount>`);
+
+test("mtBuildYml_: XML байт-у-байт, SHA, байти, sourceDigest — ідентичні LIVE (ціна — у форматі <discount>)", async () => {
   const s = generateSynthetic({ products: 250, queue: 10, seed: 5, now: NOW });
   const { live, liveError, mine, mineError, xml } = await buildBoth(s);
   assert.equal(liveError, undefined, liveError);
   assert.equal(mineError, undefined, mineError);
-  assert.equal(xml, live.xml);
-  assert.equal(mine.sha256, live.sha256);
-  assert.equal(mine.bytes, live.bytes);
-  assert.equal(mine.sourceDigest, live.sourceDigest);
+  assert.match(live.xml, /<oldprice>/, "LIVE ще пише <oldprice> — перетворення щось перевіряє");
+  const expected = liveWithDiscountTag(live.xml);
+  assert.equal(xml, expected);
+  assert.equal(mine.sha256, createHash("sha256").update(expected, "utf8").digest("hex"));
+  assert.equal(mine.bytes, Buffer.byteLength(expected, "utf8"));
+  // sourceDigest — відбиток без дати фіду: той самий, що в LIVE, порахований для перетвореного XML.
+  assert.equal(mine.sourceDigest, createHash("sha256").update(expected.replace(/<yml_catalog date="[^"]*"/, '<yml_catalog date=""'), "utf8").digest("hex"));
+  assert.notEqual(mine.sourceDigest, live.sourceDigest, "інший формат ціни — нова версія фіду");
   assert.equal(mine.count, live.count);
   assert.equal(mine.generatedAt, live.generatedAt);
 });

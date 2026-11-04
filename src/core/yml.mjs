@@ -181,9 +181,12 @@ export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missin
     '<offer id="' + id + '" available="' + available + '"' + (available && opts.inStock === true ? ' in_stock="true"' : "") + ' selling_type="r">',
     element("name", r["Назва RU"]),
     element("name_ua", r["Назва UA"]),
-    element("price", (available ? expected.final : expected.base).toFixed(2)),
+    // 04.11.2026 (інцидент): Prom після імпорту «Оновити примусово» прочитав пару <price> (зі знижкою) + <oldprice> як «Ціна = price»
+    // і ще раз застосував знижку (oldprice − price) — покупець бачив −25 %. Тепер <price> = базова ціна, знижка — тегом <discount>
+    // (довідка Prom: «Знижка задана в відсотках… застосовується на період у 45 днів»). Покупець платить base × (1 − знижка) = «Ціна кінцева».
+    element("price", expected.base.toFixed(2)),
   ];
-  if (available) body.push(element("oldprice", expected.base.toFixed(2)));
+  if (available) body.push(element("discount", expected.discount));
   body.push("<currencyId>UAH</currencyId>", element("categoryId", r["Група ID"]), element("portal_category_id", r["Категорія Prom ID"]));
   if (r["Категорія Prom URL"]) body.push(element("portal_category_url", httpUrl(r["Категорія Prom URL"])));
   for (const url of photos) {
@@ -237,6 +240,7 @@ export function forceUnavailable(offer) {
   let s = String(offer).replace(/(<offer id="[^"]+"[^>]*?)available="(?:true|false)"/, '$1available="false"');
   const old = /<oldprice>([^<]*)<\/oldprice>/.exec(s);
   if (old) s = s.replace(/<price>[^<]*<\/price>/, "<price>" + old[1] + "</price>").replace(/<oldprice>[^<]*<\/oldprice>/, "");
+  s = s.replace(/<discount>[^<]*<\/discount>/, ""); // 04.11: <price> уже базова — прибираємо лише знижку
   return s.replace(/<quantity_in_stock>[^<]*<\/quantity_in_stock>/, "");
 }
 /** Патч цілого фіду (захист від старих версій, S7): offer з ids → forceUnavailable. Повертає новий XML і змінені ID. */
@@ -403,8 +407,8 @@ export function patchOfferLive(offer, r, { pricing = DEFAULT_PRICING, inStock = 
   const open = /^<offer id="[^"]+" available="(?:true|false)"(?: in_stock="true")? selling_type="r">/;
   if (!open.test(offer) || (offer.match(/<price>/g) || []).length !== 1 || !offer.includes("<description>")) throw new Error("offer нестандартний; ID " + id);
   let s = offer.replace(open, '<offer id="' + id + '" available="' + available + '"' + (available && inStock ? ' in_stock="true"' : "") + ' selling_type="r">');
-  s = s.replace(/<oldprice>[^<]*<\/oldprice>/, "").replace(/<quantity_in_stock>[^<]*<\/quantity_in_stock>/, "");
-  s = s.replace(/<price>[^<]*<\/price>/, element("price", (available ? expected.final : expected.base).toFixed(2)) + (available ? element("oldprice", expected.base.toFixed(2)) : ""));
+  s = s.replace(/<oldprice>[^<]*<\/oldprice>/, "").replace(/<discount>[^<]*<\/discount>/, "").replace(/<quantity_in_stock>[^<]*<\/quantity_in_stock>/, "");
+  s = s.replace(/<price>[^<]*<\/price>/, element("price", expected.base.toFixed(2)) + (available ? element("discount", expected.discount) : ""));
   if (qty !== "") s = s.replace("<description>", element("quantity_in_stock", qty) + "<description>");
   return s;
 }

@@ -122,7 +122,7 @@ test("оновлення цін після «Цін»: змінені offer = п
   const after = offersById(await served(feed));
   const gm = groupMapOf(b), r5 = rowsOf(b)[5];
   assert.equal(after.get(ids[5]), renderOffer(r5, { success: new Date(r5["Оновлено"]).getTime(), groupMap: gm, pricing, missingPolicy: "unavailable", conflictPolicy: "isolate", inStock: true }).xml);
-  assert.match(after.get(ids[5]), /<price>[\d.]+<\/price><oldprice>/);
+  assert.match(after.get(ids[5]), /<price>[\d.]+<\/price><discount>20%<\/discount>/);
   assert.notEqual(after.get(ids[6]), before.get(ids[6]));
   assert.equal(after.get(ids[2]), before.get(ids[2]), "знятий не оновлюється");
   assert.equal(after.get(ids[7]), before.get(ids[7]));

@@ -210,12 +210,12 @@ test("розклад «Цін» на сервері: типово вимкнен
   const run = core.recentRuns(1)[0];
   assert.equal(run.by, SCHEDULE_BY); assert.equal(run.status, "DONE");
   assert.equal(await storage.getAlarm(), c.t + 120 * 60_000, "наступний — через 2 год");
-  // Наступного разу виконується інша операція — пропуск (без черги), розклад іде далі.
+  // Наступного разу виконується інша операція — пропуск (без черги); 04.11: повтор через 10 хв, а не через весь інтервал.
   c.t += 120 * 60_000;
   core.sql.exec("INSERT INTO runs (id, op, status, at, updated, info) VALUES ('x', 'update', 'RUNNING', ?, ?, '{}')", c.t - 60_000, c.t - 60_000);
   await core.alarm();
   assert.equal(jobs, 1); assert.equal(core.metaGet(PRICES_SCHEDULE_KEY).last.state, "BUSY");
-  assert.equal(await storage.getAlarm(), c.t + 120 * 60_000);
+  assert.equal(await storage.getAlarm(), c.t + 10 * 60_000);
   await core.pricesSchedule({ on: false });
   assert.equal(await storage.getAlarm(), null);
 });

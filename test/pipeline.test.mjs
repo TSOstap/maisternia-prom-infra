@@ -81,7 +81,7 @@ test("зміна ціни → нова версія; попередня збер
   const m = await store.getJson(manifestKey("main"));
   assert.notEqual(m.active.key, first.key);
   assert.equal(m.previous.key, first.key);
-  assert.ok((await bodyText(await get("/feeds/main.xml?key=" + KEY))).toString().includes("782.77"));
+  assert.ok((await bodyText(await get("/feeds/main.xml?key=" + KEY))).toString().includes("978.46"), "04.11: <price> — базова ціна (782.77 × 1.25)");
 
   await store.delete(m.active.key); // аварія активного об'єкта
   // Правило 8 (Hermes E7): попередня версія — запасна ЛИШЕ якщо publisher перевірив її на стан CC (previousFallbackSafe).

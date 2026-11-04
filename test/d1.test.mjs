@@ -164,7 +164,7 @@ test("п.2: підтверджений власний залишок — тов�
   const r = await run(T0 + 4 * H);
   assert.equal(r.feeds[0].ownStock, 1);
   const xml = await yml();
-  assert.match(offerOf(xml, id(5)), /available="true"[\s\S]*<oldprice>[\s\S]*<quantity_in_stock>3</);
+  assert.match(offerOf(xml, id(5)), /available="true"[\s\S]*<discount>20%<\/discount>[\s\S]*<quantity_in_stock>3</);
   assert.match(offerOf(xml, id(6)), /available="false"/);
 });
 
