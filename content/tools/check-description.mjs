@@ -14,6 +14,7 @@
  */
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
+import { GMC_MAX_DESC, descLength, plainText, capsWords } from "../../src/core/text-rules.mjs";
 
 // h2 — «Заголовок 2» редактора Prom (рішення власника 03.11: заголовки блоків — Заголовок 2, жирні, 16 px)
 const ALLOWED_TAGS = new Set(["div", "span", "strong", "p", "ul", "li", "h2"]);
@@ -129,6 +130,13 @@ for (const [name, a, b] of [["числа", nums(U.text), nums(R.text)], ["дюй
 const uaBad = U.text.match(/[ыэъёЫЭЪЁ]/g);
 const ruBad = R.text.match(/[іїєґІЇЄҐ]/g);
 report(uaBad ? "FAIL" : "PASS", "UA: без російських літер", uaBad ? [...new Set(uaBad)].join(" ") : "");
+// Рішення власника 06.11 (Google Merchant Center): текст ≤ 5 000 символів, без слів великими літерами (крім скорочень / брендів / кодів).
+for (const [lang, html] of [["UA", ua], ["RU", ru]]) {
+  const n = descLength(html);
+  report(n > GMC_MAX_DESC ? "FAIL" : "PASS", `${lang}: довжина тексту ≤ ${GMC_MAX_DESC} (Google Merchant Center)`, `${n} символів`);
+  const caps = capsWords(plainText(html));
+  report(caps.length ? "FAIL" : "PASS", `${lang}: без слів великими літерами (Google Merchant Center)`, caps.slice(0, 10).join(" "));
+}
 report(ruBad ? "FAIL" : "PASS", "RU: без українських літер", ruBad ? [...new Set(ruBad)].join(" ") : "");
 
 // Відповідність тексту власника
