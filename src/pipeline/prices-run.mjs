@@ -21,7 +21,7 @@ import { PROSALE_SHEET, withProsale } from "../core/prosale.mjs";
 
 const DISCOUNT = "Знижка";
 /** Колонки «Основного каталогу», потрібні плану й запису за ключем (зіставлення з offer — як mtMatch, 8 колонок LIVE, присутність). */
-export const PRICE_READ_COLUMNS = Object.freeze(["Offer ID", "Категорія Prom ID", "Тариф ProSale", "ID постачальника", "Артикул постачальника", "Назва постачальника UA", "Назва постачальника RU", "URL постачальника", ...LIVE_COLUMNS, PRESENCE_COLUMN]);
+export const PRICE_READ_COLUMNS = Object.freeze(["Offer ID", "Категорія Prom ID", "Тариф ProSale", "ID постачальника", "Артикул постачальника", "Назва постачальника UA", "Назва постачальника RU", "URL постачальника", "Ціна власника", ...LIVE_COLUMNS, PRESENCE_COLUMN]);
 const cellFor = (k, v) => (k === DISCOUNT ? sheetDiscount(v) : v);
 
 /**

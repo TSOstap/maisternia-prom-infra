@@ -7,7 +7,7 @@
  *   - XML пишеться потоком у sink, тому 30 тис. товарів не впираються в ліміт довжини рядка V8. */
 import crypto from "node:crypto";
 import { mtText } from "./text.mjs";
-import { DEFAULT_PRICING, mtPrices } from "./pricing.mjs";
+import { DEFAULT_PRICING, mtPrices, ownerCost } from "./pricing.mjs";
 import { prosaleFor } from "./prosale.mjs";
 import { formatYmlDate } from "./time.mjs";
 import { FROZEN_COLUMNS, GROUP_HEADERS, YML_HEADERS, canonicalGroups, contentSha, idsSha, rowSeal, SEAL_COLUMN } from "./seal.mjs";
@@ -161,7 +161,7 @@ export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missin
   if (!held && new Date(r["Оновлено"]).getTime() !== success) throw new Error("Рядок не належить останньому успішному оновленню; ID " + id);
   if (r["Валюта"] !== "UAH" || (!held && ["+", "-"].indexOf(r["Наявність"]) < 0)) throw new Error("Невизначена валюта/наявність; ID " + id);
   const available = held ? false : r["Наявність"] === "+";
-  const price = Number(r["Ціна постачальника"]);
+  const price = ownerCost(r) ?? Number(r["Ціна постачальника"]); // 06.11: «Ціна власника» має перевагу над ціною з фіду
   if (held && !(price > 0)) throw new Error("Знятий товар без перевіреної ціни; ID " + id);
   const expected = expectedPrices(r, price, available, pricing);
   const discountOk = mtText(r["Знижка"]) === expected.discount
@@ -396,7 +396,7 @@ export function patchOfferLive(offer, r, { pricing = DEFAULT_PRICING, inStock = 
   if (!id || id !== mtText(r["Offer ID"])) throw new Error("offer не того товару");
   if (r["Стан синхронізації"] !== "ЗІСТАВЛЕНО" || r["Статус імпорту"] !== "ДОЗВОЛЕНО" || ["+", "-"].indexOf(r["Наявність"]) < 0) throw new Error("Непідтверджений статус; ID " + id);
   const available = r["Наявність"] === "+";
-  const expected = expectedPrices(r, Number(r["Ціна постачальника"]), available, pricing);
+  const expected = expectedPrices(r, ownerCost(r) ?? Number(r["Ціна постачальника"]), available, pricing);
   const discountOk = mtText(r["Знижка"]) === expected.discount
     || (expected.discount === pricing.discount + "%" && typeof r["Знижка"] === "number" && Math.abs(r["Знижка"] - pricing.discount / 100) < 1e-9);
   if (mtText(r["Ціна"]).trim() === "" || mtText(r["Ціна кінцева"]).trim() === "" || Number(r["Ціна"]) !== expected.base || Number(r["Ціна кінцева"]) !== expected.final || !discountOk || expected.base > 9999999999) {

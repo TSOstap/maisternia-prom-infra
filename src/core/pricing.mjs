@@ -10,6 +10,17 @@ export function mtMoney(v) {
   return Math.round(v * 100) / 100;
 }
 
+/** Рішення власника 06.11.2026: «Ціна власника» — ціна ПОСТАЧАЛЬНИКА, яку власник знає раніше за фід (постачальник написав).
+ *  Заповнена (додатне число) — замість ціни з фіду: +5, націнка тарифу ProSale, знижка — як завжди; порожня — ціна з фіду.
+ *  Невалідна (не число, ≤ 0) — ігнорується (ціна з фіду). «Ціна постачальника» лишається з фіду (для звірки). */
+export const OWNER_PRICE_COLUMN = "Ціна власника";
+export function ownerCost(row) {
+  const t = mtText(row?.[OWNER_PRICE_COLUMN]).replace(/[\s ₴]|грн\.?/gi, "").replace(",", ".");
+  if (!t) return null;
+  const n = Number(t);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
 /** prosale — { k, rate } тарифу ProSale рядка (src/core/prosale.mjs prosaleFor) або null: тоді формула точно як раніше. */
 export function mtPrices(price, available, pricing = DEFAULT_PRICING, prosale = null) {
   if (!Number.isFinite(price) || price <= 0 || typeof available !== "boolean") throw new Error("Невалідні ціна або наявність");
