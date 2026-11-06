@@ -75,10 +75,10 @@ test("основний каталог: фото — повним списком 
   sim.setOffer(supplierOf(c, { pictures: next }));
   await sim.sync();
   assert.equal(card(sim, mtText(c["Offer ID"]))["Фото JSON"], JSON.stringify(next));
-  // Лише змінений порядок — теж відображається
+  // Рішення власника 06.11: лише змінений порядок (той самий набір) — лишається порядок каталогу
   sim.setOffer(supplierOf(c, { pictures: next.slice().reverse() }));
   await sim.sync();
-  assert.equal(card(sim, mtText(c["Offer ID"]))["Фото JSON"], JSON.stringify(next.slice().reverse()));
+  assert.equal(card(sim, mtText(c["Offer ID"]))["Фото JSON"], JSON.stringify(next));
 });
 
 test("фото не стираються: повний XML недоступний, неповний (< 95%) або без фото в позиції — список лишається; ціни при цьому оновлюються", async () => {
@@ -171,7 +171,7 @@ test("черга, власне SEO: модель / артикул / фото / �
   assert.match(q["Перевірка"], /фото: \+1 нових, −1 прибрано/);
 });
 
-test("черга, сире SEO: лише змінено порядок фото → новий порядок у таблиці, без попереджень", async () => {
+test("черга, сире SEO: лише змінено порядок фото → порядок у таблиці не змінено (рішення власника 06.11), без попереджень", async () => {
   const sim = new WatchSim();
   await sim.start();
   const ID = "2991000002";
@@ -180,6 +180,6 @@ test("черга, сире SEO: лише змінено порядок фото 
   for (let k = 0; k < 3; k++) await sim.tick();
   sim.setOffer({ id: ID, pictures: [pics[2], pics[0], pics[1]] });
   await sim.sync();
-  assert.equal(sim.queueRow(ID)["Фото JSON"], JSON.stringify([pics[2], pics[0], pics[1]]));
+  assert.equal(sim.queueRow(ID)["Фото JSON"], JSON.stringify(pics));
   assert.doesNotMatch(sim.queueRow(ID)["Перевірка"], /ПОТРЕБУЄ/);
 });

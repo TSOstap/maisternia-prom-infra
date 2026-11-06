@@ -277,6 +277,18 @@ const descKey = (s) => mtKey(mtText(s).replace(/<[^>]*>/g, " ").replace(/&nbsp;/
 const descPart = (sha) => /^s1\.(?:[0-9a-f]{8}\.){6}([0-9a-f]{8})$/.exec(mtText(sha))?.[1] || "";
 const jsonOr = (v, d) => { try { const x = JSON.parse(mtText(v) || "null"); return x ?? d; } catch { return d; } };
 const photoId = (u) => (/images\.prom\.ua\/(\d+)_/.exec(mtText(u)) || [])[1] || mtText(u).trim();
+/** Фото постачальника для «Фото JSON». Рішення власника 06.11: той самий набір фото в іншому порядку — лишаємо порядок каталогу
+ *  (власник переставив головне фото); змінився набір (додано / прибрано фото) — повний список постачальника. */
+export function supplierPhotos(current, pictures) {
+  const next = pictures.slice(0, 10);
+  const cur = jsonOr(current, []);
+  const ids = (a) => a.map(photoId);
+  if (Array.isArray(cur) && cur.length === next.length && cur.every((u) => typeof u === "string")) {
+    const a = ids(cur), b = new Set(ids(next));
+    if (new Set(a).size === a.length && b.size === next.length && a.every((x) => b.has(x))) return JSON.stringify(cur);
+  }
+  return JSON.stringify(next);
+}
 
 /** Знімок СИРИХ даних постачальника (не нашого SEO) — для попередження «було → стало». */
 function supplierSnapshot(row, sha, supplierModel = "") {
@@ -370,7 +382,7 @@ export function refreshQueueRow(row, offer, full, { stamp, catalog = null, clean
     if (!mtText(r[RAW_PARAMS]).trim()) r[RAW_PARAMS] = mtText(row["Характеристики JSON"]) || "[]";
     if (full) {
       // Фото — повним актуальним списком постачальника (порядок, головне фото); порожній список не стирає наявних.
-      if ((full.pictures || []).length) set("Фото JSON", JSON.stringify(full.pictures.slice(0, 10)));
+      if ((full.pictures || []).length) set("Фото JSON", supplierPhotos(r["Фото JSON"], full.pictures));
       else if ((jsonOr(r["Фото JSON"], []) || []).length) notes.push("у повному XML немає фото — залишено попередні");
       const params = JSON.stringify((full.params || []).slice(0, 100));
       if (params.length > CELL_LIMIT) notes.push("характеристики постачальника завеликі для клітинки — не оновлено");
@@ -490,7 +502,7 @@ export function refreshMainRow(row, offer, full, { stamp, skuInUse = () => "", c
   if (full) {
     const model = mtText(full.model).trim();
     if (model) set("Модель", model);
-    if ((full.pictures || []).length) photos = set("Фото JSON", JSON.stringify(full.pictures.slice(0, 10)));
+    if ((full.pictures || []).length) photos = set("Фото JSON", supplierPhotos(r["Фото JSON"], full.pictures));
     const rawJson = JSON.stringify((full.params || []).slice(0, 100));
     if (rawJson.length <= CELL_LIMIT && (full.params || []).length) { if (firstRaw) quiet(RAW_PARAMS, rawJson); else rawParams = set(RAW_PARAMS, rawJson); }
     for (const [col, text] of [[RAW_DESC_UA, full.descriptionUa], [RAW_DESC_RU, full.descriptionRu]]) {
