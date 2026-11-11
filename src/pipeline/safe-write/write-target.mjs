@@ -161,6 +161,8 @@ export const MODE_POLICIES = Object.freeze({
   "group-add": { "Групи": { ops: ["appendRows"] }, "Журнал": { ops: ["appendRows"] } },
   "warnings-archive": { ...WARN_ARCHIVE, "Журнал": { ops: ["appendRows"] } },
   "row-highlight": { "Основний каталог": { ops: ["addRowHighlight"] }, "Журнал": { ops: ["appendRows"] } },
+  // Рішення власника 11.11: «Нові товари» — сірі рядки «ВІДХИЛЕНО», жовті з позначкою в «Перевірці» (лише умовне форматування).
+  "queue-highlight": { "Нові товари": { ops: ["addRowHighlight"] }, "Журнал": { ops: ["appendRows"] } },
   "prosale-tariffs": { "Тарифи ProSale": { ops: ["updateRanges"], columns: "*" }, "Журнал": { ops: ["appendRows"] } },
   // ENG-28c: QA погоджених товарів — лише системні / сирі колонки постачальника й печатка «Основного каталогу» (за ключем), паспорт,
   // «Журнал»; жодних SEO / описів / характеристик / рішень, нових колонок чи аркушів.
