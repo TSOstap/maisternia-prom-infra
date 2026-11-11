@@ -10,7 +10,10 @@
  *   • рядок основного каталогу — як при штатному затвердженні (toMainRow, «ДОЗВОЛЕНО», код Prom = Offer ID, якщо порожній, стан полів);
  *   • рішення власника 02.11 (змінює B6): перенесені рядки ПРИБИРАЮТЬСЯ з «Нових товарів» — і щойно перенесені, і перенесені раніше
  *     (системна позначка «ПЕРЕНЕСЕНО…», Offer ID уже в каталозі). Видалення — лише за ключем зі знімком усього рядка (зміна → не видаляється);
- *   • рядки «ОЧІКУЄ ПЕРЕНЕСЕННЯ» (NEW92) — окремий режим merge; тут не чіпаються. */
+ *   • рядки «ОЧІКУЄ ПЕРЕНЕСЕННЯ» (NEW92) — окремий режим merge; тут не чіпаються;
+ *   • рішення власника 11.11: «Рішення» = «ВІДХИЛЕНО» (дубль / не беремо; товару немає в «Основному каталозі») — Offer ID дописується
+ *     в «Заморожені ID» (більше не повернеться в чергу), рядок прибирається з «Нових товарів» (за ключем зі знімком рядка);
+ *   • 11.11: ціни, знижка й кількість переносяться ЧИСЛАМИ (текст «2606.25» фід не приймав до наступних «Цін»). */
 import crypto from "node:crypto";
 import { mtText } from "./text.mjs";
 import { readSheet } from "./sync-plan.mjs";
@@ -24,6 +27,15 @@ import { stateCell, approvalState } from "./owner-priority.mjs";
 export const TRANSFER_APPROVED_KEY = "state/transfer-approved/plan.json";
 export const NOT_TRANSFERRED = "НЕ ПЕРЕНЕСЕНО: ";
 const t = (v) => mtText(v).trim();
+/** 11.11: колонки, які в «Основному каталозі» мають бути числами (записувач — RAW: рядок «2606.25» лягав би текстом). */
+export const NUMERIC_MAIN_COLUMNS = Object.freeze(["Ціна постачальника", "Ціна", "Ціна кінцева", "Знижка", "Кількість постачальника"]);
+/** Значення клітинки картки для запису: числові колонки — числом (і з числового тексту), решта — текстом, як раніше. */
+export function mainCellValue(v, column) {
+  if (!NUMERIC_MAIN_COLUMNS.includes(column)) return mtText(v ?? "");
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  const s = mtText(v ?? "").trim();
+  return /^-?\d+(\.\d+)?$/.test(s) ? Number(s) : mtText(v ?? "");
+}
 const norm = (v) => mtText(v).trim().toUpperCase().replace(/\s+/g, " ");
 export const rowHash = (row, header) => crypto.createHash("sha256").update(JSON.stringify(header.map((k) => mtText(row?.[k] ?? "")))).digest("hex").slice(0, 32);
 
@@ -73,13 +85,18 @@ export function planTransferApproved({ book, stamp, cc = null }) {
   const deferred = book[SHEET.deferred]?.length ? readSheet(book[SHEET.deferred], SHEET.deferred).rows : [];
   const index = buildDupIndex([...main.rows.map((r) => rowEntry(r, SHEET.main)), ...queue.rows.map((r) => rowEntry(r, SHEET.queue)), ...deferred.map((r) => rowEntry(r, SHEET.deferred))]);
 
-  const moveRows = [], removeRows = [], notTransferred = [], marks = [];
+  const moveRows = [], removeRows = [], notTransferred = [], marks = [], rejectRows = [];
   for (const r of queue.rows) {
     const id = t(r["Offer ID"]), check0 = t(r["Перевірка"]), decision = norm(r["Рішення"]);
     if (!id || check0.startsWith(PENDING_TRANSFER_MARK)) continue;
     if (mainIds.has(id) && !moveRows.some((m) => t(m["Offer ID"]) === id)) {
       // Перенесено раніше (системна позначка) — рядок черги прибирається; без позначки — не чіпаємо (рішення людини).
       if (isTransferredMark(check0) && !qDup.has(id)) removeRows.push({ offerId: id, row: r, earlier: true });
+      continue;
+    }
+    if (decision === DECISION.REJECT) {
+      // 11.11: «ВІДХИЛЕНО» — у «Заморожені ID» і з черги (Offer ID — лише цифри, один рядок у черзі; інакше рядок не чіпаємо).
+      if (/^\d+$/.test(id) && !qDup.has(id)) rejectRows.push({ offerId: id, row: r, alreadyFrozen: frozenIds.has(id) });
       continue;
     }
     if (decision !== DECISION.APPROVE && decision !== DECISION.APPROVE_NOT_DUP) continue;
@@ -110,9 +127,9 @@ export function planTransferApproved({ book, stamp, cc = null }) {
   }
   const passportAfter = approvalManifest([...main.rows, ...moveRows], groups);
   const droppedColumns = MAIN_HEADERS.filter((k) => !mainHeader.includes(k));
-  const counts = { mainBefore: main.rows.length, moved: moveRows.length, mainAfter: main.rows.length + moveRows.length, removeFromQueue: removeRows.length, removeEarlier: removeRows.filter((x) => x.earlier).length, notTransferred: notTransferred.length, queueBefore: queue.rows.length };
-  const state = moveRows.length || removeRows.length || marks.length ? "READY" : "NOTHING";
-  return { state, checks, moveRows, removeRows, notTransferred, marks, mainHeader, queueHeader, passportAfter, counts, droppedColumns: moveRows.length ? droppedColumns : [] };
+  const counts = { mainBefore: main.rows.length, moved: moveRows.length, mainAfter: main.rows.length + moveRows.length, removeFromQueue: removeRows.length, removeEarlier: removeRows.filter((x) => x.earlier).length, notTransferred: notTransferred.length, queueBefore: queue.rows.length, rejected: rejectRows.length };
+  const state = moveRows.length || removeRows.length || marks.length || rejectRows.length ? "READY" : "NOTHING";
+  return { state, checks, moveRows, removeRows, rejectRows, notTransferred, marks, mainHeader, queueHeader, passportAfter, counts, droppedColumns: moveRows.length ? droppedColumns : [] };
 }
 
 /** Контрольний план у сховищі W2 (до першого запису): усе, що потрібно для продовження після збою без нового планування. */
@@ -121,9 +138,10 @@ export function controlPlanOf(plan, { stamp, opId, events }) {
     v: 1, kind: "transfer-approved", opId, stamp, status: "PLANNED", createdAt: stamp,
     mainHeader: plan.mainHeader, queueHeader: plan.queueHeader,
     moveIds: plan.moveRows.map((r) => t(r["Offer ID"])),
-    moveValues: plan.moveRows.map((r) => plan.mainHeader.map((k) => mtText(r[k] ?? ""))),
+    moveValues: plan.moveRows.map((r) => plan.mainHeader.map((k) => mainCellValue(r[k], k))),
     // Лише відбиток рядка черги (план — у сховищі W2, без повних описів); знімок для видалення береться зі свіжого читання, якщо відбиток збігся.
     remove: plan.removeRows.map((x) => ({ offerId: x.offerId, earlier: x.earlier, hash: rowHash(x.row, plan.queueHeader) })),
+    reject: (plan.rejectRows || []).map((x) => ({ offerId: x.offerId, hash: rowHash(x.row, plan.queueHeader) })),
     marks: plan.marks, notTransferred: plan.notTransferred, passportAfter: plan.passportAfter, counts: plan.counts, droppedColumns: plan.droppedColumns || [], events,
   };
 }

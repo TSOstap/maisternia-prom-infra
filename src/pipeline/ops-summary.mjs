@@ -67,6 +67,8 @@ export function ownerSummary(op, report) {
   if (op === "transfer") {
     if (r.moved !== undefined) lines.push(`Перенесено в «Основний каталог»: ${n(r.moved)}${r.count ? `; у каталозі тепер ${n(r.count)}` : ""}`);
     if (r.removedFromQueue !== undefined) lines.push(`Прибрано з «Нових товарів»: ${n(r.removedFromQueue)}`);
+    if (n(r.rejected)) lines.push(`Відхилено (дублі / не беремо) → «Заморожені ID», прибрано з «Нових товарів»: ${n(r.rejected)}`);
+    for (const x of (r.rejectSkipped || []).slice(0, 10)) lines.push(`Не відхилено ${mtText(x.offerId)}: ${clip(x.why, 200)}`);
     for (const p of (r.notTransferred || []).slice(0, 30)) lines.push(`Не перенесено ${mtText(p.offerId)}: ${clip(p.problems?.join("; ") || p.reason, 300)}`);
     if ((r.notTransferred || []).length > 30) lines.push(`… ще ${r.notTransferred.length - 30} — див. колонку «Перевірка» в «Нових товарах»`);
     if ((r.droppedColumns || []).length && n(r.moved)) lines.push(`Колонок немає в «Основному каталозі» — їх не перенесено: ${r.droppedColumns.join(", ")}`);

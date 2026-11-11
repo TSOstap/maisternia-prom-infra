@@ -209,3 +209,72 @@ test("Hermes F-28C-2 / F-28C-3 (ENG-29): update не дописує рядки �
   await assert.rejects(g("find-new").appendRows(SHEET.queue, [qhh.map((k) => (k === "Рішення" ? DECISION.APPROVE : "1"))]), /лише очищувати/);
   await assert.rejects(g("find-new").appendRows(SHEET.main, [["1"]]), /не дозволено/);
 });
+
+test("11.11: «ВІДХИЛЕНО» → Offer ID у «Заморожені ID» і рядок прибрано з «Нових товарів»; уже заморожений не дублюється; повтор — нічого", async () => {
+  const w = await world();
+  const ids = qRows(w).map((r) => mtText(r["Offer ID"]));
+  const [a, dup, dup2, idle] = ids;
+  approve(w, a);
+  setQ(w, dup, "Рішення", DECISION.REJECT);
+  setQ(w, dup2, "Рішення", DECISION.REJECT);
+  w.raw.book[SHEET.frozen].push([dup2]); // уже заморожений раніше — лише прибрати з черги
+  const mainBefore = mainRows(w).length;
+  const r = await press(w);
+  assert.equal(r.state, "TRANSFERRED", JSON.stringify(r).slice(0, 400));
+  assert.equal(r.moved, 1);
+  assert.equal(r.rejected, 2);
+  assert.deepEqual(r.rejectSkipped, []);
+  assert.ok(r.verify.rejectedDone);
+  const frozen = w.raw.book[SHEET.frozen].slice(1).map((x) => mtText(x[0]));
+  assert.equal(frozen.filter((x) => x === dup).length, 1);
+  assert.equal(frozen.filter((x) => x === dup2).length, 1, "без дублю в «Заморожених ID»");
+  for (const id of [dup, dup2]) {
+    assert.equal(qRow(w, id), undefined, "відхилений прибрано з черги");
+    assert.equal(mainRows(w).filter((x) => mtText(x["Offer ID"]) === id).length, 0, "не в каталозі");
+  }
+  assert.ok(qRow(w, idle), "рядок без рішення лишився");
+  assert.equal(mainRows(w).length, mainBefore + 1);
+  assert.ok(w.raw.book[JOURNAL_SHEET].some((e) => e[2] === dup && e[3] === "ВІДХИЛЕНО" && e[5] === SHEET.frozen));
+  const { ownerSummary } = await import("../src/pipeline/ops-summary.mjs");
+  assert.match(ownerSummary("transfer", { result: r }), /Відхилено \(дублі \/ не беремо\) → «Заморожені ID», прибрано з «Нових товарів»: 2/);
+  const r2 = await press(w, { stamp: new Date(NOW + 60_000).toISOString() });
+  assert.equal(r2.state, "NOTHING");
+  assert.equal(w.raw.book[SHEET.frozen].length, frozen.length + 1);
+});
+
+test("11.11: лише «ВІДХИЛЕНО» без затверджених — теж виконується; збій видалення після запису в «Заморожені ID» → продовження без дублів", async () => {
+  const w = await world();
+  const [dup] = qRows(w).map((r) => mtText(r["Offer ID"]));
+  setQ(w, dup, "Рішення", DECISION.REJECT);
+  w.raw.armFailure("deleteRows");
+  const r1 = await press(w);
+  assert.equal(r1.state, "INCOMPLETE", JSON.stringify(r1).slice(0, 300));
+  assert.ok(r1.done.includes("frozen"));
+  assert.ok(qRow(w, dup), "рядок ще в черзі");
+  const r2 = await press(w, { stamp: new Date(NOW + 120_000).toISOString() });
+  assert.equal(r2.state, "TRANSFERRED", JSON.stringify(r2).slice(0, 300));
+  assert.equal(r2.resumed, true);
+  assert.equal(r2.rejected, 1);
+  assert.equal(qRow(w, dup), undefined);
+  assert.equal(w.raw.book[SHEET.frozen].slice(1).filter((x) => mtText(x[0]) === dup).length, 1, "без дублю після продовження");
+});
+
+test("11.11: ціни, знижка й кількість переносяться числами (і з числового тексту); інші колонки — текстом, як раніше", async () => {
+  const { mainCellValue } = await import("../src/core/transfer-approved.mjs");
+  assert.equal(mainCellValue(2606.25, "Ціна"), 2606.25);
+  assert.equal(mainCellValue("2085", "Ціна кінцева"), 2085);
+  assert.equal(mainCellValue("0.2", "Знижка"), 0.2);
+  assert.equal(mainCellValue("", "Знижка"), "");
+  assert.equal(mainCellValue("20%", "Знижка"), "20%");
+  assert.equal(mainCellValue(3269890259, "Offer ID"), "3269890259");
+  assert.equal(mainCellValue(12, "Назва UA"), "12");
+  const w = await world();
+  const [a] = qRows(w).map((r) => mtText(r["Offer ID"]));
+  approve(w, a);
+  setQ(w, a, "Ціна кінцева", String(mtText(qRow(w, a)["Ціна кінцева"])));
+  const r = await press(w);
+  assert.equal(r.state, "TRANSFERRED", JSON.stringify(r).slice(0, 300));
+  const m = mainRows(w).find((x) => mtText(x["Offer ID"]) === a);
+  for (const k of ["Ціна постачальника", "Ціна", "Ціна кінцева"]) assert.equal(typeof m[k], "number", k + ": " + JSON.stringify(m[k]));
+  assert.equal(typeof m["Offer ID"], "string");
+});

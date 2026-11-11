@@ -6,6 +6,8 @@
  *   2. «Паспорт каталогу» — як після затвердження;
  *   3. «Нові товари» — прибрати перенесені рядки: deleteByKeys зі знімком усього рядка (рядок змінено після плану → не видаляється,
  *      у підсумку; чужий рядок, що зник, — повертається зі знімка);
+ *   3a. 11.11: «ВІДХИЛЕНО» — Offer ID у «Заморожені ID» (лише відсутні, свіже читання), потім рядок прибирається з «Нових товарів»
+ *      (deleteByKeys зі знімком; рядок змінено після плану → не виконується, у підсумку);
  *   4. «Перевірка» рядків, що не пройшли перевірку: «НЕ ПЕРЕНЕСЕНО: … колонка E «Назва UA» …» (за ключем з очікуваним значенням);
  *   5. «Журнал» — події з «ID події»;
  *   6. звірка свіжим читанням → план DONE.
@@ -39,10 +41,11 @@ export async function transferApproved({ readBook, stamp, session, controls = nu
   if (plan.state === "NOTHING") return { state: "NOTHING", reason: plan.notTransferred.length ? "затверджені товари не пройшли перевірку — причини в колонці «Перевірка» (і нижче)" : "немає затверджених товарів для перенесення", moved: 0, removedFromQueue: 0, notTransferred: plan.notTransferred };
   const opId = "transfer-approved:" + stamp;
   const events = [
-    [stamp, "СИСТЕМА", "", "ПЕРЕНЕСЕННЯ ЗАТВЕРДЖЕНИХ", "", plan.counts.moved, JSON.stringify({ mode: "ПЕРЕНЕСТИ ЗАТВЕРДЖЕНІ", moved: plan.counts.moved, removeFromQueue: plan.counts.removeFromQueue, notTransferred: plan.counts.notTransferred })],
+    [stamp, "СИСТЕМА", "", "ПЕРЕНЕСЕННЯ ЗАТВЕРДЖЕНИХ", "", plan.counts.moved, JSON.stringify({ mode: "ПЕРЕНЕСТИ ЗАТВЕРДЖЕНІ", moved: plan.counts.moved, removeFromQueue: plan.counts.removeFromQueue, notTransferred: plan.counts.notTransferred, rejected: plan.counts.rejected || 0 })],
     ...plan.moveRows.map((r) => [stamp, SHEET.main, t(r["Offer ID"]), "ЗАТВЕРДЖЕНО", SHEET.queue, SHEET.main, "ДОЗВОЛЕНО"]),
     ...plan.removeRows.map((x) => [stamp, SHEET.queue, x.offerId, "ПРИБРАНО З ЧЕРГИ", "", "", "ПЕРЕНЕСЕНО В «ОСНОВНИЙ КАТАЛОГ»" + (x.earlier ? " (раніше)" : "")]),
     ...plan.notTransferred.map((x) => [stamp, SHEET.queue, x.offerId, "НЕ ПЕРЕНЕСЕНО", "", "", x.problems.join("; ").slice(0, 900)]),
+    ...(plan.rejectRows || []).map((x) => [stamp, SHEET.queue, x.offerId, "ВІДХИЛЕНО", "", SHEET.frozen, "ВІДХИЛЕНО"]),
   ];
   let cp = controlPlanOf(plan, { stamp, opId, events: withEventIds(opId, events) });
   let ver;
@@ -54,7 +57,8 @@ export async function transferApproved({ readBook, stamp, session, controls = nu
 async function execute({ cp, ver, store, session, readBook, stamp, resumed }) {
   const W = session.sheets;
   const progress = async (status) => { ver = await savePlan(store, TRANSFER_APPROVED_KEY, { ...cp, status, progressAt: stamp, ...(resumed ? { resumedAt: stamp } : {}) }, ver); cp = { ...cp, status }; };
-  const done = [], conflicts = [];
+  const done = [], conflicts = [], rejectSkipped = [];
+  let rejected = [];
   const base = { opId: cp.opId, resumed, notTransferred: cp.notTransferred, droppedColumns: cp.droppedColumns || [] };
   try {
     if (cp.moveIds.length) {
@@ -94,6 +98,31 @@ async function execute({ cp, ver, store, session, readBook, stamp, resumed }) {
       done.push("queueRemove");
     }
     await progress("QUEUE_DONE");
+    if ((cp.reject || []).length) {
+      // 11.11: «ВІДХИЛЕНО». Свіже читання: виконується лише рядок, побайтово той, що в плані; спершу «Заморожені ID» (лише відсутні —
+      // повтор після збою не дублює), потім прибирання з черги. Збій між кроками — наступне натискання доробить за тим самим планом.
+      const fresh = await readBook([SHEET.queue, SHEET.frozen]);
+      const byId = new Map(readSheet(fresh[SHEET.queue], SHEET.queue).rows.map((r) => [t(r["Offer ID"]), r]));
+      const frozenNow = new Set((fresh[SHEET.frozen] || []).slice(1).map((r) => t(r?.[0])).filter(Boolean));
+      const freeze = [], todo = [];
+      for (const x of cp.reject) {
+        const r = byId.get(x.offerId);
+        if (!r) { if (frozenNow.has(x.offerId)) rejected.push(x.offerId); else rejectSkipped.push({ offerId: x.offerId, why: "рядка вже немає в «Нових товарах» — у «Заморожені ID» не додано" }); continue; }
+        if (rowHash(r, cp.queueHeader) !== x.hash) { rejectSkipped.push({ offerId: x.offerId, why: "рядок змінено після планування — «ВІДХИЛЕНО» не виконано, натисніть ще раз" }); continue; }
+        if (!frozenNow.has(x.offerId)) freeze.push(x.offerId);
+        todo.push({ key: x.offerId, expect: Object.fromEntries(cp.queueHeader.filter(Boolean).map((k) => [k, mtText(r[k] ?? "")])) });
+      }
+      if (freeze.length) { await W.appendRows(SHEET.frozen, freeze.map((id) => [id])); done.push("frozen"); }
+      if (todo.length) {
+        const dr = await session.deleteByKeys({ title: SHEET.queue, rows: todo, generation: "transfer-approved-reject:" + cp.opId });
+        const failed = (dr.items || []).filter((x) => x.status === ITEM.NOT_APPLIED || x.status === "PENDING");
+        if (![OP.VERIFIED, OP.NOTHING, OP.NOT_APPLIED].includes(dr.outcome) || failed.length) throw new Error("«Нові товари» (прибрати відхилені): " + dr.outcome + (failed.length ? `; не видалено ${failed.length}` : ""));
+        for (const x of dr.items || []) if (x.status === ITEM.CONFLICT) rejectSkipped.push({ offerId: x.key, why: "рядок змінено під час операції — не прибрано з «Нових товарів» (ID уже в «Заморожених ID»)" });
+        rejected = [...rejected, ...(dr.items || []).filter((x) => x.status === ITEM.VERIFIED || x.status === ITEM.ALREADY).map((x) => x.key)];
+      }
+      done.push("reject");
+    }
+    await progress("REJECT_DONE");
     if (cp.marks.length) {
       const qr = await session.updateByKey({ title: SHEET.queue, changes: cp.marks.map((m) => ({ key: m.offerId, expect: { "Перевірка": m.expect }, set: { "Перевірка": m.set } })), generation: "transfer-approved-marks:" + cp.opId });
       if (![OP.VERIFIED, OP.NOTHING, OP.NOT_APPLIED].includes(qr.outcome)) throw new Error("«Перевірка» неперенесених: " + qr.outcome);
@@ -104,7 +133,7 @@ async function execute({ cp, ver, store, session, readBook, stamp, resumed }) {
     if (!jr.ok) throw new Error("«Журнал»: " + jr.outcome);
     done.push("journal");
     // Звірка свіжим читанням.
-    const after = await readBook([SHEET.main, SHEET.queue, SHEET.passport, JOURNAL_SHEET]);
+    const after = await readBook([SHEET.main, SHEET.queue, SHEET.passport, JOURNAL_SHEET, SHEET.frozen]);
     const main = readSheet(after[SHEET.main], SHEET.main).rows, q = readSheet(after[SHEET.queue], SHEET.queue).rows;
     const ids = main.map((r) => t(r["Offer ID"])), byId = new Map(main.map((r) => [t(r["Offer ID"]), r]));
     const target = new Map(cp.moveIds.map((id, i) => [id, rowHash(Object.fromEntries(cp.mainHeader.map((k, j) => [k, cp.moveValues[i][j]])), cp.mainHeader)]));
@@ -118,13 +147,15 @@ async function execute({ cp, ver, store, session, readBook, stamp, resumed }) {
       queueRemoved: cp.remove.every((x) => conflictIds.has(x.offerId) || !qIds.has(x.offerId)),
       passportOk: samePassport(readPassport(after[SHEET.passport]), cp.passportAfter),
       journalOk: cp.events.every((r) => journal.has(t(r[7]))),
+      rejectedDone: (() => { const fz = new Set((after[SHEET.frozen] || []).slice(1).map((r) => t(r?.[0]))), skip = new Set(rejectSkipped.map((x) => x.offerId));
+        return (cp.reject || []).every((x) => skip.has(x.offerId) || (fz.has(x.offerId) && !qIds.has(x.offerId))); })(),
     };
     // Після продовження рядок каталогу міг змінити власник (між збоєм і продовженням) — це не помилка запису, лише попередження.
-    const ok = verify.uniqueIds && verify.allMovedPresent && verify.queueRemoved && verify.journalOk && (verify.movedIdentical || resumed) && (verify.passportOk || resumed);
+    const ok = verify.uniqueIds && verify.allMovedPresent && verify.queueRemoved && verify.journalOk && verify.rejectedDone && (verify.movedIdentical || resumed) && (verify.passportOk || resumed);
     if (!ok) throw Object.assign(new Error("звірка після запису не пройдена"), { verify });
     await progress("DONE");
-    return { state: "TRANSFERRED", moved: cp.counts.moved, count: main.length, removedFromQueue: removed.length, conflicts, verify, warnings: resumed && changedAfter.length ? [`після продовження ${changedAfter.length} перенесених карток уже змінено в «Основному каталозі»`] : [], ...base };
+    return { state: "TRANSFERRED", moved: cp.counts.moved, count: main.length, removedFromQueue: removed.length, rejected: rejected.length, rejectSkipped, conflicts, verify, warnings: resumed && changedAfter.length ? [`після продовження ${changedAfter.length} перенесених карток уже змінено в «Основному каталозі»`] : [], ...base };
   } catch (e) {
-    return { state: "INCOMPLETE", error: mtText(e?.message || e).slice(0, 300), done, verify: e?.verify, conflicts, next: NEXT, ...base };
+    return { state: "INCOMPLETE", error: mtText(e?.message || e).slice(0, 300), done, verify: e?.verify, conflicts, rejectSkipped, next: NEXT, ...base };
   }
 }
