@@ -7,7 +7,7 @@
  *   - XML пишеться потоком у sink, тому 30 тис. товарів не впираються в ліміт довжини рядка V8. */
 import crypto from "node:crypto";
 import { mtText } from "./text.mjs";
-import { DEFAULT_PRICING, mtPrices, ownerCost } from "./pricing.mjs";
+import { DEFAULT_PRICING, mtPrices, ownerCost, rowPrices } from "./pricing.mjs";
 import { prosaleFor } from "./prosale.mjs";
 import { formatYmlDate } from "./time.mjs";
 import { FROZEN_COLUMNS, GROUP_HEADERS, YML_HEADERS, canonicalGroups, contentSha, idsSha, rowSeal, SEAL_COLUMN } from "./seal.mjs";
@@ -147,11 +147,17 @@ function statusAllowed(r, missingPolicy, conflictPolicy) {
  *  — і без неї; повертає той варіант, якому відповідають колонки рядка (інакше — варіант із націнкою, і перевірка дасть помилку). */
 function expectedPrices(r, price, available, pricing) {
   const ps = prosaleFor(r, pricing);
-  const withTariff = mtPrices(price, available, pricing, ps);
-  if (!ps) return withTariff;
-  const plain = mtPrices(price, available, pricing);
+  // Рішення власника 14.11: правило рядка («Ціна вручну» / «Надбавка») — основний варіант.
+  const own = rowPrices(r, price, available, pricing, ps);
+  const variants = [own];
+  if (ps) variants.push(rowPrices(r, price, available, pricing));
+  // Перехідний стан: правило вже записано, а «Ціни» ще не перерахували рядок — чинні стандартні ціни теж погоджені (не ізолюємо товар).
+  if (own.rule.kind !== "standard") {
+    variants.push(mtPrices(price, available, pricing, ps));
+    if (ps) variants.push(mtPrices(price, available, pricing));
+  }
   const same = (e) => Number(r["Ціна"]) === e.base && Number(r["Ціна кінцева"]) === e.final;
-  return same(withTariff) || !same(plain) ? withTariff : plain;
+  return variants.find(same) || own;
 }
 
 export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missingPolicy = "block", conflictPolicy = "block", opts = {}) {

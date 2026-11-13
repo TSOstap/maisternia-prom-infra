@@ -1,7 +1,7 @@
 /** Зіставлення рядка каталогу з offer постачальника і план операційних колонок F:M.
  *  Точні порти mtMatch / mtPlan / mtHeaders з Code.LIVE-CURRENT.gs. */
 import { mtKey, mtSku, mtText } from "./text.mjs";
-import { DEFAULT_PRICING, mtPrices, mtSameDiscount, ownerCost } from "./pricing.mjs";
+import { DEFAULT_PRICING, mtSameDiscount, ownerCost, rowPrices } from "./pricing.mjs";
 import { prosaleFor } from "./prosale.mjs";
 
 /** Операційні колонки F:M — єдине, що оновлення має право змінювати. Порядок фіксований. */
@@ -63,7 +63,8 @@ export function planRows(rows, offers, stamp, pricing = DEFAULT_PRICING) {
     let next = before.slice();
     if (match === MATCH.OK) {
       // Рішення власника 06.11: «Ціна власника» (ціна постачальника, яку власник знає раніше за фід) — замість ціни з фіду.
-      const p = mtPrices(ownerCost(row) ?? offer.price, offer.available, pricing, prosaleFor(row, pricing));
+      // Рішення власника 14.11: «Ціна вручну» (лише поки ціна постачальника та сама) / «Надбавка» (−1…+5) — rowPrices.
+      const p = rowPrices(row, ownerCost(row) ?? offer.price, offer.available, pricing, prosaleFor(row, pricing));
       next = [offer.price, p.base, p.final, p.discount, p.availability, offer.quantity === "" ? before[5] : Number(offer.quantity), match, stamp];
       // Та сама знижка в іншому поданні (0.2 у %-клітинці = «20%») — не зміна.
       if (mtSameDiscount(before[3], next[3])) next[3] = before[3];

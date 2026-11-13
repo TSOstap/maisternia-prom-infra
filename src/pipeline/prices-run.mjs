@@ -18,10 +18,11 @@ import { OP, ITEM } from "./safe-write/keyed-update.mjs";
 import { RUN_PLAN_KEY, PLAN, RECOVERY_DONE, EVENT_ID_COLUMN, openPlansGate, loadPlan, savePlan, withEventIds, evidenceCell, appendEvents, JOURNAL_SHEET } from "./run-plan.mjs";
 import { sheetDiscount, journalRow, syncControlsState, ccUnchanged } from "./sync-helpers.mjs";
 import { PROSALE_SHEET, withProsale } from "../core/prosale.mjs";
+import { PRICE_RULE_COLUMNS } from "../core/pricing.mjs";
 
 const DISCOUNT = "Знижка";
 /** Колонки «Основного каталогу», потрібні плану й запису за ключем (зіставлення з offer — як mtMatch, 8 колонок LIVE, присутність). */
-export const PRICE_READ_COLUMNS = Object.freeze(["Offer ID", "Категорія Prom ID", "Тариф ProSale", "ID постачальника", "Артикул постачальника", "Назва постачальника UA", "Назва постачальника RU", "URL постачальника", "Ціна власника", ...LIVE_COLUMNS, PRESENCE_COLUMN]);
+export const PRICE_READ_COLUMNS = Object.freeze(["Offer ID", "Категорія Prom ID", "Тариф ProSale", "ID постачальника", "Артикул постачальника", "Назва постачальника UA", "Назва постачальника RU", "URL постачальника", "Ціна власника", ...PRICE_RULE_COLUMNS, ...LIVE_COLUMNS, PRESENCE_COLUMN]);
 const cellFor = (k, v) => (k === DISCOUNT ? sheetDiscount(v) : v);
 
 /**

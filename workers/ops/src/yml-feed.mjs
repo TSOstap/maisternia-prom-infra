@@ -16,6 +16,7 @@ import { formatYmlDate } from "../../../src/core/time.mjs";
 import { PRESENCE, PRESENCE_COLUMN } from "../../../src/core/supplier-presence.mjs";
 import { mtText } from "../../../src/core/text.mjs";
 import { PROSALE_SHEET, withProsale } from "../../../src/core/prosale.mjs";
+import { PRICE_RULE_COLUMNS } from "../../../src/core/pricing.mjs";
 import { GoogleSheetsCatalogSource } from "../../../src/pipeline/google-sheets.mjs";
 import { TEST_SHEET_ID } from "../../../src/pipeline/safe-write/write-target.mjs";
 import { googleTokenSource } from "./google-auth.mjs";
@@ -23,11 +24,11 @@ import { sheetsReaders, narrowControls, approvedContract } from "./prices-job.mj
 
 const MAIN = "Основний каталог";
 /** Колонки, які читає offerXml (+ присутність у постачальника). */
-export const YML_COLUMNS = Object.freeze(["Offer ID", "Тариф ProSale", "Ціна власника", "Статус імпорту", "Стан синхронізації", "Оновлено", "Валюта", "Наявність", "Ціна постачальника", "Знижка", "Ціна", "Ціна кінцева",
+export const YML_COLUMNS = Object.freeze(["Offer ID", "Тариф ProSale", "Ціна власника", ...PRICE_RULE_COLUMNS, "Статус імпорту", "Стан синхронізації", "Оновлено", "Валюта", "Наявність", "Ціна постачальника", "Знижка", "Ціна", "Ціна кінцева",
   "Назва UA", "Назва RU", "Опис UA", "Опис RU", "Група ID", "Категорія Prom ID", "Категорія Prom URL", "Фото JSON", "Характеристики JSON", "Код товару Prom", "Виробник", "Країна", "GTIN",
   "Запити RU", "Запити UA", "Модель", "Кількість постачальника", PRESENCE_COLUMN]);
 /** Колонки для оновлення цін у готових offer. */
-export const LIVE_SYNC_COLUMNS = Object.freeze(["Offer ID", "Категорія Prom ID", "Тариф ProSale", "Ціна власника", "Статус імпорту", "Стан синхронізації", "Наявність", "Ціна постачальника", "Знижка", "Ціна", "Ціна кінцева", "Кількість постачальника", PRESENCE_COLUMN]);
+export const LIVE_SYNC_COLUMNS = Object.freeze(["Offer ID", "Категорія Prom ID", "Тариф ProSale", "Ціна власника", ...PRICE_RULE_COLUMNS, "Статус імпорту", "Стан синхронізації", "Наявність", "Ціна постачальника", "Знижка", "Ціна", "Ціна кінцева", "Кількість постачальника", PRESENCE_COLUMN]);
 /** Тимчасово не публікуються — як у LIVE (Yml.gs MTY_TEMP_EXCLUDE_IDS); рішення власника 03.11: «поки не змінюй їхній статус публікації». */
 export const HOLD_DEFAULT = Object.freeze(["1561514532", "2560360931", "2689669665", "2894494274", "3166947187"]);
 export const DATE_MARK = "{{YML_DATE}}";

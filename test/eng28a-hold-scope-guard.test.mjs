@@ -134,7 +134,8 @@ test("ENG-28a охорона: політика є для кожного режи
   // Рішення власника 03.11: точкові правки власника — теж лише з --maintenance і під орендою W2; лише перелічені колонки.
   assert.match(src, /const MAINTENANCE_MODES = \[[^\]]*"owner-edits"[^\]]*\]/);
   assert.match(src, /underMaintenanceLease\(\(\) => applyOwnerEdits\(/);
-  assert.deepEqual(WT.MODE_POLICIES["owner-edits"][SHEET.main].columns, ["Назва UA", "Назва RU", "Опис UA", "Опис RU", "Характеристики JSON", "Фото JSON", "Виробник", "Попередження постачальника", "Запити UA", "Запити RU", "Група ID", "Група UA", "Група RU", "Категорія Prom ID", "Категорія Prom URL"]);
+  // Рішення власника 14.11: + три колонки правила ціни (ручна ціна, ціна постачальника на момент встановлення, надбавка −1…+5).
+  assert.deepEqual(WT.MODE_POLICIES["owner-edits"][SHEET.main].columns, ["Назва UA", "Назва RU", "Опис UA", "Опис RU", "Характеристики JSON", "Фото JSON", "Виробник", "Попередження постачальника", "Запити UA", "Запити RU", "Група ID", "Група UA", "Група RU", "Категорія Prom ID", "Категорія Prom URL", "Ціна вручну", "Ціна вручну: при ціні постачальника", "Надбавка"]);
   // Кожен режим запису — записувач, обгорнутий охоронцем (до будь-якого кроку запису).
   assert.match(src, /if \(WRITE_MODES\.includes\(mode\)\) \{\s*try \{\s*const policy = MODE_POLICIES\[mode\];[\s\S]{0,400}sheets = guardedSheets\(sheets, \{ spreadsheetId:/);
 });
