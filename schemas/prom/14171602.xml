@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14171602" nameRU="Пескоструйные аппараты передвижные" nameUK="Піскоструминні пересувні апарати">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="14" measureUnitUK="бар"/>
+    <attribute id="106" nameRU="Расход воздуха" type="real" nameUK="Витрата повітря" measureUnitRU="литр/мин" min="0" max="10000" measureUnitUK="літр/хв"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="149" nameRU="Глубина" type="real" nameUK="Глибина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="1403" nameRU="Масса" type="real" nameUK="Маса" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="1980" nameRU="Тип питания" type="multiselect" nameUK="Тип живлення">
+      <attribute_value id="11693" nameRU="Сеть 220 В" nameUK="Мережа 220 В"/>
+      <attribute_value id="11694" nameRU="Сеть 380 В" nameUK="Мережа 380 В"/>
+      <attribute_value id="11695" nameRU="Сеть 12 В" nameUK="Мережа 12 В"/>
+      <attribute_value id="12624" nameRU="Сеть 24 В" nameUK="Мережа 24 В"/>
+      <attribute_value id="151652" nameRU="Сжатый воздух" nameUK="Стиснене повітря"/>
+    </attribute>
+    <attribute id="2501" nameRU="Объем бункера" type="real" nameUK="Об'єм бункера" measureUnitRU="л" min="0" max="1000" measureUnitUK="л"/>
+    <attribute id="2872" nameRU="Производительность  пескоструя" type="real" nameUK="Продуктивність піскоструменю" measureUnitRU="кв. м/час" min="0" max="100" measureUnitUK="кв.м/год"/>
+    <attribute id="2879" nameRU="Тип подачи абразива" type="singleselect" nameUK="Тип подачі абразиву">
+      <attribute_value id="18835" nameRU="Напорный" nameUK="Напірний"/>
+      <attribute_value id="18836" nameRU="Эжекционный" nameUK="Ежекційний"/>
+      <attribute_value id="18837" nameRU="Другой" nameUK="Інший"/>
+    </attribute>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+  </category>
+</categories>

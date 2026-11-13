@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="147006" nameRU="Подметальные машины" nameUK="Підмітальні машини">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="150000" measureUnitUK="куб. см"/>
+    <attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="л. с." min="0" max="10" measureUnitUK="к. с."/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+      <attribute_value id="9284" nameRU="Бензиновый" nameUK="Бензиновий"/>
+    </attribute>
+    <attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+      <attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+      <attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+    </attribute>
+    <attribute id="1920" nameRU="Максимальная рабочая ширина" type="real" nameUK="Максимальна робоча ширина" measureUnitRU="мм" min="0" max="15000" measureUnitUK="мм"/>
+    <attribute id="2511" nameRU="Тип привода подметальной машины" type="free" nameUK="Тип приводу підмітальної машини"/>
+    <attribute id="2929" nameRU="Максимальная скорость" type="real" nameUK="Максимальна швидкість" measureUnitRU="км/ч" min="0" max="15" measureUnitUK="км/год"/>
+    <attribute id="2945" nameRU="Производительность по площади" type="real" nameUK="Продуктивність по площі" measureUnitRU="кв. м/час" min="0" max="4000" measureUnitUK="кв.м/год"/>
+    <attribute id="2947" nameRU="Объем контейнера для мусора" type="real" nameUK="Об'єм контейнера для сміття" measureUnitRU="л" min="0" max="4000" measureUnitUK="л"/>
+    <attribute id="2950" nameRU="Ширина основной щетки" type="real" nameUK="Ширина основної щітки" measureUnitRU="мм" min="0" max="4000" measureUnitUK="мм"/>
+    <attribute id="2975" nameRU="Количество боковых подметальных щёток" type="integer" nameUK="Кількість бічних підмітальних щіток" measureUnitRU="шт" min="0" max="20" measureUnitUK="шт."/>
+    <attribute id="2994" nameRU="Сиденье для оператора" type="bool" nameUK="Сидіння для оператора"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10867" nameRU="Система запуска" type="singleselect" nameUK="Система запуску">
+      <attribute_value id="99186" nameRU="Электростартер" nameUK="Електростартер"/>
+      <attribute_value id="106391" nameRU="Ручной запуск" nameUK="Ручний запуск"/>
+    </attribute>
+    <attribute id="14589" nameRU="Количество передач" type="singleselect" nameUK="Кількість передач">
+      <attribute_value id="152329" nameRU="1 вперед" nameUK="1 вперед"/>
+      <attribute_value id="152330" nameRU="1 вперед/1 назад" nameUK="1 вперед/1 назад"/>
+      <attribute_value id="152331" nameRU="2 вперед/1 назад" nameUK="2 вперед/1 назад"/>
+      <attribute_value id="152332" nameRU="3 вперед/1 назад" nameUK="3 вперед/1 назад"/>
+      <attribute_value id="152333" nameRU="4 вперед/1 назад" nameUK="4 вперед/1 назад"/>
+      <attribute_value id="152334" nameRU="4 вперед/2 назад" nameUK="4 вперед/2 назад"/>
+      <attribute_value id="152335" nameRU="6 вперед/1 назад" nameUK="6 вперед/1 назад"/>
+      <attribute_value id="152336" nameRU="6 вперед/2 назад" nameUK="6 вперед/2 назад"/>
+      <attribute_value id="152337" nameRU="6 вперед/3 назад" nameUK="6 вперед/3 назад"/>
+      <attribute_value id="178555" nameRU="5 вперед/2 назад" nameUK="5 вперед/2 назад"/>
+      <attribute_value id="181240" nameRU="2 вперед/2 назад" nameUK="2 вперед/2 назад"/>
+      <attribute_value id="203547" nameRU="4 вперед/3 назад" nameUK="4 вперед/3 назад"/>
+      <attribute_value id="210169" nameRU="8 вперед/2 назад" nameUK="8 вперед/2 назад"/>
+      <attribute_value id="238253" nameRU="8 вперед/8 назад" nameUK="8 вперед/8 тому"/>
+      <attribute_value id="290714" nameRU="4 вперед/4 назад" nameUK=""/>
+      <attribute_value id="347137" nameRU="3 вперед/ 2 назад" nameUK="3 вперед/ 2 назад"/>
+    </attribute>
+  </category>
+</categories>
