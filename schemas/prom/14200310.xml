@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200310" nameRU="Отвертки" nameUK="Викрутки">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="1000" measureUnitUK="г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="123" nameRU="Длина инструмента" type="real" nameUK="Довжина інструменту" measureUnitRU="мм" min="0" max="515" measureUnitUK="мм"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7635" nameRU="сталь" nameUK="сталь"/>
+      <attribute_value id="7636" nameRU="алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7637" nameRU="свинец" nameUK="свинець"/>
+      <attribute_value id="7638" nameRU="медь" nameUK="мідь"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="7641" nameRU="стеклопластик" nameUK="склопластик"/>
+      <attribute_value id="7765" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="209260" nameRU="Многокомпонентный" nameUK="Багатокомпонентний"/>
+      <attribute_value id="289102" nameRU="Термопластик" nameUK="Термопластик"/>
+    </attribute>
+    <attribute id="398" nameRU="Тип отвертки" type="singleselect" nameUK="Тип викрутки">
+      <attribute_value id="7661" nameRU="Прямой шлиц" nameUK="Прямий шліц"/>
+      <attribute_value id="7662" nameRU="Крестообразный" nameUK="Хрестоподібний"/>
+      <attribute_value id="7663" nameRU="Шестигранный шлиц" nameUK="Шестигранний шліц"/>
+      <attribute_value id="7664" nameRU="Torx (звёздообразный шестилучевой)" nameUK="Torx (зіркоподібний шестипроменевої)"/>
+      <attribute_value id="7665" nameRU="Tri-Wing (трёхлопастной)" nameUK="Tri-Wing (трилопатеві)"/>
+      <attribute_value id="7666" nameRU="Torq-Set (асимметричный крестообразный)" nameUK="Torq-Set (асиметричний хрестоподібний)"/>
+      <attribute_value id="7667" nameRU="Двухштырьковый (спаннер)" nameUK="Двоштирковий (спаннер)"/>
+      <attribute_value id="226576" nameRU="Универсальная" nameUK="Універсальна"/>
+      <attribute_value id="289850" nameRU="Ударная" nameUK="Ударна"/>
+      <attribute_value id="296803" nameRU="Индикаторная" nameUK="Індикаторна"/>
+      <attribute_value id="297689" nameRU="Прецизионная" nameUK="Прецизійна"/>
+      <attribute_value id="301898" nameRU="Диэлектрическая" nameUK="Діелектрична"/>
+      <attribute_value id="332867" nameRU="Квадратный шлиц" nameUK="Квадратний шліц"/>
+      <attribute_value id="332929" nameRU="Торцовая, шестигранная головка" nameUK="Торцева, шестигранна головка"/>
+      <attribute_value id="332931" nameRU="Торцовая головка" nameUK="Торцева головка"/>
+      <attribute_value id="340371" nameRU="Битодержатель" nameUK="Бітоутримувач"/>
+    </attribute>
+    <attribute id="399" nameRU="Маркировка наконечника" type="singleselect" nameUK="Маркування накінечника">
+      <attribute_value id="7668" nameRU="SL 2" nameUK="SL 2"/>
+      <attribute_value id="7669" nameRU="SL 2,5" nameUK="SL 2,5"/>
+      <attribute_value id="7670" nameRU="SL 3" nameUK="SL 3"/>
+      <attribute_value id="7671" nameRU="SL 3,5" nameUK="SL 3,5"/>
+      <attribute_value id="7672" nameRU="SL 4" nameUK="SL 4"/>
+      <attribute_value id="7673" nameRU="SL 4,5" nameUK="SL 4,5"/>
+      <attribute_value id="7674" nameRU="SL 5" nameUK="SL 5"/>
+      <attribute_value id="7675" nameRU="SL 5,5" nameUK="SL 5,5"/>
+      <attribute_value id="7676" nameRU="SL 6" nameUK="SL 6"/>
+      <attribute_value id="7677" nameRU="SL 6,5" nameUK="SL 6,5"/>
+      <attribute_value id="7678" nameRU="SL 7" nameUK="SL 7"/>
+      <attribute_value id="7679" nameRU="SL 8" nameUK="SL 8"/>
+      <attribute_value id="7680" nameRU="SL 9" nameUK="SL 9"/>
+      <attribute_value id="7681" nameRU="SL 10" nameUK="SL 10"/>
+      <attribute_value id="7682" nameRU="SL 12" nameUK="SL 12"/>
+      <attribute_value id="7683" nameRU="SL 13" nameUK="SL 13"/>
+      <attribute_value id="7684" nameRU="SL 14" nameUK="SL 14"/>
+      <attribute_value id="7685" nameRU="SL 16" nameUK="SL 16"/>
+      <attribute_value id="7686" nameRU="SL 18" nameUK="SL 18"/>
+      <attribute_value id="7687" nameRU="PH 000" nameUK="PH 000"/>
+      <attribute_value id="7688" nameRU="PH 00" nameUK="PH 00"/>
+      <attribute_value id="7689" nameRU="PH 0" nameUK="PH 0"/>
+      <attribute_value id="7690" nameRU="PH 1" nameUK="PH 1"/>
+      <attribute_value id="7691" nameRU="PH 2" nameUK="PH 2"/>
+      <attribute_value id="7692" nameRU="PH 3" nameUK="PH 3"/>
+      <attribute_value id="7693" nameRU="PH 4" nameUK="PH 4"/>
+      <attribute_value id="7694" nameRU="SW 1,5" nameUK="SW 1,5"/>
+      <attribute_value id="7695" nameRU="SW 2" nameUK="SW 2"/>
+      <attribute_value id="7696" nameRU="SW 2,5" nameUK="SW 2,5"/>
+      <attribute_value id="7697" nameRU="SW 3" nameUK="SW 3"/>
+      <attribute_value id="7698" nameRU="SW 3,5" nameUK="SW 3,5"/>
+      <attribute_value id="7699" nameRU="SW 4" nameUK="SW 4"/>
+      <attribute_value id="7700" nameRU="SW 4,5" nameUK="SW 4,5"/>
+      <attribute_value id="7701" nameRU="SW 5" nameUK="SW 5"/>
+      <attribute_value id="7702" nameRU="SW 6" nameUK="SW 6"/>
+      <attribute_value id="7703" nameRU="SW 7" nameUK="SW 7"/>
+      <attribute_value id="7704" nameRU="SW 8" nameUK="SW 8"/>
+      <attribute_value id="7705" nameRU="SW 9" nameUK="SW 9"/>
+      <attribute_value id="7706" nameRU="SW 10" nameUK="SW 10"/>
+      <attribute_value id="7707" nameRU="SW 11" nameUK="SW 11"/>
+      <attribute_value id="7708" nameRU="SW 12" nameUK="SW 12"/>
+      <attribute_value id="7709" nameRU="SW 13" nameUK="SW 13"/>
+      <attribute_value id="7710" nameRU="SW 14" nameUK="SW 14"/>
+      <attribute_value id="7711" nameRU="SW 17" nameUK="SW 17"/>
+      <attribute_value id="7712" nameRU="SW 19" nameUK="SW 19"/>
+      <attribute_value id="7713" nameRU="SW 22" nameUK="SW 22"/>
+      <attribute_value id="7714" nameRU="SW 24" nameUK="SW 24"/>
+      <attribute_value id="7715" nameRU="SW27" nameUK="SW27"/>
+      <attribute_value id="7716" nameRU="TX 1" nameUK="TX 1"/>
+      <attribute_value id="7717" nameRU="TX 2" nameUK="TX 2"/>
+      <attribute_value id="7718" nameRU="TX 3" nameUK="TX 3"/>
+      <attribute_value id="7719" nameRU="TX 4" nameUK="TX 4"/>
+      <attribute_value id="7720" nameRU="TX 5" nameUK="TX 5"/>
+      <attribute_value id="7721" nameRU="TX 6" nameUK="TX 6"/>
+      <attribute_value id="7722" nameRU="TX 7" nameUK="TX 7"/>
+      <attribute_value id="7723" nameRU="TX 8" nameUK="TX 8"/>
+      <attribute_value id="7724" nameRU="TX 9" nameUK="TX 9"/>
+      <attribute_value id="7725" nameRU="TX 10" nameUK="TX 10"/>
+      <attribute_value id="7726" nameRU="TX 15" nameUK="TX 15"/>
+      <attribute_value id="7727" nameRU="TX 20" nameUK="TX 20"/>
+      <attribute_value id="7728" nameRU="TX 25" nameUK="TX 25"/>
+      <attribute_value id="7729" nameRU="TX 27" nameUK="TX 27"/>
+      <attribute_value id="7730" nameRU="TX 30" nameUK="TX 30"/>
+      <attribute_value id="7731" nameRU="TX 40" nameUK="TX 40"/>
+      <attribute_value id="7732" nameRU="TX 45" nameUK="TX 45"/>
+      <attribute_value id="7733" nameRU="TX 50" nameUK="TX 50"/>
+      <attribute_value id="7734" nameRU="TX 55" nameUK="TX 55"/>
+      <attribute_value id="7735" nameRU="TX 60" nameUK="TX 60"/>
+      <attribute_value id="7736" nameRU="TX 70" nameUK="TX 70"/>
+      <attribute_value id="7737" nameRU="TX 80" nameUK="TX 80"/>
+      <attribute_value id="7738" nameRU="TX 90" nameUK="TX 90"/>
+      <attribute_value id="7739" nameRU="TX 100" nameUK="TX 100"/>
+      <attribute_value id="7740" nameRU="TW 0" nameUK="TW 0"/>
+      <attribute_value id="7741" nameRU="TW 1" nameUK="TW 1"/>
+      <attribute_value id="7742" nameRU="TW 2" nameUK="TW 2"/>
+      <attribute_value id="7743" nameRU="TW 3" nameUK="TW 3"/>
+      <attribute_value id="7744" nameRU="TW 4" nameUK="TW 4"/>
+      <attribute_value id="7745" nameRU="TW 5" nameUK="TW 5"/>
+      <attribute_value id="7746" nameRU="TW 6" nameUK="TW 6"/>
+      <attribute_value id="7747" nameRU="TW 7" nameUK="TW 7"/>
+      <attribute_value id="7748" nameRU="TW 8" nameUK="TW 8"/>
+      <attribute_value id="7749" nameRU="TW 9" nameUK="TW 9"/>
+      <attribute_value id="7750" nameRU="TW 10" nameUK="TW 10"/>
+      <attribute_value id="7751" nameRU="TW 11" nameUK="TW 11"/>
+      <attribute_value id="7752" nameRU="TW 12" nameUK="TW 12"/>
+      <attribute_value id="7753" nameRU="TW 13" nameUK="TW 13"/>
+      <attribute_value id="7754" nameRU="TW 14" nameUK="TW 14"/>
+      <attribute_value id="7755" nameRU="TW 15" nameUK="TW 15"/>
+      <attribute_value id="7756" nameRU="TS 0" nameUK="TS 0"/>
+      <attribute_value id="7757" nameRU="TS 1" nameUK="TS 1"/>
+      <attribute_value id="7758" nameRU="TS 2" nameUK="TS 2"/>
+      <attribute_value id="7759" nameRU="TS 3" nameUK="TS 3"/>
+      <attribute_value id="7760" nameRU="TS 4" nameUK="4 TS"/>
+      <attribute_value id="7761" nameRU="TS 5" nameUK="TS 5"/>
+      <attribute_value id="7762" nameRU="TS 6" nameUK="TS 6"/>
+      <attribute_value id="7763" nameRU="TS 8" nameUK="TS 8"/>
+      <attribute_value id="7764" nameRU="TS 10" nameUK="TS 10"/>
+      <attribute_value id="274917" nameRU="SL 9,5" nameUK="SL 9,5"/>
+      <attribute_value id="277631" nameRU="Y2" nameUK="Y2"/>
+      <attribute_value id="277632" nameRU="Y1" nameUK="Y1"/>
+      <attribute_value id="277633" nameRU="Y0" nameUK="Y0"/>
+      <attribute_value id="277634" nameRU="U5" nameUK="U5"/>
+      <attribute_value id="277635" nameRU="TA2" nameUK="TA2"/>
+      <attribute_value id="277636" nameRU="T5" nameUK="T5"/>
+      <attribute_value id="277637" nameRU="Т6" nameUK="Т6"/>
+      <attribute_value id="280112" nameRU="PZ 2" nameUK="PZ 2"/>
+      <attribute_value id="282999" nameRU="PZ 1" nameUK=""/>
+      <attribute_value id="289639" nameRU="PZ 3" nameUK=""/>
+      <attribute_value id="332831" nameRU="PZ0" nameUK=""/>
+      <attribute_value id="332868" nameRU="SQ 0" nameUK=""/>
+      <attribute_value id="332869" nameRU="SQ 1" nameUK=""/>
+      <attribute_value id="332870" nameRU="SQ 2" nameUK=""/>
+      <attribute_value id="332871" nameRU="SQ 3" nameUK=""/>
+      <attribute_value id="332933" nameRU="SW 5.5" nameUK=""/>
+      <attribute_value id="336535" nameRU="SL 1.5" nameUK=""/>
+      <attribute_value id="349395" nameRU="PH/FL2 " nameUK=""/>
+      <attribute_value id="349524" nameRU="PZ1/PZ2" nameUK=""/>
+      <attribute_value id="349525" nameRU="PH1/SL2" nameUK=""/>
+      <attribute_value id="349526" nameRU="PH1/SL5" nameUK=""/>
+      <attribute_value id="349545" nameRU="PH2/SL6" nameUK=""/>
+      <attribute_value id="353278" nameRU="SL0.8" nameUK=""/>
+      <attribute_value id="353422" nameRU="SL 1.0" nameUK=""/>
+      <attribute_value id="360278" nameRU="SL 0.8/4.0" nameUK=""/>
+      <attribute_value id="360279" nameRU="SL 1.0/5.5" nameUK=""/>
+      <attribute_value id="360343" nameRU="PH1/PH2" nameUK=""/>
+      <attribute_value id="360372" nameRU="SL 1,2" nameUK="SL 1,2"/>
+    </attribute>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+      <attribute_value id="67488" nameRU="Металлический кейс" nameUK="Металевий кейс"/>
+    </attribute>
+    <attribute id="8228" nameRU="Диэлектрическое покрытие" type="bool" nameUK="Діелектричне покриття"/>
+    <attribute id="8271" nameRU="Омедненный инструмент" type="bool" nameUK="Оміднений інструмент"/>
+    <attribute id="8409" nameRU="Наличие индикатора" type="bool" nameUK="Наявність індикатора"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10252" nameRU="Набор" type="bool" nameUK="Набір"/>
+    <attribute id="11406" nameRU="Материал наконечника" type="singleselect" nameUK="Матеріал накінечника">
+      <attribute_value id="109435" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="331418" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="331419" nameRU="Металл" nameUK="Метал"/>
+    </attribute>
+    <attribute id="18546" nameRU="Намагниченный наконечник" type="bool" nameUK="Намагнічений наконечник"/>
+  </category>
+</categories>

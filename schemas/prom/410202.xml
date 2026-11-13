@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="410202" nameRU="Автомобильные пуско-зарядные устройства" nameUK="Автомобільні пуско-зарядні пристрої">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="60" measureUnitUK="кг"/>
+    <attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="15000" measureUnitUK="А. г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+      <attribute_value id="7132" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7867" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="19908" nameRU="Металл покрытый порошковой краской" nameUK="Метал покритий порошковою фарбою"/>
+      <attribute_value id="67250" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="67251" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="75486" nameRU="Термопластик" nameUK="Термопластик"/>
+      <attribute_value id="109050" nameRU="АБС-пластик" nameUK="АБС-пластик"/>
+      <attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+      <attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+      <attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="118199" nameRU="Пусковое" nameUK="Пусковий"/>
+      <attribute_value id="118200" nameRU="Зарядное" nameUK="Зарядний"/>
+      <attribute_value id="118202" nameRU="Пуско-зарядное" nameUK="Пуско-зарядний"/>
+    </attribute>
+    <attribute id="2935" nameRU="Время зарядки аккумулятора" type="real" nameUK="Час зарядки акумулятора" measureUnitRU="час" min="0" max="20" measureUnitUK="годин"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="9771" nameRU="Ток заряда" type="real" nameUK="Струм заряду" measureUnitRU="А" min="0" max="4000" measureUnitUK="А"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10438" nameRU="Напряжение зарядки" type="real" nameUK="Напруга зарядки" measureUnitRU="В" min="0" max="48" measureUnitUK="В"/>
+    <attribute id="10447" nameRU="Количество режимов заряда" type="singleselect" nameUK="Кількість режимів заряду">
+      <attribute_value id="93583" nameRU="1" nameUK="1"/>
+      <attribute_value id="93584" nameRU="2" nameUK="2"/>
+      <attribute_value id="93585" nameRU="3" nameUK="3"/>
+      <attribute_value id="93586" nameRU="4" nameUK="4"/>
+      <attribute_value id="93587" nameRU="5" nameUK="5"/>
+      <attribute_value id="93588" nameRU="6" nameUK="6"/>
+      <attribute_value id="93589" nameRU="7" nameUK="7"/>
+      <attribute_value id="93590" nameRU="8" nameUK="8"/>
+    </attribute>
+    <attribute id="10456" nameRU="Тип зарядного устройства" type="singleselect" nameUK="Тип зарядного пристрою">
+      <attribute_value id="93605" nameRU="Импульсные" nameUK="Імпульсні"/>
+      <attribute_value id="93606" nameRU="Трансформаторные" nameUK="Трансформаторні"/>
+    </attribute>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="152816" nameRU="Защита от перегрузки" nameUK="Захист від перевантаження"/>
+      <attribute_value id="152817" nameRU="Защита от короткого замыкания" nameUK="Захист від короткого замикання"/>
+      <attribute_value id="185947" nameRU="Защита от перегрева" nameUK="Захист від перегріву"/>
+      <attribute_value id="349764" nameRU="Восстановление аккумулятора" nameUK=""/>
+      <attribute_value id="349765" nameRU="Встроенный амперметр" nameUK=""/>
+      <attribute_value id="349766" nameRU="Индикатор заряда цифровой" nameUK=""/>
+      <attribute_value id="349767" nameRU="Интеллектуальная зарядка" nameUK=""/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+    <attribute id="18319" nameRU="Артикул производителя" type="free" nameUK="Артикул виробника"/>
+  </category>
+</categories>

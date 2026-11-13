@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="301902" nameRU="Сварочные маски" nameUK="Зварювальні маски">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="1000" measureUnitUK="град."/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="700" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="700" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="700" measureUnitUK="мм"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="-50" max="0" measureUnitUK="град."/>
+    <attribute id="7572" nameRU="Ширина смотрового окна" type="real" nameUK="Ширина оглядового вікна" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="7573" nameRU="Длина смотрового окна" type="real" nameUK="Довжина оглядового вікна" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="7574" nameRU="Ширина светофильтра" type="real" nameUK="Ширина світлофільтру" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="7575" nameRU="Длина светофильтра" type="real" nameUK="Довжина світлофільтру" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="7576" nameRU="Высота светофильтра" type="real" nameUK="Висота світлофільтру" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="7577" nameRU="Максимальная температура хранения" type="real" nameUK="Максимальна температура зберігання" measureUnitRU="град." min="0" max="200" measureUnitUK="град."/>
+    <attribute id="7578" nameRU="Минимальная температура хранения" type="real" nameUK="Мінімальна температура зберігання" measureUnitRU="град." min="-50" max="100" measureUnitUK="град."/>
+    <attribute id="7579" nameRU="Защита от излучения" type="multiselect" nameUK="Захист від випромінювання">
+      <attribute_value id="64559" nameRU="Ультрафиолетового" nameUK="Ультрафіолетового"/>
+      <attribute_value id="64560" nameRU="Инфракрасного" nameUK="Інфрачервоного"/>
+    </attribute>
+    <attribute id="7580" nameRU="Время срабатывания" type="real" nameUK="Час спрацьовування" measureUnitRU="мс" min="0" max="1000" measureUnitUK="мс"/>
+    <attribute id="7581" nameRU="Время возврата в светлое положение" type="real" nameUK="Час повернення в світле положення" measureUnitRU="мс" min="0" max="2000" measureUnitUK="мс"/>
+    <attribute id="7582" nameRU="Вид сварочной маски" type="singleselect" nameUK="Вид зварювальної маски">
+      <attribute_value id="64561" nameRU="Традиционная" nameUK="Традиційна"/>
+      <attribute_value id="64562" nameRU="С подъемным свето­фильтром" nameUK="З підйомним світлофільтром"/>
+      <attribute_value id="64563" nameRU="Маска-хамелеон" nameUK="Маска хамелеон"/>
+    </attribute>
+    <attribute id="7583" nameRU="Возможность работы с респиратором" type="bool" nameUK="Можливість роботи з респіратором"/>
+    <attribute id="7585" nameRU="Регулировка задержки снятия затемнения" type="bool" nameUK="Регулювання затримки зняття затемнення"/>
+    <attribute id="7586" nameRU="Регулировка плотности затемнения" type="bool" nameUK="Регулювання щільності затемнення"/>
+    <attribute id="7587" nameRU="Светлое состояние, DIN" type="integer" nameUK="Світлий стан, DIN"/>
+    <attribute id="7588" nameRU="Минимальная степень затемнения, DIN" type="integer" nameUK="Мінімальна ступінь затемнення, DIN"/>
+    <attribute id="7589" nameRU="Максимальная степень затемнения, DIN" type="integer" nameUK="Максимальна ступінь затемнення, DIN"/>
+    <attribute id="7590" nameRU="Питание маски" type="multiselect" nameUK="Живлення маски">
+      <attribute_value id="64568" nameRU="Фотоэлемент" nameUK="Фотоелемент"/>
+      <attribute_value id="64569" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+    </attribute>
+    <attribute id="14734" nameRU="Количество поддерживаемых сенсоров" type="integer" nameUK="Кількість підтримуваних сенсорів"/>
+  </category>
+</categories>

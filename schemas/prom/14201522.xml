@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201522" nameRU="Ножи, лески для триммеров и кусторезов" nameUK="Ножі, ліски для тримерів і кущорізів">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="1000" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8058" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="8059" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="62586" nameRU="ПВХ" nameUK="ПВХ"/>
+      <attribute_value id="70452" nameRU="Нейлон" nameUK="Нейлон"/>
+      <attribute_value id="74175" nameRU="Полиамид" nameUK="Поліамід"/>
+      <attribute_value id="85975" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+      <attribute_value id="172618" nameRU="Инструментальная сталь" nameUK="Інструментальна сталь"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="79729" nameRU="Нож" nameUK="Ніж"/>
+      <attribute_value id="113074" nameRU="Леска" nameUK="Волосінь"/>
+      <attribute_value id="157675" nameRU="Барабан" nameUK="Барабан"/>
+      <attribute_value id="183133" nameRU="Блок ножей" nameUK="Блок ножів"/>
+      <attribute_value id="183134" nameRU="Полотно ножевое верхнее" nameUK="Полотно ножове верхнє"/>
+      <attribute_value id="183135" nameRU="Полотно ножевое нижнее" nameUK="Полотно ножове нижнє"/>
+      <attribute_value id="183136" nameRU="Диск" nameUK="Диск"/>
+      <attribute_value id="183137" nameRU="Барабан с леской" nameUK="Барабан з волосінню"/>
+    </attribute>
+    <attribute id="4415" nameRU="Применение" type="singleselect" nameUK="Застосування">
+      <attribute_value id="183138" nameRU="Кусторез" nameUK="Кущоріз"/>
+      <attribute_value id="183139" nameRU="Мотокоса" nameUK="Мотокоса"/>
+      <attribute_value id="183140" nameRU="Триммер" nameUK="Тример"/>
+    </attribute>
+    <attribute id="6420" nameRU="Перфорация" type="bool" nameUK="Перфорація"/>
+    <attribute id="6527" nameRU="Диаметр диска" type="real" nameUK="Діаметр диска" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="8306" nameRU="Длина лески" type="integer" nameUK="Довжина волосіні" measureUnitRU="м" min="0" max="10000" measureUnitUK="м"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10058" nameRU="Мульчирование" type="bool" nameUK="Мульчування"/>
+    <attribute id="10176" nameRU="Количество зубьев" type="real" nameUK="Кількість зубів" measureUnitRU="шт" min="0" max="100" measureUnitUK="шт."/>
+    <attribute id="12658" nameRU="Диаметр лески" type="real" nameUK="Діаметр волосіні" measureUnitRU="мм" min="0" max="10" measureUnitUK="мм"/>
+    <attribute id="17867" nameRU="Диаметр посадки диска/ножа" type="real" nameUK="Діаметр посадки диска/ножа" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="17868" nameRU="Заточка диска/ножа" type="singleselect" nameUK="Заточка диска/ножа">
+      <attribute_value id="233466" nameRU="Односторонняя" nameUK="Одностороння"/>
+      <attribute_value id="233467" nameRU="Двусторонняя" nameUK="Двостороння"/>
+    </attribute>
+    <attribute id="17869" nameRU="Победитовые напайки" type="bool" nameUK="Побідитові напайки"/>
+    <attribute id="17870" nameRU="Диаметр посадки барабана" type="real" nameUK="Діаметр посадки барабана" measureUnitRU="мм" min="0" max="110" measureUnitUK="мм"/>
+    <attribute id="17871" nameRU="Подача лески" type="singleselect" nameUK="Подача волосіні">
+      <attribute_value id="233468" nameRU="Автоматическая" nameUK="Автоматична"/>
+      <attribute_value id="233469" nameRU="Полуавтоматическая" nameUK="Напівавтоматична"/>
+      <attribute_value id="233470" nameRU="Механическая" nameUK="Механічна"/>
+    </attribute>
+    <attribute id="17872" nameRU="Сечение лески" type="singleselect" nameUK="Перетин ліски">
+      <attribute_value id="233471" nameRU="Витое" nameUK="Кручене"/>
+      <attribute_value id="233472" nameRU="Звезда" nameUK="Зірка"/>
+      <attribute_value id="233473" nameRU="Зуб пилы" nameUK="Зуб пилки"/>
+      <attribute_value id="233474" nameRU="Квадрат" nameUK="Квадрат"/>
+      <attribute_value id="233475" nameRU="Круг" nameUK="Коло"/>
+      <attribute_value id="233476" nameRU="Шестиугольник" nameUK="Шестикутник"/>
+      <attribute_value id="278370" nameRU="Семиугольник" nameUK="Семикутник"/>
+    </attribute>
+    <attribute id="17873" nameRU="Цветовой код лески" type="singleselect" nameUK="Колірний код ліски">
+      <attribute_value id="233477" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="233478" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="233479" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="233480" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="233481" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="233482" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="233483" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="233484" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="271436" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+    </attribute>
+    <attribute id="17874" nameRU="Ширина кошения" type="real" nameUK="Ширина косіння" measureUnitRU="см" min="0" max="100" measureUnitUK="см"/>
+  </category>
+</categories>
