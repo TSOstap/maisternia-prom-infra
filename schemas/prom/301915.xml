@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="301915" nameRU="Наушники и беруши" nameUK="Навушники та беруші">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="496" nameRU="Возрастная группа" type="singleselect" nameUK="Вікова група">
+      <attribute_value id="9540" nameRU="Для детей" nameUK="Для дітей"/>
+      <attribute_value id="9541" nameRU="Для взрослых" nameUK="Для дорослих"/>
+      <attribute_value id="9543" nameRU="Для детей и взрослых" nameUK="Для дітей та дорослих"/>
+    </attribute>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="31381" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="42610" nameRU="Силикон" nameUK="Силікон"/>
+      <attribute_value id="73174" nameRU="Полиуретан" nameUK="Поліуретан"/>
+      <attribute_value id="88071" nameRU="Термопластик" nameUK="Термопластик"/>
+      <attribute_value id="200012" nameRU="Воск" nameUK="Віск"/>
+      <attribute_value id="283956" nameRU="EVA" nameUK="EVA"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="129148" nameRU="Наушники" nameUK="Навушники"/>
+      <attribute_value id="146703" nameRU="Комплектующее" nameUK="Комплектуюче"/>
+      <attribute_value id="150944" nameRU="Беруши" nameUK="Беруші"/>
+      <attribute_value id="157566" nameRU="Аксессуары" nameUK="Аксесуари"/>
+    </attribute>
+    <attribute id="2719" nameRU="Узоры и принты" type="singleselect" nameUK="Візерунки і принти">
+      <attribute_value id="174436" nameRU="Камуфляж" nameUK="Камуфляж"/>
+      <attribute_value id="273597" nameRU="Мультикам" nameUK="Мультикам"/>
+      <attribute_value id="293021" nameRU="Камуфляж Дезерт" nameUK=""/>
+      <attribute_value id="306478" nameRU="Камуфляж Хищник" nameUK="Камуфляж Хижак"/>
+      <attribute_value id="363363" nameRU="MultiCam" nameUK=""/>
+      <attribute_value id="363364" nameRU="MultiCam Black" nameUK=""/>
+      <attribute_value id="363365" nameRU="MultiCam Arid" nameUK=""/>
+      <attribute_value id="363366" nameRU="MultiCam Tropic" nameUK=""/>
+      <attribute_value id="363368" nameRU="MultiCam Alpine" nameUK=""/>
+      <attribute_value id="363369" nameRU="Scorpion" nameUK=""/>
+      <attribute_value id="363370" nameRU="UCP" nameUK=""/>
+      <attribute_value id="363371" nameRU="AOR1" nameUK=""/>
+      <attribute_value id="363372" nameRU="AOR2" nameUK=""/>
+      <attribute_value id="363373" nameRU="Flecktarn" nameUK=""/>
+      <attribute_value id="363374" nameRU="Tiger Stripe" nameUK=""/>
+      <attribute_value id="363375" nameRU="Vietnam Tiger Stripe" nameUK=""/>
+      <attribute_value id="363376" nameRU="Desert Tiger Stripe" nameUK=""/>
+    </attribute>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30798" nameRU="Песочный" nameUK="Пісочний"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30802" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="266267" nameRU="Койот" nameUK="Койот"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="132943" nameRU="Для детей" nameUK="Для дітей"/>
+      <attribute_value id="158367" nameRU="Для плавания" nameUK="Для плавання"/>
+      <attribute_value id="281327" nameRU="Для сна" nameUK="Для сну"/>
+      <attribute_value id="281328" nameRU="Для полетов" nameUK="Для польотів"/>
+      <attribute_value id="281329" nameRU="Для музыкантов" nameUK="Для музикантів"/>
+      <attribute_value id="281330" nameRU="Для мотоциклистов" nameUK="Для мотоциклістів"/>
+      <attribute_value id="281331" nameRU="Для шумных работ" nameUK="Для гучних робіт"/>
+      <attribute_value id="281332" nameRU="Для вечеринок и концертов" nameUK="Для вечірок та концертів"/>
+      <attribute_value id="292403" nameRU="Для стрельбы" nameUK="Для стрілянини"/>
+    </attribute>
+    <attribute id="17661" nameRU="Уровень шумоподавления SNR" type="real" nameUK="Рівень шумозаглушення SNR" measureUnitRU="дБ" min="0" max="100" measureUnitUK="дБ"/>
+    <attribute id="18674" nameRU="Уровень подавления шума NRR" type="real" nameUK="Рівень придушення шуму NRR" measureUnitRU="дБ" min="0" max="100" measureUnitUK="дБ"/>
+  </category>
+</categories>

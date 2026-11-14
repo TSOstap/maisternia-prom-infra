@@ -338,7 +338,10 @@ export function loadPromCatalog(dir = SCHEMAS_DIR, { promCategoriesFile = proces
   // Варіанти, які НЕ є перекладом (known-issues.json, action «noLexicon»: напр. 13070703 «Тип сходів» — UA у множині для RU в
   // однині), не беруть участі у словнику UA/RU інших категорій; поле самої категорії заповнюється як звичайно.
   const noLex = out.knownIssues.filter((k) => k.action === "noLexicon");
-  const lexSchemas = [...out.schemas.values()].map((s) => (noLex.some((k) => (k.categories || []).map(String).includes(String(s.id))) ? { ...s, attributes: s.attributes.map((a) => (noLex.some((k) => (k.categories || []).map(String).includes(String(s.id)) && String(k.id) === a.id) ? { ...a, values: [] } : a)) } : s));
+  // 14.11.2026 (known-issues.json → lexiconExcluded): категорії, чиї схеми працюють лише для власних полів і в словник UA/RU не йдуть
+  // зовсім (ні назви, ні значення): їхні переклади суперечать чинним схемам і стерли б перевірені пари.
+  const lexExcluded = new Set((readJson(path.join(dir, "known-issues.json"), {}).lexiconExcluded || []).flatMap((x) => (x.categories || []).map(String)));
+  const lexSchemas = [...out.schemas.values()].filter((s) => !lexExcluded.has(String(s.id))).map((s) => (noLex.some((k) => (k.categories || []).map(String).includes(String(s.id))) ? { ...s, attributes: s.attributes.map((a) => (noLex.some((k) => (k.categories || []).map(String).includes(String(s.id)) && String(k.id) === a.id) ? { ...a, values: [] } : a)) } : s));
   out.names = buildNames(lexSchemas, dict.names || {}, out.units.aliasMap, dict.values || {}, dict.valuesInContext || {}, out.units.conversions || [], dict.wordsInContext || {}, dict.restrictedContexts || null, dict.inCategory || {});
   out.names.brandPairs = Array.isArray(dict.brandPairs) ? dict.brandPairs : []; // погоджені пари написань бренду (лише за офіційним брендом)
   // Комплектація, підтверджена власником для конкретних товарів (Offer ID → { battery, charger })

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="64430" nameRU="Запчасти для увлажнителей, очистителей воздуха" nameUK="Запчастини для зволожувачів, очищувачів повітря">
+    <attribute id="8445" nameRU="Диаметр мембраны диафрагмы" type="real" nameUK="Діаметр мембрани діафрагми" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="9826" nameRU="Вид запчасти" type="singleselect" nameUK="Вид запчастини">
+      <attribute_value id="179830" nameRU="Плата управления" nameUK="Плата управління"/>
+      <attribute_value id="179834" nameRU="Фильтр" nameUK="Фільтр"/>
+      <attribute_value id="179893" nameRU="Трансформатор" nameUK="Трансформатор"/>
+      <attribute_value id="180731" nameRU="Двигатель вентилятора" nameUK="Двигун вентилятора"/>
+      <attribute_value id="180732" nameRU="Резервуар" nameUK="Резервуар"/>
+      <attribute_value id="276894" nameRU="Мембрана" nameUK="Мембрана"/>
+      <attribute_value id="277518" nameRU="Поплавок" nameUK="Поплавок"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

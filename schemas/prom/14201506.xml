@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201506" nameRU="Пилки для лобзиков" nameUK="Пилки для лобзиків">
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8058" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="169033" nameRU="Быстрорежущая сталь" nameUK="Швидкорізальна сталь"/>
+      <attribute_value id="172709" nameRU="Биметалл" nameUK="Біметал"/>
+      <attribute_value id="172710" nameRU="Высокоуглеродистая сталь" nameUK="Високовуглецева сталь"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="82135" nameRU="Набор" nameUK="Набір"/>
+      <attribute_value id="172707" nameRU="Пилка" nameUK="Пилка"/>
+    </attribute>
+    <attribute id="4245" nameRU="Толщина" type="real" nameUK="Товщина" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="15780" nameRU="Твердосплавная напайка" type="bool" nameUK="Твердосплавна напайка"/>
+    <attribute id="15790" nameRU="Применение пилки" type="multiselect" nameUK="Застосування пилки">
+      <attribute_value id="172714" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="172715" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="172716" nameRU="Пеноматериалы" nameUK="Піноматеріали"/>
+      <attribute_value id="172717" nameRU="Плитка" nameUK="Плитка"/>
+      <attribute_value id="172718" nameRU="Кафель" nameUK="Кахель"/>
+      <attribute_value id="172719" nameRU="Стекло" nameUK="Скло"/>
+      <attribute_value id="172720" nameRU="Камень" nameUK="Камінь"/>
+      <attribute_value id="172721" nameRU="Бетон" nameUK="Бетон"/>
+      <attribute_value id="172722" nameRU="Железобетон" nameUK="Залізобетон"/>
+      <attribute_value id="172723" nameRU="Керамогранит" nameUK="Керамограніт"/>
+    </attribute>
+    <attribute id="15791" nameRU="Направление зубьев" type="singleselect" nameUK="Напрямок зубців">
+      <attribute_value id="172728" nameRU="Вверх" nameUK="Вгору"/>
+      <attribute_value id="172729" nameRU="Вниз" nameUK="Вниз"/>
+    </attribute>
+    <attribute id="15792" nameRU="Длина оснастки" type="real" nameUK="Довжина оснащення" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="15793" nameRU="Ширина оснастки" type="real" nameUK="Ширина оснащення" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="15794" nameRU="Толщина оснастки" type="real" nameUK="Товщина оснащення" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+  </category>
+</categories>

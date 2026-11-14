@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1250316" nameRU="Снегоуборщики" nameUK="Снігоприбирачі">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="150000" measureUnitUK="куб. см"/>
+    <attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="16" measureUnitUK="л/год"/>
+    <attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+      <attribute_value id="9284" nameRU="Бензиновый" nameUK="Бензиновий"/>
+      <attribute_value id="9285" nameRU="Дизельный" nameUK="Дизельний"/>
+      <attribute_value id="70839" nameRU="Электрический" nameUK="Електричний"/>
+    </attribute>
+    <attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+      <attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+      <attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+    </attribute>
+    <attribute id="1338" nameRU="Время работы" type="real" nameUK="Час роботи" measureUnitRU="час" min="0" max="1000" measureUnitUK="годин"/>
+    <attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+    <attribute id="3321" nameRU="Диаметр шнека" type="integer" nameUK="Діаметр шнека" measureUnitRU="мм" min="0" max="600" measureUnitUK="мм"/>
+    <attribute id="4167" nameRU="Ширина захвата" type="real" nameUK="Ширина захвату" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="5073" nameRU="Производительность" type="real" nameUK="Продуктивність" measureUnitRU="т/ч" min="0" max="280" measureUnitUK="т/год"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10077" nameRU="Тип привода" type="singleselect" nameUK="Тип приводу">
+      <attribute_value id="174969" nameRU="Колеса" nameUK="Колеса"/>
+      <attribute_value id="174970" nameRU="Гусеницы" nameUK="Гусениці"/>
+    </attribute>
+    <attribute id="10934" nameRU="Подогрев ручек" type="bool" nameUK="Підігрів ручок"/>
+    <attribute id="12646" nameRU="Тип запуска" type="singleselect" nameUK="Тип запуску">
+      <attribute_value id="174964" nameRU="Ручной" nameUK="Ручний"/>
+      <attribute_value id="174965" nameRU="Электростартер" nameUK="Електростартер"/>
+      <attribute_value id="174966" nameRU="Дистанционный" nameUK="Дистанційний"/>
+      <attribute_value id="174967" nameRU="Ручной/Электростартер" nameUK="Ручний/Електростартер"/>
+      <attribute_value id="174968" nameRU="Ручной/Электростартер/Дистанционный" nameUK="Ручний/Електростартер/Дистанційний"/>
+    </attribute>
+    <attribute id="13225" nameRU="Высота захвата" type="real" nameUK="Висота захоплення" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="14589" nameRU="Количество передач" type="singleselect" nameUK="Кількість передач">
+      <attribute_value id="152329" nameRU="1 вперед" nameUK="1 вперед"/>
+      <attribute_value id="152330" nameRU="1 вперед/1 назад" nameUK="1 вперед/1 назад"/>
+      <attribute_value id="152331" nameRU="2 вперед/1 назад" nameUK="2 вперед/1 назад"/>
+      <attribute_value id="152332" nameRU="3 вперед/1 назад" nameUK="3 вперед/1 назад"/>
+      <attribute_value id="152333" nameRU="4 вперед/1 назад" nameUK="4 вперед/1 назад"/>
+      <attribute_value id="152334" nameRU="4 вперед/2 назад" nameUK="4 вперед/2 назад"/>
+      <attribute_value id="152335" nameRU="6 вперед/1 назад" nameUK="6 вперед/1 назад"/>
+      <attribute_value id="152336" nameRU="6 вперед/2 назад" nameUK="6 вперед/2 назад"/>
+      <attribute_value id="152337" nameRU="6 вперед/3 назад" nameUK="6 вперед/3 назад"/>
+      <attribute_value id="178555" nameRU="5 вперед/2 назад" nameUK="5 вперед/2 назад"/>
+      <attribute_value id="181240" nameRU="2 вперед/2 назад" nameUK="2 вперед/2 назад"/>
+    </attribute>
+    <attribute id="15959" nameRU="Производитель двигателя" type="singleselect" nameUK="Виробник двигуна">
+      <attribute_value id="174946" nameRU="DOOSAN" nameUK="DOOSAN"/>
+      <attribute_value id="174947" nameRU="AL-KO" nameUK="AL-KO"/>
+      <attribute_value id="174948" nameRU="Alpina" nameUK="Alpina"/>
+      <attribute_value id="174949" nameRU="Briggs&amp;Stratton" nameUK="Briggs&amp;Stratton"/>
+      <attribute_value id="174950" nameRU="Buff" nameUK="Buff"/>
+      <attribute_value id="174951" nameRU="Forte" nameUK="Forte"/>
+      <attribute_value id="174952" nameRU="GGP" nameUK="GGP"/>
+      <attribute_value id="174953" nameRU="Honda" nameUK="Honda"/>
+      <attribute_value id="174954" nameRU="Ikra Mogatec" nameUK="Ikra Mogatec"/>
+      <attribute_value id="174955" nameRU="LCT" nameUK="LCT"/>
+      <attribute_value id="174956" nameRU="Loncin" nameUK="Loncin"/>
+      <attribute_value id="174957" nameRU="MTD" nameUK="MTD"/>
+      <attribute_value id="174958" nameRU="PowerLine" nameUK="PowerLine"/>
+      <attribute_value id="174959" nameRU="Pubert" nameUK="Pubert"/>
+      <attribute_value id="174960" nameRU="Stiga" nameUK="Stiga"/>
+      <attribute_value id="174961" nameRU="Texas" nameUK="Texas"/>
+      <attribute_value id="174962" nameRU="Wolf-Garten" nameUK="Wolf-Garten"/>
+      <attribute_value id="174963" nameRU="Протон" nameUK="Протон"/>
+      <attribute_value id="186627" nameRU="Daewoo" nameUK="Daewoo"/>
+    </attribute>
+    <attribute id="15960" nameRU="Мощность двигателя, л.с." type="real" nameUK="Потужність двигуна, л. с."/>
+    <attribute id="15961" nameRU="Мощность двигателя, Вт" type="real" nameUK="Потужність двигуна, Вт"/>
+    <attribute id="15962" nameRU="Шнек" type="singleselect" nameUK="Шнек">
+      <attribute_value id="174971" nameRU="Обрезиненый" nameUK="Обгумований"/>
+      <attribute_value id="174972" nameRU="Необрезиненый" nameUK="Необрезинений"/>
+    </attribute>
+    <attribute id="15963" nameRU="Регулировка направления выброса" type="singleselect" nameUK="Регулювання напрямку викиду">
+      <attribute_value id="174973" nameRU="Нет" nameUK="Немає"/>
+      <attribute_value id="174974" nameRU="Ручная" nameUK="Ручна"/>
+      <attribute_value id="174976" nameRU="Дистанционная" nameUK="Дистанційна"/>
+      <attribute_value id="174982" nameRU="Ручная/Дистанционная" nameUK="Ручна/Дистанційна"/>
+    </attribute>
+    <attribute id="15964" nameRU="Управление расстоянием выброса" type="bool" nameUK="Управління відстанню викиду"/>
+    <attribute id="15965" nameRU="Максимальная глубина снега" type="real" nameUK="Максимальна глибина снігу" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="15966" nameRU="Дальность выброса" type="real" nameUK="Дальність викиду" measureUnitRU="м" min="0" max="1000" measureUnitUK="м"/>
+  </category>
+</categories>

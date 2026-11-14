@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201503" nameRU="Ручные клуппы, плашки" nameUK="Ручні клупи, плашки">
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="69917" nameRU="Удлинитель" nameUK="Подовжувач"/>
+      <attribute_value id="169021" nameRU="Головка" nameUK="Головка"/>
+      <attribute_value id="169266" nameRU="Плашка цельная" nameUK="Плашка цілісна"/>
+      <attribute_value id="169267" nameRU="Плашка разрезная" nameUK="Плашка розрізна"/>
+      <attribute_value id="169268" nameRU="Плашка раздвижная" nameUK="Плашка розсувна"/>
+      <attribute_value id="172593" nameRU="Держатель" nameUK="Тримач"/>
+      <attribute_value id="178496" nameRU="Набор плашек" nameUK="Набір плашок"/>
+      <attribute_value id="178497" nameRU="Клупп без рукоятки" nameUK="Клуп без рукоятки"/>
+      <attribute_value id="178498" nameRU="Клупп с рукояткой и храповым механизмом" nameUK="Клуп з рукояткою і храповим механізмом"/>
+      <attribute_value id="178499" nameRU="Набор клуппов" nameUK="Набір клуппів"/>
+      <attribute_value id="178500" nameRU="Двойной держатель" nameUK="Подвійний тримач"/>
+      <attribute_value id="178501" nameRU="Рукоятка" nameUK="Рукоятка"/>
+      <attribute_value id="178502" nameRU="Рукоятка телескопическая" nameUK="Рукоятка телескопічна"/>
+      <attribute_value id="178503" nameRU="Головка в сборе с резцами" nameUK="Головка у зборі з різцями"/>
+      <attribute_value id="178504" nameRU="Рукоятка с храповым механизмом" nameUK="Рукоятка з храповим механізмом"/>
+      <attribute_value id="178505" nameRU="Храповый механизм" nameUK="Храповий механізм"/>
+      <attribute_value id="178506" nameRU="Резцы" nameUK="Різці"/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="169269" nameRU="Ручная" nameUK="Ручна"/>
+      <attribute_value id="169270" nameRU="Машинная" nameUK="Машинна"/>
+      <attribute_value id="169271" nameRU="Машинно-ручная" nameUK="Машинно-ручна"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10152" nameRU="Шаг резьбы" type="real" nameUK="Крок різьби" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="15564" nameRU="Профиль нарезаемой резьбы" type="singleselect" nameUK="Профіль нарізуваного різьблення">
+      <attribute_value id="169217" nameRU="Дюймовый" nameUK="Дюймовий"/>
+      <attribute_value id="169218" nameRU="Метрический" nameUK="Метричний"/>
+      <attribute_value id="169394" nameRU="Метрический конический" nameUK="Метричний конічний"/>
+      <attribute_value id="169395" nameRU="Трубный конический" nameUK="Трубний конічний"/>
+      <attribute_value id="169396" nameRU="Трубный цилиндрический" nameUK="Трубний циліндричний"/>
+    </attribute>
+    <attribute id="15565" nameRU="Направление резьбы" type="singleselect" nameUK="Напрям різьби">
+      <attribute_value id="169221" nameRU="Левая" nameUK="Ліва"/>
+      <attribute_value id="169222" nameRU="Правая" nameUK="Права"/>
+    </attribute>
+    <attribute id="15577" nameRU="Тип наружной поверхности" type="singleselect" nameUK="Тип зовнішньої поверхні">
+      <attribute_value id="169272" nameRU="Круглый" nameUK="Круглий"/>
+      <attribute_value id="169273" nameRU="Квадратный" nameUK="Квадратний"/>
+      <attribute_value id="169274" nameRU="Шестигранный" nameUK="Шестигранний"/>
+      <attribute_value id="169275" nameRU="Призматический" nameUK="Призматичний"/>
+    </attribute>
+    <attribute id="15579" nameRU="Диаметр нарезаемой резьбы" type="real" nameUK="Діаметр нарізуваного різьблення" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+  </category>
+</categories>

@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="5090319" nameRU="Зарядные устройства для смартфонов и планшетов" nameUK="Зарядні пристрої для смартфонів та планшетів">
+    <attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="мА/ч" min="0" max="80000" measureUnitUK="мА/год"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="143448" nameRU="Автомобильный" nameUK="Автомобільний"/>
+      <attribute_value id="175056" nameRU="Сетевой" nameUK="Мережевий"/>
+      <attribute_value id="183560" nameRU="Беспроводной" nameUK="Бездротовий"/>
+      <attribute_value id="190386" nameRU="Кабель USB" nameUK="Кабель USB"/>
+    </attribute>
+    <attribute id="1536" nameRU="Совместимость с брендом" type="singleselect" nameUK="Сумісність з брендом">
+      <attribute_value id="150031" nameRU="Samsung" nameUK="Samsung"/>
+      <attribute_value id="151617" nameRU="Apple" nameUK="Apple"/>
+      <attribute_value id="189228" nameRU="Xiaomi" nameUK="Xiaomi"/>
+      <attribute_value id="246879" nameRU="Универсальный" nameUK="Універсальний"/>
+      <attribute_value id="346239" nameRU="Google" nameUK=""/>
+      <attribute_value id="350721" nameRU="Copy" nameUK=""/>
+      <attribute_value id="350722" nameRU="High Copy" nameUK=""/>
+      <attribute_value id="350723" nameRU="Ainol" nameUK=""/>
+      <attribute_value id="350724" nameRU="Amazon" nameUK=""/>
+      <attribute_value id="350725" nameRU="Blackview" nameUK=""/>
+      <attribute_value id="350726" nameRU="Doogee" nameUK=""/>
+      <attribute_value id="350727" nameRU="Google NEXUS" nameUK=""/>
+      <attribute_value id="350728" nameRU="HONOR" nameUK=""/>
+      <attribute_value id="350729" nameRU="Huawei" nameUK=""/>
+      <attribute_value id="350730" nameRU="Nomi" nameUK=""/>
+      <attribute_value id="350731" nameRU="Nook" nameUK=""/>
+      <attribute_value id="350732" nameRU="Oppo" nameUK=""/>
+      <attribute_value id="350733" nameRU="Realme" nameUK=""/>
+      <attribute_value id="350734" nameRU="TCL" nameUK=""/>
+      <attribute_value id="350735" nameRU="Umidigi" nameUK=""/>
+    </attribute>
+    <attribute id="4173" nameRU="Быстрая зарядка" type="bool" nameUK="Швидка зарядка"/>
+    <attribute id="4737" nameRU="Мощность" type="real" nameUK="Потужність" measureUnitRU="Вт" min="0.1" max="4000" measureUnitUK="Вт"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="272045" nameRU="Золотой" nameUK="Золотий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="62747" nameRU="Универсальное" nameUK="Універсальне"/>
+      <attribute_value id="135300" nameRU="Для планшета" nameUK="Для планшета"/>
+      <attribute_value id="151695" nameRU="Для электронной книги" nameUK="Для електронної книги"/>
+      <attribute_value id="155655" nameRU="Для телефона" nameUK="Для телефону"/>
+      <attribute_value id="167824" nameRU="Для плеера" nameUK="Для плеєра"/>
+      <attribute_value id="243839" nameRU="Для умных часов" nameUK="Для розумних годин"/>
+      <attribute_value id="281719" nameRU="Для роутера" nameUK="Для роутеру"/>
+    </attribute>
+    <attribute id="6212" nameRU="Напряжение питания" type="multiselect" nameUK="Напруга живлення">
+      <attribute_value id="42681" nameRU="220 В" nameUK="220 В"/>
+      <attribute_value id="125714" nameRU="12 В" nameUK="12 В"/>
+      <attribute_value id="125715" nameRU="24 В" nameUK="24 В"/>
+      <attribute_value id="274923" nameRU="5В" nameUK="5В"/>
+    </attribute>
+    <attribute id="7210" nameRU="Количество USB-портов" type="singleselect" nameUK="Кількість USB-портів">
+      <attribute_value id="60831" nameRU="1" nameUK="1"/>
+      <attribute_value id="60832" nameRU="2" nameUK="2"/>
+      <attribute_value id="60833" nameRU="3" nameUK="3"/>
+      <attribute_value id="60834" nameRU="4" nameUK="4"/>
+      <attribute_value id="153450" nameRU="5 и более" nameUK="5 і більше"/>
+    </attribute>
+    <attribute id="7443" nameRU="Номинальная сила тока" type="real" nameUK="Номінальна сила струму" measureUnitRU="А" min="0.1" max="10" measureUnitUK="А"/>
+    <attribute id="9321" nameRU="Вид" type="singleselect" nameUK="Вид">
+      <attribute_value id="190392" nameRU="Зарядное устройство" nameUK="Зарядний пристрій"/>
+      <attribute_value id="190393" nameRU="Адаптер" nameUK="Адаптер"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10634" nameRU="Выходная мощность" type="real" nameUK="Вихідна потужність" measureUnitRU="Вт" min="3" max="4000" measureUnitUK="Вт"/>
+    <attribute id="10900" nameRU="Количество разъемов" type="integer" nameUK="Кількість роз'ємів"/>
+    <attribute id="11112" nameRU="Функция беспроводной зарядки" type="bool" nameUK="Функція бездротової зарядки"/>
+    <attribute id="12026" nameRU="Тип разъема" type="singleselect" nameUK="Тип роз'єму">
+      <attribute_value id="152727" nameRU="2.5x0.7 мм" nameUK="2.5x0.7 мм"/>
+      <attribute_value id="152729" nameRU="3.0x1.0 мм" nameUK="3.0x1.0 мм"/>
+      <attribute_value id="152730" nameRU="4.0x1.7 мм" nameUK="4.0x1.7 мм"/>
+      <attribute_value id="152731" nameRU="4.8x1.7 мм" nameUK="4.8x1.7 мм"/>
+      <attribute_value id="152732" nameRU="5.5x1.7 мм" nameUK="5.5x1.7 мм"/>
+      <attribute_value id="152733" nameRU="5.5x2.1 мм" nameUK="5.5x2.1 мм"/>
+      <attribute_value id="152734" nameRU="5.5x2.5 мм" nameUK="5.5x2.5 мм"/>
+      <attribute_value id="152739" nameRU="3.5x1.5 мм" nameUK="3.5x1.5 мм"/>
+      <attribute_value id="152740" nameRU="3.5х1.3 мм" nameUK="3.5х1.3 мм"/>
+      <attribute_value id="190475" nameRU="micro-USB" nameUK="micro-USB"/>
+      <attribute_value id="190476" nameRU="mini-USB " nameUK="mini-USB"/>
+      <attribute_value id="190477" nameRU=" USB" nameUK="USB"/>
+      <attribute_value id="190478" nameRU="Nokia 2 мм (тонкий) " nameUK="Nokia 2 мм (тонка) "/>
+      <attribute_value id="190479" nameRU="Nokia 3.5 мм (толстый)" nameUK="Nokia 3.5 мм (товстий)"/>
+      <attribute_value id="190480" nameRU="Samsung 18 pin " nameUK="Samsung 18 pin"/>
+      <attribute_value id="190481" nameRU="Samsung M20 pin" nameUK="Samsung M20 pin"/>
+      <attribute_value id="190482" nameRU="Samsung S20 pin" nameUK="Samsung S20 pin"/>
+      <attribute_value id="190483" nameRU="Samsung S30 pin " nameUK="Samsung S30 pin"/>
+      <attribute_value id="190484" nameRU=" Sony Ericsson Pop-Port" nameUK="Sony Ericsson Pop-Port"/>
+      <attribute_value id="190485" nameRU="Sony Ericsson Fast-Port " nameUK="Sony Ericsson Fast-Port"/>
+      <attribute_value id="190486" nameRU="Apple Lightning" nameUK="Apple Lightning"/>
+      <attribute_value id="190487" nameRU="Apple 30-pin" nameUK="Apple 30-pin"/>
+      <attribute_value id="202223" nameRU="3.0x1.1 мм" nameUK="3.0x1.1 мм"/>
+      <attribute_value id="202224" nameRU="2.3x0.7 мм" nameUK="2.3x0.7 мм"/>
+      <attribute_value id="268787" nameRU="iPhone" nameUK="iPhone"/>
+      <attribute_value id="270911" nameRU="Универсальный" nameUK="Універсальний"/>
+      <attribute_value id="283844" nameRU="USB Type-C" nameUK="USB Type-C"/>
+      <attribute_value id="310666" nameRU="XT60" nameUK=""/>
+      <attribute_value id="313411" nameRU="3.5х1.35 мм" nameUK=""/>
+      <attribute_value id="319786" nameRU="PD Type C" nameUK="PD Type C"/>
+    </attribute>
+    <attribute id="14604" nameRU="Выходное напряжение (output)" type="singleselect" nameUK="Вихідна напруга (output)">
+      <attribute_value id="152703" nameRU="10.5 В" nameUK="10.5 В"/>
+      <attribute_value id="152704" nameRU="12 В" nameUK="12 В"/>
+      <attribute_value id="152705" nameRU="14 В" nameUK="14 В"/>
+      <attribute_value id="152706" nameRU="14.5 В" nameUK="14.5 В"/>
+      <attribute_value id="152707" nameRU="14.85 В" nameUK="14.85 В"/>
+      <attribute_value id="152708" nameRU="15 В" nameUK="15 В"/>
+      <attribute_value id="152709" nameRU="16 В" nameUK="16 В"/>
+      <attribute_value id="152710" nameRU="16.5 В" nameUK="16.5 В"/>
+      <attribute_value id="152711" nameRU="18.5 В" nameUK="18.5 В"/>
+      <attribute_value id="152712" nameRU="19 В" nameUK="19 В"/>
+      <attribute_value id="152713" nameRU="19.5 В" nameUK="19.5 В"/>
+      <attribute_value id="152714" nameRU="20 В" nameUK="20 В"/>
+      <attribute_value id="152715" nameRU="9.5 В" nameUK="9.5 В"/>
+      <attribute_value id="152716" nameRU="24 В" nameUK="24 В"/>
+      <attribute_value id="275949" nameRU="5 В" nameUK="5 В"/>
+      <attribute_value id="290972" nameRU="220 В" nameUK=""/>
+      <attribute_value id="290973" nameRU="230 В" nameUK=""/>
+      <attribute_value id="290979" nameRU="28 В" nameUK=""/>
+      <attribute_value id="291834" nameRU="6 В" nameUK=""/>
+      <attribute_value id="291835" nameRU="9 В" nameUK=""/>
+      <attribute_value id="296946" nameRU="8.5 В" nameUK=""/>
+    </attribute>
+    <attribute id="14605" nameRU="Сила выходного тока" type="singleselect" nameUK="Сила вихідного струму">
+      <attribute_value id="152717" nameRU="1.5 - 2 А" nameUK="1.5 - 2 А"/>
+      <attribute_value id="152718" nameRU="2 - 2.9 А" nameUK="2 - А 2.9"/>
+      <attribute_value id="152719" nameRU="3 - 3.95 А" nameUK="3 - 3.95 А"/>
+      <attribute_value id="152720" nameRU="4 - 4.9 А" nameUK="4 - 4.9 А"/>
+      <attribute_value id="152721" nameRU="5 - 8 А" nameUK="5 - 8 А"/>
+      <attribute_value id="270912" nameRU="8-10 А" nameUK="8-10 А"/>
+      <attribute_value id="278438" nameRU="5 А" nameUK="5 А"/>
+      <attribute_value id="278439" nameRU="1 А" nameUK="1 А"/>
+      <attribute_value id="290982" nameRU="2.4-10 А" nameUK=""/>
+      <attribute_value id="339001" nameRU="3-3,25 А" nameUK=""/>
+    </attribute>
+    <attribute id="18984" nameRU="Технологии быстрой зарядки" type="singleselect" nameUK="Технології швидкого заряджання">
+      <attribute_value id="321427" nameRU="Fast Charge" nameUK=""/>
+      <attribute_value id="321428" nameRU="Power Delivery" nameUK=""/>
+      <attribute_value id="321429" nameRU="Power Delivery 2.0" nameUK=""/>
+      <attribute_value id="321430" nameRU="Power Delivery 3.0" nameUK=""/>
+      <attribute_value id="321431" nameRU="Programmable PowerSupply (PPS)" nameUK=""/>
+      <attribute_value id="321432" nameRU="Quick Charge 2.0" nameUK=""/>
+      <attribute_value id="321433" nameRU="Quick Charge 3.0" nameUK=""/>
+      <attribute_value id="321434" nameRU="Quick Charge 3.1" nameUK=""/>
+      <attribute_value id="321435" nameRU="Quick Charge 3.2" nameUK=""/>
+      <attribute_value id="321436" nameRU="Quick Charge 4.0" nameUK=""/>
+      <attribute_value id="321437" nameRU="Quick Charge 5.0" nameUK=""/>
+      <attribute_value id="321438" nameRU="Wireless Fast Charge" nameUK=""/>
+      <attribute_value id="321439" nameRU="Intellicharge" nameUK=""/>
+      <attribute_value id="321440" nameRU="PowerIQ" nameUK=""/>
+      <attribute_value id="321441" nameRU="Quick Charge 2.4" nameUK=""/>
+      <attribute_value id="321442" nameRU="VoltageBoost" nameUK=""/>
+    </attribute>
+    <attribute id="18999" nameRU="Длинна кабеля" type="real" nameUK="Довжина кабелю" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="19104" nameRU="Модель планшета" type="multiselect" nameUK="Модель планшета">
+      <attribute_value id="339087" nameRU="Acer Enduro T1 (10-inch)" nameUK=""/>
+      <attribute_value id="339088" nameRU="Acer Enduro T1 (8-inch)" nameUK=""/>
+      <attribute_value id="339089" nameRU="Acer Enduro Urban T1" nameUK=""/>
+      <attribute_value id="339090" nameRU="Acer Iconia Tab M10" nameUK=""/>
+      <attribute_value id="339091" nameRU="Acer Enduro T3" nameUK=""/>
+      <attribute_value id="339092" nameRU="Acer Iconia Tab P10" nameUK=""/>
+      <attribute_value id="339093" nameRU="Acer A1" nameUK=""/>
+      <attribute_value id="339094" nameRU="Acer Iconia" nameUK=""/>
+      <attribute_value id="339095" nameRU="Acer B1" nameUK=""/>
+      <attribute_value id="339096" nameRU="Agm Pad P1" nameUK=""/>
+      <attribute_value id="339097" nameRU="Agm Pad P2" nameUK=""/>
+      <attribute_value id="339098" nameRU="Agm Pad P2 Pro" nameUK=""/>
+      <attribute_value id="339099" nameRU="Agm Pad P2 Ultra" nameUK=""/>
+      <attribute_value id="339100" nameRU="Ainol 10" nameUK=""/>
+      <attribute_value id="339101" nameRU="Ainol 7" nameUK=""/>
+      <attribute_value id="339102" nameRU="Ainol 9" nameUK=""/>
+      <attribute_value id="339103" nameRU="Ainol 8" nameUK=""/>
+      <attribute_value id="339104" nameRU="Alldocube iPlay 20" nameUK=""/>
+      <attribute_value id="339105" nameRU="Alldocube iPlay 40" nameUK=""/>
+      <attribute_value id="339106" nameRU="Alldocube X Game" nameUK=""/>
+      <attribute_value id="339107" nameRU="Alldocube iPlay 40 Pro" nameUK=""/>
+      <attribute_value id="339108" nameRU="Alldocube iPlay 50" nameUK=""/>
+      <attribute_value id="339109" nameRU="Alldocube iPlay 50 Pro" nameUK=""/>
+      <attribute_value id="339110" nameRU="Alldocube iPlay 50 mini" nameUK=""/>
+      <attribute_value id="339111" nameRU="Alldocube iPlay 50 mini Pro" nameUK=""/>
+      <attribute_value id="339112" nameRU="Alldocube iPlay 60" nameUK=""/>
+      <attribute_value id="339113" nameRU="Allview Viva" nameUK=""/>
+      <attribute_value id="339114" nameRU="Amazon Fire HD 8 (10th gen)" nameUK=""/>
+      <attribute_value id="339115" nameRU="Amazon Fire HD 10 (11th gen)" nameUK=""/>
+      <attribute_value id="339116" nameRU="Amazon Fire 7 (12th gen)" nameUK=""/>
+      <attribute_value id="339117" nameRU="Amazon Fire HD 8 (12th gen)" nameUK=""/>
+      <attribute_value id="339118" nameRU="Amazon Fire HD 10 (13th gen)" nameUK=""/>
+      <attribute_value id="339119" nameRU="Amazon Fire Max 11" nameUK=""/>
+      <attribute_value id="339120" nameRU="Apple iPad Pro 9.7" nameUK=""/>
+      <attribute_value id="339121" nameRU="Apple iPad (5th gen)" nameUK=""/>
+      <attribute_value id="339122" nameRU="Apple iPad Pro 10.5" nameUK=""/>
+      <attribute_value id="339123" nameRU="Apple iPad Pro 12.9 (2nd gen)" nameUK=""/>
+      <attribute_value id="339124" nameRU="Apple iPad (6th gen)" nameUK=""/>
+      <attribute_value id="339125" nameRU="Apple iPad Pro 11 (1st gen)" nameUK=""/>
+      <attribute_value id="339126" nameRU="Apple iPad Pro 12.9 (3rd gen)" nameUK=""/>
+      <attribute_value id="339127" nameRU="Apple iPad (7th gen)" nameUK=""/>
+      <attribute_value id="339128" nameRU="Apple iPad Air (3rd gen)" nameUK=""/>
+      <attribute_value id="339129" nameRU="Apple iPad mini (5th gen)" nameUK=""/>
+      <attribute_value id="339130" nameRU="Apple iPad (8th gen)" nameUK=""/>
+      <attribute_value id="339131" nameRU="Apple iPad Air (4th gen)" nameUK=""/>
+      <attribute_value id="339132" nameRU="Apple iPad Pro 11 (2nd gen)" nameUK=""/>
+      <attribute_value id="339133" nameRU="Apple iPad Pro 12.9 (4th gen)" nameUK=""/>
+      <attribute_value id="339134" nameRU="Apple iPad (9th gen)" nameUK=""/>
+      <attribute_value id="339135" nameRU="Apple iPad Pro 11 (3rd gen, M1)" nameUK=""/>
+      <attribute_value id="339136" nameRU="Apple iPad Pro 12.9 (5th gen, Mini-LED, M1)" nameUK=""/>
+      <attribute_value id="339137" nameRU="Apple iPad mini (6th gen)" nameUK=""/>
+      <attribute_value id="339138" nameRU="Apple iPad (10th gen)" nameUK=""/>
+      <attribute_value id="339139" nameRU="Apple iPad Air (5th gen, M1)" nameUK=""/>
+      <attribute_value id="339140" nameRU="Apple iPad Pro 11 (4th gen, M2)" nameUK=""/>
+      <attribute_value id="339141" nameRU="Apple iPad Pro 12.9 (6th gen, M2)" nameUK=""/>
+      <attribute_value id="339142" nameRU="Apple iPad Air (M2, 11-inch)" nameUK=""/>
+      <attribute_value id="339143" nameRU="Apple iPad Air (M2, 13-inch)" nameUK=""/>
+      <attribute_value id="339144" nameRU="Apple iPad Pro (M4, 11-inch, OLED)" nameUK=""/>
+      <attribute_value id="339145" nameRU="Apple iPad Pro (M4, 13-inch, OLED)" nameUK=""/>
+      <attribute_value id="339146" nameRU="Archos Xenon" nameUK=""/>
+      <attribute_value id="339147" nameRU="Archos Platinum" nameUK=""/>
+      <attribute_value id="339148" nameRU="ASUS Transformer Pad" nameUK=""/>
+      <attribute_value id="339149" nameRU="ASUS Nexus" nameUK=""/>
+      <attribute_value id="339150" nameRU="ASUS FonePad" nameUK=""/>
+      <attribute_value id="339151" nameRU="ASUS AsusPRO" nameUK=""/>
+      <attribute_value id="339152" nameRU="ASUS PadFone" nameUK=""/>
+      <attribute_value id="339153" nameRU="ASUS MeMO Pad" nameUK=""/>
+      <attribute_value id="339154" nameRU="ASUS ZenPad" nameUK=""/>
+      <attribute_value id="339155" nameRU="Blackview Tab 8" nameUK=""/>
+      <attribute_value id="339156" nameRU="Blackview Tab 10" nameUK=""/>
+      <attribute_value id="339157" nameRU="Blackview Tab 11" nameUK=""/>
+      <attribute_value id="339158" nameRU="Blackview Tab 12" nameUK=""/>
+      <attribute_value id="339159" nameRU="Blackview Tab 13" nameUK=""/>
+      <attribute_value id="339160" nameRU="Blackview Tab 15" nameUK=""/>
+      <attribute_value id="339161" nameRU="Blackview Active 8 Pro" nameUK=""/>
+      <attribute_value id="339162" nameRU="Blackview Tab 16" nameUK=""/>
+      <attribute_value id="339163" nameRU="Blackview Active 10 Pro" nameUK=""/>
+      <attribute_value id="339164" nameRU="Blackview Tab 18" nameUK=""/>
+      <attribute_value id="339165" nameRU="Blackview Tab 70" nameUK=""/>
+      <attribute_value id="339166" nameRU="Bmax MaxPad I10" nameUK=""/>
+      <attribute_value id="339167" nameRU="Bmax MaxPad I11" nameUK=""/>
+      <attribute_value id="339168" nameRU="Bmax MaxPad I9" nameUK=""/>
+      <attribute_value id="339169" nameRU="Bmax MaxPad I10 Pro" nameUK=""/>
+      <attribute_value id="339170" nameRU="Bmax MaxPad I11 Plus" nameUK=""/>
+      <attribute_value id="339171" nameRU="Bmax MaxPad I9 Plus" nameUK=""/>
+      <attribute_value id="339172" nameRU="Bmax MaxPad I11 Pro" nameUK=""/>
+      <attribute_value id="339173" nameRU="Bmax MaxPad I12" nameUK=""/>
+      <attribute_value id="339174" nameRU="Chuwi Hi10 X" nameUK=""/>
+      <attribute_value id="339175" nameRU="Chuwi HiPad X" nameUK=""/>
+      <attribute_value id="339176" nameRU="Chuwi UBook X" nameUK=""/>
+      <attribute_value id="339177" nameRU="Chuwi FreeBook" nameUK=""/>
+      <attribute_value id="339178" nameRU="Chuwi Hi10 Go" nameUK=""/>
+      <attribute_value id="339179" nameRU="Chuwi Hi10 XR" nameUK=""/>
+      <attribute_value id="339180" nameRU="Chuwi HiPad Air" nameUK=""/>
+      <attribute_value id="339181" nameRU="Chuwi HiPad Plus" nameUK=""/>
+      <attribute_value id="339182" nameRU="Chuwi HiPad Pro" nameUK=""/>
+      <attribute_value id="339183" nameRU="Chuwi HiPad Max" nameUK=""/>
+      <attribute_value id="339184" nameRU="Chuwi UBook X Pro" nameUK=""/>
+      <attribute_value id="339185" nameRU="Chuwi FreeBook Pro" nameUK=""/>
+      <attribute_value id="339186" nameRU="Chuwi Hi10 Max" nameUK=""/>
+      <attribute_value id="339187" nameRU="Chuwi HiPad X Pro" nameUK=""/>
+      <attribute_value id="339188" nameRU="Chuwi Vi10" nameUK=""/>
+      <attribute_value id="339189" nameRU="Chuwi Hi8" nameUK=""/>
+      <attribute_value id="339190" nameRU="Cube Talk" nameUK=""/>
+      <attribute_value id="339191" nameRU="Cube iWork8" nameUK=""/>
+      <attribute_value id="339192" nameRU="Dell Venue 7" nameUK=""/>
+      <attribute_value id="339193" nameRU="Dell Venue 8" nameUK=""/>
+      <attribute_value id="339194" nameRU="Dell Venue 11 Pro" nameUK=""/>
+      <attribute_value id="339195" nameRU="Doogee T10" nameUK=""/>
+      <attribute_value id="339196" nameRU="Doogee R10 (Rugged)" nameUK=""/>
+      <attribute_value id="339197" nameRU="Doogee T10 Pro" nameUK=""/>
+      <attribute_value id="339198" nameRU="Doogee T10S" nameUK=""/>
+      <attribute_value id="339199" nameRU="Doogee T20" nameUK=""/>
+      <attribute_value id="339200" nameRU="Doogee T20 Pro" nameUK=""/>
+      <attribute_value id="339201" nameRU="Doogee T30" nameUK=""/>
+      <attribute_value id="339202" nameRU="Doogee T30 Pro" nameUK=""/>
+      <attribute_value id="339203" nameRU="Doogee T20 Ultra" nameUK=""/>
+      <attribute_value id="339204" nameRU="Doogee T30 Ultra" nameUK=""/>
+      <attribute_value id="339205" nameRU="EvroMedia PlayPad Note" nameUK=""/>
+      <attribute_value id="339206" nameRU="EvroMedia PlayPad Pro" nameUK=""/>
+      <attribute_value id="339207" nameRU="Goclever Terra" nameUK=""/>
+      <attribute_value id="339208" nameRU="Goclever Quantum" nameUK=""/>
+      <attribute_value id="339209" nameRU="Goclever Tab" nameUK=""/>
+      <attribute_value id="339210" nameRU="Google Pixel Tablet (11-inch)" nameUK=""/>
+      <attribute_value id="339211" nameRU="Honor Pad V6" nameUK=""/>
+      <attribute_value id="339212" nameRU="Honor Pad 7" nameUK=""/>
+      <attribute_value id="339213" nameRU="Honor Pad V7" nameUK=""/>
+      <attribute_value id="339214" nameRU="Honor Pad V7 Pro" nameUK=""/>
+      <attribute_value id="339215" nameRU="Honor Pad 8" nameUK=""/>
+      <attribute_value id="339216" nameRU="Honor Pad X8" nameUK=""/>
+      <attribute_value id="339217" nameRU="Honor Pad X8 Pro" nameUK=""/>
+      <attribute_value id="339218" nameRU="Honor Pad 9" nameUK=""/>
+      <attribute_value id="339219" nameRU="Honor Pad V8" nameUK=""/>
+      <attribute_value id="339220" nameRU="Honor Pad V8 Pro" nameUK=""/>
+      <attribute_value id="339221" nameRU="Honor Pad X9" nameUK=""/>
+      <attribute_value id="339222" nameRU="Honor Pad 9 Pro" nameUK=""/>
+      <attribute_value id="339223" nameRU="Huawei MatePad (10.4, 2020)" nameUK=""/>
+      <attribute_value id="339224" nameRU="Huawei MatePad Pro 10.8 (2020)" nameUK=""/>
+      <attribute_value id="339225" nameRU="Huawei MatePad 11" nameUK=""/>
+      <attribute_value id="339226" nameRU="Huawei MatePad Pro 12.6 (2021)" nameUK=""/>
+      <attribute_value id="339227" nameRU="Huawei MatePad 10.4 (2022)" nameUK=""/>
+      <attribute_value id="339228" nameRU="Huawei MatePad Paper (e-ink)" nameUK=""/>
+      <attribute_value id="339229" nameRU="Huawei MatePad Pro 11 (2022)" nameUK=""/>
+      <attribute_value id="339230" nameRU="Huawei MatePad SE (10.1/10.4)" nameUK=""/>
+      <attribute_value id="339231" nameRU="Huawei MatePad 11.5" nameUK=""/>
+      <attribute_value id="339232" nameRU="Huawei MatePad Air" nameUK=""/>
+      <attribute_value id="339233" nameRU="Huawei MatePad Pro 13.2" nameUK=""/>
+      <attribute_value id="339234" nameRU="Huawei MatePad 11.5 S" nameUK=""/>
+      <attribute_value id="339235" nameRU="Huawei MatePad SE" nameUK=""/>
+      <attribute_value id="339236" nameRU="Kruger&amp;Matz Eagle" nameUK=""/>
+      <attribute_value id="339237" nameRU="Lenovo Tab M10 FHD Plus (2nd Gen)" nameUK=""/>
+      <attribute_value id="339238" nameRU="Lenovo Tab P11" nameUK=""/>
+      <attribute_value id="339239" nameRU="Lenovo Tab P11 Pro (1st Gen)" nameUK=""/>
+      <attribute_value id="339240" nameRU="Lenovo Tab P11 5G" nameUK=""/>
+      <attribute_value id="339241" nameRU="Lenovo Tab P12 Pro" nameUK=""/>
+      <attribute_value id="339242" nameRU="Lenovo Yoga Tab 11" nameUK=""/>
+      <attribute_value id="339243" nameRU="Lenovo Yoga Tab 13" nameUK=""/>
+      <attribute_value id="339244" nameRU="Lenovo Tab M10 Plus (3rd Gen)" nameUK=""/>
+      <attribute_value id="339245" nameRU="Lenovo Tab P11 (2nd Gen)" nameUK=""/>
+      <attribute_value id="339246" nameRU="Lenovo Tab P11 Pro (2nd Gen)" nameUK=""/>
+      <attribute_value id="339247" nameRU="Lenovo Tab Extreme" nameUK=""/>
+      <attribute_value id="339248" nameRU="Lenovo Tab M10 5G" nameUK=""/>
+      <attribute_value id="339249" nameRU="Lenovo Tab P12" nameUK=""/>
+      <attribute_value id="339250" nameRU="Lenovo Legion Tab (Y700 global)" nameUK=""/>
+      <attribute_value id="339251" nameRU="Lenovo Tab M11" nameUK=""/>
+      <attribute_value id="339252" nameRU="Lenovo Tab 3" nameUK=""/>
+      <attribute_value id="339253" nameRU="Lenovo Yoga Duet 7" nameUK=""/>
+      <attribute_value id="339254" nameRU="Lenovo IdeaTab A3000" nameUK=""/>
+      <attribute_value id="339255" nameRU="Lenovo MIIX" nameUK=""/>
+      <attribute_value id="339256" nameRU="Lenovo Tab 2 A8" nameUK=""/>
+      <attribute_value id="339257" nameRU="Lenovo Tab M8" nameUK=""/>
+      <attribute_value id="339258" nameRU="Lenovo Yoga Book" nameUK=""/>
+      <attribute_value id="339259" nameRU="Lenovo Tab M7" nameUK=""/>
+      <attribute_value id="339260" nameRU="Lenovo IdeaTab A3300" nameUK=""/>
+      <attribute_value id="339261" nameRU="Lenovo Yoga Tab Plus" nameUK=""/>
+      <attribute_value id="339262" nameRU="Lenovo Yoga Tablet 3" nameUK=""/>
+      <attribute_value id="339263" nameRU="Lenovo Yoga Tablet 2 Pro" nameUK=""/>
+      <attribute_value id="339264" nameRU="Lenovo IdeaTab A7600" nameUK=""/>
+      <attribute_value id="339265" nameRU="Lenovo Legion" nameUK=""/>
+      <attribute_value id="339266" nameRU="Lenovo IdeaTab A5500" nameUK=""/>
+      <attribute_value id="339267" nameRU="Lenovo Idea Tab Pro" nameUK="Lenovo Idea Tab Pro"/>
+      <attribute_value id="339268" nameRU="Lenovo Tab S8" nameUK=""/>
+      <attribute_value id="339269" nameRU="Lenovo IdeaTab A3500" nameUK=""/>
+      <attribute_value id="339270" nameRU="Lenovo Tab 4" nameUK=""/>
+      <attribute_value id="339271" nameRU="Lenovo Phab 2 Pro" nameUK=""/>
+      <attribute_value id="339272" nameRU="Lenovo ThinkPad Tablet" nameUK=""/>
+      <attribute_value id="339273" nameRU="Lenovo Tablet 10" nameUK=""/>
+      <attribute_value id="339274" nameRU="Lenovo Phab" nameUK=""/>
+      <attribute_value id="339275" nameRU="Lenovo IdeaPad Duet 3" nameUK=""/>
+      <attribute_value id="339276" nameRU="Lenovo Tab M10" nameUK=""/>
+      <attribute_value id="339277" nameRU="Lenovo Tab 3 Plus" nameUK=""/>
+      <attribute_value id="339278" nameRU="Lenovo Tab 2 A7" nameUK=""/>
+      <attribute_value id="339279" nameRU="Lenovo Yoga Tablet 2 10" nameUK=""/>
+      <attribute_value id="339280" nameRU="Lenovo Tab 2 A10" nameUK=""/>
+      <attribute_value id="339281" nameRU="Lenovo Yoga Tablet" nameUK=""/>
+      <attribute_value id="339282" nameRU="Lenovo Tab M9" nameUK=""/>
+      <attribute_value id="339283" nameRU="Lenovo Phab 2" nameUK=""/>
+      <attribute_value id="339284" nameRU="Lenovo IdeaTab S6000" nameUK=""/>
+      <attribute_value id="339285" nameRU="Lenovo IdeaTab S5000" nameUK=""/>
+      <attribute_value id="339286" nameRU="Lenovo Yoga Tablet 2 8" nameUK=""/>
+      <attribute_value id="339287" nameRU="Lenovo Yoga Smart Tab" nameUK=""/>
+      <attribute_value id="339288" nameRU="Lenovo IdeaTab A1000" nameUK=""/>
+      <attribute_value id="339289" nameRU="Lenovo Tab K11" nameUK="Lenovo Tab K11"/>
+      <attribute_value id="339290" nameRU="Microsoft Surface Go 2" nameUK=""/>
+      <attribute_value id="339291" nameRU="Microsoft Surface Go 3" nameUK=""/>
+      <attribute_value id="339292" nameRU="Microsoft Surface Pro 7+" nameUK=""/>
+      <attribute_value id="339293" nameRU="Microsoft Surface Pro 8" nameUK=""/>
+      <attribute_value id="339294" nameRU="Microsoft Surface Pro 9" nameUK=""/>
+      <attribute_value id="339295" nameRU="Microsoft Surface Go 4 (Business)" nameUK=""/>
+      <attribute_value id="339296" nameRU="Microsoft Surface Pro (Copilot+, 11th gen)" nameUK=""/>
+      <attribute_value id="339297" nameRU="Microsoft Surface Pro 10 for Business" nameUK=""/>
+      <attribute_value id="339298" nameRU="Microsoft Surface RT" nameUK=""/>
+      <attribute_value id="339299" nameRU="MYTAB Volta" nameUK=""/>
+      <attribute_value id="339300" nameRU="MYTAB Ontario 2" nameUK=""/>
+      <attribute_value id="339301" nameRU="Nokia T20" nameUK=""/>
+      <attribute_value id="339302" nameRU="Nokia T10" nameUK=""/>
+      <attribute_value id="339303" nameRU="Nokia T21" nameUK=""/>
+      <attribute_value id="339304" nameRU="Nokia Kids Tab 8" nameUK=""/>
+      <attribute_value id="339305" nameRU="Nokia T10 Kids Edition" nameUK=""/>
+      <attribute_value id="339306" nameRU="Nokia T21 Kids Edition" nameUK=""/>
+      <attribute_value id="339307" nameRU="Nomi Sigma" nameUK=""/>
+      <attribute_value id="339308" nameRU="Nomi Corsa" nameUK=""/>
+      <attribute_value id="339309" nameRU="Nomi Terra" nameUK=""/>
+      <attribute_value id="339310" nameRU="Nomi Libra" nameUK=""/>
+      <attribute_value id="339311" nameRU="Nomi Ultra" nameUK=""/>
+      <attribute_value id="339312" nameRU="Oneplus Pad" nameUK=""/>
+      <attribute_value id="339313" nameRU="Oneplus Pad Go" nameUK=""/>
+      <attribute_value id="339314" nameRU="Oppo Pad" nameUK=""/>
+      <attribute_value id="339315" nameRU="Oppo Pad Air" nameUK=""/>
+      <attribute_value id="339316" nameRU="Oppo Pad 2" nameUK=""/>
+      <attribute_value id="339317" nameRU="Oscal Pad 10" nameUK=""/>
+      <attribute_value id="339318" nameRU="Oscal Pad 13" nameUK=""/>
+      <attribute_value id="339319" nameRU="Oscal Pad 8" nameUK=""/>
+      <attribute_value id="339320" nameRU="Oscal Pad 15" nameUK=""/>
+      <attribute_value id="339321" nameRU="Oukitel RT1" nameUK=""/>
+      <attribute_value id="339322" nameRU="Oukitel RT2" nameUK=""/>
+      <attribute_value id="339323" nameRU="Oukitel OT5" nameUK=""/>
+      <attribute_value id="339324" nameRU="Oukitel RT3" nameUK=""/>
+      <attribute_value id="339325" nameRU="Oukitel RT5" nameUK=""/>
+      <attribute_value id="339326" nameRU="Oukitel RT6" nameUK=""/>
+      <attribute_value id="339327" nameRU="Oukitel RT7 Titan 5G" nameUK=""/>
+      <attribute_value id="339328" nameRU="Oukitel RT3 Pro" nameUK=""/>
+      <attribute_value id="339329" nameRU="Oukitel RT8" nameUK=""/>
+      <attribute_value id="339330" nameRU="Pixus Blaze" nameUK=""/>
+      <attribute_value id="339331" nameRU="Pixus Touch" nameUK=""/>
+      <attribute_value id="339332" nameRU="Pixus Play Three" nameUK=""/>
+      <attribute_value id="339333" nameRU="Prestigio Wize" nameUK=""/>
+      <attribute_value id="339334" nameRU="Prestigio Node" nameUK=""/>
+      <attribute_value id="339335" nameRU="Prestigio Ultra" nameUK=""/>
+      <attribute_value id="339336" nameRU="Prestigio Visconte" nameUK=""/>
+      <attribute_value id="339337" nameRU="Prestigio Muze" nameUK=""/>
+      <attribute_value id="339338" nameRU="Prestigio Grace" nameUK=""/>
+      <attribute_value id="339339" nameRU="Prestigio Color" nameUK=""/>
+      <attribute_value id="339340" nameRU="Realme Pad" nameUK=""/>
+      <attribute_value id="339341" nameRU="Realme Pad Mini" nameUK=""/>
+      <attribute_value id="339342" nameRU="Realme Pad 2" nameUK=""/>
+      <attribute_value id="339343" nameRU="Redmi Pad" nameUK=""/>
+      <attribute_value id="339344" nameRU="Redmi Pad SE" nameUK=""/>
+      <attribute_value id="339345" nameRU="Samsung Galaxy Tab A7 (10.4)" nameUK=""/>
+      <attribute_value id="339346" nameRU="Samsung Galaxy Tab Active3" nameUK=""/>
+      <attribute_value id="339347" nameRU="Samsung Galaxy Tab S6 Lite (2020)" nameUK=""/>
+      <attribute_value id="339348" nameRU="Samsung Galaxy Tab S7" nameUK=""/>
+      <attribute_value id="339349" nameRU="Samsung Galaxy Tab S7+" nameUK=""/>
+      <attribute_value id="339350" nameRU="Samsung Galaxy Tab A7 Lite (8.7)" nameUK=""/>
+      <attribute_value id="339351" nameRU="Samsung Galaxy Tab A8 (10.5)" nameUK=""/>
+      <attribute_value id="339352" nameRU="Samsung Galaxy Tab S7 FE" nameUK=""/>
+      <attribute_value id="339353" nameRU="Samsung Galaxy Tab Active4 Pro" nameUK=""/>
+      <attribute_value id="339354" nameRU="Samsung Galaxy Tab S6 Lite (2022)" nameUK=""/>
+      <attribute_value id="339355" nameRU="Samsung Galaxy Tab S8" nameUK=""/>
+      <attribute_value id="339356" nameRU="Samsung Galaxy Tab S8 Ultra" nameUK=""/>
+      <attribute_value id="339357" nameRU="Samsung Galaxy Tab S8+" nameUK=""/>
+      <attribute_value id="339358" nameRU="Samsung Galaxy Tab A9" nameUK=""/>
+      <attribute_value id="339359" nameRU="Samsung Galaxy Tab A9+" nameUK=""/>
+      <attribute_value id="339360" nameRU="Samsung Galaxy Tab S9" nameUK=""/>
+      <attribute_value id="339361" nameRU="Samsung Galaxy Tab S9 FE" nameUK=""/>
+      <attribute_value id="339362" nameRU="Samsung Galaxy Tab S9 FE+" nameUK=""/>
+      <attribute_value id="339363" nameRU="Samsung Galaxy Tab S9 Ultra" nameUK=""/>
+      <attribute_value id="339364" nameRU="Samsung Galaxy Tab S9+" nameUK=""/>
+      <attribute_value id="339365" nameRU="Samsung Galaxy Tab Active5" nameUK=""/>
+      <attribute_value id="339366" nameRU="Samsung Galaxy Tab S10" nameUK=""/>
+      <attribute_value id="339367" nameRU="Samsung Galaxy Tab S10 Ultra" nameUK=""/>
+      <attribute_value id="339368" nameRU="Samsung Galaxy Tab S10+" nameUK=""/>
+      <attribute_value id="339369" nameRU="Samsung Galaxy Tab S6 Lite (2024)" nameUK=""/>
+      <attribute_value id="339370" nameRU="Samsung Galaxy Tab 4 7.0" nameUK=""/>
+      <attribute_value id="339371" nameRU="Samsung Galaxy Tab 4 10.1" nameUK=""/>
+      <attribute_value id="339372" nameRU="Samsung Galaxy Tab Pro S" nameUK=""/>
+      <attribute_value id="339373" nameRU="Samsung Galaxy Tab E" nameUK=""/>
+      <attribute_value id="339374" nameRU="Samsung Galaxy Tab A7 Lite" nameUK=""/>
+      <attribute_value id="339375" nameRU="Samsung Galaxy Note Pro" nameUK=""/>
+      <attribute_value id="339376" nameRU="Samsung Galaxy Tab A 10.1" nameUK=""/>
+      <attribute_value id="339377" nameRU="Samsung Galaxy Tab S2 8.0" nameUK=""/>
+      <attribute_value id="339378" nameRU="Samsung Galaxy Tab A 10.5" nameUK=""/>
+      <attribute_value id="339379" nameRU="Samsung Galaxy Tab 4 8.0" nameUK=""/>
+      <attribute_value id="339380" nameRU="Samsung Galaxy Tab S2 9.7" nameUK=""/>
+      <attribute_value id="339381" nameRU="Samsung Galaxy Tab Pro" nameUK=""/>
+      <attribute_value id="339382" nameRU="Samsung Galaxy Tab S3 9.7" nameUK=""/>
+      <attribute_value id="339383" nameRU="Samsung Galaxy Note 8.0" nameUK=""/>
+      <attribute_value id="339384" nameRU="Samsung Galaxy Tab 3 7.0" nameUK=""/>
+      <attribute_value id="339385" nameRU="Samsung Galaxy Tab A 2018" nameUK=""/>
+      <attribute_value id="339386" nameRU="Samsung Galaxy Tab 3 8.0" nameUK=""/>
+      <attribute_value id="339387" nameRU="Samsung Galaxy Tab A7" nameUK=""/>
+      <attribute_value id="339388" nameRU="Samsung Galaxy Tab 3 10.1" nameUK=""/>
+      <attribute_value id="339389" nameRU="Samsung Galaxy Note 10.1 2014 Edition" nameUK=""/>
+      <attribute_value id="339390" nameRU="Samsung Galaxy Tab S 10.5" nameUK=""/>
+      <attribute_value id="339391" nameRU="Samsung Galaxy Tab A" nameUK=""/>
+      <attribute_value id="339392" nameRU="Samsung Galaxy Tab S 8.4" nameUK=""/>
+      <attribute_value id="339393" nameRU="Samsung Galaxy Tab A 9.7" nameUK=""/>
+      <attribute_value id="339394" nameRU="Samsung Galaxy Tab A 8.0" nameUK=""/>
+      <attribute_value id="339395" nameRU="Samsung Galaxy Tab 3 7.0 Lite" nameUK=""/>
+      <attribute_value id="339396" nameRU="Tcl NxtPaper 10s" nameUK=""/>
+      <attribute_value id="339397" nameRU="Tcl NxtPaper 11" nameUK=""/>
+      <attribute_value id="339398" nameRU="Tcl NxtPaper 12 Pro" nameUK=""/>
+      <attribute_value id="339399" nameRU="Teclast M40" nameUK=""/>
+      <attribute_value id="339400" nameRU="Teclast P20HD" nameUK=""/>
+      <attribute_value id="339401" nameRU="Teclast M40 Pro" nameUK=""/>
+      <attribute_value id="339402" nameRU="Teclast T40" nameUK=""/>
+      <attribute_value id="339403" nameRU="Teclast T40 Plus" nameUK=""/>
+      <attribute_value id="339404" nameRU="Teclast T40 Pro" nameUK=""/>
+      <attribute_value id="339405" nameRU="Teclast M40S" nameUK=""/>
+      <attribute_value id="339406" nameRU="Teclast T50" nameUK=""/>
+      <attribute_value id="339407" nameRU="Teclast M50 Pro" nameUK=""/>
+      <attribute_value id="339408" nameRU="Teclast P30S" nameUK=""/>
+      <attribute_value id="339409" nameRU="Teclast P40HD" nameUK=""/>
+      <attribute_value id="339410" nameRU="Teclast T50 Pro" nameUK=""/>
+      <attribute_value id="339411" nameRU="Teclast T60" nameUK=""/>
+      <attribute_value id="339412" nameRU="Teclast P50T" nameUK=""/>
+      <attribute_value id="339413" nameRU="Teclast T65" nameUK=""/>
+      <attribute_value id="339414" nameRU="Ulefone Armor Pad" nameUK=""/>
+      <attribute_value id="339415" nameRU="Umidigi G" nameUK=""/>
+      <attribute_value id="339416" nameRU="Umidigi Active" nameUK=""/>
+      <attribute_value id="339417" nameRU="Vivo Pad" nameUK=""/>
+      <attribute_value id="339418" nameRU="Vivo Pad2" nameUK=""/>
+      <attribute_value id="339419" nameRU="Xiaomi Pad 5" nameUK=""/>
+      <attribute_value id="339420" nameRU="Xiaomi Pad 5 Pro" nameUK=""/>
+      <attribute_value id="339421" nameRU="Xiaomi Pad 6" nameUK=""/>
+      <attribute_value id="339422" nameRU="Xiaomi Pad 6 Max 14" nameUK=""/>
+      <attribute_value id="339423" nameRU="Xiaomi Pad 6 Pro" nameUK=""/>
+      <attribute_value id="339424" nameRU="Xiaomi Pad 6S Pro 12.4" nameUK=""/>
+      <attribute_value id="340388" nameRU="Apple iPad Air 11" nameUK=""/>
+      <attribute_value id="345695" nameRU="Lenovo Yoga Tab (2025)" nameUK="Lenovo Yoga Tab (2025)"/>
+      <attribute_value id="345860" nameRU="Galaxy Tab A11+" nameUK="Galaxy Tab A11+"/>
+      <attribute_value id="346635" nameRU="Xiaomi Pad 8" nameUK="Xiaomi Pad 8"/>
+      <attribute_value id="346637" nameRU="Xiaomi Pad 8 Pro" nameUK="Xiaomi Pad 8 Pro"/>
+      <attribute_value id="347198" nameRU="Samsung Galaxy Tab S10 FE" nameUK="Samsung Galaxy Tab S10 FE"/>
+      <attribute_value id="347199" nameRU="Samsung Galaxy Tab S10 Lite" nameUK="Samsung Galaxy Tab S10 Lite"/>
+      <attribute_value id="347281" nameRU="Honor Pad 10" nameUK="Honor Pad 10"/>
+      <attribute_value id="347514" nameRU="Redmi Pad 2 Pro" nameUK="Redmi Pad 2 Pro"/>
+      <attribute_value id="347515" nameRU="Poco Pad M1" nameUK="Poco Pad M1"/>
+      <attribute_value id="347579" nameRU="Galaxy Tab A11" nameUK="Galaxy Tab A11"/>
+      <attribute_value id="347623" nameRU="Redmi Pad 2" nameUK="Redmi Pad 2"/>
+      <attribute_value id="348752" nameRU="Lenovo Idea Tab" nameUK="Lenovo Idea Tab"/>
+      <attribute_value id="348753" nameRU="Lenovo Idea Tab Plus" nameUK="Lenovo Idea Tab Plus"/>
+      <attribute_value id="348754" nameRU="Lenovo Idea Tab Pro Gen 2" nameUK="Lenovo Idea Tab Pro Gen 2"/>
+      <attribute_value id="350653" nameRU="Xiaomi Redmi Pad 2 9.7&quot;" nameUK=""/>
+    </attribute>
+  </category>
+</categories>

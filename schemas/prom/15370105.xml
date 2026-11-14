@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="15370105" nameRU="Влагомеры" nameUK="Вологоміри">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="1000" measureUnitUK="кг"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="220290" nameRU="Контактный" nameUK="Контактний"/>
+      <attribute_value id="220291" nameRU="Бесконтактный" nameUK="Безконтактний"/>
+    </attribute>
+    <attribute id="5071" nameRU="Рабочая среда" type="multiselect" nameUK="Робоче середовище">
+      <attribute_value id="32402" nameRU="Воздух" nameUK="Повітря"/>
+      <attribute_value id="220292" nameRU="Почва" nameUK="Грунт"/>
+      <attribute_value id="220293" nameRU="Грунт" nameUK="Грунт"/>
+      <attribute_value id="220294" nameRU="Семена овощей" nameUK="Насіння овочів"/>
+      <attribute_value id="220295" nameRU="Семена зерновых культур" nameUK="Насіння зернових культур"/>
+      <attribute_value id="220296" nameRU="Мука" nameUK="Борошно"/>
+      <attribute_value id="220297" nameRU="Зернопродукты" nameUK="Зернопродукти"/>
+      <attribute_value id="220298" nameRU="Макаронные изделия" nameUK="Макаронні вироби"/>
+      <attribute_value id="220299" nameRU="Древесина" nameUK="Деревина"/>
+      <attribute_value id="220300" nameRU="Изделия из древесины" nameUK="Вироби з деревини"/>
+      <attribute_value id="220301" nameRU="Целлюлозно-бумажные изделия" nameUK="Целюлозно-паперові вироби"/>
+      <attribute_value id="220302" nameRU="Кирпич" nameUK="Цегла"/>
+      <attribute_value id="220303" nameRU="Бетон" nameUK="Бетон"/>
+      <attribute_value id="220304" nameRU="Стройматериалы" nameUK="Будматеріали"/>
+      <attribute_value id="220305" nameRU="Сено" nameUK="Сіно"/>
+      <attribute_value id="361556" nameRU="Минеральные масла" nameUK="Мінеральні мастила"/>
+    </attribute>
+    <attribute id="7345" nameRU="Минимальный диапазон измерения" type="real" nameUK="Мінімальний діапазон вимірювання" measureUnitRU="%" min="0" max="100" measureUnitUK="%"/>
+    <attribute id="7346" nameRU="Максимальный диапазон измерения" type="real" nameUK="Максимальний діапазон вимірювання" measureUnitRU="%" min="0" max="100" measureUnitUK="%"/>
+    <attribute id="17038" nameRU="Температурная компенсация" type="bool" nameUK="Температурна компенсація"/>
+    <attribute id="17783" nameRU="Принцип измерения" type="singleselect" nameUK="Принцип вимірювання">
+      <attribute_value id="226732" nameRU="Весовой метод" nameUK="Ваговий метод"/>
+      <attribute_value id="226733" nameRU="Волосяной метод" nameUK="Волосяний метод"/>
+      <attribute_value id="226734" nameRU="Психрометрический метод" nameUK="Психометричний метод"/>
+      <attribute_value id="226735" nameRU="Химический метод" nameUK="Хімічний метод"/>
+      <attribute_value id="226736" nameRU="Оптический метод" nameUK="Оптичний метод"/>
+      <attribute_value id="226737" nameRU="Кондуктометрический метод" nameUK="Кондуктометричний метод"/>
+      <attribute_value id="226738" nameRU="Диэлькометрический метод" nameUK="Діелькометричний метод"/>
+      <attribute_value id="226739" nameRU="Термогравиметрический экспресс-метод" nameUK="Термогравіметричний експрес-метод"/>
+    </attribute>
+    <attribute id="17784" nameRU="Шаг измерения" type="real" nameUK="Крок виміру" measureUnitRU="%" min="0" max="100" measureUnitUK="%"/>
+    <attribute id="17785" nameRU="Погрешность, ±" type="real" nameUK="Похибка, ±" measureUnitRU="%" min="0" max="100" measureUnitUK="%"/>
+  </category>
+</categories>

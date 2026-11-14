@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13040907" nameRU="Курвиметры" nameUK="Курвіметри">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="40710" nameRU="Батарейки одноразовые" nameUK="Батарейки одноразові"/>
+      <attribute_value id="40711" nameRU="Батарейки аккумуляторного типа" nameUK="Батарейки акумуляторного типу"/>
+    </attribute>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8058" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="8059" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="8696" nameRU="Пластмасса" nameUK="Пластмаса"/>
+      <attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="721" nameRU="Диапазон измерений от 0 до" type="real" nameUK="Діапазон вимірювань від 0 до" measureUnitRU="м" min="0" max="100000" measureUnitUK="м"/>
+    <attribute id="4818" nameRU="Диаметр колеса" type="real" nameUK="Діаметр колеса" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="5984" nameRU="Тип батарейки" type="multiselect" nameUK="Тип батарейки">
+      <attribute_value id="40717" nameRU="ААА" nameUK="ААА"/>
+      <attribute_value id="40718" nameRU="АА" nameUK="АА"/>
+      <attribute_value id="40719" nameRU="С" nameUK="З"/>
+      <attribute_value id="40720" nameRU="D" nameUK="D"/>
+      <attribute_value id="40721" nameRU="Крона" nameUK="Крона"/>
+    </attribute>
+    <attribute id="5985" nameRU="Количество батареек" type="integer" nameUK="Кількість батарейок" measureUnitRU="шт" min="1" max="8" measureUnitUK="шт."/>
+    <attribute id="6036" nameRU="Индикация" type="singleselect" nameUK="Індикація">
+      <attribute_value id="41119" nameRU="Механическая" nameUK="Механічна"/>
+      <attribute_value id="41120" nameRU="Цифровая" nameUK="Цифрова"/>
+    </attribute>
+    <attribute id="6037" nameRU="Длина окружности колеса" type="real" nameUK="Довжина окружності колеса" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="6038" nameRU="Точность измерения +/-" type="real" nameUK="Точність вимірювання +/-" measureUnitRU="%" min="0" max="5" measureUnitUK="%"/>
+    <attribute id="6043" nameRU="Стопорный тормоз" type="bool" nameUK="Стопорний гальма"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+      <attribute_value id="231714" nameRU="Неликвид" nameUK="Неліквід"/>
+    </attribute>
+  </category>
+</categories>

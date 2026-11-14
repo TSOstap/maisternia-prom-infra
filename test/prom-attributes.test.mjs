@@ -16,9 +16,9 @@ const GRIND = "141717", SAW = "1250302", GEN = "410402"; // Шліфувальн
 const attrOf = (id, name) => S(id).attributes.find((a) => a.nameUK === name);
 const P = (name, value, unit = "") => ({ name, value, unit });
 
-test("схеми: 80 категорій з MANIFEST завантажено без помилок (48 + 17 від 25.10.2026 + 13070703 і 3 відновлені 26.10.2026 + 4 від власника 04.11.2026 + 147006 і 14171602 від власника 13.11.2026 + 5 від власника 12.11.2026, імпортовано 13.11); порожні «…, загальне» — коректні, без атрибутів", () => {
+test("схеми: 164 категорії з MANIFEST завантажено без помилок (48 + 17 від 25.10.2026 + 13070703 і 3 відновлені 26.10.2026 + 4 від власника 04.11.2026 + 147006 і 14171602 від власника 13.11.2026 + 5 від власника 12.11.2026, імпортовано 13.11 + 84 від власника 14.11.2026); порожні «…, загальне» — коректні, без атрибутів", () => {
   assert.deepEqual(catalog.problems, []);
-  assert.equal(catalog.schemas.size, 80);
+  assert.equal(catalog.schemas.size, 164);
   for (const id of ["12110205", "1250304", "125031801", "13040305", "13070701", "141723", "141734", "14200604", "142007", "14201515", "14201612", "14201636", "14201607", "14209811", "142907", "143110", "4305"]) assert.ok(S(id).attributes.length > 0, id);
   // 26.10.2026 (погоджено власником): 142001, 14200332, 14200504 — синтаксис відновлено (лише `"` → `&quot;` у значеннях);
   // файли проходять строгий парсер, розбір = розбір оригіналу; неекранованих лапок у репозиторних файлах немає.
@@ -1396,7 +1396,7 @@ test("вада одиниці «GHz» (атрибут 1493) — захист р�
   const names = catalog.names;
   const B = (cat, o) => buildCharacteristics({ schema: S(cat), categoryId: cat, current: [], names, mapping: catalog.mappings.get(cat), units: catalog.units, mode: "queue", ...o });
   const known = catalog.knownIssues.find((k) => k.id === "1493");
-  assert.deepEqual(known.categories, ["14209803", "143109", "4305", "14209811", "14310311"]);
+  assert.deepEqual(known.categories, ["14209803", "143109", "4305", "14209811", "14310311", "13241405"]);
   for (const cat of ["4305", "14209811", "14310311"]) {
     assert.equal(S(cat).attributes.find((a) => a.id === "1493").unitUK, "GHz", cat);
     const raw = [P("Частота", "50", "GHz")];
@@ -1644,4 +1644,19 @@ test("підпис розділу замість значення («Драби�
   for (const v of ["переваги", "Особливості", "преимущества", "особенности:", "Характеристики"]) assert.equal(D("Драбина трансформер", v).kind, "заголовок", v);
   assert.equal(D("Особливості", "переваги", "table"), null);
   assert.equal(D("Тип", "переваги та недоліки"), null, "не підпис розділу");
+});
+
+test("84 схеми від власника 14.11 (known-issues.json → lexiconExcluded): працюють для полів своїх категорій, але в словник UA/RU не йдуть — перевірені пари не зникають", () => {
+  const ex = JSON.parse(fs.readFileSync(path.join(SCHEMAS_DIR, "known-issues.json"), "utf8")).lexiconExcluded;
+  const ids = ex.flatMap((x) => x.categories);
+  assert.equal(ids.length, 84);
+  for (const id of ids) assert.ok(catalog.schemas.has(String(id)), "схема завантажена: " + id);
+  // Поле категорії працює (602 «Холодильники»): атрибут знаходиться за українською і російською назвою
+  const fridge = catalog.schemas.get("602");
+  assert.ok(fridge.attributes.some((a) => a.nameUK === "Розташування морозильної камери"));
+  // Але назва лише з нової схеми — не в загальному словнику, а пари, які нові схеми стерли б, на місці
+  assert.equal(catalog.names.name.get(normName("Расположение морозильной камеры")), undefined);
+  assert.equal(catalog.names.value.get(normValue("Красный", catalog.names)), normValue("Червоний", catalog.names));
+  assert.equal(catalog.names.value.get(normValue("Нет", catalog.names)), normValue("Немає", catalog.names));
+  assert.equal(catalog.names.lex.get("выключатель"), "вимикач");
 });

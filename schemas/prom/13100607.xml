@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13100607" nameRU="Переходники" nameUK="Перехідники">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="50" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="лет" min="0" max="70" measureUnitUK="років"/>
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="350" measureUnitUK="бар"/>
+    <attribute id="3951" nameRU="Тип присоединения" type="singleselect" nameUK="Тип приєднання">
+      <attribute_value id="25764" nameRU="Резьбовое" nameUK="Різьбове"/>
+      <attribute_value id="25765" nameRU="Фланцевое" nameUK="Фланцеве"/>
+      <attribute_value id="25768" nameRU="Под приварку" nameUK="Під приварення"/>
+      <attribute_value id="34495" nameRU="Пайка" nameUK="Пайка"/>
+      <attribute_value id="181514" nameRU="Пресс" nameUK="Прес"/>
+      <attribute_value id="219512" nameRU="Раструбное" nameUK="Розтрубне"/>
+      <attribute_value id="308927" nameRU="Обжимное" nameUK="Обтискне"/>
+    </attribute>
+    <attribute id="4465" nameRU="Условный проход" type="real" nameUK="Умовний прохід" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5071" nameRU="Рабочая среда" type="multiselect" nameUK="Робоче середовище">
+      <attribute_value id="32398" nameRU="Вода" nameUK="Вода"/>
+      <attribute_value id="32400" nameRU="Газ" nameUK="Газ"/>
+      <attribute_value id="32401" nameRU="Пар" nameUK="Пар"/>
+      <attribute_value id="32402" nameRU="Воздух" nameUK="Повітря"/>
+      <attribute_value id="32404" nameRU="Пароводяная смесь" nameUK="Пароводяна суміш"/>
+      <attribute_value id="34050" nameRU="Жидкая среда" nameUK="Рідке середовище"/>
+      <attribute_value id="34311" nameRU="Масло" nameUK="Масло"/>
+      <attribute_value id="62853" nameRU="Неагрессивная среда" nameUK="Неагресивне середовище"/>
+      <attribute_value id="66600" nameRU="Агрессивная среда" nameUK="Агресивне середовище"/>
+      <attribute_value id="361556" nameRU="Минеральные масла" nameUK="Мінеральні мастила"/>
+    </attribute>
+    <attribute id="5692" nameRU="Покрытие" type="singleselect" nameUK="Покриття">
+      <attribute_value id="38109" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="38112" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="38113" nameRU="Матовый хром" nameUK="Матовий хром"/>
+      <attribute_value id="38114" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="38116" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="38117" nameRU="Никель" nameUK="Нікель"/>
+      <attribute_value id="38118" nameRU="Титан" nameUK="Титан"/>
+      <attribute_value id="38119" nameRU="Хром" nameUK="Хром"/>
+      <attribute_value id="38120" nameRU="Эмаль" nameUK="Емаль"/>
+      <attribute_value id="46530" nameRU="Никель-хром" nameUK="Нікель-хром"/>
+      <attribute_value id="64759" nameRU="Цинк" nameUK="Цинк"/>
+      <attribute_value id="64889" nameRU="Эпоксидный порошок" nameUK="Епоксидний порошок"/>
+    </attribute>
+    <attribute id="6843" nameRU="Максимальная температура рабочей среды" type="real" nameUK="Максимальна температура робочого середовища" measureUnitRU="град." min="0" max="700" measureUnitUK="град."/>
+    <attribute id="7438" nameRU="Минимальная температура рабочей среды" type="real" nameUK="Мінімальна температура робочого середовища" measureUnitRU="град." min="-80" max="5" measureUnitUK="град."/>
+    <attribute id="7513" nameRU="Диаметр резьбы входного отверстия" type="singleselect" nameUK="Діаметр різьблення вхідного отвору">
+      <attribute_value id="63614" nameRU="5/16&quot;Н" nameUK="5/16&quot;Н"/>
+      <attribute_value id="63615" nameRU="1 1/2&quot;Н" nameUK="1 1/2&quot;Н"/>
+      <attribute_value id="63616" nameRU="1 1/4&quot;Н" nameUK="1 1/4&quot;Н"/>
+      <attribute_value id="63617" nameRU="7/8&quot;Н" nameUK="7/8&quot;Н"/>
+      <attribute_value id="63618" nameRU="7/16&quot;Н" nameUK="7/16&quot;Н"/>
+      <attribute_value id="63619" nameRU="3/16&quot;Н" nameUK="3/16&quot;Н"/>
+      <attribute_value id="63620" nameRU="3 3/4&quot;Н" nameUK="3 3/4&quot;Н"/>
+      <attribute_value id="63621" nameRU="3/4&quot;Н" nameUK="3/4&quot;Н"/>
+      <attribute_value id="63622" nameRU="3/8&quot;Н" nameUK="3/8&quot;Н"/>
+      <attribute_value id="63623" nameRU="5/8&quot;Н" nameUK="5/8&quot;Н"/>
+      <attribute_value id="63624" nameRU="1/2&quot;Н" nameUK="1/2&quot;Н"/>
+      <attribute_value id="63625" nameRU="1/4&quot;Н" nameUK="1/4&quot;Н"/>
+      <attribute_value id="63626" nameRU="1/8&quot;Н" nameUK="1/8&quot;Н"/>
+      <attribute_value id="63627" nameRU="2&quot;Н" nameUK="2&quot;Н"/>
+      <attribute_value id="63628" nameRU="2&quot;1/2Н" nameUK="2&quot;1/2Н"/>
+      <attribute_value id="63629" nameRU="1&quot;Н" nameUK="1&quot;Н"/>
+      <attribute_value id="63630" nameRU="3&quot;Н" nameUK="3&quot;Н"/>
+      <attribute_value id="63631" nameRU="1 1/8&quot;Н" nameUK="1 1/8&quot;Н"/>
+      <attribute_value id="63632" nameRU="1 3/4&quot;Н" nameUK="1 3/4&quot;Н"/>
+      <attribute_value id="63633" nameRU="1 5/8&quot;Н" nameUK="1 5/8&quot;Н"/>
+      <attribute_value id="63634" nameRU="1 7/8&quot;Н" nameUK="1 7/8&quot;Н"/>
+      <attribute_value id="63635" nameRU="2 1/4&quot;Н" nameUK="2 1/4&quot;Н"/>
+      <attribute_value id="63636" nameRU="2 3/4&quot;Н" nameUK="2 3/4&quot;Н"/>
+      <attribute_value id="63637" nameRU="2 3/8&quot;Н" nameUK="2 3/8&quot;Н"/>
+      <attribute_value id="63638" nameRU="2 5/8&quot;Н" nameUK="2 5/8&quot;Н"/>
+      <attribute_value id="63639" nameRU="3 1/2&quot;Н" nameUK="3 1/2&quot;Н"/>
+      <attribute_value id="63640" nameRU="3 1/4&quot;Н" nameUK="3 1/4&quot;Н"/>
+      <attribute_value id="63641" nameRU="4&quot;Н" nameUK="4&quot;Н"/>
+      <attribute_value id="63642" nameRU="5&quot;Н" nameUK="5&quot;Н"/>
+      <attribute_value id="63643" nameRU="9/16&quot;Н" nameUK="9/16&quot;Н"/>
+      <attribute_value id="63644" nameRU="5/16&quot;В" nameUK="5/16&quot;В"/>
+      <attribute_value id="63645" nameRU="1 1/2&quot;В" nameUK="1 1/2&quot;В"/>
+      <attribute_value id="63646" nameRU="1 1/4&quot;В" nameUK="1 1/4&quot;В"/>
+      <attribute_value id="63647" nameRU="7/8&quot;В" nameUK="7/8&quot;В"/>
+      <attribute_value id="63648" nameRU="7/16&quot;В" nameUK="7/16&quot;В"/>
+      <attribute_value id="63649" nameRU="3/16&quot;В" nameUK="3/16&quot;В"/>
+      <attribute_value id="63650" nameRU="3 3/4&quot;В" nameUK="3 3/4&quot;У"/>
+      <attribute_value id="63651" nameRU="3/4&quot;В" nameUK="3/4&quot;У"/>
+      <attribute_value id="63652" nameRU="3/8&quot;В" nameUK="3/8&quot;У"/>
+      <attribute_value id="63653" nameRU="5/8&quot;В" nameUK="5/8&quot;В"/>
+      <attribute_value id="63654" nameRU="1/2&quot;В" nameUK="1/2&quot;В"/>
+      <attribute_value id="63655" nameRU="1/4&quot;В" nameUK="1/4&quot;В"/>
+      <attribute_value id="63656" nameRU="1/8&quot;В" nameUK="1/8&quot;В"/>
+      <attribute_value id="63657" nameRU="2&quot;В" nameUK="2&quot;"/>
+      <attribute_value id="63658" nameRU="2&quot;1/2В" nameUK="2&quot;1/2В"/>
+      <attribute_value id="63659" nameRU="1&quot;В" nameUK="1&quot;"/>
+      <attribute_value id="63660" nameRU="3&quot;В" nameUK="3&quot;"/>
+      <attribute_value id="63661" nameRU="1 1/8&quot;В" nameUK="1 1/8&quot;В"/>
+      <attribute_value id="63662" nameRU="1 3/4&quot;В" nameUK="1 3/4&quot;У"/>
+      <attribute_value id="63663" nameRU="1 5/8&quot;В" nameUK="1 5/8&quot;В"/>
+      <attribute_value id="63664" nameRU="1 7/8&quot;В" nameUK="1 7/8&quot;В"/>
+      <attribute_value id="63665" nameRU="2 1/4&quot;В" nameUK="2 1/4&quot;В"/>
+      <attribute_value id="63666" nameRU="2 3/4&quot;В" nameUK="2 3/4&quot;У"/>
+      <attribute_value id="63667" nameRU="2 3/8&quot;В" nameUK="2 3/8&quot;У"/>
+      <attribute_value id="63668" nameRU="2 5/8&quot;В" nameUK="2 5/8&quot;В"/>
+      <attribute_value id="63669" nameRU="3 1/2&quot;В" nameUK="3 1/2&quot;В"/>
+      <attribute_value id="63670" nameRU="3 1/4&quot;В" nameUK="3 1/4&quot;В"/>
+      <attribute_value id="63671" nameRU="4&quot;В" nameUK="Чотири"/>
+      <attribute_value id="63672" nameRU="5&quot;В" nameUK="5&quot;"/>
+      <attribute_value id="63673" nameRU="9/16&quot;В" nameUK="9/16&quot;В"/>
+    </attribute>
+    <attribute id="7514" nameRU="Диаметр резьбы выходного отверстия" type="singleselect" nameUK="Діаметр різьблення вихідного отвору">
+      <attribute_value id="63677" nameRU="5/16&quot;Н" nameUK="5/16&quot;Н"/>
+      <attribute_value id="63678" nameRU="1 1/2&quot;Н" nameUK="1 1/2&quot;Н"/>
+      <attribute_value id="63679" nameRU="1 1/4&quot;Н" nameUK="1 1/4&quot;Н"/>
+      <attribute_value id="63680" nameRU="7/8&quot;Н" nameUK="7/8&quot;Н"/>
+      <attribute_value id="63681" nameRU="7/16&quot;Н" nameUK="7/16&quot;Н"/>
+      <attribute_value id="63682" nameRU="3/16&quot;Н" nameUK="3/16&quot;Н"/>
+      <attribute_value id="63683" nameRU="3 3/4&quot;Н" nameUK="3 3/4&quot;Н"/>
+      <attribute_value id="63684" nameRU="3/4&quot;Н" nameUK="3/4&quot;Н"/>
+      <attribute_value id="63685" nameRU="3/8&quot;Н" nameUK="3/8&quot;Н"/>
+      <attribute_value id="63686" nameRU="5/8&quot;Н" nameUK="5/8&quot;Н"/>
+      <attribute_value id="63687" nameRU="1/2&quot;Н" nameUK="1/2&quot;Н"/>
+      <attribute_value id="63688" nameRU="1/4&quot;Н" nameUK="1/4&quot;Н"/>
+      <attribute_value id="63689" nameRU="1/8&quot;Н" nameUK="1/8&quot;Н"/>
+      <attribute_value id="63690" nameRU="2&quot;Н" nameUK="2&quot;Н"/>
+      <attribute_value id="63691" nameRU="2&quot;1/2Н" nameUK="2&quot;1/2Н"/>
+      <attribute_value id="63692" nameRU="1&quot;Н" nameUK="1&quot;Н"/>
+      <attribute_value id="63693" nameRU="3&quot;Н" nameUK="3&quot;Н"/>
+      <attribute_value id="63694" nameRU="1 1/8&quot;Н" nameUK="1 1/8&quot;Н"/>
+      <attribute_value id="63695" nameRU="1 3/4&quot;Н" nameUK="1 3/4&quot;Н"/>
+      <attribute_value id="63696" nameRU="1 5/8&quot;Н" nameUK="1 5/8&quot;Н"/>
+      <attribute_value id="63697" nameRU="1 7/8&quot;Н" nameUK="1 7/8&quot;Н"/>
+      <attribute_value id="63698" nameRU="2 1/4&quot;Н" nameUK="2 1/4&quot;Н"/>
+      <attribute_value id="63699" nameRU="2 3/4&quot;Н" nameUK="2 3/4&quot;Н"/>
+      <attribute_value id="63700" nameRU="2 3/8&quot;Н" nameUK="2 3/8&quot;Н"/>
+      <attribute_value id="63701" nameRU="2 5/8&quot;Н" nameUK="2 5/8&quot;Н"/>
+      <attribute_value id="63702" nameRU="3 1/2&quot;Н" nameUK="3 1/2&quot;Н"/>
+      <attribute_value id="63703" nameRU="3 1/4&quot;Н" nameUK="3 1/4&quot;Н"/>
+      <attribute_value id="63704" nameRU="4&quot;Н" nameUK="4&quot;Н"/>
+      <attribute_value id="63705" nameRU="5&quot;Н" nameUK="5&quot;Н"/>
+      <attribute_value id="63706" nameRU="9/16&quot;Н" nameUK="9/16&quot;Н"/>
+      <attribute_value id="63707" nameRU="5/16&quot;В" nameUK="5/16&quot;В"/>
+      <attribute_value id="63708" nameRU="1 1/2&quot;В" nameUK="1 1/2&quot;В"/>
+      <attribute_value id="63709" nameRU="1 1/4&quot;В" nameUK="1 1/4&quot;В"/>
+      <attribute_value id="63710" nameRU="7/8&quot;В" nameUK="7/8&quot;В"/>
+      <attribute_value id="63711" nameRU="7/16&quot;В" nameUK="7/16&quot;В"/>
+      <attribute_value id="63712" nameRU="3/16&quot;В" nameUK="3/16&quot;В"/>
+      <attribute_value id="63713" nameRU="3 3/4&quot;В" nameUK="3 3/4&quot;У"/>
+      <attribute_value id="63714" nameRU="3/4&quot;В" nameUK="3/4&quot;У"/>
+      <attribute_value id="63715" nameRU="3/8&quot;В" nameUK="3/8&quot;У"/>
+      <attribute_value id="63716" nameRU="5/8&quot;В" nameUK="5/8&quot;В"/>
+      <attribute_value id="63717" nameRU="1/2&quot;В" nameUK="1/2&quot;В"/>
+      <attribute_value id="63718" nameRU="1/4&quot;В" nameUK="1/4&quot;В"/>
+      <attribute_value id="63719" nameRU="1/8&quot;В" nameUK="1/8&quot;В"/>
+      <attribute_value id="63720" nameRU="2&quot;В" nameUK="2&quot;"/>
+      <attribute_value id="63721" nameRU="2&quot;1/2В" nameUK="2&quot;1/2В"/>
+      <attribute_value id="63722" nameRU="1&quot;В" nameUK="1&quot;"/>
+      <attribute_value id="63723" nameRU="3&quot;В" nameUK="3&quot;"/>
+      <attribute_value id="63724" nameRU="1 1/8&quot;В" nameUK="1 1/8&quot;В"/>
+      <attribute_value id="63725" nameRU="1 3/4&quot;В" nameUK="1 3/4&quot;У"/>
+      <attribute_value id="63726" nameRU="1 5/8&quot;В" nameUK="1 5/8&quot;В"/>
+      <attribute_value id="63727" nameRU="1 7/8&quot;В" nameUK="1 7/8&quot;В"/>
+      <attribute_value id="63728" nameRU="2 1/4&quot;В" nameUK="2 1/4&quot;В"/>
+      <attribute_value id="63729" nameRU="2 3/4&quot;В" nameUK="2 3/4&quot;У"/>
+      <attribute_value id="63730" nameRU="2 3/8&quot;В" nameUK="2 3/8&quot;У"/>
+      <attribute_value id="63731" nameRU="2 5/8&quot;В" nameUK="2 5/8&quot;В"/>
+      <attribute_value id="63732" nameRU="3 1/2&quot;В" nameUK="3 1/2&quot;В"/>
+      <attribute_value id="63733" nameRU="3 1/4&quot;В" nameUK="3 1/4&quot;В"/>
+      <attribute_value id="63734" nameRU="4&quot;В" nameUK="Чотири"/>
+      <attribute_value id="63735" nameRU="5&quot;В" nameUK="5&quot;"/>
+      <attribute_value id="63736" nameRU="9/16&quot;В" nameUK="9/16&quot;В"/>
+      <attribute_value id="277009" nameRU="W21.8" nameUK="W21.8"/>
+    </attribute>
+    <attribute id="7654" nameRU="Материал переходника" type="singleselect" nameUK="Матеріал перехідника">
+      <attribute_value id="64990" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="64991" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="64992" nameRU="Титан" nameUK="Титан"/>
+      <attribute_value id="64993" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="64994" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="64995" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="64996" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="64997" nameRU="Поливинилхлорид" nameUK="Полівінілхлорид"/>
+      <attribute_value id="64998" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+      <attribute_value id="64999" nameRU="Полиэтилен" nameUK="Поліетилен"/>
+      <attribute_value id="65000" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="65001" nameRU="Полиамид" nameUK="Поліамід"/>
+      <attribute_value id="65002" nameRU="Металлопластик" nameUK="Металопластик"/>
+      <attribute_value id="300848" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="309450" nameRU="Комбинированный" nameUK="Комбінований"/>
+    </attribute>
+    <attribute id="7692" nameRU="Условный проход Ду2" type="real" nameUK="Умовний прохід Ду2" measureUnitRU="мм" min="0" max="3000" measureUnitUK="мм"/>
+    <attribute id="14262" nameRU="Диаметр отверстий для крепления" type="real" nameUK="Діаметр отворів для кріплення" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+  </category>
+</categories>

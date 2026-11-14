@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="5092905" nameRU="Элементы крепежа кабеля" nameUK="Елементи кріплення кабелю">
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="200" measureUnitUK="град."/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="1237" nameRU="Конструкция" type="singleselect" nameUK="Конструкція">
+      <attribute_value id="116772" nameRU="Прямая" nameUK="Пряма"/>
+      <attribute_value id="116773" nameRU="Угловая" nameUK="Кутова"/>
+      <attribute_value id="116774" nameRU="Тройник" nameUK="Трійник"/>
+    </attribute>
+    <attribute id="3474" nameRU="Количество в упаковке" type="integer" nameUK="Кількість в упаковці" measureUnitRU="шт" min="0" max="2000" measureUnitUK="шт."/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="-50" max="0" measureUnitUK="град."/>
+    <attribute id="5187" nameRU="Материал изоляции" type="singleselect" nameUK="Матеріал ізоляції">
+      <attribute_value id="116849" nameRU="Поливинилхлорид" nameUK="Полівінілхлорид"/>
+      <attribute_value id="116850" nameRU="Нейлон" nameUK="Нейлон"/>
+      <attribute_value id="116851" nameRU="Стекло" nameUK="Скло"/>
+      <attribute_value id="116852" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="116853" nameRU="Слюда" nameUK="Слюда"/>
+      <attribute_value id="158905" nameRU="Полиамид" nameUK="Поліамід"/>
+      <attribute_value id="297528" nameRU="АБС-Пластик" nameUK=""/>
+    </attribute>
+    <attribute id="5697" nameRU="Способ монтажа" type="singleselect" nameUK="Спосіб монтажу">
+      <attribute_value id="116841" nameRU="Липучка" nameUK="Липучка"/>
+      <attribute_value id="116842" nameRU="Шуруп" nameUK="Шуруп"/>
+      <attribute_value id="116843" nameRU="Гвоздь" nameUK="Цвях"/>
+      <attribute_value id="116844" nameRU="Саморез" nameUK="Саморіз"/>
+      <attribute_value id="116845" nameRU="Болт" nameUK="Болт"/>
+      <attribute_value id="116846" nameRU="Самоклейка" nameUK="Самоклейка"/>
+      <attribute_value id="116847" nameRU="На DIN рейку" nameUK="На DIN рейку"/>
+      <attribute_value id="116848" nameRU="Винт" nameUK="Гвинт"/>
+      <attribute_value id="116867" nameRU="Пайка" nameUK="Пайка"/>
+      <attribute_value id="116880" nameRU="Опрессовка" nameUK="Опресовування"/>
+    </attribute>
+    <attribute id="6760" nameRU="Предельная прочность на разрыв" type="real" nameUK="Гранична міцність на розрив" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+    <attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+    <attribute id="8517" nameRU="Материал изделия" type="singleselect" nameUK="Матеріал виробу">
+      <attribute_value id="77019" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="106293" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="106295" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="116831" nameRU="Нейлон" nameUK="Нейлон"/>
+      <attribute_value id="116832" nameRU="Полиэтилен" nameUK="Поліетилен"/>
+      <attribute_value id="116833" nameRU="Полистирол" nameUK="Полістирол"/>
+      <attribute_value id="116865" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="116909" nameRU="Полиамид" nameUK="Поліамід"/>
+      <attribute_value id="127981" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+      <attribute_value id="158822" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="261324" nameRU="Медь-алюминий" nameUK="Мідь-алюміній"/>
+      <attribute_value id="261325" nameRU="Медь луженая" nameUK="Мідь луджена"/>
+      <attribute_value id="273201" nameRU="Комбинированный" nameUK="Комбінований"/>
+      <attribute_value id="309823" nameRU="Силикон" nameUK="Силікон"/>
+      <attribute_value id="340943" nameRU="Полиформальдегид" nameUK="Поліформальдегід"/>
+      <attribute_value id="348004" nameRU="ПВХ" nameUK="ПВХ"/>
+      <attribute_value id="348345" nameRU="Полиэстер" nameUK="Поліестер"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10197" nameRU="Тип наконечника" type="singleselect" nameUK="Тип накінечника">
+      <attribute_value id="116835" nameRU="Штырь" nameUK="Штир"/>
+      <attribute_value id="116836" nameRU="Кольцо" nameUK="Кільце"/>
+      <attribute_value id="116837" nameRU="Гильза" nameUK="Гільза"/>
+      <attribute_value id="116838" nameRU="Втулка" nameUK="Втулка"/>
+      <attribute_value id="116839" nameRU="Вилка" nameUK="Вилка"/>
+    </attribute>
+    <attribute id="10563" nameRU="Количество модулей" type="integer" nameUK="Кількість модулів"/>
+    <attribute id="10731" nameRU="Сечение подключаемых проводов" type="real" nameUK="Перетин проводів, що підключаються" measureUnitRU="кв.мм" min="0" max="1000" measureUnitUK="кв.мм"/>
+    <attribute id="10758" nameRU="Максимальный ток" type="real" nameUK="Максимальний струм" measureUnitRU="А" min="0" max="500" measureUnitUK="А"/>
+    <attribute id="12001" nameRU="Тип элемента крепежа кабеля" type="singleselect" nameUK="Тип елемента кріплення кабелю">
+      <attribute_value id="116762" nameRU="Стяжка для кабеля" nameUK="Стяжка для кабелю"/>
+      <attribute_value id="116763" nameRU="Крепежная площадка для кабеля" nameUK="Кріпильний майданчик для кабелю"/>
+      <attribute_value id="116764" nameRU="Зажим для кабеля" nameUK="Затиск для кабелю"/>
+      <attribute_value id="116765" nameRU="Скоба для кабеля" nameUK="Скоба для кабелю"/>
+      <attribute_value id="116766" nameRU="Хомут для кабеля" nameUK="Хомут для кабелю"/>
+      <attribute_value id="116767" nameRU="Муфта для кабеля" nameUK="Муфта для кабелю"/>
+      <attribute_value id="116768" nameRU="Наконечник для кабеля" nameUK="Накінечник до кабелю"/>
+      <attribute_value id="116769" nameRU="Гильза для кабеля" nameUK="Гільза для кабелю"/>
+      <attribute_value id="116770" nameRU="Соединитель для кабеля" nameUK="З'єднувач для кабелю"/>
+      <attribute_value id="116771" nameRU="Клипса для кабеля" nameUK="Кліпса для кабелю"/>
+      <attribute_value id="116778" nameRU="Гребенка" nameUK="Гребінка"/>
+      <attribute_value id="116779" nameRU="Клеммная колодка" nameUK="Клемна колодка"/>
+      <attribute_value id="116804" nameRU="Сальник для кабеля" nameUK="Сальник для кабелю"/>
+      <attribute_value id="116834" nameRU="Наконечники для кабеля" nameUK="Накінечники для кабелю"/>
+      <attribute_value id="116872" nameRU="Колпачок для кабеля" nameUK="Ковпачок для кабелю"/>
+      <attribute_value id="129689" nameRU="Клемма для кабеля" nameUK="Клема для кабелю"/>
+      <attribute_value id="136583" nameRU="Модуль силовой для кабеля" nameUK="Модуль силової для кабелю"/>
+      <attribute_value id="137182" nameRU="Коннектор для кабеля" nameUK="Коннектор для кабелю"/>
+      <attribute_value id="139736" nameRU="Шина для кабеля" nameUK="Шина для кабелю"/>
+      <attribute_value id="141392" nameRU="Соединительный зажим для кабеля" nameUK="З'єднувальний затискач для кабелю"/>
+      <attribute_value id="299969" nameRU="Дюбель" nameUK="Дюбель"/>
+      <attribute_value id="340942" nameRU="Кабельная маркировка" nameUK="Кабельне маркування"/>
+      <attribute_value id="348344" nameRU="Оплетки для кабеля" nameUK="Обплетення для кабелю"/>
+      <attribute_value id="348748" nameRU="Контакт" nameUK="Контакт"/>
+      <attribute_value id="361612" nameRU="Клипса для гофри" nameUK="Кліпса для гофрі"/>
+      <attribute_value id="361994" nameRU="Клеммный блок" nameUK="Клемний блок"/>
+    </attribute>
+    <attribute id="12009" nameRU="Диаметр отверстия крепежа" type="real" nameUK="Діаметр отвору кріплення" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="12011" nameRU="Количество отверстий для крепления" type="integer" nameUK="Кількість отворів для кріплення"/>
+    <attribute id="12012" nameRU="Наличие изоляции" type="bool" nameUK="Наявність ізоляції"/>
+    <attribute id="12013" nameRU="Цвет изоляции" type="singleselect" nameUK="Колір ізоляції">
+      <attribute_value id="116854" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="116855" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="116856" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="116857" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="116858" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="116859" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="116860" nameRU="Сиреневый" nameUK="Бузковий"/>
+      <attribute_value id="116861" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="116862" nameRU="Прозрачный" nameUK="Прозорий"/>
+      <attribute_value id="120879" nameRU="Желто-зеленый" nameUK="Жовто-зелений"/>
+      <attribute_value id="121775" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="121776" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="262127" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="291479" nameRU="Голубой" nameUK=""/>
+      <attribute_value id="291480" nameRU="Бирюзовый" nameUK=""/>
+      <attribute_value id="291499" nameRU="Слоновая кость" nameUK=""/>
+    </attribute>
+    <attribute id="12015" nameRU="Цвет элемента крепежа" type="singleselect" nameUK="Колір елемента кріплення">
+      <attribute_value id="116887" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="116888" nameRU="Бесцветный" nameUK="Безбарвний"/>
+      <attribute_value id="116889" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="116890" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="116891" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="116892" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="116893" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="116894" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="116895" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="116896" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="116897" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="116898" nameRU="Сиреневый" nameUK="Бузковий"/>
+      <attribute_value id="116899" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="212674" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="340944" nameRU="Разные цвета" nameUK="Різні кольори"/>
+    </attribute>
+    <attribute id="12018" nameRU="Максимальное напряжение" type="real" nameUK="Максимальное напряжение" measureUnitRU="В" min="0" max="3000" measureUnitUK="В"/>
+    <attribute id="12020" nameRU="Одноразовое соединение" type="bool" nameUK="Одноразове з'єднання"/>
+    <attribute id="12026" nameRU="Тип разъема" type="singleselect" nameUK="Тип роз'єму">
+      <attribute_value id="116940" nameRU="Мама" nameUK="Мама"/>
+      <attribute_value id="116941" nameRU="Папа" nameUK="Тато"/>
+    </attribute>
+    <attribute id="18160" nameRU="Шаг крепления" type="real" nameUK="Крок кріплення" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="18618" nameRU="Цвет стяжки" type="multiselect" nameUK="Колір стяжки">
+      <attribute_value id="283596" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="283597" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="283598" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="283599" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="283600" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="283601" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="283602" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="283603" nameRU="Зеленый" nameUK="Зелений"/>
+    </attribute>
+  </category>
+</categories>

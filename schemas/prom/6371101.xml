@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="6371101" nameRU="Портативные колонки" nameUK="Портативні колонки">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="8" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="700" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="700" measureUnitUK="мм"/>
+    <attribute id="149" nameRU="Глубина" type="real" nameUK="Глибина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+      <attribute_value id="7068" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="7069" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="7070" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="7071" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="7072" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="7075" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="7076" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="7077" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7078" nameRU="Антрацит" nameUK="Антрацит"/>
+      <attribute_value id="7079" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="7080" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="7081" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="7082" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="7083" nameRU="Медный" nameUK="Мідний"/>
+      <attribute_value id="7084" nameRU="Слоновая кость" nameUK="Слонова кістка"/>
+      <attribute_value id="7085" nameRU="Фисташковый" nameUK="Фісташковий"/>
+      <attribute_value id="7086" nameRU="Кремовый" nameUK="Кремовий"/>
+      <attribute_value id="7087" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="7088" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="7089" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="7090" nameRU="Малиновый" nameUK="Малиновий"/>
+      <attribute_value id="7091" nameRU="Сиреневый" nameUK="Бузковий"/>
+      <attribute_value id="7092" nameRU="Персиковый" nameUK="Персиковий"/>
+      <attribute_value id="7093" nameRU="Серебряный" nameUK="Срібний"/>
+      <attribute_value id="7094" nameRU="Другой" nameUK="Інший"/>
+      <attribute_value id="43982" nameRU="Светло-серый" nameUK="Світло-сірий"/>
+      <attribute_value id="44231" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="83208" nameRU="Прозрачный" nameUK="Прозорий"/>
+      <attribute_value id="102939" nameRU="Металлик" nameUK="Металік"/>
+      <attribute_value id="102940" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="102941" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="102942" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="123604" nameRU="Темное дерево" nameUK="Темне дерево"/>
+      <attribute_value id="123605" nameRU="Светлое дерево" nameUK="Світле дерево"/>
+      <attribute_value id="123606" nameRU="Титан" nameUK="Титан"/>
+      <attribute_value id="280464" nameRU="Мятный" nameUK="М'ятний"/>
+      <attribute_value id="280467" nameRU="Камуфляж" nameUK="Камуфляж"/>
+      <attribute_value id="280820" nameRU="Хаки" nameUK="Хакі"/>
+    </attribute>
+    <attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+      <attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7135" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="7867" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="107082" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="205715" nameRU="Прорезиненный пластик" nameUK="Прогумований пластик"/>
+      <attribute_value id="280463" nameRU="Ткань" nameUK="Тканина"/>
+      <attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+      <attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+      <attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+    </attribute>
+    <attribute id="1277" nameRU="Время автономной работы" type="integer" nameUK="Час автономної роботи" measureUnitRU="час" min="0" max="100" measureUnitUK="годин"/>
+    <attribute id="1980" nameRU="Тип питания" type="multiselect" nameUK="Тип живлення">
+      <attribute_value id="11692" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="21680" nameRU="Батарейки" nameUK="Батарейки"/>
+      <attribute_value id="95189" nameRU="Сеть" nameUK="Мережа"/>
+      <attribute_value id="138709" nameRU="USB-порт" nameUK="USB-порт"/>
+      <attribute_value id="333193" nameRU="USB Type-C" nameUK="USB Type-C"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11158" nameRU="Интерфейсы" type="multiselect" nameUK="Інтерфейси">
+      <attribute_value id="105991" nameRU="USB" nameUK="USB"/>
+      <attribute_value id="105994" nameRU="mini USB" nameUK="mini USB"/>
+      <attribute_value id="105995" nameRU="micro USB" nameUK="micro USB"/>
+      <attribute_value id="146354" nameRU="jack 3.5 мм" nameUK="jack 3.5 мм"/>
+      <attribute_value id="148252" nameRU="RCA" nameUK="RCA"/>
+      <attribute_value id="148253" nameRU="S-Video" nameUK="S-Video"/>
+      <attribute_value id="148254" nameRU="AUX-вход" nameUK="AUX-вхід"/>
+      <attribute_value id="268777" nameRU="Type-C" nameUK="Type-C"/>
+      <attribute_value id="349947" nameRU="WiDi" nameUK="WiDi"/>
+      <attribute_value id="349948" nameRU="Без поддержки сети" nameUK="Без підтримки мережі"/>
+    </attribute>
+    <attribute id="11318" nameRU="Поддерживаемые карты памяти" type="multiselect" nameUK="Підтримувані карти пам'яті">
+      <attribute_value id="108097" nameRU="microSD" nameUK="microSD"/>
+      <attribute_value id="148136" nameRU="SD" nameUK="SD"/>
+      <attribute_value id="278593" nameRU="TF Card" nameUK="TF Card"/>
+    </attribute>
+    <attribute id="11670" nameRU="Чувствительность" type="real" nameUK="Чутливість" measureUnitRU="дБ" min="0" max="140" measureUnitUK="дБ"/>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="147491" nameRU="FM-приемник" nameUK="FM-приймач"/>
+      <attribute_value id="148183" nameRU="Запасные аккумуляторы" nameUK="Запасні акумулятори"/>
+      <attribute_value id="148259" nameRU="Часы (будильник)" nameUK="Годинник (будильник)"/>
+      <attribute_value id="148260" nameRU="Зарядка плеера/смартфона" nameUK="Зарядка плеєра/смартфона"/>
+      <attribute_value id="148261" nameRU="Тюнер" nameUK="Тюнер"/>
+      <attribute_value id="148262" nameRU="Беспроводной пульт ДУ" nameUK="Бездротовий пульт ДУ"/>
+      <attribute_value id="148263" nameRU="Подключение к ПК" nameUK="Підключення до ПК"/>
+      <attribute_value id="148264" nameRU="Синхронизация с ПК" nameUK="Синхронізація з ПК"/>
+      <attribute_value id="148265" nameRU="Подключение к телевизору" nameUK="Підключення до телевізора"/>
+      <attribute_value id="148266" nameRU="Информационный дисплей" nameUK="Інформаційний дисплей"/>
+      <attribute_value id="148267" nameRU="Поддержка AirPlay" nameUK="Підтримка AirPlay"/>
+      <attribute_value id="160314" nameRU="Эквалайзер" nameUK="Еквалайзер"/>
+      <attribute_value id="164217" nameRU="Функция громкой связи" nameUK="Функція гучного зв'язку"/>
+      <attribute_value id="164447" nameRU="Крепление на руль велосипеда" nameUK="Кріплення на кермо велосипеда"/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+    <attribute id="12205" nameRU="Суммарная мощность звука" type="real" nameUK="Сумарна потужність звуку" measureUnitRU="Вт" min="0" max="300" measureUnitUK="Вт"/>
+    <attribute id="12235" nameRU="Беспроводные возможности" type="multiselect" nameUK="Бездротові можливості">
+      <attribute_value id="119703" nameRU="Wi-Fi" nameUK="Wi-Fi"/>
+      <attribute_value id="119705" nameRU="Bluetooth" nameUK="Bluetooth"/>
+      <attribute_value id="168139" nameRU="AirPlay" nameUK="AirPlay"/>
+    </attribute>
+    <attribute id="12562" nameRU="Подключение устройства" type="singleselect" nameUK="Підключення пристрою">
+      <attribute_value id="135340" nameRU="Проводное" nameUK="Дротове"/>
+      <attribute_value id="135341" nameRU="Беспроводное" nameUK="Бездротове"/>
+    </attribute>
+    <attribute id="14173" nameRU="Минимальная частота" type="integer" nameUK="Мінімальна частота" measureUnitRU="Гц" min="20" max="500" measureUnitUK="Гц"/>
+    <attribute id="14174" nameRU="Максимальная частота" type="integer" nameUK="Максимальна частота" measureUnitRU="Гц" min="10000" max="55000" measureUnitUK="Гц"/>
+    <attribute id="14409" nameRU="Формат акустики" type="singleselect" nameUK="Формат акустики">
+      <attribute_value id="148241" nameRU="2.1" nameUK="2.1"/>
+      <attribute_value id="148242" nameRU="Моно" nameUK="Моно"/>
+      <attribute_value id="148243" nameRU="Стерео" nameUK="Стерео"/>
+    </attribute>
+    <attribute id="18432" nameRU="Степень защиты" type="multiselect" nameUK="Ступінь захисту">
+      <attribute_value id="346299" nameRU="IPX4" nameUK="IPX4"/>
+      <attribute_value id="346300" nameRU="IPX5" nameUK="IPX5"/>
+      <attribute_value id="346301" nameRU="IPX6" nameUK="IPX6"/>
+      <attribute_value id="346303" nameRU="IP67" nameUK="IP67"/>
+      <attribute_value id="346304" nameRU="IPX7" nameUK=""/>
+    </attribute>
+    <attribute id="19441" nameRU="Оснащение колонки" type="singleselect" nameUK="Оснащення колонки">
+      <attribute_value id="350421" nameRU="Встроенный ЦАП" nameUK=""/>
+      <attribute_value id="350422" nameRU="Защита от перегрева" nameUK=""/>
+      <attribute_value id="350423" nameRU="Индикатор разряда батареи" nameUK=""/>
+      <attribute_value id="350424" nameRU="Микрофон с громкоговорителем" nameUK=""/>
+      <attribute_value id="350425" nameRU="Противоударный корпус" nameUK=""/>
+      <attribute_value id="350426" nameRU="Пульт ДУ" nameUK=""/>
+      <attribute_value id="350427" nameRU="С FM тюнером" nameUK=""/>
+      <attribute_value id="350428" nameRU="Светодиодная подсветка" nameUK=""/>
+      <attribute_value id="350429" nameRU="Сенсорное управление" nameUK=""/>
+      <attribute_value id="350430" nameRU="С медиаплеером" nameUK=""/>
+      <attribute_value id="350431" nameRU="Со встроенным фонариком" nameUK=""/>
+      <attribute_value id="350432" nameRU="Часы-будильник" nameUK=""/>
+    </attribute>
+    <attribute id="19442" nameRU="Особенности колонки" type="singleselect" nameUK="Особливості колонки">
+      <attribute_value id="350433" nameRU="Hi-Fi компоненты" nameUK=""/>
+      <attribute_value id="350434" nameRU="Multiroom" nameUK=""/>
+      <attribute_value id="350435" nameRU="True Wireless Stereo" nameUK=""/>
+      <attribute_value id="350436" nameRU="Беспроводная зарядка" nameUK=""/>
+      <attribute_value id="350437" nameRU="Вокальные эффекты" nameUK=""/>
+      <attribute_value id="350438" nameRU="Голосовое управление" nameUK=""/>
+      <attribute_value id="350439" nameRU="Несколько Bluetooth подключений" nameUK=""/>
+      <attribute_value id="350440" nameRU="Поддержка RDS" nameUK=""/>
+      <attribute_value id="350441" nameRU="Подключение к ПК" nameUK=""/>
+      <attribute_value id="350442" nameRU="Предустановленные фонограммы" nameUK=""/>
+      <attribute_value id="350443" nameRU="С влагозащитой" nameUK=""/>
+      <attribute_value id="350444" nameRU="С встроенным аккумулятором" nameUK=""/>
+      <attribute_value id="350445" nameRU="С караоке" nameUK=""/>
+      <attribute_value id="350446" nameRU="С микшерным пультом" nameUK=""/>
+      <attribute_value id="350447" nameRU="Солнечная панель для зарядки аккумулятора" nameUK=""/>
+      <attribute_value id="350448" nameRU="С технологией DSP" nameUK=""/>
+      <attribute_value id="350449" nameRU="С функцией громкой связи" nameUK=""/>
+      <attribute_value id="350450" nameRU="С функцией интеллектуального помощника" nameUK=""/>
+      <attribute_value id="350451" nameRU="С функцией УМБ" nameUK=""/>
+    </attribute>
+    <attribute id="19443" nameRU="Совместимость с iOS и Android-устройствами" type="singleselect" nameUK="Сумісність з iOS та Android">
+      <attribute_value id="350452" nameRU="Android" nameUK=""/>
+      <attribute_value id="350453" nameRU="IPad" nameUK=""/>
+      <attribute_value id="350454" nameRU="IPhone" nameUK=""/>
+      <attribute_value id="350455" nameRU="IPod" nameUK=""/>
+    </attribute>
+  </category>
+</categories>

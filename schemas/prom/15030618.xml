@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="15030618" nameRU="Реставрационные материалы для мебели" nameUK="Реставраційні матеріали для меблів">
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="82135" nameRU="Набор" nameUK="Набір"/>
+      <attribute_value id="114980" nameRU="Воск" nameUK="Віск"/>
+      <attribute_value id="134722" nameRU="Маркер" nameUK="Маркер"/>
+      <attribute_value id="137260" nameRU="Краска" nameUK="Фарба"/>
+      <attribute_value id="159440" nameRU="Крем" nameUK="Крем"/>
+      <attribute_value id="199367" nameRU="Карандаш" nameUK="Олівець"/>
+    </attribute>
+    <attribute id="4495" nameRU="Тип воска" type="singleselect" nameUK="Тип воску">
+      <attribute_value id="62068" nameRU="Мягкий" nameUK="М'який"/>
+      <attribute_value id="62072" nameRU="Твердый" nameUK="Твердий"/>
+    </attribute>
+    <attribute id="15344" nameRU="Цвет (оттенок) мебели" type="multiselect" nameUK="Колір (відтінок) меблів">
+      <attribute_value id="165371" nameRU="Бук натуральный" nameUK="Бук натуральний"/>
+      <attribute_value id="165389" nameRU="Каштан" nameUK="Каштан"/>
+      <attribute_value id="165402" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="165405" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="170746" nameRU="Вишня" nameUK="Вишня"/>
+      <attribute_value id="222525" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="246891" nameRU="Орех" nameUK="Горіх"/>
+      <attribute_value id="266384" nameRU="Слоновая кость" nameUK="Слонова кістка"/>
+      <attribute_value id="288501" nameRU="Дуб" nameUK="Дуб"/>
+      <attribute_value id="298032" nameRU="Махогон" nameUK="Махогон"/>
+      <attribute_value id="301082" nameRU="Кедр" nameUK=""/>
+      <attribute_value id="301083" nameRU="Клен" nameUK=""/>
+      <attribute_value id="311015" nameRU="Темный орех" nameUK="Темний горіх"/>
+      <attribute_value id="322248" nameRU="Розовое дерево" nameUK="Рожеве дерево"/>
+      <attribute_value id="328424" nameRU="Сиена жженая" nameUK="Сієна палена"/>
+      <attribute_value id="329227" nameRU="Эспрессо" nameUK="Еспресо"/>
+      <attribute_value id="329228" nameRU="Бамбук" nameUK="Бамбук"/>
+      <attribute_value id="347447" nameRU="Графит + Дуб Эвок" nameUK="Графіт + Дуб Евок"/>
+      <attribute_value id="347448" nameRU="Кашемир + Дуб Артизан" nameUK="Кашемір + Дуб Артизан"/>
+      <attribute_value id="347449" nameRU="Дуб Артизан + Графит" nameUK="Дуб Артизан + Графіт"/>
+      <attribute_value id="347540" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="360349" nameRU="Темное дерево" nameUK="Темне дерево"/>
+      <attribute_value id="360350" nameRU="Светлое дерево" nameUK="Світле дерево"/>
+      <attribute_value id="360654" nameRU="Серый бетон" nameUK="Сірий бетон"/>
+      <attribute_value id="360655" nameRU="Дуб платиновый" nameUK="Дуб платиновий"/>
+      <attribute_value id="360656" nameRU="Белая Аляска" nameUK="Біла Аляска"/>
+      <attribute_value id="360657" nameRU="Пинероло темный" nameUK="Пінероло темний"/>
+      <attribute_value id="361644" nameRU="Дуб Бароко Янтарный" nameUK="Дуб Бароко Бурштиновий"/>
+      <attribute_value id="361645" nameRU="Дуб Бароко Ристретто" nameUK="Дуб Бароко Рістретто"/>
+    </attribute>
+  </category>
+</categories>

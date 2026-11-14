@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200525" nameRU="Аэрографы" nameUK="Аерографи">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+    <attribute id="46" nameRU="Тип управления" type="singleselect" nameUK="Тип управління">
+      <attribute_value id="179475" nameRU="Одинарного действия" nameUK="Одинарної дії"/>
+      <attribute_value id="179476" nameRU="Двойного действия" nameUK="Подвійної дії"/>
+      <attribute_value id="179477" nameRU="Зависимого действия (автомат)" nameUK="Залежного дії (автомат)"/>
+      <attribute_value id="179478" nameRU="Независимого действия (ручной)" nameUK="Незалежної дії (ручний)"/>
+      <attribute_value id="179479" nameRU="Независимого действия (механика)" nameUK="Незалежної дії (механіка)"/>
+    </attribute>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="103" nameRU="Диаметр сопла" type="real" nameUK="Діаметр сопла" measureUnitRU="мм" min="0" max="10" measureUnitUK="мм"/>
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="100" measureUnitUK="бар"/>
+    <attribute id="106" nameRU="Расход воздуха" type="real" nameUK="Витрата повітря" measureUnitRU="литр/мин" min="0" max="10000" measureUnitUK="літр/хв"/>
+    <attribute id="107" nameRU="Диаметр входного штуцера" type="singleselect" nameUK="Діаметр вхідного штуцера">
+      <attribute_value id="7023" nameRU="1&quot;" nameUK="1&quot;"/>
+      <attribute_value id="7024" nameRU="2&quot;" nameUK="2&quot;"/>
+      <attribute_value id="7025" nameRU="1/2&quot;" nameUK="1/2&quot;"/>
+      <attribute_value id="7026" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="7027" nameRU="1/8&quot;" nameUK="1/8&quot;"/>
+      <attribute_value id="7028" nameRU="3/4&quot;" nameUK="3/4&quot;"/>
+      <attribute_value id="7029" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+    </attribute>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="131481" nameRU="Комплект" nameUK="Комплект"/>
+      <attribute_value id="170908" nameRU="Аэрограф" nameUK="Аерограф"/>
+      <attribute_value id="170909" nameRU="Компрессор для аэрографа" nameUK="Компресор для аерографа"/>
+      <attribute_value id="170910" nameRU="Аксессуары для аэрографа" nameUK="Аксесуари для аерографа"/>
+      <attribute_value id="170911" nameRU="Запчасти для аэрографа" nameUK="Запчастини для аерографа"/>
+    </attribute>
+    <attribute id="761" nameRU="Объем емкости" type="integer" nameUK="Об'єм ємності" measureUnitRU="мл" min="0" max="1000" measureUnitUK="мл"/>
+    <attribute id="16152" nameRU="Тип смешения" type="singleselect" nameUK="Тип змішування">
+      <attribute_value id="179473" nameRU="Внешний" nameUK="Зовнішній"/>
+      <attribute_value id="179474" nameRU="Внутренний" nameUK="Внутрішній"/>
+    </attribute>
+    <attribute id="16153" nameRU="Тип подачи материала" type="singleselect" nameUK="Тип подачі матеріалу">
+      <attribute_value id="179480" nameRU="Верхняя подводка материала" nameUK="Верхня підводка матеріалу"/>
+      <attribute_value id="179481" nameRU="Нижняя подводка материала" nameUK="Нижня підводка матеріалу"/>
+      <attribute_value id="179482" nameRU="Боковое расположение красочной емкости" nameUK="Бічне розташування барвистої ємності"/>
+      <attribute_value id="179483" nameRU="Подводка под давлением" nameUK="Підводка під тиском"/>
+    </attribute>
+    <attribute id="16154" nameRU="Тип посадки сопла" type="singleselect" nameUK="Тип посадки сопла">
+      <attribute_value id="179484" nameRU="Резьбовой фиксируемый" nameUK="Різьбовий фіксований"/>
+      <attribute_value id="179485" nameRU="Конический фиксируемый самоцентрический" nameUK="Конічний фіксований самоцентричний"/>
+      <attribute_value id="179486" nameRU="Комбинированный фиксируемый самоцентрический" nameUK="Комбінований фіксований самоцентрічний"/>
+      <attribute_value id="179487" nameRU="Плавающий самоцентрирующийся" nameUK="Плаваючий самоцентруючийся"/>
+    </attribute>
+    <attribute id="16155" nameRU="Дополнительные настройки" type="multiselect" nameUK="Додаткові налаштування">
+      <attribute_value id="179488" nameRU="Ограничитель подачи материала" nameUK="Обмежувач подачі матеріалу"/>
+      <attribute_value id="179489" nameRU="Предварительная настройка подачи материала" nameUK="Попередня настройка подачі матеріалу"/>
+      <attribute_value id="179490" nameRU="Предварительная подача воздуха" nameUK="Попередня подача повітря"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="121250" nameRU="Автомобильные щетки и скребки" nameUK="Автомобільні щітки та скребки">
+    <attribute id="71" nameRU="Длина щетки" type="real" nameUK="Довжина щітки" measureUnitRU="мм" min="0" max="1700" measureUnitUK="мм"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7636" nameRU="алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="7765" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="38769" nameRU="цветной пластик" nameUK="кольоровий пластик"/>
+      <attribute_value id="64738" nameRU="металл" nameUK="метал"/>
+      <attribute_value id="69140" nameRU="силикон" nameUK="силікон"/>
+      <attribute_value id="69141" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="69142" nameRU="нержавеющая сталь/пластик" nameUK="нержавіюча сталь/пластик"/>
+      <attribute_value id="167949" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="289731" nameRU="Пена EVA" nameUK=""/>
+      <attribute_value id="300888" nameRU="Резина/Пластик" nameUK="Гума/Пластик"/>
+    </attribute>
+    <attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="250" measureUnitUK="мм"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5784" nameRU="Материал щетины" type="singleselect" nameUK="Матеріал щетини">
+      <attribute_value id="38847" nameRU="Натуральная" nameUK="Натуральна"/>
+      <attribute_value id="38848" nameRU="Нейлон" nameUK="Нейлон"/>
+      <attribute_value id="38849" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="38859" nameRU="Смешанная" nameUK="Змішана"/>
+      <attribute_value id="42712" nameRU="Полиэстр" nameUK="Поліестр"/>
+      <attribute_value id="42713" nameRU="Синтетическая" nameUK="Синтетична"/>
+      <attribute_value id="42860" nameRU="Синтетическая микротекстурная" nameUK="Синтетична мікротекстурна"/>
+      <attribute_value id="42869" nameRU="Полиуретан" nameUK="Поліуретан"/>
+      <attribute_value id="70774" nameRU="Силикон" nameUK="Силікон"/>
+      <attribute_value id="70777" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="302722" nameRU="Плюш" nameUK="Плюш"/>
+      <attribute_value id="302723" nameRU="Шерсть" nameUK="Вовна"/>
+      <attribute_value id="312295" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+      <attribute_value id="318292" nameRU="Поролон" nameUK="Поролон"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10168" nameRU="Ширина щетки" type="real" nameUK="Ширина щітки" measureUnitRU="мм" min="0" max="250" measureUnitUK="мм"/>
+    <attribute id="10252" nameRU="Набор" type="bool" nameUK="Набір"/>
+    <attribute id="11293" nameRU="Тип щетки" type="singleselect" nameUK="Тип щітки">
+      <attribute_value id="107775" nameRU="Щетка" nameUK="Щітка"/>
+      <attribute_value id="107776" nameRU="Скребок" nameUK="Скребок"/>
+      <attribute_value id="107777" nameRU="Щетка-скребок" nameUK="Щітка-скребок"/>
+      <attribute_value id="277856" nameRU="Водосгон" nameUK="Водозгон"/>
+      <attribute_value id="328323" nameRU="Кисточка" nameUK="Пензлик"/>
+      <attribute_value id="350841" nameRU="Швабра" nameUK="Швабра"/>
+    </attribute>
+    <attribute id="18319" nameRU="Артикул производителя" type="free" nameUK="Артикул виробника"/>
+    <attribute id="19626" nameRU="Жесткость ворса" type="singleselect" nameUK="Жорсткість ворсу">
+      <attribute_value id="363193" nameRU="Ultra Soft" nameUK=""/>
+      <attribute_value id="363194" nameRU="Soft" nameUK=""/>
+      <attribute_value id="363195" nameRU="Medium" nameUK=""/>
+      <attribute_value id="363196" nameRU="Hard" nameUK=""/>
+      <attribute_value id="363197" nameRU="Extra Hard" nameUK=""/>
+    </attribute>
+  </category>
+</categories>

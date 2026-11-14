@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201622" nameRU="Строительные уровни" nameUK="Будівельні рівні">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="2" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="108" nameRU="Внутренний диаметр шланга" type="real" nameUK="Внутрішній діаметр шланга" measureUnitRU="мм" min="0" max="10" measureUnitUK="мм"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="30000" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8057" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="8058" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="8059" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+      <attribute_value id="360355" nameRU="Пластик/ПВХ" nameUK="Пластик/ПВХ"/>
+    </attribute>
+    <attribute id="696" nameRU="Тип уровня" type="singleselect" nameUK="Тип рівня">
+      <attribute_value id="8442" nameRU="Механический" nameUK="Механічний"/>
+      <attribute_value id="8443" nameRU="Цифровой" nameUK="Цифровий"/>
+      <attribute_value id="277508" nameRU="Водяной" nameUK="Водяний"/>
+    </attribute>
+    <attribute id="699" nameRU="Измерительная шкала" type="multiselect" nameUK="Вимірювальна шкала">
+      <attribute_value id="8522" nameRU="Метрическая" nameUK="Метрична"/>
+      <attribute_value id="8523" nameRU="Дюймы" nameUK="Дюйми"/>
+      <attribute_value id="8524" nameRU="Футы" nameUK="Фути"/>
+      <attribute_value id="8525" nameRU="Градусы" nameUK="Градуси"/>
+      <attribute_value id="360354" nameRU="Объем" nameUK="Об'єм"/>
+    </attribute>
+    <attribute id="718" nameRU="Измерительные колбы" type="multiselect" nameUK="Вимірювальні колби">
+      <attribute_value id="8681" nameRU="1-на колба 45°" nameUK="1-колба 45°"/>
+      <attribute_value id="8682" nameRU="1-на колба 90°" nameUK="1-колба 90°"/>
+      <attribute_value id="8683" nameRU="1-на колба 180°" nameUK="1-колба 180°"/>
+      <attribute_value id="8684" nameRU="2-е колбы 45°" nameUK="2-е колби 45°"/>
+      <attribute_value id="8685" nameRU="2-е колбы 90°" nameUK="2-е колби 90°"/>
+      <attribute_value id="8686" nameRU="2-е колбы 180°" nameUK="2-е колби 180°"/>
+      <attribute_value id="274415" nameRU="1-на поворотная" nameUK="1-поворотна"/>
+      <attribute_value id="360361" nameRU="2-е колбы" nameUK="2-і колби"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

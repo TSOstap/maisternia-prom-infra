@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200347" nameRU="Зажимные клещи" nameUK="Затискні кліщі">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="2" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="123" nameRU="Длина инструмента" type="real" nameUK="Довжина інструменту" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="8228" nameRU="Диэлектрическое покрытие" type="bool" nameUK="Діелектричне покриття"/>
+    <attribute id="8233" nameRU="Твердость губок" type="real" nameUK="Твердість губок" measureUnitRU="HRC" measureUnitUK="HRC"/>
+    <attribute id="8271" nameRU="Омедненный инструмент" type="bool" nameUK="Оміднений інструмент"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

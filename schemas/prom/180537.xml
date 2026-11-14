@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="180537" nameRU="Аксессуары и комплектующие для ударных инструментов" nameUK="Аксесуари та комплектуючі для ударних інструментів">
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="см" min="0" max="300" measureUnitUK="см"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="см" min="0" max="300" measureUnitUK="см"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="35372" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="36084" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="134429" nameRU="Коврик" nameUK="Килимок"/>
+      <attribute_value id="171002" nameRU="Пружина" nameUK="Пружина"/>
+      <attribute_value id="172985" nameRU="Ключ для настройки" nameUK="Ключ для налаштування"/>
+      <attribute_value id="172986" nameRU="Аквариум для барабанов" nameUK="Акваріум для барабанів"/>
+      <attribute_value id="173083" nameRU="Лаги" nameUK="Лаги"/>
+      <attribute_value id="173084" nameRU="Машинка подструнника" nameUK="Машинка підструнника"/>
+      <attribute_value id="173085" nameRU="Подструнник" nameUK="Подструнник"/>
+      <attribute_value id="173086" nameRU="Ножки" nameUK="Ніжки"/>
+      <attribute_value id="173087" nameRU="Обод" nameUK="Обід"/>
+      <attribute_value id="173088" nameRU="Болты" nameUK="Болти"/>
+      <attribute_value id="173089" nameRU="Фетровая прокладка" nameUK="Фетрова прокладка"/>
+      <attribute_value id="181528" nameRU="Средство по уходу" nameUK="Засіб по догляду"/>
+    </attribute>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="169400" nameRU="Малый барабан" nameUK="Малий барабан"/>
+      <attribute_value id="169402" nameRU="Томы" nameUK="Томи"/>
+      <attribute_value id="169403" nameRU="Бас барабан" nameUK="Бас барабан"/>
+      <attribute_value id="169431" nameRU="Флор том" nameUK="Флор том"/>
+      <attribute_value id="344780" nameRU="Барабанная установка" nameUK="Барабанна установка"/>
+    </attribute>
+    <attribute id="6198" nameRU="Размер" type="singleselect" nameUK="Розмір">
+      <attribute_value id="169385" nameRU="8&quot;" nameUK="8&quot;"/>
+      <attribute_value id="169386" nameRU="6&quot;" nameUK="6&quot;"/>
+      <attribute_value id="169387" nameRU="10&quot;" nameUK="10&quot;"/>
+      <attribute_value id="169389" nameRU="14&quot;" nameUK="14&quot;"/>
+      <attribute_value id="169393" nameRU="12&quot;" nameUK="12&quot;"/>
+      <attribute_value id="169405" nameRU="13&quot;" nameUK="13&quot;"/>
+      <attribute_value id="169406" nameRU="15&quot;" nameUK="15&quot;"/>
+      <attribute_value id="169407" nameRU="16&quot;" nameUK="16&quot;"/>
+      <attribute_value id="169408" nameRU="18&quot;" nameUK="18&quot;"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

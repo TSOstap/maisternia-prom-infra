@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="62601" nameRU="Инфракрасные и каталитические обогреватели" nameUK="Інфрачервоні та каталітичні обігрівачі">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="70000" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="1000" measureUnitUK="кг"/>
+    <attribute id="46" nameRU="Тип управления" type="singleselect" nameUK="Тип управління">
+      <attribute_value id="6923" nameRU="Механическое" nameUK="Механічне"/>
+      <attribute_value id="6924" nameRU="Сенсорное" nameUK="Сенсорне"/>
+      <attribute_value id="6925" nameRU="Электронное" nameUK="Електронне"/>
+    </attribute>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="15000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="15000" measureUnitUK="мм"/>
+    <attribute id="149" nameRU="Глубина" type="real" nameUK="Глибина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+      <attribute_value id="7068" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="7069" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="7070" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="7071" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="7072" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="7075" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="7076" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="7077" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7078" nameRU="Антрацит" nameUK="Антрацит"/>
+      <attribute_value id="7079" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="7080" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="7081" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="7082" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="7083" nameRU="Медный" nameUK="Мідний"/>
+      <attribute_value id="7084" nameRU="Слоновая кость" nameUK="Слонова кістка"/>
+      <attribute_value id="7085" nameRU="Фисташковый" nameUK="Фісташковий"/>
+      <attribute_value id="7086" nameRU="Кремовый" nameUK="Кремовий"/>
+      <attribute_value id="7087" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="7088" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="7089" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="7090" nameRU="Малиновый" nameUK="Малиновий"/>
+      <attribute_value id="7091" nameRU="Сиреневый" nameUK="Бузковий"/>
+      <attribute_value id="7092" nameRU="Персиковый" nameUK="Персиковий"/>
+      <attribute_value id="7093" nameRU="Серебряный" nameUK="Срібний"/>
+      <attribute_value id="7094" nameRU="Другой" nameUK="Інший"/>
+      <attribute_value id="83208" nameRU="Прозрачный" nameUK="Прозорий"/>
+      <attribute_value id="148963" nameRU="Золотой" nameUK="Золотий"/>
+    </attribute>
+    <attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+      <attribute_value id="7132" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7134" nameRU="Стекло" nameUK="Скло"/>
+      <attribute_value id="7135" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="7616" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="7867" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="9214" nameRU="Хромированная сталь" nameUK="Хромована сталь"/>
+      <attribute_value id="19907" nameRU="Сталь покрытая порошковой краской" nameUK="Сталь покрита порошковою фарбою"/>
+      <attribute_value id="19908" nameRU="Металл покрытый порошковой краской" nameUK="Метал покритий порошковою фарбою"/>
+      <attribute_value id="19913" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+      <attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+      <attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+    </attribute>
+    <attribute id="190" nameRU="Длина сетевого шнура" type="real" nameUK="Довжина мережевого шнура" measureUnitRU="м" min="0" max="10" measureUnitUK="м"/>
+    <attribute id="335" nameRU="Дисплей" type="bool" nameUK="Дисплей"/>
+    <attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="20" measureUnitUK="л/год"/>
+    <attribute id="362" nameRU="Тип нагревательного элемента" type="singleselect" nameUK="Тип нагрівального елементу">
+      <attribute_value id="7609" nameRU="Открытый спиральный нагреватель" nameUK="Відкритий спіральний нагрівач"/>
+      <attribute_value id="8803" nameRU="ТЭН" nameUK="ТЕН"/>
+      <attribute_value id="8804" nameRU="Галогенный" nameUK="Галогенний"/>
+      <attribute_value id="21543" nameRU="Керамический" nameUK="Керамічний"/>
+      <attribute_value id="32909" nameRU="Карбоновый" nameUK="Карбоновий"/>
+      <attribute_value id="32910" nameRU="Кварцевый" nameUK="Кварцовий"/>
+      <attribute_value id="172285" nameRU="Микатермический" nameUK="Мікатермічний"/>
+      <attribute_value id="274963" nameRU="Без теновая технология" nameUK="Без теновая технологія"/>
+      <attribute_value id="318791" nameRU="Инфракрасный излучатель" nameUK="Інфрачервоний випромінювач"/>
+    </attribute>
+    <attribute id="516" nameRU="Колесики" type="bool" nameUK="Коліщата"/>
+    <attribute id="518" nameRU="Чехол для хранения и транспортировки" type="bool" nameUK="Чохол для зберігання й транспортування"/>
+    <attribute id="555" nameRU="Крепление на стену" type="bool" nameUK="Кріплення на стіну"/>
+    <attribute id="741" nameRU="Максимальная температура нагрева" type="real" nameUK="Максимальна температура нагріву" measureUnitRU="град." min="0" max="2000" measureUnitUK="град."/>
+    <attribute id="816" nameRU="Количество режимов работы" type="integer" nameUK="Кількість режимів роботи"/>
+    <attribute id="1137" nameRU="Индикатор температуры" type="bool" nameUK="Індикатор температури"/>
+    <attribute id="1338" nameRU="Время работы" type="real" nameUK="Час роботи" measureUnitRU="час" min="0" max="100" measureUnitUK="годин"/>
+    <attribute id="1493" nameRU="Частота" type="real" nameUK="Частота" measureUnitRU="Гц" min="0" max="300" measureUnitUK="Гц"/>
+    <attribute id="2053" nameRU="Напряжение сети" type="multiselect" nameUK="Напруга мережі">
+      <attribute_value id="11945" nameRU="220~240 В" nameUK="220~240 В"/>
+      <attribute_value id="11946" nameRU="380~400 В" nameUK="380~400 В"/>
+      <attribute_value id="35999" nameRU="100~120 В" nameUK="100~120 В"/>
+      <attribute_value id="279844" nameRU="220 В" nameUK="220 В"/>
+      <attribute_value id="313082" nameRU="220-230 В" nameUK=""/>
+    </attribute>
+    <attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="100" measureUnitUK="л"/>
+    <attribute id="2138" nameRU="Класс защиты" type="singleselect" nameUK="Клас захисту">
+      <attribute_value id="12040" nameRU="I" nameUK="I"/>
+      <attribute_value id="12041" nameRU="I+" nameUK="I+"/>
+      <attribute_value id="12042" nameRU="II" nameUK="II"/>
+      <attribute_value id="12043" nameRU="II+" nameUK="II+"/>
+      <attribute_value id="12044" nameRU="III" nameUK="III"/>
+      <attribute_value id="34245" nameRU="0" nameUK="0"/>
+      <attribute_value id="34246" nameRU="00" nameUK="00"/>
+      <attribute_value id="34247" nameRU="000" nameUK="000"/>
+      <attribute_value id="34248" nameRU="0I" nameUK="0I"/>
+      <attribute_value id="362364" nameRU="IP67" nameUK=""/>
+    </attribute>
+    <attribute id="2392" nameRU="Тип установки" type="multiselect" nameUK="Тип встановлення">
+      <attribute_value id="36482" nameRU="Напольный" nameUK="Підлоговий"/>
+      <attribute_value id="36483" nameRU="Настенный" nameUK="Настінний"/>
+      <attribute_value id="36484" nameRU="Потолочный" nameUK="Стельовий"/>
+      <attribute_value id="36487" nameRU="Настольный" nameUK="Настільний"/>
+    </attribute>
+    <attribute id="2658" nameRU="Регулировка высоты" type="bool" nameUK="Регулювання висоти"/>
+    <attribute id="3122" nameRU="Рекомендуемая площадь помещения" type="real" nameUK="Рекомендована площа приміщення" measureUnitRU="кв.м" min="0" max="300" measureUnitUK="кв.м"/>
+    <attribute id="3132" nameRU="Влагозащищенный корпус" type="bool" nameUK="Вологозахищений корпус"/>
+    <attribute id="3634" nameRU="Коэффициент полезного действия" type="real" nameUK="Коефіцієнт корисної дії" measureUnitRU="%" min="0" max="100" measureUnitUK="%"/>
+    <attribute id="3938" nameRU="Время нагрева до нужной температуры" type="integer" nameUK="Час нагрівання до потрібної температури" measureUnitRU="мин" min="0" max="120" measureUnitUK="хв"/>
+    <attribute id="3955" nameRU="Пьезорозжиг" type="bool" nameUK="П'єзорозпалювання"/>
+    <attribute id="4309" nameRU="Класс защиты корпусов электронного оборудования" type="singleselect" nameUK="Клас захисту корпусів електронного устаткування">
+      <attribute_value id="27642" nameRU="IPX4D" nameUK="IPX4D"/>
+      <attribute_value id="27643" nameRU="IPX5D" nameUK="IPX5D"/>
+      <attribute_value id="27644" nameRU="IP20" nameUK="IP20"/>
+      <attribute_value id="27645" nameRU="IP44" nameUK="IP44"/>
+      <attribute_value id="27646" nameRU="IP65" nameUK="IP65"/>
+      <attribute_value id="28458" nameRU="IP40" nameUK="IP40"/>
+      <attribute_value id="39734" nameRU="IP68" nameUK="IP68"/>
+      <attribute_value id="230795" nameRU="IPХ4" nameUK="ІРХ4"/>
+      <attribute_value id="230796" nameRU="IP24" nameUK="IP24"/>
+      <attribute_value id="234126" nameRU="IP54" nameUK="IP54"/>
+      <attribute_value id="248450" nameRU="IP47" nameUK="IP47"/>
+      <attribute_value id="248451" nameRU=" IPX24" nameUK="IPX24"/>
+      <attribute_value id="248453" nameRU="IP21" nameUK="IP21"/>
+      <attribute_value id="248454" nameRU="IP52" nameUK="IP52"/>
+      <attribute_value id="285127" nameRU="IP34" nameUK=""/>
+    </attribute>
+    <attribute id="4739" nameRU="Угол распространения ИК-излучение" type="real" nameUK="Кут поширення ІЧ-випромінювання" measureUnitRU="град." min="0" max="360" measureUnitUK="град."/>
+    <attribute id="4780" nameRU="Диаметр обогрева" type="real" nameUK="Діаметр обігріву" measureUnitRU="м" min="0" max="25" measureUnitUK="м"/>
+    <attribute id="5036" nameRU="Мощность обогрева" type="real" nameUK="Потужність обігріву" measureUnitRU="Вт" min="0" max="50000" measureUnitUK="Вт"/>
+    <attribute id="5103" nameRU="Рекомендуемая площадь вне помещения" type="real" nameUK="Рекомендована площа поза приміщенням" measureUnitRU="кв.м" min="0" max="300" measureUnitUK="кв.м"/>
+    <attribute id="5233" nameRU="Площадь нагревательного элемента" type="real" nameUK="Площа нагрівального елемента" measureUnitRU="кв.м" min="0" max="5" measureUnitUK="кв.м"/>
+    <attribute id="5503" nameRU="Тип используемого топлива" type="multiselect" nameUK="Тип використовуваного палива">
+      <attribute_value id="36558" nameRU="природный газ" nameUK="природний газ"/>
+      <attribute_value id="36559" nameRU="сжиженный газ" nameUK="скраплений газ"/>
+      <attribute_value id="36560" nameRU="пропан/бутан" nameUK="пропан/бутан"/>
+      <attribute_value id="36561" nameRU="дизельное топливо (солярка)" nameUK="дизельне паливо (солярка)"/>
+      <attribute_value id="36562" nameRU="керосин" nameUK="гас"/>
+      <attribute_value id="36563" nameRU="бензин" nameUK="бензин"/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="170151" nameRU="Бытовое" nameUK="Побутове"/>
+      <attribute_value id="174574" nameRU="Промышленное" nameUK="Промислове"/>
+    </attribute>
+    <attribute id="6807" nameRU="Безопасность" type="multiselect" nameUK="Безпека">
+      <attribute_value id="172251" nameRU="Отключение при падении" nameUK="Відключення при падінні"/>
+      <attribute_value id="172252" nameRU="Защита от перегрева" nameUK="Захист від перегріву"/>
+      <attribute_value id="172253" nameRU="Защита от замерзания" nameUK="Захист від замерзання"/>
+      <attribute_value id="172254" nameRU="Защита от детей" nameUK="Захист від дітей"/>
+      <attribute_value id="172255" nameRU="Защита от влаги" nameUK="Захист від вологи"/>
+      <attribute_value id="172702" nameRU="Датчик наклона" nameUK="Датчик нахилу"/>
+      <attribute_value id="172704" nameRU="Датчик затухания" nameUK="Датчик загасання"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="148178" nameRU="Пульт дистанционного управления" nameUK="Пульт дистанційного керування"/>
+      <attribute_value id="158915" nameRU="Встроенный вентилятор" nameUK="Вбудований вентилятор"/>
+      <attribute_value id="172241" nameRU="Функция ионизации" nameUK="Функція іонізації"/>
+      <attribute_value id="172242" nameRU="Функция наклона" nameUK="Функція нахилу"/>
+      <attribute_value id="172243" nameRU="Функция памяти" nameUK="Функція пам'яті"/>
+      <attribute_value id="172245" nameRU="Функция увлажнения" nameUK="Функція зволоження"/>
+      <attribute_value id="172246" nameRU="Функция поворота" nameUK="Функція повороту"/>
+      <attribute_value id="172249" nameRU="Терморегулятор" nameUK="Терморегулятор"/>
+      <attribute_value id="172250" nameRU="Таймер" nameUK="Таймер"/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+    <attribute id="14191" nameRU="Дополнительный сервис" type="multiselect" nameUK="Додатковий сервіс">
+      <attribute_value id="144186" nameRU="Установка" nameUK="Установка"/>
+      <attribute_value id="144187" nameRU="Сервисное обслуживание" nameUK="Сервісне обслуговування"/>
+      <attribute_value id="179729" nameRU="Настройка" nameUK="Налаштування"/>
+    </attribute>
+    <attribute id="15747" nameRU="Тип источника энергии" type="singleselect" nameUK="Тип джерела енергії">
+      <attribute_value id="172274" nameRU="Жидкотопливный" nameUK="Рідкопаливний"/>
+      <attribute_value id="172275" nameRU="Электрический" nameUK="Електричний"/>
+      <attribute_value id="172276" nameRU="Газовый" nameUK="Газовий"/>
+    </attribute>
+  </category>
+</categories>

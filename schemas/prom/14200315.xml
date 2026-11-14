@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200315" nameRU="Тиски" nameUK="Лещата">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="50" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="600" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="600" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="600" measureUnitUK="мм"/>
+    <attribute id="7871" nameRU="Тип тисков" type="singleselect" nameUK="Тип лещат">
+      <attribute_value id="65948" nameRU="слесарные" nameUK="слюсарні"/>
+      <attribute_value id="65949" nameRU="станочные" nameUK="верстатні"/>
+      <attribute_value id="65950" nameRU="столярные" nameUK="столярні"/>
+      <attribute_value id="65951" nameRU="ручные (миниатюрные)" nameUK="ручні (мініатюрні)"/>
+    </attribute>
+    <attribute id="7872" nameRU="Наличие поворотного механизма" type="bool" nameUK="Наявність поворотного механізму"/>
+    <attribute id="7873" nameRU="Ширина губок" type="real" nameUK="Ширина губок" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="7874" nameRU="Высота губок" type="real" nameUK="Висота губок" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="7875" nameRU="Максимальное раскрытие тисков" type="real" nameUK="Максимальне розкриття лещат" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="7876" nameRU="Наличие наковальни" type="bool" nameUK="Наявність ковадла"/>
+    <attribute id="7877" nameRU="Наличие зажима для труб и цилиндрических деталей" type="bool" nameUK="Наявність затиску для труб і циліндричних деталей"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200327" nameRU="Разводные ключи" nameUK="Розвідні ключі">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="123" nameRU="Длина инструмента" type="real" nameUK="Довжина інструменту" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="360009" nameRU="Двухкомпонентный " nameUK="Двокомпонентний"/>
+    </attribute>
+    <attribute id="8271" nameRU="Омедненный инструмент" type="bool" nameUK="Оміднений інструмент"/>
+    <attribute id="8412" nameRU="Максимальная ширина захвата" type="real" nameUK="Максимальна ширина захоплення" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="8498" nameRU="Тип ключа" type="singleselect" nameUK="Тип ключа">
+      <attribute_value id="296984" nameRU="Разводной поворотный" nameUK="Розвідний поворотний"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="12902" nameRU="Дровоколы" nameUK="Дровоколи">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="30000" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+    </attribute>
+    <attribute id="82" nameRU="Объем масляного бака" type="real" nameUK="Об'єм масляного бака" measureUnitRU="л" min="0" max="80" measureUnitUK="л"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="9000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="30000" measureUnitUK="мм"/>
+    <attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="кВт" min="0" max="1000" measureUnitUK="кВт"/>
+    <attribute id="349" nameRU="Емкость топливного бака" type="real" nameUK="Ємність паливного бака" measureUnitRU="л" min="0" max="2000" measureUnitUK="л"/>
+    <attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="1000" measureUnitUK="л/год"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="30000" measureUnitUK="мм"/>
+    <attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+      <attribute_value id="9284" nameRU="Бензиновый" nameUK="Бензиновий"/>
+      <attribute_value id="70839" nameRU="Электрический" nameUK="Електричний"/>
+    </attribute>
+    <attribute id="2049" nameRU="Максимальное давление" type="real" nameUK="Максимальний тиск" measureUnitRU="бар" min="0" max="1000" measureUnitUK="бар"/>
+    <attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+    <attribute id="4737" nameRU="Мощность" type="real" nameUK="Потужність" measureUnitRU="Вт" min="0" max="400" measureUnitUK="Вт"/>
+    <attribute id="5951" nameRU="Объем гидробака" type="real" nameUK="Об'єм гідробака" measureUnitRU="л" min="1" max="150" measureUnitUK="л"/>
+    <attribute id="6454" nameRU="Максимальная скорость передвижения" type="real" nameUK="Максимальна швидкість пересування" measureUnitRU="км/ч" min="0" max="30" measureUnitUK="км/год"/>
+    <attribute id="6527" nameRU="Диаметр диска" type="real" nameUK="Діаметр диска" measureUnitRU="мм" min="0" max="600" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+    </attribute>
+    <attribute id="12014" nameRU="Объем трелюемой пачки" type="real" nameUK="Об'єм трелюемой пачки" measureUnitRU="куб. м" min="0" max="50" measureUnitUK="куб. м"/>
+    <attribute id="12017" nameRU="Тип трелевочной машины по ходовой" type="singleselect" nameUK="Тип трелювальної машини за ходовою">
+      <attribute_value id="116900" nameRU="Гусенечная" nameUK="Гусенична"/>
+      <attribute_value id="116901" nameRU="Колесная" nameUK="Колісна"/>
+    </attribute>
+    <attribute id="12021" nameRU="Масса навесного оборудования, не более" type="real" nameUK="Маса навісного обладнання, не більше" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="12022" nameRU="Максимальный вылет манипулятора" type="real" nameUK="Максимальний виліт маніпулятора" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="12023" nameRU="Минимальный вылет манипулятора" type="real" nameUK="Мінімальний виліт маніпулятора" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="12024" nameRU="Угол поворота манипулятора" type="integer" nameUK="Угол поворота манипулятора" measureUnitRU="град." min="0" max="360" measureUnitUK="град."/>
+    <attribute id="16608" nameRU="Максимальная длина заготовки" type="real" nameUK="Максимальна довжина заготовки" measureUnitRU="мм" min="0" max="1400" measureUnitUK="мм"/>
+    <attribute id="17599" nameRU="Механизм измельчения" type="multiselect" nameUK="Механізм подрібнення">
+      <attribute_value id="214074" nameRU="Диск" nameUK="Диск"/>
+    </attribute>
+    <attribute id="18666" nameRU="Продуктивность" type="real" nameUK=" Продуктивність" measureUnitRU="куб.м/мин" min="0" max="100" measureUnitUK="куб.м/хв"/>
+    <attribute id="18777" nameRU="Вид лесозаготовительного оборудования" type="singleselect" nameUK="Вид лісозаготівельного обладнання">
+      <attribute_value id="298152" nameRU="трелевочные машины" nameUK="трелювальні машини"/>
+      <attribute_value id="298153" nameRU="лесопогрузочные машины" nameUK="лісонавантажувальні машини"/>
+      <attribute_value id="298154" nameRU="мульчеры" nameUK="мульчери"/>
+      <attribute_value id="298155" nameRU="грейферы и валочные головки" nameUK="грейфери та валочні головки"/>
+      <attribute_value id="298156" nameRU="дереводробилки" nameUK="дереводробарки"/>
+      <attribute_value id="298157" nameRU="дровоколы" nameUK="дровоколи"/>
+      <attribute_value id="298158" nameRU="ручные измельчители пней" nameUK="ручні подрібнювачі пнів"/>
+      <attribute_value id="298159" nameRU="форвардеры" nameUK="форвардери"/>
+      <attribute_value id="298160" nameRU="Окорочные станки" nameUK="Окорочні станки"/>
+      <attribute_value id="345508" nameRU="Дроворез" nameUK="Дроворіз"/>
+    </attribute>
+    <attribute id="19218" nameRU="Максимальный диаметр бревна, мм" type="real" nameUK="Максимальний діаметр колоди, мм" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+  </category>
+</categories>

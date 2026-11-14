@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1911" nameRU="Бинокли, монокли" nameUK="Біноклі, моноклі">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+      <attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7867" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="67250" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="75483" nameRU="Карбон" nameUK="Карбон"/>
+      <attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="75489" nameRU="Поликарбонат" nameUK="Полікарбонат"/>
+      <attribute_value id="107082" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="205715" nameRU="Прорезиненный пластик" nameUK="Прогумований пластик"/>
+      <attribute_value id="205716" nameRU="Магниевый сплав" nameUK="Магнієвий сплав"/>
+      <attribute_value id="205717" nameRU="Кожа" nameUK="Шкіра"/>
+      <attribute_value id="245169" nameRU="Прорезиненный металл" nameUK="Прогумований метал"/>
+      <attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+      <attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+      <attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="158343" nameRU="Бинокль" nameUK="Бінокль"/>
+      <attribute_value id="158344" nameRU="Подзорная труба" nameUK="Підзорна труба"/>
+      <attribute_value id="205706" nameRU="Монокль" nameUK="Монокль"/>
+      <attribute_value id="297019" nameRU="Перископ" nameUK="Перископ"/>
+    </attribute>
+    <attribute id="731" nameRU="Диаметр объектива" type="real" nameUK="Діаметр об'єктиву" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="1312" nameRU="Фокусное расстояние" type="real" nameUK="Фокусна відстань" measureUnitRU="мм" min="0" max="100000" measureUnitUK="мм"/>
+    <attribute id="4646" nameRU="Водостойкость" type="bool" nameUK="Водостійкість"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="234476" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="205708" nameRU="Астрономический" nameUK="Астрономічний"/>
+      <attribute_value id="205709" nameRU="Тактический" nameUK="Тактичний"/>
+      <attribute_value id="205710" nameRU="Театральный" nameUK="Театральний"/>
+      <attribute_value id="205712" nameRU="Общего назначения" nameUK="Загального призначення"/>
+      <attribute_value id="292579" nameRU="Морской" nameUK="Морський"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+      <attribute_value id="231714" nameRU="Неликвид" nameUK="Неліквід"/>
+    </attribute>
+    <attribute id="13343" nameRU="Минимальная кратность" type="real" nameUK="Мінімальна кратність" measureUnitRU="х" min="0" max="10000" measureUnitUK="х"/>
+    <attribute id="13344" nameRU="Максимальная кратность" type="real" nameUK="Максимальна кратність" measureUnitRU="х" min="0" max="100000" measureUnitUK="х"/>
+    <attribute id="17454" nameRU="Тип кратности" type="singleselect" nameUK="Тип кратності">
+      <attribute_value id="205713" nameRU="Изменяемая" nameUK="Змінна"/>
+      <attribute_value id="205714" nameRU="Фиксированная" nameUK="Фіксована"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="121108" nameRU="Оборудование для замены масел и смазок" nameUK="Обладнання для заміни мастил та змащувачів">
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="700" measureUnitUK="бар"/>
+    <attribute id="2913" nameRU="Емкость бака" type="real" nameUK="Ємність бака" measureUnitRU="л" min="0" max="100" measureUnitUK="л"/>
+    <attribute id="6355" nameRU="Длина шланга" type="real" nameUK="Довжина шланга" measureUnitRU="мм" min="0" max="4000" measureUnitUK="мм"/>
+    <attribute id="15694" nameRU="Давление для слива" type="real" nameUK="Тиск для зливу" measureUnitRU="бар" min="0" max="15" measureUnitUK="бар"/>
+    <attribute id="15695" nameRU="Максимальная всасывающая способность" type="real" nameUK="Максимальна всмоктувальна здатність" measureUnitRU="л" min="0" max="70" measureUnitUK="л"/>
+    <attribute id="15696" nameRU="Максимальная способность слива" type="real" nameUK="Максимальна здатність зливу" measureUnitRU="л" min="0" max="70" measureUnitUK="л"/>
+  </category>
+</categories>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="420503" nameRU="Гвозди" nameUK="Цвяхи">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="134" nameRU="Длина гвоздя" type="real" nameUK="Довжина цвяха" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="1559" nameRU="Упаковка" type="singleselect" nameUK="Упаковка">
+      <attribute_value id="45106" nameRU="Пакет" nameUK="Пакет"/>
+      <attribute_value id="45477" nameRU="Пачка" nameUK="Пачка"/>
+      <attribute_value id="70885" nameRU="Коробка" nameUK="Коробка"/>
+      <attribute_value id="70887" nameRU="Полиэтиленовый пакет" nameUK="Поліетиленовий пакет"/>
+      <attribute_value id="71169" nameRU="Мешок" nameUK="Мішок"/>
+      <attribute_value id="88284" nameRU="Ящик" nameUK="Ящик"/>
+    </attribute>
+    <attribute id="5161" nameRU="Минимальная температура окружающей среды" type="real" nameUK="Мінімальна температура навколишнього середовища" measureUnitRU="град." min="-100" max="10" measureUnitUK="град."/>
+    <attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0" max="400" measureUnitUK="град."/>
+    <attribute id="5692" nameRU="Покрытие" type="singleselect" nameUK="Покриття">
+      <attribute_value id="38109" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="38112" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="38113" nameRU="Матовый хром" nameUK="Матовий хром"/>
+      <attribute_value id="38114" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="38116" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="38117" nameRU="Никель" nameUK="Нікель"/>
+      <attribute_value id="38119" nameRU="Хром" nameUK="Хром"/>
+      <attribute_value id="38120" nameRU="Эмаль" nameUK="Емаль"/>
+      <attribute_value id="46530" nameRU="Никель-хром" nameUK="Нікель-хром"/>
+      <attribute_value id="64759" nameRU="Цинк" nameUK="Цинк"/>
+      <attribute_value id="64889" nameRU="Эпоксидный порошок" nameUK="Епоксидний порошок"/>
+      <attribute_value id="84397" nameRU="Окраска" nameUK="Забарвлення"/>
+    </attribute>
+    <attribute id="7646" nameRU="Вес упаковки" type="real" nameUK="Вага упаковки" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10153" nameRU="Диаметр головки" type="real" nameUK="Діаметр головки" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="10154" nameRU="Высота головки" type="real" nameUK="Висота головки" measureUnitRU="мм" min="0" max="50" measureUnitUK="мм"/>
+    <attribute id="10178" nameRU="Тип гвоздя" type="singleselect" nameUK="Тип цвяха">
+      <attribute_value id="87943" nameRU="Декоративный" nameUK="Декоративний"/>
+      <attribute_value id="87944" nameRU="Строительный" nameUK="Будівельний"/>
+      <attribute_value id="87945" nameRU="Толевый" nameUK="Толеві"/>
+      <attribute_value id="87946" nameRU="Кровельный" nameUK="Покрівельний"/>
+      <attribute_value id="87947" nameRU="Отделочный" nameUK="Обробний"/>
+      <attribute_value id="87948" nameRU="Обойный" nameUK="Шпалерний"/>
+      <attribute_value id="87949" nameRU="Тарный" nameUK="Тарний"/>
+      <attribute_value id="87950" nameRU="Формовочный" nameUK="Формувальний"/>
+      <attribute_value id="87958" nameRU="Универсальный" nameUK="Універсальний"/>
+      <attribute_value id="273816" nameRU="Планочный" nameUK="Планочный"/>
+      <attribute_value id="340053" nameRU="Столярный" nameUK="Столярний"/>
+    </attribute>
+    <attribute id="10182" nameRU="Вид гвоздя" type="singleselect" nameUK="Вид цвяха">
+      <attribute_value id="87975" nameRU="Винтовой" nameUK="Гвинтовий"/>
+      <attribute_value id="87976" nameRU="Дюкерт-гвоздь" nameUK="Дюкерт-цвях"/>
+      <attribute_value id="87977" nameRU="Гребенчатый (ершеный)" nameUK="Гребінчастий (єршоні)"/>
+      <attribute_value id="87978" nameRU="Шиферный" nameUK="Шиферний"/>
+      <attribute_value id="87979" nameRU="Двухшляпочный" nameUK="Двокапелюшний"/>
+      <attribute_value id="87980" nameRU="Без шляпки" nameUK="Без головки"/>
+      <attribute_value id="87981" nameRU="Финишный" nameUK="Фінішний"/>
+      <attribute_value id="87982" nameRU="Долбежный" nameUK="Довбальний"/>
+      <attribute_value id="87983" nameRU="Замковый" nameUK="Замковий"/>
+    </attribute>
+    <attribute id="10183" nameRU="Материал гвоздя" type="singleselect" nameUK="Матеріал цвяха">
+      <attribute_value id="87996" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="87997" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="87998" nameRU="Высокопрочная сталь" nameUK="Високоміцна сталь"/>
+      <attribute_value id="87999" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="88000" nameRU="Легированная сталь" nameUK="Легована сталь"/>
+      <attribute_value id="88001" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="88002" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="88003" nameRU="Полиамид" nameUK="Поліамід"/>
+      <attribute_value id="88004" nameRU="Поливинилхлорид" nameUK="Полівінілхлорид"/>
+      <attribute_value id="88005" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+      <attribute_value id="88006" nameRU="Полиэтилен" nameUK="Поліетилен"/>
+      <attribute_value id="88007" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="88008" nameRU="Сталь закаленная" nameUK="Сталь загартована"/>
+      <attribute_value id="88009" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="88010" nameRU="Дерево" nameUK="Дерево"/>
+    </attribute>
+    <attribute id="10184" nameRU="Диаметр стержня гвоздя" type="real" nameUK="Діаметр стрижня цвяха" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+  </category>
+</categories>

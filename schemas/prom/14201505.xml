@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201505" nameRU="Цепи и шины для пил" nameUK="Ланцюги та шини для пил">
+    <attribute id="80" nameRU="Длина шины" type="real" nameUK="Довжина шини" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="81" nameRU="Шаг цепи" type="singleselect" nameUK="Крок ланцюга">
+      <attribute_value id="6950" nameRU="0.325&quot;" nameUK="0.325&quot;"/>
+      <attribute_value id="6951" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+      <attribute_value id="6952" nameRU="0.404&quot;" nameUK="0.404&quot;"/>
+      <attribute_value id="172654" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="172656" nameRU="3/8&quot; Picco" nameUK="3/8&quot; Picco"/>
+      <attribute_value id="350355" nameRU="1/8" nameUK="1/8"/>
+      <attribute_value id="350356" nameRU="3/4" nameUK="3/4"/>
+      <attribute_value id="350357" nameRU="0.05" nameUK="0.05"/>
+      <attribute_value id="350358" nameRU="0.3" nameUK="0.3"/>
+    </attribute>
+    <attribute id="2517" nameRU="Ширина паза" type="real" nameUK="Ширина паза" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="15786" nameRU="Количество звеньев цепи" type="integer" nameUK="Кількість ланок ланцюга" measureUnitRU="шт" min="0" max="10000" measureUnitUK="шт."/>
+    <attribute id="15787" nameRU="Толщина звена" type="real" nameUK="Товщина ланки" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+  </category>
+</categories>

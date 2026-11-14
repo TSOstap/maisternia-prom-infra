@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="421002" nameRU="Проволока" nameUK="Дріт">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="1500" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="514" nameRU="Диаметр проволоки" type="real" nameUK="Діаметр дроту" measureUnitRU="мм" min="0" max="20" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="м" min="0" max="3000" measureUnitUK="м"/>
+    <attribute id="1559" nameRU="Упаковка" type="singleselect" nameUK="Упаковка">
+      <attribute_value id="104378" nameRU="Моток" nameUK="Моток"/>
+      <attribute_value id="104379" nameRU="Бухта" nameUK="Бухта"/>
+      <attribute_value id="104380" nameRU="Катушка" nameUK="Котушка"/>
+      <attribute_value id="104382" nameRU="Розетт" nameUK="Розетт"/>
+    </attribute>
+    <attribute id="5692" nameRU="Покрытие" type="singleselect" nameUK="Покриття">
+      <attribute_value id="38109" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="38112" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="38113" nameRU="Матовый хром" nameUK="Матовий хром"/>
+      <attribute_value id="38114" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="38116" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="38117" nameRU="Никель" nameUK="Нікель"/>
+      <attribute_value id="38118" nameRU="Титан" nameUK="Титан"/>
+      <attribute_value id="38119" nameRU="Хром" nameUK="Хром"/>
+      <attribute_value id="38120" nameRU="Эмаль" nameUK="Емаль"/>
+      <attribute_value id="46530" nameRU="Никель-хром" nameUK="Нікель-хром"/>
+      <attribute_value id="64759" nameRU="Цинк" nameUK="Цинк"/>
+      <attribute_value id="64889" nameRU="Эпоксидный порошок" nameUK="Епоксидний порошок"/>
+      <attribute_value id="84397" nameRU="Окраска" nameUK="Забарвлення"/>
+      <attribute_value id="85973" nameRU="Оплетка из ПВХ" nameUK="Оплітка з ПВХ"/>
+      <attribute_value id="88771" nameRU="Оксидное" nameUK="Оксидне"/>
+      <attribute_value id="88782" nameRU="Фосфатное" nameUK="Фосфатне"/>
+      <attribute_value id="95156" nameRU="Полимерно-порошковое" nameUK="Полімерно-порошкове"/>
+    </attribute>
+    <attribute id="11039" nameRU="Вид проволоки" type="singleselect" nameUK="Вид дроту">
+      <attribute_value id="104330" nameRU="Колючая" nameUK="Колючий"/>
+      <attribute_value id="104331" nameRU="Пружинная" nameUK="Пружинна"/>
+      <attribute_value id="104332" nameRU="Обычная" nameUK="Звичайна"/>
+      <attribute_value id="104333" nameRU="Вязальная" nameUK="В'язальний"/>
+      <attribute_value id="104334" nameRU="Полиграфическая" nameUK="Поліграфічна"/>
+      <attribute_value id="104335" nameRU="Игольная" nameUK="Голкова"/>
+      <attribute_value id="361370" nameRU="Шпалерная" nameUK="Шпалерна"/>
+    </attribute>
+    <attribute id="11040" nameRU="Материал проволоки" type="singleselect" nameUK="Матеріал дроту">
+      <attribute_value id="104337" nameRU="Низкоуглеродистая сталь" nameUK="Низьковуглецева сталь"/>
+      <attribute_value id="104338" nameRU="Углеродистая сталь" nameUK="Вуглецева сталь"/>
+      <attribute_value id="104339" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="104340" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="104341" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="104342" nameRU="Никель" nameUK="Нікель"/>
+      <attribute_value id="104343" nameRU="Титан" nameUK="Титан"/>
+      <attribute_value id="104344" nameRU="Цинк" nameUK="Цинк"/>
+      <attribute_value id="104345" nameRU="Высоколегированная сталь" nameUK="Високолегована сталь"/>
+      <attribute_value id="104346" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="104347" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="104348" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="104372" nameRU="Биметалл" nameUK="Біметал"/>
+      <attribute_value id="104373" nameRU="Полиметалл" nameUK="Поліметал"/>
+      <attribute_value id="170741" nameRU="Фехраль" nameUK="Фехраль"/>
+      <attribute_value id="170742" nameRU="Нихром" nameUK="Ніхром"/>
+      <attribute_value id="170743" nameRU="Кантал" nameUK="Кантана"/>
+    </attribute>
+    <attribute id="11041" nameRU="Сечение проволоки" type="singleselect" nameUK="Перетин дроту">
+      <attribute_value id="104349" nameRU="Круглое" nameUK="Кругле"/>
+      <attribute_value id="104350" nameRU="Шестиугольное" nameUK="Шестикутні"/>
+      <attribute_value id="104351" nameRU="Квадратное" nameUK="Квадратне"/>
+      <attribute_value id="104352" nameRU="Трапециевидное" nameUK="Трапецієподібна"/>
+      <attribute_value id="104353" nameRU="Овальное" nameUK="Овальне"/>
+      <attribute_value id="104354" nameRU="Прямоугольное" nameUK="Прямокутна"/>
+    </attribute>
+    <attribute id="11042" nameRU="Предельное отклонение по диаметру, ±" type="real" nameUK="Граничне відхилення по діаметру, ±" measureUnitRU="мм" min="0" max="0.5" measureUnitUK="мм"/>
+    <attribute id="11043" nameRU="Временное сопротивление разрыву, более" type="real" nameUK="Тимчасовий опір розриву, більш" measureUnitRU="Н/мм2" min="0" max="2000" measureUnitUK="Н/мм2"/>
+    <attribute id="11044" nameRU="Относительное удлинение, не менее" type="real" nameUK="Відносне подовження, не менше" measureUnitRU="%" min="0" max="30" measureUnitUK="%"/>
+    <attribute id="11045" nameRU="Число перегибов, не более" type="real" nameUK="Кількість перегинів, не більше"/>
+    <attribute id="11046" nameRU="Число скручиваний, не более" type="real" nameUK="Кількість скручувань, не більше"/>
+    <attribute id="11047" nameRU="Класс прочности проволоки" type="singleselect" nameUK="Клас міцності дроту">
+      <attribute_value id="104355" nameRU="1" nameUK="1"/>
+      <attribute_value id="104356" nameRU="2" nameUK="2"/>
+      <attribute_value id="104357" nameRU="2А" nameUK="2А"/>
+      <attribute_value id="104358" nameRU="3" nameUK="3"/>
+    </attribute>
+    <attribute id="15698" nameRU="Номинальное электрическое сопротивление" type="real" nameUK="Номінальний електричний опір" measureUnitRU="Ом/м" min="0" max="100" measureUnitUK="Ом/м"/>
+    <attribute id="18171" nameRU="Цвет покрытия" type="singleselect" nameUK="Колір покриття">
+      <attribute_value id="293259" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="293260" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="293261" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="295031" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="344376" nameRU="Красный" nameUK=""/>
+    </attribute>
+  </category>
+</categories>

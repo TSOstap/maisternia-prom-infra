@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141005" nameRU="Компрессоры, общее" nameUK="Компресори, загальне">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+  </category>
+</categories>

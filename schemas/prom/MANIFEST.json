@@ -2,6 +2,17 @@
   "version": 1,
   "categories": [
     {
+      "id": "602",
+      "nameUK": "Холодильники",
+      "nameRU": "Холодильники",
+      "file": "602.xml",
+      "sha256": "365ac933cce5ae7c987d91b1eb563189293137dec3ee7c19a9f31995c312fcb4",
+      "attributes": 52,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205534.433.xml"
+    },
+    {
       "id": "608",
       "nameUK": "Пилососи",
       "nameRU": "Пылесосы",
@@ -11,6 +22,50 @@
       "excluded": 0,
       "received": "2026-10-23",
       "source": "фрагмент-14.xml"
+    },
+    {
+      "id": "632",
+      "nameUK": "Радіоприймачі",
+      "nameRU": "Радиоприемники",
+      "file": "632.xml",
+      "sha256": "767540005cb8ca79432155adee8fe4ad9b0c69a72de3fc66117a6b190c36eba0",
+      "attributes": 11,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205543.036.xml"
+    },
+    {
+      "id": "638",
+      "nameUK": "Кавоварки та кавомашини",
+      "nameRU": "Кофеварки и кофемашины",
+      "file": "638.xml",
+      "sha256": "a992f6d82b26ffae55c87b2a2f3f5616255ded1381ece476747029e06849d32c",
+      "attributes": 57,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205204.107.xml"
+    },
+    {
+      "id": "1405",
+      "nameUK": "Промислові фільтри",
+      "nameRU": "Промышленные фильтры",
+      "file": "1405.xml",
+      "sha256": "813d16d073295af73fd907aefb6d252d77f1405d9ad3eb04a6846746381550c8",
+      "attributes": 23,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204917.720.xml"
+    },
+    {
+      "id": "1911",
+      "nameUK": "Біноклі, моноклі",
+      "nameRU": "Бинокли, монокли",
+      "file": "1911.xml",
+      "sha256": "c611765c069877eed8b7131d6fa0de6e615ba5a2475a3814483eb61533a40e22",
+      "attributes": 16,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204830.278.xml"
     },
     {
       "id": "4305",
@@ -24,6 +79,28 @@
       "source": "4305.xml"
     },
     {
+      "id": "12902",
+      "nameUK": "Дровоколи",
+      "nameRU": "Дровоколы",
+      "file": "12902.xml",
+      "sha256": "11f6b004f2edfad4b426b6fafd3b3582d9d2a6f1f8bb10128522001e3a0efce5",
+      "attributes": 30,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205426.410.xml"
+    },
+    {
+      "id": "30816",
+      "nameUK": "Робочі рукавички",
+      "nameRU": "Рабочие перчатки",
+      "file": "30816.xml",
+      "sha256": "c4ebbd6075833d4dd6eddf12dde1ebc3c5e08997ee89b91accaa900d2d93176b",
+      "attributes": 12,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204808.618.xml"
+    },
+    {
       "id": "52807",
       "nameUK": "Батареї та акумулятори, загальне",
       "nameRU": "Батареи и аккумуляторы, общее",
@@ -32,6 +109,17 @@
       "attributes": 0,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
+    },
+    {
+      "id": "62601",
+      "nameUK": "Інфрачервоні та каталітичні обігрівачі",
+      "nameRU": "Инфракрасные и каталитические обогреватели",
+      "file": "62601.xml",
+      "sha256": "c2eb4dab3e488ac3ccf53e17e779f263ff0bd4974c27293a068fdc4d8c90f1d9",
+      "attributes": 44,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205246.881.xml"
     },
     {
       "id": "64404",
@@ -45,6 +133,28 @@
       "source": "фрагмент-18.xml"
     },
     {
+      "id": "64430",
+      "nameUK": "Запчастини для зволожувачів, очищувачів повітря",
+      "nameRU": "Запчасти для увлажнителей, очистителей воздуха",
+      "file": "64430.xml",
+      "sha256": "564ac121438dc8db75c44ecb53f82af42e0c6f9390e296635caefde21083ecb3",
+      "attributes": 3,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204617.713.xml"
+    },
+    {
+      "id": "71109",
+      "nameUK": "Повербанки",
+      "nameRU": "Повербанки",
+      "file": "71109.xml",
+      "sha256": "c1f5768b8e79a8d07832cb9a0962f7d0793693dffb44d97015bfb6fb304b442c",
+      "attributes": 27,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205611.026.xml"
+    },
+    {
       "id": "121105",
       "nameUK": "Апарати високого тиску",
       "nameRU": "Аппараты высокого давления",
@@ -53,6 +163,17 @@
       "attributes": 47,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
+    },
+    {
+      "id": "121108",
+      "nameUK": "Обладнання для заміни мастил та змащувачів",
+      "nameRU": "Оборудование для замены масел и смазок",
+      "file": "121108.xml",
+      "sha256": "2c67a56133517d50d0a9bd4578e2202ee5587b6f0fdeb07843032b724c78edd4",
+      "attributes": 6,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205549.960.xml"
     },
     {
       "id": "121111",
@@ -66,6 +187,39 @@
       "source": "фрагмент-25.xml"
     },
     {
+      "id": "121250",
+      "nameUK": "Автомобільні щітки та скребки",
+      "nameRU": "Автомобильные щетки и скребки",
+      "file": "121250.xml",
+      "sha256": "ba0602e9a995f3780e03c1e6bdeee7f33dd205cc495ed6b1fdc003f0225532c1",
+      "attributes": 11,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204739.782.xml"
+    },
+    {
+      "id": "140203",
+      "nameUK": "Промислові осушувачі повітря",
+      "nameRU": "Промышленные осушители воздуха",
+      "file": "140203.xml",
+      "sha256": "7a75f4d0876f313e7ad48a5bd7c16da09d9e567bf86578c6d11690d5cb0c043d",
+      "attributes": 20,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205527.430.xml"
+    },
+    {
+      "id": "140307",
+      "nameUK": "Циркуляційні промислові насоси",
+      "nameRU": "Циркуляционные промышленные насосы",
+      "file": "140307.xml",
+      "sha256": "2f94d28cc6ae7910e07c6f9c839f0e6e3eeab48a21530e990d5fd5ab30bc0f28",
+      "attributes": 30,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205012.950.xml"
+    },
+    {
       "id": "140309",
       "nameUK": "Свердловинні насоси",
       "nameRU": "Скважинные насосы",
@@ -74,6 +228,17 @@
       "attributes": 30,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
+    },
+    {
+      "id": "140310",
+      "nameUK": "Бочкові насоси",
+      "nameRU": "Бочковые насосы",
+      "file": "140310.xml",
+      "sha256": "e9a811d6146111a2d96ca0aa04b6ebcfdef53169467b8b75de23d3a54af10fde",
+      "attributes": 23,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204639.434.xml"
     },
     {
       "id": "140316",
@@ -95,6 +260,28 @@
       "excluded": 0,
       "received": "2026-10-23",
       "source": "фрагмент-03.xml"
+    },
+    {
+      "id": "141003",
+      "nameUK": "Гвинтові компресори",
+      "nameRU": "Компрессоры винтовые",
+      "file": "141003.xml",
+      "sha256": "c14b4283fe20505b823a625aa0505e9fea54029198127ec651164a6a6b2d6b38",
+      "attributes": 29,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205019.539.xml"
+    },
+    {
+      "id": "141005",
+      "nameUK": "Компресори, загальне",
+      "nameRU": "Компрессоры, общее",
+      "file": "141005.xml",
+      "sha256": "731b4305246516d8dd367834bfc6c48831da8eb0bb0543e242d06a766cb71acd",
+      "attributes": 1,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205232.907.xml"
     },
     {
       "id": "141702",
@@ -269,6 +456,17 @@
       "source": "142007.xml"
     },
     {
+      "id": "142702",
+      "nameUK": "Магнітні фіксатори",
+      "nameRU": "Магнитные фиксаторы",
+      "file": "142702.xml",
+      "sha256": "11be9827b12e1a40b41d9d6af9c3bbede3fd3f0cf9f4df278eacc67d0a0c75f6",
+      "attributes": 11,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204940.190.xml"
+    },
+    {
       "id": "142907",
       "nameUK": "Підйомники, лебідки, талі",
       "nameRU": "Подъемники, лебедки, тали",
@@ -278,6 +476,17 @@
       "excluded": 0,
       "received": "2026-10-25",
       "source": "142907.xml"
+    },
+    {
+      "id": "142908",
+      "nameUK": "Складські ножичні підйомники",
+      "nameRU": "Складские ножничные подъемники",
+      "file": "142908.xml",
+      "sha256": "98ab37cf424c3780a14d0ac40f4fa57bc03366b9ed79645b5aecbef12db9dc3b",
+      "attributes": 29,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205556.927.xml"
     },
     {
       "id": "143109",
@@ -355,6 +564,50 @@
       "source": "фрагмент-26.xml"
     },
     {
+      "id": "151405",
+      "nameUK": "Щітки та скребачки для прибирання",
+      "nameRU": "Щетки и скребки для уборки",
+      "file": "151405.xml",
+      "sha256": "a004d58a33e40de5ba4a2004380b2e0c359c90506566a3700b36c52424e20eb3",
+      "attributes": 23,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205051.333.xml"
+    },
+    {
+      "id": "153709",
+      "nameUK": "Термометри, пірометри, тепловізори",
+      "nameRU": "Термометры, пирометры, тепловизоры",
+      "file": "153709.xml",
+      "sha256": "a107a25b9fcec7745654852a9c10ef1c7ba904724d8909518a8457d62473ce88",
+      "attributes": 40,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204601.615.xml"
+    },
+    {
+      "id": "180528",
+      "nameUK": "Ударні інструменти та аксесуари, загальне",
+      "nameRU": "Ударные инструменты и аксессуары, общее",
+      "file": "180528.xml",
+      "sha256": "12edf1817810a974003ab5405cb42bc9d230dacbde1ca1fcf1a9107f51030bac",
+      "attributes": 0,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205512.898.xml"
+    },
+    {
+      "id": "180537",
+      "nameUK": "Аксесуари та комплектуючі для ударних інструментів",
+      "nameRU": "Аксессуары и комплектующие для ударных инструментов",
+      "file": "180537.xml",
+      "sha256": "4fc673801b83199274a791830a9e25ac0b47da0ea268a6fee11686e544599dfa",
+      "attributes": 8,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204802.072.xml"
+    },
+    {
       "id": "190402",
       "nameUK": "Лазерні нівеліри, рівні, сканери",
       "nameRU": "Лазерные нивелиры, уровни, сканеры",
@@ -366,6 +619,61 @@
       "source": "attributes (1).xml"
     },
     {
+      "id": "190408",
+      "nameUK": "Технічні ендоскопи, відеоскопи",
+      "nameRU": "Технические эндоскопы, видеоскопы",
+      "file": "190408.xml",
+      "sha256": "61fb7d63619b49d4cb8bbacfb3479e3543227258be36fb328746fa74e0b3391e",
+      "attributes": 32,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204852.653.xml"
+    },
+    {
+      "id": "211116",
+      "nameUK": "Канцелярські ножі і ножиці",
+      "nameRU": "Канцелярские ножи и ножницы",
+      "file": "211116.xml",
+      "sha256": "7da170a2161bcf5e1f66fd28d39b7d9f28033668657d49521b59719bda0bb29e",
+      "attributes": 9,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204723.918.xml"
+    },
+    {
+      "id": "240421",
+      "nameUK": "Туристичні столи",
+      "nameRU": "Туристические столы",
+      "file": "240421.xml",
+      "sha256": "f8c651bbdab078a1d64f005a20ba477bcba7f33a0042983275af869a1ec88366",
+      "attributes": 18,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204632.185.xml"
+    },
+    {
+      "id": "240432",
+      "nameUK": "Туристичні газові балони",
+      "nameRU": "Туристические газовые баллоны",
+      "file": "240432.xml",
+      "sha256": "8407b111e502692f0bedec662d053cac041436c1f9f7d18fb05572d157d64178",
+      "attributes": 10,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204955.166.xml"
+    },
+    {
+      "id": "240434",
+      "nameUK": "Туристичні обігрівачі",
+      "nameRU": "Туристические обогреватели",
+      "file": "240434.xml",
+      "sha256": "b47375274b1318410518448a9997a1c66ffa3d1068f28d8a3baff0daa76ea65b",
+      "attributes": 9,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205128.263.xml"
+    },
+    {
       "id": "301902",
       "nameUK": "Зварювальні маски",
       "nameRU": "Сварочные маски",
@@ -375,6 +683,50 @@
       "excluded": 0,
       "received": "2026-11-13",
       "source": "301902-Зварювальні-маски.xml"
+    },
+    {
+      "id": "301911",
+      "nameUK": "Будівельні каски",
+      "nameRU": "Строительные каски",
+      "file": "301911.xml",
+      "sha256": "4634970e3236eb266f7c28581a0e0084d5e2fee2763f252cb8463a2ed7de34a6",
+      "attributes": 5,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205358.359.xml"
+    },
+    {
+      "id": "301915",
+      "nameUK": "Навушники та беруші",
+      "nameRU": "Наушники и беруши",
+      "file": "301915.xml",
+      "sha256": "97dda237f303668679c098086af412be8304fdf0fdaa4a0c3e410bc8d9a130bf",
+      "attributes": 9,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205254.693.xml"
+    },
+    {
+      "id": "341520",
+      "nameUK": "Передпускові підігрівачі та автономні обігрівачі",
+      "nameRU": "Предпусковые подогреватели и автономные отопители",
+      "file": "341520.xml",
+      "sha256": "a67be983291293d2699705a97f4df31e469159e73673b9813ad06bfa9a048de4",
+      "attributes": 10,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204554.601.xml"
+    },
+    {
+      "id": "342406",
+      "nameUK": "Велосипедні насоси",
+      "nameRU": "Велосипедные насосы",
+      "file": "342406.xml",
+      "sha256": "7f6cda663bfd76fff23d142342ab54b722a1efb3af5ccc2a5b21c627d88838d8",
+      "attributes": 10,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204837.532.xml"
     },
     {
       "id": "410201",
@@ -417,6 +769,39 @@
       "attributes": 0,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
+    },
+    {
+      "id": "420503",
+      "nameUK": "Цвяхи",
+      "nameRU": "Гвозди",
+      "file": "420503.xml",
+      "sha256": "8a0e8080fe89bc177ca9995cf10e01a48321d6d3acb8c3d75243f89622427c97",
+      "attributes": 14,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204822.856.xml"
+    },
+    {
+      "id": "420517",
+      "nameUK": "Монтажні патрони",
+      "nameRU": "Монтажные патроны",
+      "file": "420517.xml",
+      "sha256": "c0072d25471886bf9abf7d9e32d97d1ba3fbdff5e17e01b04b16c0a50ad77d13",
+      "attributes": 9,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204815.158.xml"
+    },
+    {
+      "id": "421002",
+      "nameUK": "Дріт",
+      "nameRU": "Проволока",
+      "file": "421002.xml",
+      "sha256": "5742a9d54dc3d6fe4119c1e32ee0df1c9bdb48d926702918b3e22af696b45485",
+      "attributes": 17,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205645.844.xml"
     },
     {
       "id": "1250301",
@@ -483,6 +868,17 @@
       "source": "фрагмент-12.xml"
     },
     {
+      "id": "1250316",
+      "nameUK": "Снігоприбирачі",
+      "nameRU": "Снегоуборщики",
+      "file": "1250316.xml",
+      "sha256": "4378857e530f36f497e5c99c7677a2b04a367d0f1f17053917ba6ad1302386e9",
+      "attributes": 25,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205617.788.xml"
+    },
+    {
       "id": "1250317",
       "nameUK": "Садові обприскувачі",
       "nameRU": "Садовые опрыскиватели",
@@ -504,6 +900,72 @@
       "source": "Категорії Пром Ручні.txt"
     },
     {
+      "id": "1250328",
+      "nameUK": "Інструменти для обрізки, загальне",
+      "nameRU": "Инструменты для обрезки, общее",
+      "file": "1250328.xml",
+      "sha256": "306182d7a8d95a9219f4c262d79bdadb61b2fc86d512a42c0e6587149d0e0fdb",
+      "attributes": 0,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205404.582.xml"
+    },
+    {
+      "id": "1250343",
+      "nameUK": "Пістолети і насадки для поливу",
+      "nameRU": "Пистолеты и насадки для полива",
+      "file": "1250343.xml",
+      "sha256": "f9cc667d4d3bac5a9723cbcfcf356f03be4613b0ead61710265cddf50756f70e",
+      "attributes": 15,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204716.334.xml"
+    },
+    {
+      "id": "5090319",
+      "nameUK": "Зарядні пристрої для смартфонів та планшетів",
+      "nameRU": "Зарядные устройства для смартфонов и планшетов",
+      "file": "5090319.xml",
+      "sha256": "4f458592d202cd5ef70b102059395a11957b68b735cb7c2ae2f6bf83eea5381d",
+      "attributes": 23,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205239.303.xml"
+    },
+    {
+      "id": "5092905",
+      "nameUK": "Елементи кріплення кабелю",
+      "nameRU": "Элементы крепежа кабеля",
+      "file": "5092905.xml",
+      "sha256": "b4989874349c46760ff07ccf1aa9a385a9eb6458deec37bc383f5206a602f89d",
+      "attributes": 28,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205652.696.xml"
+    },
+    {
+      "id": "5140403",
+      "nameUK": "Перетворювачі, загальне",
+      "nameRU": "Преобразователи, общее",
+      "file": "5140403.xml",
+      "sha256": "4b65ae8114c4c970183b56f5fa72fc33922d956135607f5fd1d3383348a2fc87",
+      "attributes": 0,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205039.651.xml"
+    },
+    {
+      "id": "5140404",
+      "nameUK": "Перетворювачі частоти",
+      "nameRU": "Преобразователи частоты",
+      "file": "5140404.xml",
+      "sha256": "1d686d3866729bfd2bcb4848fe453ad7431b2401b36fc2dd232b2fa38f482c0c",
+      "attributes": 6,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205624.826.xml"
+    },
+    {
       "id": "5280501",
       "nameUK": "Акумулятори загального призначення",
       "nameRU": "Аккумуляторы общего назначения",
@@ -514,6 +976,28 @@
       "source": "Акумулятори загального призначення.xml"
     },
     {
+      "id": "6371101",
+      "nameUK": "Портативні колонки",
+      "nameRU": "Портативные колонки",
+      "file": "6371101.xml",
+      "sha256": "40cdd33dadcc0ebb18e7950b389c3fcf49f00c370127d32b404cc3bc9689db66",
+      "attributes": 24,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205212.183.xml"
+    },
+    {
+      "id": "7081201",
+      "nameUK": "Ручні культиватори, плуги",
+      "nameRU": "Ручные культиваторы, плуги",
+      "file": "7081201.xml",
+      "sha256": "d6761f94df21927ed822cc5528c6e8ffcb430dfb975539fc3a4e5ec86bbeb0f9",
+      "attributes": 7,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205301.251.xml"
+    },
+    {
       "id": "12020302",
       "nameUK": "Генератори, альтернатори і комплектуючі",
       "nameRU": "Генераторы, альтернаторы и комплектующие",
@@ -522,6 +1006,17 @@
       "attributes": 28,
       "received": "2026-10-23",
       "source": "Категорії Пром Ручні.txt"
+    },
+    {
+      "id": "12020419",
+      "nameUK": "Автомобільні паливні насоси",
+      "nameRU": "Автомобильные топливные насосы",
+      "file": "12020419.xml",
+      "sha256": "f5d3f4b2eb9a1f236bd6001e9b9ea38fd4e9bac68519ae6c7ade6d1f9e2d91f0",
+      "attributes": 21,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204747.414.xml"
     },
     {
       "id": "12110201",
@@ -546,6 +1041,28 @@
       "source": "12110205.xml"
     },
     {
+      "id": "12110306",
+      "nameUK": "Трансмісійні стійки",
+      "nameRU": "Трансмиссионные стойки",
+      "file": "12110306.xml",
+      "sha256": "295736d4c31b3d0bbea87f1ac4be90683b0dbbe8366b9a6f5c71b4346da32455",
+      "attributes": 5,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204702.233.xml"
+    },
+    {
+      "id": "12110307",
+      "nameUK": "Гідравлічні підкатні крани",
+      "nameRU": "Гидравлические подкатные краны",
+      "file": "12110307.xml",
+      "sha256": "5267f4536755c9bf5179ab27a215f792b21583d5275fc43a01001a6ba0239819",
+      "attributes": 8,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204910.845.xml"
+    },
+    {
       "id": "13040305",
       "nameUK": "Глибинні вібратори",
       "nameRU": "Глубинные вибраторы",
@@ -566,6 +1083,17 @@
       "excluded": 0,
       "received": "2026-11-03",
       "source": "13040605-фарбувальні-агрегати.xml"
+    },
+    {
+      "id": "13040907",
+      "nameUK": "Курвіметри",
+      "nameRU": "Курвиметры",
+      "file": "13040907.xml",
+      "sha256": "e54a86170938187567d5815829671e920fa14163846d4d2b0a42b73b3afdd455",
+      "attributes": 17,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205604.396.xml"
     },
     {
       "id": "13070701",
@@ -590,6 +1118,39 @@
       "source": "13070703.xml"
     },
     {
+      "id": "13073204",
+      "nameUK": "Комплектуючі для плиткових робіт",
+      "nameRU": "Комплектующие для плиточных работ",
+      "file": "13073204.xml",
+      "sha256": "aa975f3af85f7de117954dacdcf3b19e2eefbdd26aff3065512290ee925773f1",
+      "attributes": 6,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204625.279.xml"
+    },
+    {
+      "id": "13073206",
+      "nameUK": "Затирка для швів",
+      "nameRU": "Затирка для швов",
+      "file": "13073206.xml",
+      "sha256": "ef90b6e9e36f303ed2c0f79856caf97542c426c2d82c6574d52031f8cb4af22a",
+      "attributes": 14,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205344.896.xml"
+    },
+    {
+      "id": "13100607",
+      "nameUK": "Перехідники",
+      "nameRU": "Переходники",
+      "file": "13100607.xml",
+      "sha256": "42965dd2ba7224b79c63a189d65b45af74d012c999fb25cdf7d89f9818ce5fbd",
+      "attributes": 15,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204926.570.xml"
+    },
+    {
       "id": "13241401",
       "nameUK": "Побутові насоси",
       "nameRU": "Бытовые насосы",
@@ -599,6 +1160,17 @@
       "excluded": 0,
       "received": "2026-10-23",
       "source": "фрагмент-02.xml"
+    },
+    {
+      "id": "13241405",
+      "nameUK": "Запчастини та аксесуари для насосів",
+      "nameRU": "Запчасти и аксессуары для насосов",
+      "file": "13241405.xml",
+      "sha256": "3b34f7882a58544b3d0c04057d27cc56dce7df5134bb37284eff82e6cbeaabfd",
+      "attributes": 10,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205433.747.xml"
     },
     {
       "id": "14150501",
@@ -645,6 +1217,39 @@
       "source": "фрагмент-15.xml"
     },
     {
+      "id": "14200301",
+      "nameUK": "Сокири",
+      "nameRU": "Топоры",
+      "file": "14200301.xml",
+      "sha256": "a8474f7a468f35680cb6c62a33978d76ef04641d111941f1f5cbb8413afec996",
+      "attributes": 11,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205631.588.xml"
+    },
+    {
+      "id": "14200304",
+      "nameUK": "Напилки та надфілі",
+      "nameRU": "Напильники и надфили",
+      "file": "14200304.xml",
+      "sha256": "5f45d0481979d8facdeb5325c78dadb48e1081f5dc44d266cf04af515889b593",
+      "attributes": 9,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205440.895.xml"
+    },
+    {
+      "id": "14200305",
+      "nameUK": "Молотки, кувалди, киянки",
+      "nameRU": "Молотки, кувалды, киянки",
+      "file": "14200305.xml",
+      "sha256": "67e73cfd600c728b8ac0588c8dee2100c47648a518f8c2fff165408374b472f3",
+      "attributes": 12,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204948.206.xml"
+    },
+    {
       "id": "14200310",
       "nameUK": "Викрутки",
       "nameRU": "Отвертки",
@@ -654,6 +1259,28 @@
       "excluded": 0,
       "received": "2026-11-13",
       "source": "14200310-Викрутки.xml"
+    },
+    {
+      "id": "14200315",
+      "nameUK": "Лещата",
+      "nameRU": "Тиски",
+      "file": "14200315.xml",
+      "sha256": "a76a47b5b74d59839833c2ea633cf383a1f2a62c907e61b7249b21ad729ec0d4",
+      "attributes": 13,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204655.669.xml"
+    },
+    {
+      "id": "14200327",
+      "nameUK": "Розвідні ключі",
+      "nameRU": "Разводные ключи",
+      "file": "14200327.xml",
+      "sha256": "517420f011846ec2a51d2dddcd0c39343683e89d70818b61e394e66d31730189",
+      "attributes": 8,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205322.581.xml"
     },
     {
       "id": "14200332",
@@ -667,6 +1294,39 @@
       "source": "14200332.xml"
     },
     {
+      "id": "14200337",
+      "nameUK": "Ручні рубанки",
+      "nameRU": "Ручные рубанки",
+      "file": "14200337.xml",
+      "sha256": "ca4b09d5be2f0c25aebac17cc8d4278733b5c0ae87544fe1b71e2f9a16ef6609",
+      "attributes": 10,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205111.379.xml"
+    },
+    {
+      "id": "14200347",
+      "nameUK": "Затискні кліщі",
+      "nameRU": "Зажимные клещи",
+      "file": "14200347.xml",
+      "sha256": "146a294d1251fd72a19aefa47cfbb6e773c59ee0093025cf8e402269f8d8613a",
+      "attributes": 7,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205519.468.xml"
+    },
+    {
+      "id": "14200358",
+      "nameUK": "Ручні обтискні інструменти",
+      "nameRU": "Ручные обжимные инструменты",
+      "file": "14200358.xml",
+      "sha256": "a553e82841871ecfd758c96f57f6d5475ae4d29a8611b34fd5c38f967e0423e3",
+      "attributes": 12,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205329.187.xml"
+    },
+    {
       "id": "14200377",
       "nameUK": "Монтажні присоски",
       "nameRU": "Монтажные присоски",
@@ -676,6 +1336,39 @@
       "excluded": 0,
       "received": "2026-10-23",
       "source": "attributes (2).xml"
+    },
+    {
+      "id": "14200378",
+      "nameUK": "Набори ключів",
+      "nameRU": "Наборы ключей",
+      "file": "14200378.xml",
+      "sha256": "38cd5fba53a3c9fc896f1ba1780f487f301e796367c62c13c451e08cff10c8ac",
+      "attributes": 8,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205032.691.xml"
+    },
+    {
+      "id": "14200386",
+      "nameUK": "Знімачі гальмівних колодок",
+      "nameRU": "Съемники тормозных колодок",
+      "file": "14200386.xml",
+      "sha256": "9c472a546ac5d327ee8a11546b2350b652996a9e3f69a43cee0551214484caae",
+      "attributes": 7,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205226.313.xml"
+    },
+    {
+      "id": "14200503",
+      "nameUK": "Пневматичні штукатурні розпилювачі",
+      "nameRU": "Пневматические штукатурные распылители",
+      "file": "14200503.xml",
+      "sha256": "474fd1228dee2787c258508498a83f09f7ef547f02daddf26bd17b8eccb3c423",
+      "attributes": 15,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205315.579.xml"
     },
     {
       "id": "14200504",
@@ -710,6 +1403,28 @@
       "source": "14200516-пневмопістолети.xml"
     },
     {
+      "id": "14200517",
+      "nameUK": "Пневматичні піскоструминні пістолети",
+      "nameRU": "Пневматические пескоструйные пистолеты",
+      "file": "14200517.xml",
+      "sha256": "842c6bda9999ebfeba91f0f5bc82147b9aadb643404537e2a66c474f0221188b",
+      "attributes": 15,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205157.597.xml"
+    },
+    {
+      "id": "14200525",
+      "nameUK": "Аерографи",
+      "nameRU": "Аэрографы",
+      "file": "14200525.xml",
+      "sha256": "f1cfaee86e667d44802297d3c03f4a99ffd109fb0d7011274e9dcf6d8f2b4d2c",
+      "attributes": 16,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205351.147.xml"
+    },
+    {
       "id": "14200604",
       "nameUK": "Вимірювальні рулетки",
       "nameRU": "Измерительные рулетки",
@@ -719,6 +1434,83 @@
       "excluded": 0,
       "received": "2026-10-25",
       "source": "14200604.xml"
+    },
+    {
+      "id": "14201002",
+      "nameUK": "Ручні ножиці по металу",
+      "nameRU": "Ручные ножницы по металлу",
+      "file": "14201002.xml",
+      "sha256": "e84aa137d8249eea402009c3f42791c6a1e311320a634ea8463ef2dfea56b481",
+      "attributes": 7,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204646.814.xml"
+    },
+    {
+      "id": "14201004",
+      "nameUK": "Мітчики",
+      "nameRU": "Метчики",
+      "file": "14201004.xml",
+      "sha256": "2d95155fdd15dbfa565ad731ad72cf9ea6f73dd2a2626f64278766aaf0afa78c",
+      "attributes": 9,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205143.239.xml"
+    },
+    {
+      "id": "14201005",
+      "nameUK": "Твердосплавні інструменти",
+      "nameRU": "Твердосплавные инструменты",
+      "file": "14201005.xml",
+      "sha256": "6443ee898004d1cc64aed83b205ee04315053e5763eeeff386694f80d330d300",
+      "attributes": 15,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204732.685.xml"
+    },
+    {
+      "id": "14201401",
+      "nameUK": "Строгальні ножі",
+      "nameRU": "Строгальные ножи",
+      "file": "14201401.xml",
+      "sha256": "285b82e172ca361ec1a8f1de7589d9fd521f373e7be2ccf14063316d06ef431c",
+      "attributes": 7,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205149.815.xml"
+    },
+    {
+      "id": "14201503",
+      "nameUK": "Ручні клупи, плашки",
+      "nameRU": "Ручные клуппы, плашки",
+      "file": "14201503.xml",
+      "sha256": "6e1cf66fa4cc9df2e9af141bf04ec78fa5271791f0e73fd948cccf1e583753a0",
+      "attributes": 10,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205335.973.xml"
+    },
+    {
+      "id": "14201505",
+      "nameUK": "Ланцюги та шини для пил",
+      "nameRU": "Цепи и шины для пил",
+      "file": "14201505.xml",
+      "sha256": "4b2e6d27009eb9f9483e5be0e7b288229143ec3794d399fc4003d25b4c5bb27e",
+      "attributes": 6,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205639.124.xml"
+    },
+    {
+      "id": "14201506",
+      "nameUK": "Пилки для лобзиків",
+      "nameRU": "Пилки для лобзиков",
+      "file": "14201506.xml",
+      "sha256": "f431bf71510fcac87e159a7aae5f3364aebe5a8de90f8ea1656112a11dce253c",
+      "attributes": 12,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205025.934.xml"
     },
     {
       "id": "14201508",
@@ -743,6 +1535,17 @@
       "source": "фрагмент-07.xml"
     },
     {
+      "id": "14201514",
+      "nameUK": "Оснащення для багатофункціональних шліфувальних машин",
+      "nameRU": "Оснастка для многофункциональных шлифмашин",
+      "file": "14201514.xml",
+      "sha256": "5b8ed6ccacd7188138822b73c8741dbb536f0095f8669ac24080259364c16884",
+      "attributes": 10,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205005.342.xml"
+    },
+    {
       "id": "14201515",
       "nameUK": "Скоби, цвяхи для будівельних степлерів",
       "nameRU": "Скобы, гвозди для строительных степлеров",
@@ -754,6 +1557,17 @@
       "source": "14201515.xml"
     },
     {
+      "id": "14201516",
+      "nameUK": "Оливи, мастила для інструменту",
+      "nameRU": "Масла, смазки для инструмента",
+      "file": "14201516.xml",
+      "sha256": "0f81b999cc59276da5bd14a1c756884281948f82a896d9a6e254c7ed076b7bc6",
+      "attributes": 13,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204609.595.xml"
+    },
+    {
       "id": "14201522",
       "nameUK": "Ножі, ліски для тримерів і кущорізів",
       "nameRU": "Ножи, лески для триммеров и кусторезов",
@@ -763,6 +1577,17 @@
       "excluded": 0,
       "received": "2026-11-13",
       "source": "14201522-Ножі_-ліски-для-тримерів-і-кущорізів.xml"
+    },
+    {
+      "id": "14201604",
+      "nameUK": "Кельми, штукатурні ковші",
+      "nameRU": "Кельмы, мастерки, штукатурные ковши",
+      "file": "14201604.xml",
+      "sha256": "bf0afd450dc5354088df7731043a1e6d4ff7717e2e17ac06066e496fbd034f36",
+      "attributes": 8,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205307.870.xml"
     },
     {
       "id": "14201607",
@@ -785,6 +1610,39 @@
       "excluded": 0,
       "received": "2026-10-25",
       "source": "14201612.xml"
+    },
+    {
+      "id": "14201622",
+      "nameUK": "Будівельні рівні",
+      "nameRU": "Строительные уровни",
+      "file": "14201622.xml",
+      "sha256": "9a9eef8f4cdc60a9f5b1567dab1761ad804a8d12ef1c58e6812862af7e457d36",
+      "attributes": 12,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205105.061.xml"
+    },
+    {
+      "id": "14201623",
+      "nameUK": "Пістолети для в'язки арматури",
+      "nameRU": "Пистолеты для вязки арматуры",
+      "file": "14201623.xml",
+      "sha256": "dbfd5ccbce1412f969cfad8a5b0dd430995c0a89e28a1f9bf6601457ec6f2804",
+      "attributes": 12,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204709.524.xml"
+    },
+    {
+      "id": "14201632",
+      "nameUK": "Вимірювальні лінійки, косинці",
+      "nameRU": "Измерительные линейки, угольники",
+      "file": "14201632.xml",
+      "sha256": "1cf493aaef70d94118e5a5b729c3c137cde3176a3617fb1bc1e23d57b7ff4a3c",
+      "attributes": 10,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205058.497.xml"
     },
     {
       "id": "14201636",
@@ -851,6 +1709,72 @@
       "excluded": 1,
       "received": "2026-10-23",
       "source": "фрагмент-13.xml"
+    },
+    {
+      "id": "15030618",
+      "nameUK": "Реставраційні матеріали для меблів",
+      "nameRU": "Реставрационные материалы для мебели",
+      "file": "15030618.xml",
+      "sha256": "d95066e98a42c902227fb787daf377920f39abe54c9d966113cceed912bc9c4a",
+      "attributes": 3,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204845.734.xml"
+    },
+    {
+      "id": "15230433",
+      "nameUK": "Точила для ножів",
+      "nameRU": "Точилки для ножей",
+      "file": "15230433.xml",
+      "sha256": "2495d7cd3c263de94ae82110e276f9890d8ed52ba471f1da4edeec9efa046687",
+      "attributes": 13,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204933.452.xml"
+    },
+    {
+      "id": "15370105",
+      "nameUK": "Вологоміри",
+      "nameRU": "Влагомеры",
+      "file": "15370105.xml",
+      "sha256": "b14316d377bd2f714b3bcd2c8e7a5a3b736764420ced9adac1446fe8046f69c0",
+      "attributes": 12,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205121.071.xml"
+    },
+    {
+      "id": "15370801",
+      "nameUK": "Манометри",
+      "nameRU": "Манометры",
+      "file": "15370801.xml",
+      "sha256": "d2e82cdd85d05da0636a5af56c44aa9ce0a8841b31197a42c10351838f76295a",
+      "attributes": 12,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T204754.968.xml"
+    },
+    {
+      "id": "21111109",
+      "nameUK": "Художні фарби",
+      "nameRU": "Художественные краски",
+      "file": "21111109.xml",
+      "sha256": "8400fba4181b02d5fa8901732849c326445bcf21a9ac233d72d3fa4a86119b81",
+      "attributes": 10,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205219.275.xml"
+    },
+    {
+      "id": "39050303",
+      "nameUK": "Переносні світильники",
+      "nameRU": "Переносные светильники",
+      "file": "39050303.xml",
+      "sha256": "20b4cdce91724d0c25d56a2b82ed46c0cf2c144b4d6b2014c2565530421e54ba",
+      "attributes": 7,
+      "excluded": 0,
+      "received": "2026-11-14",
+      "source": "attributes - 2026-11-14T205136.135.xml"
     },
     {
       "id": "125031801",

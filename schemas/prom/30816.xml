@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="30816" nameRU="Рабочие перчатки" nameUK="Робочі рукавички">
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="см" min="0" max="80" measureUnitUK="см"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8058" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="8699" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="33403" nameRU="Натуральная кожа" nameUK="Натуральна шкіра"/>
+      <attribute_value id="33404" nameRU="Искусственная кожа" nameUK="Штучна шкіра"/>
+      <attribute_value id="34289" nameRU="Хлопковая ткань" nameUK="Бавовняна тканина"/>
+      <attribute_value id="36534" nameRU="Полиэстер" nameUK="Поліестер"/>
+      <attribute_value id="42611" nameRU="Латекс" nameUK="Латекс"/>
+      <attribute_value id="62586" nameRU="ПВХ" nameUK="ПВХ"/>
+      <attribute_value id="70452" nameRU="Нейлон" nameUK="Нейлон"/>
+      <attribute_value id="73174" nameRU="Полиуретан" nameUK="Поліуретан"/>
+      <attribute_value id="74157" nameRU="Спилок" nameUK="Спилок"/>
+      <attribute_value id="74168" nameRU="Брезент" nameUK="Брезент"/>
+      <attribute_value id="74169" nameRU="Комбинированный" nameUK="Комбінований"/>
+      <attribute_value id="74171" nameRU="Кашемир" nameUK="Кашемір"/>
+      <attribute_value id="74172" nameRU="Шерсть" nameUK="Вовна"/>
+      <attribute_value id="75640" nameRU="Флис" nameUK="Фліс"/>
+      <attribute_value id="127579" nameRU="Неопрен" nameUK="Неопрен"/>
+      <attribute_value id="128652" nameRU="Замша" nameUK="Замша"/>
+      <attribute_value id="166546" nameRU="Нитрил" nameUK="Нітрил"/>
+      <attribute_value id="315270" nameRU="Стрейч" nameUK="Стрейч"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="3474" nameRU="Количество в упаковке" type="integer" nameUK="Кількість в упаковці" measureUnitRU="шт" min="0" max="500" measureUnitUK="шт."/>
+    <attribute id="4245" nameRU="Толщина" type="real" nameUK="Товщина" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="4917" nameRU="Вид изделия" type="singleselect" nameUK="Вид виробу">
+      <attribute_value id="71489" nameRU="Нарукавники" nameUK="Нарукавники"/>
+      <attribute_value id="74128" nameRU="Перчатки защитные" nameUK="Рукавички захисні"/>
+      <attribute_value id="74129" nameRU="Перчатки рабочие" nameUK="Рукавички робочі"/>
+      <attribute_value id="74130" nameRU="Перчатки лабораторные" nameUK="Рукавички лабораторні"/>
+      <attribute_value id="74131" nameRU="Рукавицы" nameUK="Рукавиці"/>
+    </attribute>
+    <attribute id="5692" nameRU="Покрытие" type="singleselect" nameUK="Покриття">
+      <attribute_value id="139624" nameRU="Без покрытия" nameUK="Без покриття"/>
+      <attribute_value id="285310" nameRU="ПВХ" nameUK=""/>
+      <attribute_value id="294441" nameRU="Полиуретановое" nameUK="Поліуретанове"/>
+      <attribute_value id="294442" nameRU="Нитриловое" nameUK="Нітрилове"/>
+      <attribute_value id="294443" nameRU="ПВХ точка" nameUK=""/>
+      <attribute_value id="294444" nameRU="Латекс" nameUK=""/>
+    </attribute>
+    <attribute id="6198" nameRU="Размер" type="singleselect" nameUK="Розмір">
+      <attribute_value id="42617" nameRU="S" nameUK="S"/>
+      <attribute_value id="42618" nameRU="M" nameUK="M"/>
+      <attribute_value id="42619" nameRU="L" nameUK="L"/>
+      <attribute_value id="42620" nameRU="Универсальный" nameUK="Універсальний"/>
+      <attribute_value id="74137" nameRU="XS" nameUK="XS"/>
+      <attribute_value id="74139" nameRU="XXS" nameUK="XXS"/>
+      <attribute_value id="74140" nameRU="XL" nameUK="XL"/>
+      <attribute_value id="74141" nameRU="XXL" nameUK="XXL"/>
+      <attribute_value id="150452" nameRU="10" nameUK="10"/>
+      <attribute_value id="150453" nameRU="11" nameUK="11"/>
+      <attribute_value id="150454" nameRU="12" nameUK="12"/>
+      <attribute_value id="266281" nameRU="06" nameUK="06"/>
+      <attribute_value id="266282" nameRU="07" nameUK="07"/>
+      <attribute_value id="266283" nameRU="08" nameUK="08"/>
+      <attribute_value id="266284" nameRU="09" nameUK="09"/>
+      <attribute_value id="270816" nameRU="10.5" nameUK="10.5"/>
+    </attribute>
+    <attribute id="9230" nameRU="Защита от" type="singleselect" nameUK="Захист від">
+      <attribute_value id="72928" nameRU="ОПЗ и МВ" nameUK="ОПЗ і МВ"/>
+      <attribute_value id="72929" nameRU="Пониженных температур" nameUK="Знижених температур"/>
+      <attribute_value id="72933" nameRU="Повышенных температур" nameUK="Підвищених температур"/>
+      <attribute_value id="72934" nameRU="Влаги" nameUK="Вологи"/>
+      <attribute_value id="72935" nameRU="Химических воздействий" nameUK="Хімічних впливів"/>
+      <attribute_value id="72936" nameRU="Нефти и нефтепродуктов" nameUK="Нафти і нафтопродуктів"/>
+      <attribute_value id="72937" nameRU="Термических воздействий" nameUK="Термічних впливів"/>
+      <attribute_value id="145814" nameRU="Физических воздействий" nameUK="Фізичних впливів"/>
+      <attribute_value id="230091" nameRU="Электрического воздействия" nameUK="Електричного впливу"/>
+      <attribute_value id="309858" nameRU="Механических воздействий" nameUK="Механічних впливів"/>
+    </attribute>
+    <attribute id="9340" nameRU="Тип перчаток" type="singleselect" nameUK="Тип рукавичок">
+      <attribute_value id="74134" nameRU="Вязанные" nameUK="В'язані"/>
+      <attribute_value id="74135" nameRU="Шитые" nameUK="Шиті"/>
+      <attribute_value id="230092" nameRU="Цельнолитые" nameUK="Суцільнолиті"/>
+      <attribute_value id="230093" nameRU="Комбинированные" nameUK="Комбіновані"/>
+    </attribute>
+    <attribute id="9343" nameRU="Вес пары" type="real" nameUK="Вага пари" measureUnitRU="г" min="0" max="400" measureUnitUK="г"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

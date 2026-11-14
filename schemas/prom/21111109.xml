@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="21111109" nameRU="Художественные краски" nameUK="Художні фарби">
+    <attribute id="128" nameRU="Объем" type="real" nameUK="Об`єм" measureUnitRU="мл" min="0" max="1000" measureUnitUK="мл"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="117363" nameRU="Краска поштучно" nameUK="Фарба поштучно"/>
+      <attribute_value id="117370" nameRU="Набор красок" nameUK="Набір фарб"/>
+      <attribute_value id="120564" nameRU="Контур поштучно" nameUK="Контур поштучно"/>
+      <attribute_value id="120565" nameRU="Набор контуров" nameUK="Набір контурів"/>
+    </attribute>
+    <attribute id="1534" nameRU="Комплектация" type="singleselect" nameUK="Комплектація">
+      <attribute_value id="319815" nameRU="Палитра" nameUK="Палітра"/>
+      <attribute_value id="319816" nameRU="Холст" nameUK="Полотно"/>
+      <attribute_value id="319817" nameRU="Скетчбук" nameUK="Скетчбук"/>
+    </attribute>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="234476" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="267491" nameRU="Пурпурный" nameUK="Пурпурний"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="268664" nameRU="Без цвета" nameUK="Без кольору"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="7423" nameRU="Фасовка" type="singleselect" nameUK="Фасовка">
+      <attribute_value id="117364" nameRU="Баночка" nameUK="Баночка"/>
+      <attribute_value id="117365" nameRU="Бутылка" nameUK="Пляшка"/>
+      <attribute_value id="117366" nameRU="Туба" nameUK="Туба"/>
+      <attribute_value id="117372" nameRU="Кювет" nameUK="Кювет"/>
+      <attribute_value id="290464" nameRU="Стик" nameUK=""/>
+    </attribute>
+    <attribute id="11991" nameRU="Количество цветов" type="integer" nameUK="Кількість кольорів"/>
+    <attribute id="12104" nameRU="Количество цветов в наборе" type="singleselect" nameUK="Кількість кольорів у наборі">
+      <attribute_value id="117352" nameRU="2" nameUK="2"/>
+      <attribute_value id="117353" nameRU="4" nameUK="4"/>
+      <attribute_value id="117354" nameRU="6" nameUK="6"/>
+      <attribute_value id="117355" nameRU="8" nameUK="8"/>
+      <attribute_value id="117356" nameRU="9" nameUK="9"/>
+      <attribute_value id="117357" nameRU="10" nameUK="10"/>
+      <attribute_value id="117358" nameRU="11-15" nameUK="11-15"/>
+      <attribute_value id="117359" nameRU="7" nameUK="7"/>
+      <attribute_value id="117360" nameRU="16-20" nameUK="16-20"/>
+      <attribute_value id="117361" nameRU="18" nameUK="18"/>
+      <attribute_value id="117362" nameRU="21-25" nameUK="21-25"/>
+      <attribute_value id="117373" nameRU="3" nameUK="3"/>
+      <attribute_value id="117374" nameRU="5" nameUK="5"/>
+      <attribute_value id="117375" nameRU="26-30" nameUK="26-30"/>
+      <attribute_value id="117376" nameRU="31-40" nameUK="31-40"/>
+      <attribute_value id="123611" nameRU="1" nameUK="1"/>
+      <attribute_value id="266397" nameRU="24" nameUK="24"/>
+      <attribute_value id="266398" nameRU="36" nameUK="36"/>
+      <attribute_value id="273973" nameRU="12" nameUK="12"/>
+      <attribute_value id="273974" nameRU="16" nameUK="16"/>
+      <attribute_value id="280343" nameRU="40" nameUK="40"/>
+      <attribute_value id="285759" nameRU="14" nameUK=""/>
+      <attribute_value id="285814" nameRU="20" nameUK=""/>
+      <attribute_value id="292479" nameRU="48" nameUK=""/>
+      <attribute_value id="294014" nameRU="50" nameUK=""/>
+    </attribute>
+    <attribute id="12105" nameRU="Особенность краски" type="multiselect" nameUK="Особливість фарби">
+      <attribute_value id="117367" nameRU="Флуоресцентная" nameUK="Флуоресцентна"/>
+      <attribute_value id="117368" nameRU="Перламутровая" nameUK="Перламутрова"/>
+      <attribute_value id="117369" nameRU="Обычная" nameUK="Звичайна"/>
+      <attribute_value id="117371" nameRU="Эффект мерцания" nameUK="Ефект мерехтіння"/>
+      <attribute_value id="204643" nameRU="Матовая" nameUK="Матова"/>
+      <attribute_value id="204644" nameRU="Глянцевая" nameUK="Глянцева"/>
+    </attribute>
+    <attribute id="12151" nameRU="Комплектация кисточкой" type="singleselect" nameUK="Комплектація пензликом">
+      <attribute_value id="118029" nameRU="1 (шт)" nameUK="1 (шт)"/>
+      <attribute_value id="118030" nameRU="2 (шт)" nameUK="2 (шт)"/>
+      <attribute_value id="118031" nameRU="Нет" nameUK="Немає"/>
+      <attribute_value id="319814" nameRU="4 (шт)" nameUK="4 (шт)"/>
+    </attribute>
+    <attribute id="14051" nameRU="Тип краски" type="singleselect" nameUK="Тип фарби">
+      <attribute_value id="169967" nameRU="Акварель" nameUK="Акварель"/>
+      <attribute_value id="169968" nameRU="Гуашь" nameUK="Гуаш"/>
+      <attribute_value id="310863" nameRU="Акриловая" nameUK="Акрилова"/>
+      <attribute_value id="310864" nameRU="Витражная" nameUK="Вітражна"/>
+      <attribute_value id="310865" nameRU="Масляная" nameUK="Олійна"/>
+      <attribute_value id="310866" nameRU="Темперная" nameUK="Темперна"/>
+      <attribute_value id="314312" nameRU="Чернила художественные" nameUK="Чорнило художнє"/>
+    </attribute>
+  </category>
+</categories>

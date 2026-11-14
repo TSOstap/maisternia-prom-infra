@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201623" nameRU="Пистолеты для вязки арматуры" nameUK="Пістолети для в'язки арматури">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5" measureUnitUK="кг"/>
+    <attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+      <attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+      <attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+      <attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+    </attribute>
+    <attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="5" measureUnitUK="А. г"/>
+    <attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="36" measureUnitUK="В"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="495" nameRU="Тип пистолета для вязки арматуры" type="singleselect" nameUK="Тип пістолети для в'язки арматури">
+      <attribute_value id="7815" nameRU="Механический" nameUK="Механічний"/>
+      <attribute_value id="7816" nameRU="Аккумуляторный" nameUK="Акумуляторний"/>
+    </attribute>
+    <attribute id="504" nameRU="Количество узлов на одну катушку" type="integer" nameUK="Кількість вузлів на одну котушку" measureUnitRU="шт" min="0" max="200" measureUnitUK="шт."/>
+    <attribute id="507" nameRU="Длина проволоки в одной катушке" type="real" nameUK="Довжина дроту в одній котушці" measureUnitRU="м" min="0" max="200" measureUnitUK="м"/>
+    <attribute id="511" nameRU="Время связывания узла" type="real" nameUK="Час зв'язування вузла" measureUnitRU="сек" min="0" max="3" measureUnitUK="сек"/>
+    <attribute id="514" nameRU="Диаметр проволоки" type="real" nameUK="Діаметр дроту" measureUnitRU="мм" min="0" max="3" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

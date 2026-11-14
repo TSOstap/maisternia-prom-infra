@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="602" nameRU="Холодильники" nameUK="Холодильники">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="500" measureUnitUK="кг"/>
+    <attribute id="46" nameRU="Тип управления" type="singleselect" nameUK="Тип управління">
+      <attribute_value id="6923" nameRU="Механическое" nameUK="Механічне"/>
+      <attribute_value id="6924" nameRU="Сенсорное" nameUK="Сенсорне"/>
+      <attribute_value id="6925" nameRU="Электронное" nameUK="Електронне"/>
+      <attribute_value id="7804" nameRU="Электро-механическое" nameUK="Електронно-механічне"/>
+    </attribute>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="2500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="149" nameRU="Глубина" type="real" nameUK="Глибина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+      <attribute_value id="7068" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="7069" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="7070" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="7071" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="7072" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="7075" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="7076" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="7077" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7078" nameRU="Антрацит" nameUK="Антрацит"/>
+      <attribute_value id="7079" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="7080" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="7081" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="7082" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="7083" nameRU="Медный" nameUK="Мідний"/>
+      <attribute_value id="7084" nameRU="Слоновая кость" nameUK="Слонова кістка"/>
+      <attribute_value id="7085" nameRU="Фисташковый" nameUK="Фісташковий"/>
+      <attribute_value id="7086" nameRU="Кремовый" nameUK="Кремовий"/>
+      <attribute_value id="7087" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="7088" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="7089" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="7090" nameRU="Малиновый" nameUK="Малиновий"/>
+      <attribute_value id="7091" nameRU="Сиреневый" nameUK="Бузковий"/>
+      <attribute_value id="7092" nameRU="Персиковый" nameUK="Персиковий"/>
+      <attribute_value id="7093" nameRU="Серебряный" nameUK="Срібний"/>
+      <attribute_value id="7094" nameRU="Другой" nameUK="Інший"/>
+      <attribute_value id="270039" nameRU="Графитовый" nameUK="Графітовий"/>
+    </attribute>
+    <attribute id="335" nameRU="Дисплей" type="bool" nameUK="Дисплей"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="375" nameRU="Рисунок на корпусе" type="bool" nameUK="Малюнок на корпусі"/>
+    <attribute id="467" nameRU="Защита от детей" type="bool" nameUK="Захист від дітей"/>
+    <attribute id="762" nameRU="Общий объем" type="integer" nameUK="Загальний об`єм" measureUnitRU="л" min="0" max="3000" measureUnitUK="л"/>
+    <attribute id="832" nameRU="Используемый хладагент" type="singleselect" nameUK="Використовуваний холодоагент">
+      <attribute_value id="9422" nameRU="R134a (HFC)" nameUK="R134a (HFC)"/>
+      <attribute_value id="9423" nameRU="R600a (изобутан)" nameUK="R600a (ізобутан)"/>
+    </attribute>
+    <attribute id="1105" nameRU="Расположение морозильной камеры" type="singleselect" nameUK="Розташування морозильної камери">
+      <attribute_value id="9358" nameRU="Верхнее" nameUK="Верхнє"/>
+      <attribute_value id="9359" nameRU="Нижнее" nameUK="Нижня"/>
+      <attribute_value id="12267" nameRU="Боковое (Side-by-Side)" nameUK="Бічне (Side-by-Side)"/>
+    </attribute>
+    <attribute id="1114" nameRU="Объем морозильной камеры" type="real" nameUK="Об'єм морозильної камери" measureUnitRU="л" min="0" max="1000" measureUnitUK="л"/>
+    <attribute id="1115" nameRU="Количество компрессоров" type="singleselect" nameUK="Кількість компресорів">
+      <attribute_value id="9397" nameRU="1" nameUK="1"/>
+      <attribute_value id="9398" nameRU="2" nameUK="2"/>
+    </attribute>
+    <attribute id="1116" nameRU="Класс энергопотребления" type="singleselect" nameUK="Клас енергоспоживання">
+      <attribute_value id="9402" nameRU="A++" nameUK="A++"/>
+      <attribute_value id="9403" nameRU="A+" nameUK="A+"/>
+      <attribute_value id="9404" nameRU="A" nameUK="A"/>
+      <attribute_value id="9405" nameRU="B" nameUK="B"/>
+      <attribute_value id="9406" nameRU="C" nameUK="C"/>
+      <attribute_value id="9407" nameRU="D" nameUK="D"/>
+      <attribute_value id="9408" nameRU="E" nameUK="E"/>
+      <attribute_value id="9409" nameRU="F" nameUK="F"/>
+      <attribute_value id="9410" nameRU="G" nameUK="G"/>
+      <attribute_value id="220667" nameRU="A+++" nameUK="A+++"/>
+    </attribute>
+    <attribute id="1117" nameRU="Размораживание холодильной камеры" type="singleselect" nameUK="Розморожування холодильної камери">
+      <attribute_value id="9411" nameRU="ручное" nameUK="ручне"/>
+      <attribute_value id="9412" nameRU="капельная система" nameUK="крапельна система"/>
+      <attribute_value id="9413" nameRU="No Frost" nameUK="No Frost"/>
+      <attribute_value id="267409" nameRU="статичное" nameUK="статичне"/>
+    </attribute>
+    <attribute id="1120" nameRU="Система размораживания No Frost (Frost Free)" type="singleselect" nameUK="Система розморожування No Frost (Frost Free)">
+      <attribute_value id="9414" nameRU="ручное" nameUK="ручне"/>
+      <attribute_value id="9415" nameRU="No Frost" nameUK="No Frost"/>
+    </attribute>
+    <attribute id="1121" nameRU="Суперзаморозка" type="bool" nameUK="Суперзаморозка"/>
+    <attribute id="1123" nameRU="Суперохлаждение" type="bool" nameUK="Суперохолодження"/>
+    <attribute id="1125" nameRU="Количество дверей" type="singleselect" nameUK="Кількість дверей">
+      <attribute_value id="9418" nameRU="1" nameUK="1"/>
+      <attribute_value id="9419" nameRU="2" nameUK="2"/>
+      <attribute_value id="9420" nameRU="3" nameUK="3"/>
+      <attribute_value id="9421" nameRU="4" nameUK="4"/>
+      <attribute_value id="12288" nameRU="5" nameUK="5"/>
+      <attribute_value id="12289" nameRU="6" nameUK="6"/>
+    </attribute>
+    <attribute id="1127" nameRU="Зона свежести" type="bool" nameUK="Зона свіжості"/>
+    <attribute id="1129" nameRU="Объем зоны свежести" type="real" nameUK="Об'єм зони свіжості" measureUnitRU="л" min="0" max="500" measureUnitUK="л"/>
+    <attribute id="1131" nameRU="Мощность замораживания" type="real" nameUK="Потужність заморожування" measureUnitRU="кг/сутки" min="0" max="40" measureUnitUK="кг/добу"/>
+    <attribute id="1133" nameRU="Минимальная температура в морозильной камере" type="integer" nameUK="Мінімальна температура у морозильній камері" measureUnitRU="град." min="-28" max="0" measureUnitUK="град."/>
+    <attribute id="1135" nameRU="Энергопотребление" type="real" nameUK="Енергоспоживання" measureUnitRU="кВт/год" min="0" max="1000" measureUnitUK="кВт/год"/>
+    <attribute id="1136" nameRU="Покрытие корпуса" type="multiselect" nameUK="Покриття корпусу">
+      <attribute_value id="9424" nameRU="эмалевая краска" nameUK="емалева фарба"/>
+      <attribute_value id="9425" nameRU="нержавеющая сталь" nameUK="нержавіюча сталь"/>
+      <attribute_value id="9426" nameRU="алюминий" nameUK="Алюміній"/>
+      <attribute_value id="9427" nameRU="дерево" nameUK="дерево"/>
+    </attribute>
+    <attribute id="1137" nameRU="Индикатор температуры" type="bool" nameUK="Індикатор температури"/>
+    <attribute id="1138" nameRU="Автономное сохранение холода" type="integer" nameUK="Автономне збереження холоду" measureUnitRU="час" min="0" max="120" measureUnitUK="годин"/>
+    <attribute id="1139" nameRU="Режим &quot;Отпуск&quot;" type="bool" nameUK="Режим &quot;Відпустка&quot;"/>
+    <attribute id="1140" nameRU="Встроенный телевизор" type="bool" nameUK="Вбудований телевізор"/>
+    <attribute id="1154" nameRU="Индикатор отключения питания" type="multiselect" nameUK="Індикатор відключення живлення">
+      <attribute_value id="9454" nameRU="световой индикатор" nameUK="світловий індикатор"/>
+      <attribute_value id="9455" nameRU="звуковой сигнал" nameUK="звуковий сигнал"/>
+    </attribute>
+    <attribute id="1155" nameRU="Индикатор открытой двери" type="multiselect" nameUK="Індикатор відчинених дверей">
+      <attribute_value id="9456" nameRU="световой индикатор" nameUK="світловий індикатор"/>
+      <attribute_value id="9457" nameRU="звуковой сигнал" nameUK="звуковий сигнал"/>
+    </attribute>
+    <attribute id="1159" nameRU="Индикатор повышения температуры" type="multiselect" nameUK="Індикатор підвищення температури">
+      <attribute_value id="9460" nameRU="световой индикатор" nameUK="світловий індикатор"/>
+      <attribute_value id="9461" nameRU="звуковой сигнал" nameUK="звуковий сигнал"/>
+    </attribute>
+    <attribute id="1167" nameRU="Антибактериальное покрытие" type="bool" nameUK="Антибактеріальне покриття"/>
+    <attribute id="1168" nameRU="Генератор льда" type="bool" nameUK="Генератор льоду"/>
+    <attribute id="1169" nameRU="Подача холодной воды" type="bool" nameUK="Подача холодної води"/>
+    <attribute id="1172" nameRU="Материал полок" type="multiselect" nameUK="Матеріал полиць">
+      <attribute_value id="9462" nameRU="Пластиковые решетки" nameUK="Пластикові решітки"/>
+      <attribute_value id="9463" nameRU="Металлические решетки" nameUK="Металеві решітки"/>
+      <attribute_value id="9464" nameRU="Стеклянные полки" nameUK="Скляні полиці"/>
+    </attribute>
+    <attribute id="1173" nameRU="Перенавешиваемые двери" type="bool" nameUK="Перевішувані двері"/>
+    <attribute id="2209" nameRU="Мини-бар" type="bool" nameUK="Міні-бар"/>
+    <attribute id="2210" nameRU="Количество камер" type="singleselect" nameUK="Кількість камер">
+      <attribute_value id="12261" nameRU="1" nameUK="1"/>
+      <attribute_value id="12262" nameRU="2" nameUK="2"/>
+      <attribute_value id="12263" nameRU="3" nameUK="3"/>
+      <attribute_value id="12264" nameRU="4" nameUK="4"/>
+      <attribute_value id="12265" nameRU="5" nameUK="5"/>
+    </attribute>
+    <attribute id="2222" nameRU="Высота ниши для встраивания" type="integer" nameUK="Висота ніші для вбудовування" measureUnitRU="мм" min="0" max="2500" measureUnitUK="мм"/>
+    <attribute id="2223" nameRU="Ширина ниши для встраивания" type="integer" nameUK="Ширина ніші для вбудовування" measureUnitRU="мм" min="0" max="2500" measureUnitUK="мм"/>
+    <attribute id="2225" nameRU="Глубина ниши для встраивания" type="integer" nameUK="Глибина ніші для вбудовування" measureUnitRU="мм" min="0" max="2500" measureUnitUK="мм"/>
+    <attribute id="2408" nameRU="Винная камера" type="bool" nameUK="Винна камера"/>
+    <attribute id="2409" nameRU="Объем винной камеры" type="real" nameUK="Об`єм винної камери" measureUnitRU="л" min="0" max="300" measureUnitUK="л"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="321622" nameRU="Визуальный сигнал" nameUK="Візуальний сигнал"/>
+      <attribute_value id="321834" nameRU="Диспенсер " nameUK="Диспенсер "/>
+      <attribute_value id="321835" nameRU="Зона свежести" nameUK="Зона свіжості "/>
+      <attribute_value id="321836" nameRU="Управление через Wi-Fi" nameUK="Керування через Wi-Fi  "/>
+      <attribute_value id="321837" nameRU="Минибар" nameUK="Мінібар"/>
+      <attribute_value id="321838" nameRU="Нулевая камера" nameUK="Нульова камера  "/>
+      <attribute_value id="321839" nameRU="Перевешивание дверей" nameUK="Перевішування дверей"/>
+      <attribute_value id="321840" nameRU="Полка для бутылок" nameUK="Полиця для пляшок "/>
+      <attribute_value id="321841" nameRU="Режим &quot;Отпуск&quot;" nameUK="Режим &quot;Відпустка&quot;  "/>
+      <attribute_value id="321842" nameRU="Быстрая заморозка" nameUK="Швидке замороження"/>
+      <attribute_value id="321843" nameRU="Встроенный телевизор" nameUK="Вбудований телевізор"/>
+      <attribute_value id="321844" nameRU="Автономное сохранение холода" nameUK="Автономне збереження холоду"/>
+      <attribute_value id="321845" nameRU="Индикатор температуры" nameUK="Індикатор температури"/>
+      <attribute_value id="321847" nameRU="Суперохлаждение" nameUK="Суперохолодження"/>
+      <attribute_value id="321848" nameRU="Суперзаморозка" nameUK="Суперзаморозка"/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+    <attribute id="12860" nameRU="Встраиваемая техника" type="singleselect" nameUK="Вбудована техніка">
+      <attribute_value id="128220" nameRU="Да" nameUK="Так"/>
+      <attribute_value id="128221" nameRU="Нет" nameUK="НІ"/>
+    </attribute>
+    <attribute id="14191" nameRU="Дополнительный сервис" type="multiselect" nameUK="Додатковий сервіс">
+      <attribute_value id="144186" nameRU="Установка" nameUK="Установка"/>
+      <attribute_value id="144187" nameRU="Сервисное обслуживание" nameUK="Сервісне обслуговування"/>
+      <attribute_value id="179729" nameRU="Настройка" nameUK="Налаштування"/>
+    </attribute>
+    <attribute id="18992" nameRU="Тип холодильника" type="singleselect" nameUK="Тип холодильника">
+      <attribute_value id="321801" nameRU="Двухкамерный" nameUK="Двокамерний"/>
+      <attribute_value id="321802" nameRU="Side-by-side" nameUK="Side-by-side"/>
+      <attribute_value id="321804" nameRU="Многодверный" nameUK="Багатодверний"/>
+      <attribute_value id="321805" nameRU="Однокамерный" nameUK="Однокамерний"/>
+    </attribute>
+  </category>
+</categories>

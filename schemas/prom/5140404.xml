@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="5140404" nameRU="Преобразователи частоты" nameUK="Перетворювачі частоти">
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="1200" measureUnitUK="мм"/>
+    <attribute id="4737" nameRU="Мощность" type="real" nameUK="Потужність" measureUnitRU="кВт" min="0" max="22000" measureUnitUK="кВт"/>
+    <attribute id="10487" nameRU="Количество дискретных выходов" type="integer" nameUK="Кількість дискретних виходів"/>
+    <attribute id="10684" nameRU="Количество фаз" type="singleselect" nameUK="Кількість фаз">
+      <attribute_value id="95830" nameRU="1" nameUK="1"/>
+      <attribute_value id="95831" nameRU="2" nameUK="2"/>
+      <attribute_value id="95832" nameRU="3" nameUK="3"/>
+    </attribute>
+    <attribute id="10758" nameRU="Максимальный ток" type="real" nameUK="Максимальний струм" measureUnitRU="А" min="0" max="2000" measureUnitUK="А"/>
+    <attribute id="16717" nameRU="Входное напряжение" type="integer" nameUK="Вхідна напруга" measureUnitRU="В" min="0" max="380" measureUnitUK="В"/>
+  </category>
+</categories>

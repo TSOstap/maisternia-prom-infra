@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200305" nameRU="Молотки, кувалды, киянки" nameUK="Молотки, кувалди, киянки">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="15" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="383" nameRU="Тип молотка" type="singleselect" nameUK="Тип молотка">
+      <attribute_value id="7622" nameRU="слесарный" nameUK="слюсарний"/>
+      <attribute_value id="7623" nameRU="столярный" nameUK="столярний"/>
+      <attribute_value id="7624" nameRU="каменщика" nameUK="муляра"/>
+      <attribute_value id="7625" nameRU="плотницкий" nameUK="плотницький"/>
+      <attribute_value id="241583" nameRU="обратный" nameUK="зворотний"/>
+      <attribute_value id="273716" nameRU="кровельный" nameUK="покрівельний"/>
+      <attribute_value id="283275" nameRU="сварщика" nameUK="зварювальника"/>
+      <attribute_value id="350322" nameRU="безынерционный" nameUK="Безінерційний"/>
+    </attribute>
+    <attribute id="387" nameRU="Материал ударного бойка" type="singleselect" nameUK="Матеріал ударного бойка">
+      <attribute_value id="7626" nameRU="сталь" nameUK="сталь"/>
+      <attribute_value id="7627" nameRU="чугун" nameUK="чавун"/>
+      <attribute_value id="7628" nameRU="свинец" nameUK="свинець"/>
+      <attribute_value id="7629" nameRU="медь" nameUK="мідь"/>
+      <attribute_value id="7630" nameRU="алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7631" nameRU="резина" nameUK="гума"/>
+      <attribute_value id="7632" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="7633" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="350717" nameRU="полиуретан" nameUK="Поліуретан"/>
+    </attribute>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7635" nameRU="сталь" nameUK="сталь"/>
+      <attribute_value id="7636" nameRU="алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7637" nameRU="свинец" nameUK="свинець"/>
+      <attribute_value id="7638" nameRU="медь" nameUK="мідь"/>
+      <attribute_value id="7639" nameRU="чугун" nameUK="чавун"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="7641" nameRU="стеклопластик" nameUK="склопластик"/>
+      <attribute_value id="64738" nameRU="металл" nameUK="метал"/>
+      <attribute_value id="271439" nameRU="Фиберглассовая" nameUK="Фиберглассовая"/>
+      <attribute_value id="350583" nameRU="Полиуретан" nameUK="Поліуретан"/>
+    </attribute>
+    <attribute id="389" nameRU="Длина ударного бойка" type="real" nameUK="Довжина ударного бойка" measureUnitRU="мм" min="0" max="400" measureUnitUK="мм"/>
+    <attribute id="390" nameRU="Длина рукоятки" type="real" nameUK="Довжина рукоятки" measureUnitRU="мм" min="0" max="1200" measureUnitUK="мм"/>
+    <attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="137196" nameRU="Кувалда" nameUK="Кувалда"/>
+      <attribute_value id="137197" nameRU="Молоток" nameUK="Молоток"/>
+      <attribute_value id="137198" nameRU="Киянка" nameUK="Киянка"/>
+      <attribute_value id="272979" nameRU="Кирка" nameUK="Кирка"/>
+    </attribute>
+    <attribute id="8271" nameRU="Омедненный инструмент" type="bool" nameUK="Оміднений інструмент"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

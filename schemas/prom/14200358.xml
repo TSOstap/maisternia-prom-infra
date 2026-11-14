@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200358" nameRU="Ручные обжимные инструменты" nameUK="Ручні обтискні інструменти">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="123" nameRU="Длина инструмента" type="real" nameUK="Довжина інструменту" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="64738" nameRU="металл" nameUK="метал"/>
+    </attribute>
+    <attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+    <attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+      <attribute_value id="66758" nameRU="клещи обжимные ручные" nameUK="кліщі обтискні ручні"/>
+      <attribute_value id="66760" nameRU="пресс-клещи обжимные ручные" nameUK="прес-кліщі обтискні ручні"/>
+      <attribute_value id="285637" nameRU="Кровельные рамки" nameUK="Покрівельні рамки"/>
+    </attribute>
+    <attribute id="7053" nameRU="Максимальное усилие сжатия" type="real" nameUK="Максимальне зусилля стиснення" measureUnitRU="т" measureUnitUK="т"/>
+    <attribute id="8030" nameRU="Применяется" type="multiselect" nameUK="Застосовується">
+      <attribute_value id="66801" nameRU="для наконечников" nameUK="для наконечників"/>
+      <attribute_value id="66802" nameRU="для гильз" nameUK="для гільз"/>
+      <attribute_value id="66803" nameRU="для коннекторов" nameUK="для конекторів"/>
+      <attribute_value id="66807" nameRU="для разьемов" nameUK="для роз'ємів"/>
+    </attribute>
+    <attribute id="8031" nameRU="Типы обжимаемых соединений" type="multiselect" nameUK="Типи обтиснених з'єднань">
+      <attribute_value id="66811" nameRU="НКИ" nameUK="МКІ"/>
+      <attribute_value id="66812" nameRU="НВИ" nameUK="НВИ"/>
+      <attribute_value id="66813" nameRU="НШКИ" nameUK="НШКИ"/>
+      <attribute_value id="66814" nameRU="РПИ-П" nameUK="РПІ-П"/>
+      <attribute_value id="66815" nameRU="РПИ-М" nameUK="РПІ-М"/>
+      <attribute_value id="66816" nameRU="РШИ-П" nameUK="РШІ-П"/>
+      <attribute_value id="66817" nameRU="РШИ-М" nameUK="РШІ-М"/>
+      <attribute_value id="66818" nameRU="РФИ-М" nameUK="РФІ-М"/>
+      <attribute_value id="66819" nameRU="РППИ-М" nameUK="РППІ-М"/>
+      <attribute_value id="66820" nameRU="ВРПИ-П" nameUK="ВРПИ-П"/>
+      <attribute_value id="66821" nameRU="ВРПИ-М" nameUK="ВРПИ-М"/>
+      <attribute_value id="66822" nameRU="РПИ-О" nameUK="РПІ-О"/>
+      <attribute_value id="66823" nameRU="РП-П" nameUK="РП-П"/>
+      <attribute_value id="66824" nameRU="РП-М" nameUK="РП-М"/>
+      <attribute_value id="66825" nameRU="ОВ" nameUK="ОВ"/>
+      <attribute_value id="66826" nameRU="ОВ-Т" nameUK="ОВ-Т"/>
+      <attribute_value id="66827" nameRU="К" nameUK="До"/>
+      <attribute_value id="66828" nameRU="ГСИ" nameUK="ГСИ"/>
+      <attribute_value id="66829" nameRU="ГСИ-Т" nameUK="ГСИ-Т"/>
+      <attribute_value id="66830" nameRU="ТМЛ" nameUK="ТМЛ"/>
+      <attribute_value id="66831" nameRU="ТМ" nameUK="ТМ"/>
+      <attribute_value id="66832" nameRU="ПМ" nameUK="ПМ"/>
+      <attribute_value id="66833" nameRU="НШП" nameUK="НШП"/>
+      <attribute_value id="66834" nameRU="НШПИ" nameUK="НШПИ"/>
+      <attribute_value id="66835" nameRU="ТМЛ2" nameUK="ТМЛ2"/>
+      <attribute_value id="66836" nameRU="ТМЛ-90" nameUK="ТМЛ-90"/>
+      <attribute_value id="66837" nameRU="ТМЛ-45" nameUK="ТМЛ-45"/>
+      <attribute_value id="66838" nameRU="ГМ" nameUK="ГМ"/>
+      <attribute_value id="66839" nameRU="ТА" nameUK="ТА"/>
+      <attribute_value id="66840" nameRU="ГАМ" nameUK="ГАМ"/>
+      <attribute_value id="66841" nameRU="ШАМ" nameUK="ШАМ"/>
+      <attribute_value id="66842" nameRU="ПЗ" nameUK="ПЗ"/>
+      <attribute_value id="66843" nameRU="ПЗКи" nameUK="ПЗКи"/>
+      <attribute_value id="66844" nameRU="НШВИ" nameUK="НШВИ"/>
+      <attribute_value id="66845" nameRU="НШВИ2" nameUK="НШВИ2"/>
+      <attribute_value id="66846" nameRU="НШВ" nameUK="НШВ"/>
+      <attribute_value id="66847" nameRU="СИЗ" nameUK="ЗІЗ"/>
+      <attribute_value id="66848" nameRU="СИЗ-К" nameUK="ЗІЗ-К"/>
+      <attribute_value id="66849" nameRU="ТУТ" nameUK="ТУТ"/>
+      <attribute_value id="66850" nameRU="RJ45" nameUK="RJ45"/>
+      <attribute_value id="66851" nameRU="RJ11" nameUK="RJ11"/>
+      <attribute_value id="66852" nameRU="RJ12" nameUK="RJ12"/>
+    </attribute>
+    <attribute id="8039" nameRU="Минимальное обжимаемое сечение" type="real" nameUK="Мінімальний обжимний переріз" measureUnitRU="кв. мм" measureUnitUK="кв. мм"/>
+    <attribute id="8040" nameRU="Максимальное обжимаемое сечение" type="real" nameUK="Максимальний перетин, що обжимається" measureUnitRU="кв. мм" measureUnitUK="кв. мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

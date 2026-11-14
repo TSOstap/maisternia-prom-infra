@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="151405" nameRU="Щетки и скребки для уборки" nameUK="Щітки та скребачки для прибирання">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="5000" measureUnitUK="г"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7636" nameRU="алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7765" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="64738" nameRU="металл" nameUK="метал"/>
+      <attribute_value id="69140" nameRU="силикон" nameUK="силікон"/>
+      <attribute_value id="69141" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="69848" nameRU="нейлон" nameUK="нейлон"/>
+      <attribute_value id="71098" nameRU="акрил" nameUK="акрил"/>
+      <attribute_value id="133535" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="292747" nameRU="Бамбук" nameUK=""/>
+    </attribute>
+    <attribute id="439" nameRU="Материал рабочей части" type="singleselect" nameUK="Матеріал робочої частини">
+      <attribute_value id="7791" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="7794" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="8263" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="8268" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="78641" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="78642" nameRU="Нейлон" nameUK="Нейлон"/>
+      <attribute_value id="87873" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="94018" nameRU="Силикон" nameUK="Силікон"/>
+      <attribute_value id="106487" nameRU="Металлопластик" nameUK="Металопластик"/>
+      <attribute_value id="106955" nameRU="ПВХ (поливинилхлорид)" nameUK="ПВХ (полівінілхлорид)"/>
+      <attribute_value id="106956" nameRU="Каучук" nameUK="Каучук"/>
+      <attribute_value id="107055" nameRU="Микрофибра" nameUK="Мікрофібра"/>
+      <attribute_value id="146646" nameRU="Натуральный ворс" nameUK="Натуральний ворс"/>
+      <attribute_value id="146647" nameRU="Искусственный ворс" nameUK="Штучний ворс"/>
+      <attribute_value id="349257" nameRU="Флис" nameUK="Фліс"/>
+      <attribute_value id="361711" nameRU="Полиэстер" nameUK="Поліестер"/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="671" nameRU="Материал ворса" type="singleselect" nameUK="Матеріал ворсу">
+      <attribute_value id="106553" nameRU="ПВХ (поливинилхлорид)" nameUK="ПВХ (полівінілхлорид)"/>
+      <attribute_value id="106554" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="106555" nameRU="Каучук" nameUK="Каучук"/>
+    </attribute>
+    <attribute id="675" nameRU="Длина ворса" type="integer" nameUK="Довжина ворсу" measureUnitRU="см" min="0" max="20" measureUnitUK="см"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="106957" nameRU="Щетка" nameUK="Щітка"/>
+      <attribute_value id="106958" nameRU="Скребок" nameUK="Скребок"/>
+      <attribute_value id="106959" nameRU="Щетка-скребок" nameUK="Щітка-скребок"/>
+      <attribute_value id="134430" nameRU="Валик/ролик" nameUK="Валик/ролик"/>
+      <attribute_value id="166789" nameRU="Метелка для пыли" nameUK="Мітла для пилу"/>
+      <attribute_value id="172784" nameRU="Лезвие" nameUK="Лезо"/>
+      <attribute_value id="300284" nameRU="Ручка для щетки" nameUK="Ручка для щітки"/>
+      <attribute_value id="346930" nameRU="Пипидастр" nameUK="Піпідастр"/>
+      <attribute_value id="361710" nameRU="Пад" nameUK="Пад"/>
+    </attribute>
+    <attribute id="1764" nameRU="Тип ручки" type="singleselect" nameUK="Тип ручки">
+      <attribute_value id="10792" nameRU="телескопическая" nameUK="телескопічна"/>
+      <attribute_value id="10794" nameRU="цельная" nameUK="цілісна"/>
+      <attribute_value id="106558" nameRU="съемная" nameUK="знімна"/>
+      <attribute_value id="106559" nameRU="без ручки" nameUK="без ручки"/>
+    </attribute>
+    <attribute id="2444" nameRU="Материал изготовления" type="multiselect" nameUK="Матеріал виготовлення">
+      <attribute_value id="12900" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="24675" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="77021" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="77024" nameRU="Силикон" nameUK="Силікон"/>
+      <attribute_value id="136362" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="146625" nameRU="Липкая лента" nameUK="Липка стрічка"/>
+      <attribute_value id="163535" nameRU="Дерево" nameUK="Дерево"/>
+    </attribute>
+    <attribute id="3896" nameRU="Тип ворса" type="singleselect" nameUK="Тип ворсу">
+      <attribute_value id="106576" nameRU="Мягкий" nameUK="М'який"/>
+      <attribute_value id="106578" nameRU="Средней жесткости" nameUK="Середньої жорсткості"/>
+      <attribute_value id="106579" nameRU="Жесткий" nameUK="Жорсткий"/>
+    </attribute>
+    <attribute id="4415" nameRU="Применение" type="singleselect" nameUK="Застосування">
+      <attribute_value id="106566" nameRU="Для ковровых покрытий" nameUK="Для килимових покриттів"/>
+      <attribute_value id="106567" nameRU="Для ламината" nameUK="Для ламінату"/>
+      <attribute_value id="106568" nameRU="Для паркета" nameUK="Для паркету"/>
+      <attribute_value id="106569" nameRU="Для плитки" nameUK="Для плитки"/>
+      <attribute_value id="106571" nameRU="Универсальное" nameUK="Універсальне"/>
+    </attribute>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="234476" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="62747" nameRU="Универсальное" nameUK="Універсальне"/>
+      <attribute_value id="97209" nameRU="Для одежды" nameUK="Для одягу"/>
+      <attribute_value id="106925" nameRU="Для мытья окон" nameUK="Для миття вікон"/>
+      <attribute_value id="106926" nameRU="Для пола" nameUK="Для підлоги"/>
+      <attribute_value id="106927" nameRU="Для мытья/чистки мебели" nameUK="Для миття/чищення меблів"/>
+      <attribute_value id="106936" nameRU="Для чистки ковровых покрытий" nameUK="Для чищення килимових покриттів"/>
+      <attribute_value id="107006" nameRU="Для удаления пыли" nameUK="Для видалення пилу"/>
+      <attribute_value id="138315" nameRU="Для мебели" nameUK="Для меблів"/>
+      <attribute_value id="298689" nameRU="Для выбивания ковров" nameUK="Для вибивання килимів"/>
+      <attribute_value id="309974" nameRU="Для посуды" nameUK="Для посуду"/>
+      <attribute_value id="321166" nameRU="Для печи" nameUK="Для печі"/>
+      <attribute_value id="349256" nameRU="Мытье/чистка поверхностей" nameUK="Миття/чистка поверхонь"/>
+      <attribute_value id="361517" nameRU="Для гладких поверхностей" nameUK="Для гладких поверхонь"/>
+    </attribute>
+    <attribute id="8081" nameRU="Ширина рабочей части" type="real" nameUK="Ширина робочої частини" measureUnitRU="см" min="0" max="105" measureUnitUK="см"/>
+    <attribute id="10167" nameRU="Длина ручки" type="real" nameUK="Довжина ручки" measureUnitRU="см" min="0" max="250" measureUnitUK="см"/>
+    <attribute id="11252" nameRU="Материал ручки/черенка" type="singleselect" nameUK="Матеріал ручки/черешка">
+      <attribute_value id="106524" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="106526" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="106527" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="106528" nameRU="Нейлон" nameUK="Нейлон"/>
+      <attribute_value id="106529" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="106530" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="106531" nameRU="Силикон" nameUK="Силікон"/>
+      <attribute_value id="106533" nameRU="Металлопластик" nameUK="Металопластик"/>
+      <attribute_value id="311285" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+    </attribute>
+    <attribute id="11253" nameRU="Длина ручки/черенка" type="real" nameUK="Довжина ручки/черенка" measureUnitRU="см" min="0" max="200" measureUnitUK="см"/>
+    <attribute id="11254" nameRU="Глубина рабочей части" type="real" nameUK="Глибина робочої частини" measureUnitRU="см" min="0" max="50" measureUnitUK="см"/>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="219771" nameRU="Двухсторонняя" nameUK="Двостороння"/>
+      <attribute_value id="344444" nameRU="С распылителем" nameUK="З розпилювачем"/>
+    </attribute>
+    <attribute id="14505" nameRU="Количество" type="integer" nameUK="Кількість"/>
+    <attribute id="19329" nameRU="Количество лезвий, шт." type="real" nameUK="Кількість лез, шт."/>
+  </category>
+</categories>

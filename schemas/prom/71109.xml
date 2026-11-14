@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="71109" nameRU="Повербанки" nameUK="Повербанки">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="45000" measureUnitUK="г"/>
+    <attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+      <attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+      <attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+      <attribute_value id="10614" nameRU="Li-Pol" nameUK="Li-Pol"/>
+      <attribute_value id="179273" nameRU="LiFePO4" nameUK="LiFePO4"/>
+      <attribute_value id="291284" nameRU="LFP" nameUK=""/>
+      <attribute_value id="294779" nameRU="Graphene" nameUK=""/>
+      <attribute_value id="296110" nameRU="NCM" nameUK=""/>
+    </attribute>
+    <attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="мА/ч" min="500" max="2048000" measureUnitUK="мА/год"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="800" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+      <attribute_value id="7068" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="7069" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="7070" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="7071" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="7072" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="7075" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="7076" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="7077" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7078" nameRU="Антрацит" nameUK="Антрацит"/>
+      <attribute_value id="7079" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="7080" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="7081" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="7082" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="7083" nameRU="Медный" nameUK="Мідний"/>
+      <attribute_value id="7084" nameRU="Слоновая кость" nameUK="Слонова кістка"/>
+      <attribute_value id="7085" nameRU="Фисташковый" nameUK="Фісташковий"/>
+      <attribute_value id="7086" nameRU="Кремовый" nameUK="Кремовий"/>
+      <attribute_value id="7087" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="7088" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="7089" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="7090" nameRU="Малиновый" nameUK="Малиновий"/>
+      <attribute_value id="7091" nameRU="Сиреневый" nameUK="Бузковий"/>
+      <attribute_value id="7092" nameRU="Персиковый" nameUK="Персиковий"/>
+      <attribute_value id="7093" nameRU="Серебряный" nameUK="Срібний"/>
+      <attribute_value id="7094" nameRU="Другой" nameUK="Інший"/>
+      <attribute_value id="43982" nameRU="Светло-серый" nameUK="Світло-сірий"/>
+      <attribute_value id="44231" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="83208" nameRU="Прозрачный" nameUK="Прозорий"/>
+      <attribute_value id="102939" nameRU="Металлик" nameUK="Металік"/>
+      <attribute_value id="102940" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="102941" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="102942" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="123604" nameRU="Темное дерево" nameUK="Темне дерево"/>
+      <attribute_value id="123605" nameRU="Светлое дерево" nameUK="Світле дерево"/>
+      <attribute_value id="123606" nameRU="Титан" nameUK="Титан"/>
+      <attribute_value id="148963" nameRU="Золотой" nameUK="Золотий"/>
+    </attribute>
+    <attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+      <attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7867" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+      <attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+      <attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="700" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="156366" nameRU="Универсальная батарея" nameUK="Універсальна батарея"/>
+      <attribute_value id="156367" nameRU="Универсальная солнечная батарея" nameUK="Універсальна сонячна батарея"/>
+      <attribute_value id="245520" nameRU="Чехол для аккумулятора" nameUK="Чохол для акумулятора"/>
+      <attribute_value id="308447" nameRU="Power bank" nameUK=""/>
+    </attribute>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30789" nameRU="Малиновый" nameUK="Малиновий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30796" nameRU="Персиковый" nameUK="Персиковий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30798" nameRU="Песочный" nameUK="Пісочний"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30802" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="66120" nameRU="Прозрачный" nameUK="Прозорий"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="262794" nameRU="Бронзовый" nameUK="Бронзовий"/>
+      <attribute_value id="263242" nameRU="Коралловый" nameUK="Кораловий"/>
+      <attribute_value id="265975" nameRU="Молочный" nameUK="Молочний"/>
+      <attribute_value id="266139" nameRU="Графитовый" nameUK="Графітовий"/>
+      <attribute_value id="266236" nameRU="Лавандовый" nameUK="Лавандовий"/>
+      <attribute_value id="266270" nameRU="Мятный" nameUK="М'ятний"/>
+      <attribute_value id="266644" nameRU="Антрацит" nameUK="Антрацит"/>
+      <attribute_value id="267491" nameRU="Пурпурный" nameUK="Пурпурний"/>
+      <attribute_value id="267588" nameRU="Камуфляж" nameUK="Камуфляж"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="72114" nameRU="Для ноутбука" nameUK="Для ноутбука"/>
+      <attribute_value id="135300" nameRU="Для планшета" nameUK="Для планшета"/>
+      <attribute_value id="280517" nameRU="Для электроники" nameUK="Для електроніки"/>
+      <attribute_value id="281719" nameRU="Для роутера" nameUK="Для роутеру"/>
+      <attribute_value id="306420" nameRU="Для автомобиля" nameUK="Для автомобіля"/>
+      <attribute_value id="346281" nameRU="Для смартфонов" nameUK="Для смартфонів"/>
+      <attribute_value id="349344" nameRU="Для смарт-часов и браслетов" nameUK="Для смарт-годин та браслетів"/>
+    </attribute>
+    <attribute id="6036" nameRU="Индикация" type="singleselect" nameUK="Індикація">
+      <attribute_value id="320577" nameRU="Без индикатора" nameUK="Без індикатора"/>
+      <attribute_value id="320578" nameRU="С индикатором уровня заряда" nameUK="З індикатором рівня заряду"/>
+      <attribute_value id="320579" nameRU="С дисплеем" nameUK="С дисплеем"/>
+    </attribute>
+    <attribute id="7442" nameRU="Выходное напряжение" type="real" nameUK="Вихідна напруга" measureUnitRU="В" min="0" max="18000" measureUnitUK="В"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="128013" nameRU="Противоударный корпус" nameUK="Протиударний корпус"/>
+      <attribute_value id="146558" nameRU="С подставкой" nameUK="З підставкою"/>
+      <attribute_value id="147749" nameRU="Влагозащищенный корпус" nameUK="Вологозахищений корпус"/>
+      <attribute_value id="148259" nameRU="Часы (будильник)" nameUK="Годинник (будильник)"/>
+      <attribute_value id="155792" nameRU="Ремешок на руку" nameUK="Ремінець на руку"/>
+      <attribute_value id="157050" nameRU="Фонарик" nameUK="Ліхтарик"/>
+      <attribute_value id="166552" nameRU="Дисплей" nameUK="Дисплей"/>
+      <attribute_value id="168086" nameRU="Индикатор уровня заряда" nameUK="Індикатор рівня заряду"/>
+      <attribute_value id="224225" nameRU="Беспроводная зарядка" nameUK="Бездротова зарядка"/>
+      <attribute_value id="262856" nameRU="Под нанесение логотипа" nameUK="Під нанесення логотипу"/>
+      <attribute_value id="289595" nameRU="Карабин" nameUK="Карабін"/>
+      <attribute_value id="292671" nameRU="Быстрая зарядка" nameUK="Швидка зарядка"/>
+      <attribute_value id="296079" nameRU="LED лампа" nameUK="LED лампа"/>
+      <attribute_value id="303519" nameRU="Встроенный кабель" nameUK="Вбудований кабель"/>
+      <attribute_value id="313009" nameRU="Сквозная зарядка" nameUK="Наскрізна зарядка"/>
+      <attribute_value id="320519" nameRU="С фонариком" nameUK="З ліхтариком"/>
+      <attribute_value id="320520" nameRU="С солнечной батареей в комплекте" nameUK="З сонячною батареєю в комплекті"/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+    <attribute id="14531" nameRU="Разъемы" type="multiselect" nameUK="Роз'єми">
+      <attribute_value id="277471" nameRU="micro USB" nameUK="micro USB"/>
+      <attribute_value id="294681" nameRU="DC" nameUK="DC"/>
+      <attribute_value id="296080" nameRU="USB Type-A" nameUK="USB Type-A"/>
+      <attribute_value id="319914" nameRU="USB Type-C" nameUK="USB Type-C"/>
+      <attribute_value id="319915" nameRU="Apple Lightning" nameUK="Apple Lightning"/>
+      <attribute_value id="320575" nameRU="AC" nameUK="AC"/>
+    </attribute>
+    <attribute id="15031" nameRU="Набор переходников" type="bool" nameUK="Набір перехідників"/>
+    <attribute id="15033" nameRU="Зарядка батареи" type="multiselect" nameUK="Зарядка батареї">
+      <attribute_value id="156383" nameRU="От USB" nameUK="Від USB"/>
+      <attribute_value id="156384" nameRU="От сети" nameUK="Від мережі"/>
+      <attribute_value id="156385" nameRU="От солнечной энергии" nameUK="Від сонячної енергія"/>
+      <attribute_value id="296078" nameRU="От автомобильной зарядки" nameUK="Від автомобільної зарядки"/>
+    </attribute>
+    <attribute id="16716" nameRU="Выходной ток" type="integer" nameUK="Вихідний струм" measureUnitRU="мА" min="0" max="90000" measureUnitUK="мА"/>
+    <attribute id="16717" nameRU="Входное напряжение" type="integer" nameUK="Вхідна напруга" measureUnitRU="В" min="0" max="500" measureUnitUK="В"/>
+    <attribute id="18851" nameRU="Количество заряжаемых устройств" type="integer" nameUK="Кількість пристроїв, що заряджаються"/>
+    <attribute id="18900" nameRU="Количество розеток" type="real" nameUK="Кількість розеток"/>
+    <attribute id="18908" nameRU="Максимальная мощность W" type="real" nameUK="Максимальна потужність W"/>
+    <attribute id="18972" nameRU="Выходные интерфейсы" type="singleselect" nameUK="Вихідні інтерфейси">
+      <attribute_value id="320532" nameRU="Розетка 220 В" nameUK="Розетка 220 В"/>
+      <attribute_value id="320533" nameRU="Розетка 230 В" nameUK="Розетка 230 В"/>
+      <attribute_value id="320534" nameRU="USB Type A" nameUK="USB Type A"/>
+      <attribute_value id="320535" nameRU="USB Type C" nameUK="USB Type C"/>
+      <attribute_value id="320536" nameRU="DC-разъем" nameUK="DC-роз'єм"/>
+      <attribute_value id="320537" nameRU="Lightning" nameUK="Lightning"/>
+      <attribute_value id="320538" nameRU="1 x DC-разъем" nameUK="1 x DC-роз'єм"/>
+      <attribute_value id="320539" nameRU="2 x DC-разъем" nameUK="2 x DC-роз'єм"/>
+      <attribute_value id="320540" nameRU="3 x DC-разъем" nameUK="3 x DC-роз'єм"/>
+      <attribute_value id="320541" nameRU="4 x DC-разъем" nameUK="4 x DC-роз'єм"/>
+      <attribute_value id="320544" nameRU="AC-разъем" nameUK="AC-роз'єм"/>
+      <attribute_value id="320563" nameRU="Micro-USB" nameUK="Micro-USB"/>
+    </attribute>
+    <attribute id="18973" nameRU="Функции зарядки" type="singleselect" nameUK="Функції заряджання">
+      <attribute_value id="320564" nameRU="Стандартно" nameUK="Стандартна"/>
+      <attribute_value id="320565" nameRU="QC быстрая зарядка 2.0" nameUK="QC швидка зарядка 2.0"/>
+      <attribute_value id="320566" nameRU="QC быстрая зарядка 3.0" nameUK="QC швидка зарядка 3.0"/>
+      <attribute_value id="320567" nameRU="Qi стандарт" nameUK="Qi стандарт"/>
+      <attribute_value id="320568" nameRU="QC быстрая зарядка 4.0+" nameUK="QC швидка зарядка 4.0+"/>
+      <attribute_value id="320569" nameRU="Сквозная зарядка" nameUK="Наскрізна зарядка"/>
+      <attribute_value id="320570" nameRU="QC быстрая зарядка 2.1" nameUK="QC швидка зарядка 2.1"/>
+      <attribute_value id="320571" nameRU="Зарядка микротоком" nameUK="Зарядка мікрострумом"/>
+      <attribute_value id="320572" nameRU="PowerIQ" nameUK="PowerIQ"/>
+      <attribute_value id="320573" nameRU="MagSafe" nameUK="MagSafe"/>
+      <attribute_value id="320574" nameRU="Power Delivery" nameUK="Power Delivery"/>
+    </attribute>
+    <attribute id="18974" nameRU="Переходники в комплекте" type="singleselect" nameUK="Перехідники в комплекті">
+      <attribute_value id="320644" nameRU="USB Type-C" nameUK=""/>
+      <attribute_value id="320645" nameRU="NDSL (Nintendo)" nameUK=""/>
+      <attribute_value id="320646" nameRU="Sony Ericsson 12 pin" nameUK=""/>
+      <attribute_value id="320647" nameRU="Sony PSP" nameUK=""/>
+      <attribute_value id="320648" nameRU="Micro USB" nameUK=""/>
+      <attribute_value id="320649" nameRU="Mini USB" nameUK=""/>
+      <attribute_value id="320650" nameRU="Apple lightning" nameUK=""/>
+      <attribute_value id="320651" nameRU="Apple 30 pin" nameUK=""/>
+      <attribute_value id="320652" nameRU="Samsung M20 pin" nameUK=""/>
+      <attribute_value id="320653" nameRU="LG TA-25GR3" nameUK=""/>
+      <attribute_value id="320654" nameRU="Nokia DC 3.5 мм" nameUK=""/>
+      <attribute_value id="320655" nameRU="Nokia DC 2 мм" nameUK=""/>
+    </attribute>
+  </category>
+</categories>

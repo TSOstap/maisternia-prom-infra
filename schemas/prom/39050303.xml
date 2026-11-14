@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="39050303" nameRU="Переносные светильники" nameUK="Переносні світильники">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="4000" measureUnitUK="г"/>
+    <attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+      <attribute_value id="7132" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="75486" nameRU="Термопластик" nameUK="Термопластик"/>
+      <attribute_value id="75489" nameRU="Поликарбонат" nameUK="Полікарбонат"/>
+      <attribute_value id="126965" nameRU="Алюминиевый сплав" nameUK="Алюмінієвий сплав"/>
+      <attribute_value id="179371" nameRU="ABS-пластик" nameUK="ABS-пластик"/>
+      <attribute_value id="319296" nameRU="Полистирол" nameUK="Полістирол"/>
+      <attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+      <attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+      <attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+    </attribute>
+    <attribute id="1980" nameRU="Тип питания" type="multiselect" nameUK="Тип живлення">
+      <attribute_value id="11692" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="21680" nameRU="Батарейки" nameUK="Батарейки"/>
+      <attribute_value id="95189" nameRU="Сеть" nameUK="Мережа"/>
+      <attribute_value id="135002" nameRU="Солнечная батарея" nameUK="Сонячна батарея"/>
+      <attribute_value id="138709" nameRU="USB-порт" nameUK="USB-порт"/>
+      <attribute_value id="282310" nameRU="Динамическое" nameUK="Динамічне"/>
+      <attribute_value id="282311" nameRU="Прикуриватель в машине" nameUK="Прикурювач в машині"/>
+    </attribute>
+    <attribute id="7950" nameRU="Мощность лампы" type="real" nameUK="Потужність лампи" measureUnitRU="Вт" min="0" max="200" measureUnitUK="Вт"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11377" nameRU="Световой поток" type="real" nameUK="Світловий потік" measureUnitRU="лм" min="0" max="1000000" measureUnitUK="лм"/>
+    <attribute id="12640" nameRU="Тип лампы" type="singleselect" nameUK="Тип лампи">
+      <attribute_value id="126707" nameRU="Накаливания" nameUK="Розжарювання"/>
+      <attribute_value id="126708" nameRU="Электролюминесцентная" nameUK="Електролюмінесцентна"/>
+      <attribute_value id="126710" nameRU="Галогенная" nameUK="Галогенна"/>
+      <attribute_value id="126713" nameRU="Ультрафиолетовая" nameUK="Ультрафіолетова"/>
+      <attribute_value id="126719" nameRU="Неоновая" nameUK="Неонова"/>
+      <attribute_value id="126720" nameRU="Инфракрасная" nameUK="Інфрачервона"/>
+      <attribute_value id="137101" nameRU="Люминесцентная" nameUK="Люмінесцентна"/>
+      <attribute_value id="137102" nameRU="Светодиодная" nameUK="Світлодіодна"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="240432" nameRU="Туристические газовые баллоны" nameUK="Туристичні газові балони ">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="1000" measureUnitUK="г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="128" nameRU="Объем" type="real" nameUK="Об`єм" measureUnitRU="мл" min="0" max="8000" measureUnitUK="мл"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="-50" max="0" measureUnitUK="град."/>
+    <attribute id="4469" nameRU="Сезон" type="singleselect" nameUK="Сезон">
+      <attribute_value id="28354" nameRU="Весна/Осень" nameUK="Весна/Осінь"/>
+      <attribute_value id="28355" nameRU="Зима" nameUK="Зима"/>
+      <attribute_value id="28356" nameRU="Лето" nameUK="Літо"/>
+      <attribute_value id="266054" nameRU="Всесезонный" nameUK="Всесезонний"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11642" nameRU="Соединение баллона" type="singleselect" nameUK="З'єднання балона">
+      <attribute_value id="113316" nameRU="Резьбовое" nameUK="Різьбове"/>
+      <attribute_value id="113317" nameRU="Цанговое" nameUK="Цангові"/>
+      <attribute_value id="113318" nameRU="Защелка" nameUK="Клямка"/>
+      <attribute_value id="113319" nameRU="Бесклапанное" nameUK="Бесклапанне"/>
+    </attribute>
+    <attribute id="11643" nameRU="Пропан" type="real" nameUK="Пропан" measureUnitRU="%" min="0" max="100" measureUnitUK="%"/>
+    <attribute id="11644" nameRU="Бутан" type="real" nameUK="Бутан" measureUnitRU="%" min="0" max="100" measureUnitUK="%"/>
+    <attribute id="11645" nameRU="Изобутан" type="real" nameUK="Ізобутан" measureUnitRU="%" min="0" max="100" measureUnitUK="%"/>
+  </category>
+</categories>

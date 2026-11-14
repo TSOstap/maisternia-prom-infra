@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13073206" nameRU="Затирка для швов" nameUK="Затирка для швів">
+    <attribute id="3020" nameRU="Тип поверхности" type="multiselect" nameUK="Тип поверхні">
+      <attribute_value id="19695" nameRU="Стены" nameUK="Стіни"/>
+      <attribute_value id="19697" nameRU="Пол" nameUK="Підлога"/>
+    </attribute>
+    <attribute id="4057" nameRU="Минимальная рабочая температура окружающей среды" type="real" nameUK="Мінімальна робоча температура навколишнього середовища" measureUnitRU="град." min="-50" max="15" measureUnitUK="град."/>
+    <attribute id="4058" nameRU="Максимальная рабочая температура окружающей среды" type="real" nameUK="Максимальна робоча температура навколишнього середовища" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+    <attribute id="4646" nameRU="Водостойкость" type="bool" nameUK="Водостійкість"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="264231" nameRU="Пудровый" nameUK="Пудровий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="8798" nameRU="Время высыхания" type="real" nameUK="Час висихання" measureUnitRU="час" min="0" max="48" measureUnitUK="годин"/>
+    <attribute id="9120" nameRU="Тип использования" type="singleselect" nameUK="Тип використання">
+      <attribute_value id="71897" nameRU="Для наружных работ" nameUK="Для зовнішніх робіт"/>
+      <attribute_value id="71898" nameRU="Для внутренних работ" nameUK="Для внутрішніх робіт"/>
+      <attribute_value id="71899" nameRU="Универсальный" nameUK="Універсальний"/>
+    </attribute>
+    <attribute id="9148" nameRU="Фасовка материала" type="real" nameUK="Фасовка матеріалу" measureUnitRU="кг" min="0" max="30" measureUnitUK="кг"/>
+    <attribute id="9257" nameRU="Количество компонентов" type="singleselect" nameUK="Кількість компонентів">
+      <attribute_value id="73280" nameRU="Двухкомпонентная" nameUK="Двокомпонентна"/>
+      <attribute_value id="73282" nameRU="Однокомпонентная" nameUK="Однокомпонентна"/>
+    </attribute>
+    <attribute id="9334" nameRU="Срок хранения" type="real" nameUK="Термін зберігання" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="9844" nameRU="Вид затирки для межплиточных швов" type="singleselect" nameUK="Вид затірки для міжплиткових швів">
+      <attribute_value id="80785" nameRU="Цементная" nameUK="Цементна"/>
+      <attribute_value id="80786" nameRU="Смоляная" nameUK="Смоляна"/>
+      <attribute_value id="80787" nameRU="Силиконовая" nameUK="Силіконова"/>
+      <attribute_value id="279961" nameRU="Эпоксидная" nameUK="Епоксидна"/>
+      <attribute_value id="300866" nameRU="Акриловая" nameUK="Акрилова"/>
+    </attribute>
+    <attribute id="9845" nameRU="Минимальная ширина шва" type="real" nameUK="Мінімальна ширина шва" measureUnitRU="мм" min="0" max="10" measureUnitUK="мм"/>
+    <attribute id="9846" nameRU="Максимальная ширина шва" type="real" nameUK="Максимальна ширина шва" measureUnitRU="мм" min="0" max="60" measureUnitUK="мм"/>
+    <attribute id="9847" nameRU="Противогрибковое действие" type="bool" nameUK="Протигрибкова дію"/>
+  </category>
+</categories>

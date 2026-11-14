@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13073204" nameRU="Комплектующие для плиточных работ" nameUK="Комплектуючі для плиткових робіт">
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8058" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="8059" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="8696" nameRU="Пластмасса" nameUK="Пластмаса"/>
+      <attribute_value id="35372" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="3474" nameRU="Количество в упаковке" type="integer" nameUK="Кількість в упаковці" measureUnitRU="шт" min="0" max="1000" measureUnitUK="шт."/>
+    <attribute id="5692" nameRU="Покрытие" type="singleselect" nameUK="Покриття">
+      <attribute_value id="311232" nameRU="Полированная поверхность" nameUK="Полірована поверхня"/>
+      <attribute_value id="311233" nameRU="Брашированная поверхность" nameUK="Брашована поверхня"/>
+    </attribute>
+    <attribute id="6198" nameRU="Размер" type="singleselect" nameUK="Розмір">
+      <attribute_value id="295366" nameRU="1 мм" nameUK="1 мм"/>
+      <attribute_value id="299422" nameRU="2 мм" nameUK="2 мм"/>
+      <attribute_value id="330892" nameRU="0.5 мм" nameUK=""/>
+      <attribute_value id="330893" nameRU="1.5 мм" nameUK=""/>
+      <attribute_value id="330894" nameRU="2.5 мм" nameUK=""/>
+      <attribute_value id="330895" nameRU="3 мм" nameUK=""/>
+      <attribute_value id="330896" nameRU="4 мм" nameUK=""/>
+      <attribute_value id="330897" nameRU="5 мм" nameUK=""/>
+      <attribute_value id="330898" nameRU="6 мм" nameUK=""/>
+      <attribute_value id="330899" nameRU="8 мм" nameUK=""/>
+      <attribute_value id="330900" nameRU="10 мм" nameUK=""/>
+      <attribute_value id="345894" nameRU="3.5 мм" nameUK="3.5 мм"/>
+      <attribute_value id="350587" nameRU="12 мм" nameUK=""/>
+    </attribute>
+    <attribute id="9596" nameRU="Вид элемента" type="singleselect" nameUK="Вид елемента">
+      <attribute_value id="80282" nameRU="Крестики для плитки" nameUK="Хрестики для плитки"/>
+      <attribute_value id="80337" nameRU="Угол для плитки внутренний" nameUK="Кут для плитки внутрішній"/>
+      <attribute_value id="80340" nameRU="Угол для плитки наружный" nameUK="Кут для плитки зовнішній"/>
+      <attribute_value id="282960" nameRU="Зажим" nameUK=""/>
+      <attribute_value id="296580" nameRU="Фуга" nameUK=""/>
+      <attribute_value id="330890" nameRU="Расшиватель" nameUK="Розшивач"/>
+      <attribute_value id="330979" nameRU="Подкова" nameUK="Підкова"/>
+      <attribute_value id="330980" nameRU="Пятак" nameUK="П'ятак"/>
+      <attribute_value id="330981" nameRU="Спейсер" nameUK="Спейсер"/>
+      <attribute_value id="330982" nameRU="Маяк" nameUK="Маяк"/>
+      <attribute_value id="330983" nameRU="Клин" nameUK="Клин"/>
+      <attribute_value id="330984" nameRU="СВП" nameUK="СВП"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

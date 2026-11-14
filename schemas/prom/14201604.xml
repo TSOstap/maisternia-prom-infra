@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201604" nameRU="Кельмы, мастерки, штукатурные ковши" nameUK="Кельми, штукатурні ковші">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="500" measureUnitUK="г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7635" nameRU="сталь" nameUK="сталь"/>
+      <attribute_value id="7636" nameRU="алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="300888" nameRU="Резина/Пластик" nameUK="Гума/Пластик"/>
+    </attribute>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="439" nameRU="Материал рабочей части" type="singleselect" nameUK="Матеріал робочої частини">
+      <attribute_value id="7792" nameRU="Пластмасса" nameUK="Пластмаса"/>
+      <attribute_value id="7794" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="8263" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="140002" nameRU="Инструментальная сталь" nameUK="Інструментальна сталь"/>
+    </attribute>
+    <attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+      <attribute_value id="8253" nameRU="Кельма штукатурная" nameUK="Кельма штукатурна"/>
+      <attribute_value id="8254" nameRU="Кельма затирочная" nameUK="Кельма затиральна"/>
+      <attribute_value id="8255" nameRU="Кельма плиточника" nameUK="Кельма плиточника"/>
+      <attribute_value id="8256" nameRU="Кельма бетонщика" nameUK="Кельма бетоняра"/>
+      <attribute_value id="8257" nameRU="Кельма отделочника" nameUK="Кельма обробника"/>
+      <attribute_value id="8258" nameRU="Кельма каменщика" nameUK="Кельма муляра"/>
+      <attribute_value id="8259" nameRU="Ковш штукатурный" nameUK="Ківш штукатурний"/>
+      <attribute_value id="278260" nameRU="Мастерок штукатурный для внешних углов" nameUK="Кельма штукатурний для зовнішніх кутів"/>
+      <attribute_value id="278261" nameRU="Мастерок штукатурный для внутренних углов" nameUK="Кельма штукатурний для внутрішніх кутів"/>
+      <attribute_value id="344053" nameRU="Кельма шпаклевочная" nameUK="Кельма шпаклювальна"/>
+      <attribute_value id="360351" nameRU="Кельма печника" nameUK="Кельма пічника"/>
+    </attribute>
+    <attribute id="7618" nameRU="Длина рабочей части" type="real" nameUK="Довжина робочої частини" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1405" nameRU="Промышленные фильтры" nameUK="Промислові фільтри">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="2000" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="245" nameRU="Тип фильтра" type="singleselect" nameUK="Тип фільтра">
+      <attribute_value id="138039" nameRU="Фильтр-структуризатор (Витализатор)" nameUK="Фільтр-структурізатор (Віталізатор)"/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="2837" nameRU="Максимальное рабочее давление" type="real" nameUK="Максимальний робочий тиск" measureUnitRU="МПа" min="0" max="200" measureUnitUK="МПа"/>
+    <attribute id="3953" nameRU="Присоединительный диаметр" type="real" nameUK="Приєднувальний діаметр" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="4057" nameRU="Минимальная рабочая температура окружающей среды" type="real" nameUK="Мінімальна робоча температура навколишнього середовища" measureUnitRU="град." min="-150" max="100" measureUnitUK="град."/>
+    <attribute id="4058" nameRU="Максимальная рабочая температура окружающей среды" type="real" nameUK="Максимальна робоча температура навколишнього середовища" measureUnitRU="град." min="0" max="500" measureUnitUK="град."/>
+    <attribute id="4092" nameRU="Максимальный перепад давления на фильтре" type="real" nameUK="Максимальний перепад тиску на фільтрі" measureUnitRU="МПа" min="0" max="100" measureUnitUK="МПа"/>
+    <attribute id="4093" nameRU="Минимальный размер улавливаемых частиц" type="real" nameUK="Мінімальний розмір уловлюваних частинок" measureUnitRU="мкм" min="0" max="1000" measureUnitUK="мкм"/>
+    <attribute id="4116" nameRU="Замена фильтрующего элемента" type="bool" nameUK="Заміна фільтруючого елемента"/>
+    <attribute id="7366" nameRU="Максимальная пропускная способность" type="real" nameUK="Максимальна пропускна здатність" measureUnitRU="куб. м/час" min="0" max="15000" measureUnitUK="куб.м/год"/>
+    <attribute id="9287" nameRU="Использование" type="multiselect" nameUK="Використання">
+      <attribute_value id="73664" nameRU="Для холодной воды" nameUK="Для холодної води"/>
+      <attribute_value id="73665" nameRU="Для горячей воды" nameUK="Для гарячої води"/>
+    </attribute>
+    <attribute id="9328" nameRU="Назначение очистки" type="multiselect" nameUK="Призначення очищення">
+      <attribute_value id="73971" nameRU="Обогащение кислородом" nameUK="Збагачення киснем"/>
+      <attribute_value id="73972" nameRU="Обезжелезивание" nameUK="Знезалізнювання"/>
+      <attribute_value id="73973" nameRU="Умягчение" nameUK="Зм'якшення"/>
+      <attribute_value id="73974" nameRU="Очистка от свободного хлора" nameUK="Очищення від вільного хлору"/>
+      <attribute_value id="73975" nameRU="Минерализация" nameUK="Мінералізація"/>
+      <attribute_value id="138037" nameRU="Очистка от ржавчины" nameUK="Очищення від іржі"/>
+      <attribute_value id="138038" nameRU="Очистка от солей" nameUK="Очищення від солей"/>
+    </attribute>
+    <attribute id="9867" nameRU="Максимальное значение pH рабочей среды" type="real" nameUK="Максимальне значення pH робочого середовища"/>
+    <attribute id="9975" nameRU="Тип промышленного фильтра по среде использования" type="singleselect" nameUK="Тип промислового фільтра у середовищі використання">
+      <attribute_value id="82683" nameRU="Жидкость" nameUK="Рідина"/>
+      <attribute_value id="82684" nameRU="Газ" nameUK="Газ"/>
+    </attribute>
+    <attribute id="9976" nameRU="Тип промышленного фильтра для жидкостей" type="singleselect" nameUK="Тип промислового фільтра для рідин">
+      <attribute_value id="82691" nameRU="Механический" nameUK="Механічний"/>
+      <attribute_value id="82692" nameRU="Ионообменный" nameUK="Іонообмінний"/>
+      <attribute_value id="82693" nameRU="Обратный осмос" nameUK="Зворотний осмос"/>
+      <attribute_value id="82694" nameRU="Биологический" nameUK="Біологічний"/>
+      <attribute_value id="82695" nameRU="Физико-химический (Угольный)" nameUK="Фізико-хімічний (Вугільний)"/>
+      <attribute_value id="82696" nameRU="Электрический" nameUK="Електричний"/>
+      <attribute_value id="138036" nameRU="Магнитный" nameUK="Магнітний"/>
+    </attribute>
+    <attribute id="9978" nameRU="Тип промышленного фильтра для газов" type="singleselect" nameUK="Тип промислового фільтра для газів">
+      <attribute_value id="82714" nameRU="Механический (предварительной очистки)" nameUK="Механічний (попереднього очищення)"/>
+      <attribute_value id="82715" nameRU="Угольный" nameUK="Вугільний"/>
+      <attribute_value id="82716" nameRU="Масляный" nameUK="Масляний"/>
+      <attribute_value id="82717" nameRU="Губчатый" nameUK="Губчастий"/>
+      <attribute_value id="82718" nameRU="Фильтр HEPA" nameUK="Фільтр HEPA"/>
+      <attribute_value id="82719" nameRU="Электростатический" nameUK="Електростатичний"/>
+      <attribute_value id="82720" nameRU="Фотокаталитический" nameUK="Фотокаталітичний"/>
+    </attribute>
+    <attribute id="9979" nameRU="Конструктивное исполнение промышленного фильтра для жидкостей" type="singleselect" nameUK="Конструктивне виконання промислового фільтр для рідин">
+      <attribute_value id="82725" nameRU="Угловой" nameUK="Кутовий"/>
+      <attribute_value id="82726" nameRU="Линейный" nameUK="Лінійний"/>
+    </attribute>
+    <attribute id="9981" nameRU="Материал корпуса промышленного фильтра" type="singleselect" nameUK="Матеріал корпусу промислового фільтра">
+      <attribute_value id="82739" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="82740" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="82741" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="82742" nameRU="Пластмасса" nameUK="Пластмаса"/>
+    </attribute>
+    <attribute id="13494" nameRU="Тип газа" type="singleselect" nameUK="Тип газу">
+      <attribute_value id="180002" nameRU="Пропан/Бутан" nameUK="Пропан/Бутан"/>
+      <attribute_value id="217173" nameRU="Природный газ" nameUK="Природний газ"/>
+      <attribute_value id="217174" nameRU="Метан" nameUK="Метан"/>
+    </attribute>
+  </category>
+</categories>

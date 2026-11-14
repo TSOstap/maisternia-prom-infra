@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="7081201" nameRU="Ручные культиваторы, плуги" nameUK="Ручні культиватори, плуги">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+    <attribute id="123" nameRU="Длина инструмента" type="real" nameUK="Довжина інструменту" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+      <attribute_value id="91104" nameRU="Культиватор ручной" nameUK="Культиватор ручний"/>
+      <attribute_value id="91105" nameRU="Плуг ручной" nameUK="Плуг ручний"/>
+      <attribute_value id="91106" nameRU="Бороздовичок ручной" nameUK="Бороздовичок ручний"/>
+      <attribute_value id="276916" nameRU="Корнеудалитель" nameUK="Кореньовидалятель"/>
+    </attribute>
+    <attribute id="2861" nameRU="Порода дерева" type="singleselect" nameUK="Порода дерева">
+      <attribute_value id="18433" nameRU="Амарант" nameUK="Амарант"/>
+      <attribute_value id="18434" nameRU="Ангелим светлый" nameUK="Ангелим світлий"/>
+      <attribute_value id="18435" nameRU="Ангелим темный" nameUK="Ангелим темний"/>
+      <attribute_value id="18436" nameRU="Андироба саман" nameUK="Андироба саман"/>
+      <attribute_value id="18437" nameRU="Бакаут" nameUK="Бакаут"/>
+      <attribute_value id="18438" nameRU="Бальза" nameUK="Бальза"/>
+      <attribute_value id="18439" nameRU="Береза" nameUK="Береза"/>
+      <attribute_value id="18440" nameRU="Билинга" nameUK="Білінгу"/>
+      <attribute_value id="18441" nameRU="Бокоте" nameUK="Бокоте"/>
+      <attribute_value id="18442" nameRU="Бонгосси" nameUK="Бонгосси"/>
+      <attribute_value id="18443" nameRU="Бриар" nameUK="Бріар"/>
+      <attribute_value id="18444" nameRU="Бубинга" nameUK="Бубінга"/>
+      <attribute_value id="18445" nameRU="Бук" nameUK="Бук"/>
+      <attribute_value id="18446" nameRU="Венге" nameUK="Венге"/>
+      <attribute_value id="18447" nameRU="Вишня" nameUK="Вишня"/>
+      <attribute_value id="18448" nameRU="Вяз" nameUK="В'яз"/>
+      <attribute_value id="18449" nameRU="Гонсало альвес" nameUK="Гонсало альвес"/>
+      <attribute_value id="18450" nameRU="Граб" nameUK="Граб"/>
+      <attribute_value id="18451" nameRU="Гренадил" nameUK="Гренаділ"/>
+      <attribute_value id="18452" nameRU="Грецкий орех" nameUK="Волоський горіх"/>
+      <attribute_value id="18453" nameRU="Груша" nameUK="Груша"/>
+      <attribute_value id="18454" nameRU="Дуб" nameUK="Дуб"/>
+      <attribute_value id="18455" nameRU="Дугласия" nameUK="Дугласія"/>
+      <attribute_value id="18456" nameRU="Ель" nameUK="Ялина"/>
+      <attribute_value id="18457" nameRU="Зебрано" nameUK="Зебрано"/>
+      <attribute_value id="18458" nameRU="Индийский палисандр" nameUK="Індійський палісандр"/>
+      <attribute_value id="18459" nameRU="Ипе" nameUK="Іпе"/>
+      <attribute_value id="18460" nameRU="Ироко" nameUK="Іроко"/>
+      <attribute_value id="18461" nameRU="Карельская берёза" nameUK="Карельська береза"/>
+      <attribute_value id="18462" nameRU="Каталокс" nameUK="Каталокс"/>
+      <attribute_value id="18463" nameRU="Квебрахо белое" nameUK="Квебрахо біле"/>
+      <attribute_value id="18464" nameRU="Квебрахо красное" nameUK="Квебрахо червоне"/>
+      <attribute_value id="18465" nameRU="Кедр" nameUK="Кедр"/>
+      <attribute_value id="18466" nameRU="Кедр испанский" nameUK="Кедр іспанський"/>
+      <attribute_value id="18467" nameRU="Клён" nameUK="Клен"/>
+      <attribute_value id="18468" nameRU="Кокоболо" nameUK="Кокоболо"/>
+      <attribute_value id="18469" nameRU="Кумару" nameUK="Кумару"/>
+      <attribute_value id="18470" nameRU="Кумару красный" nameUK="Кумару червоний"/>
+      <attribute_value id="18471" nameRU="Лимба" nameUK="Лімба"/>
+      <attribute_value id="18472" nameRU="Липа" nameUK="Липа"/>
+      <attribute_value id="18473" nameRU="Лиственница" nameUK="Модрина"/>
+      <attribute_value id="18474" nameRU="Масасауба" nameUK="Масасауба"/>
+      <attribute_value id="18475" nameRU="Маскарей" nameUK="Маскарей"/>
+      <attribute_value id="18476" nameRU="Махагони настоящее" nameUK="Махагони даний"/>
+      <attribute_value id="18477" nameRU="Махагони сипо" nameUK="Махагони сіпо"/>
+      <attribute_value id="18478" nameRU="Махагони хая" nameUK="Махагони хая"/>
+      <attribute_value id="18479" nameRU="Мербау" nameUK="Мербау"/>
+      <attribute_value id="18480" nameRU="Морадо" nameUK="Морадо"/>
+      <attribute_value id="18481" nameRU="Ольха" nameUK="Вільха"/>
+      <attribute_value id="18482" nameRU="Осина" nameUK="Осика"/>
+      <attribute_value id="18483" nameRU="Падук" nameUK="Падук"/>
+      <attribute_value id="18484" nameRU="Палисандр" nameUK="Палісандр"/>
+      <attribute_value id="18485" nameRU="Пало санто" nameUK="Пало санто"/>
+      <attribute_value id="18486" nameRU="Пау аммарело" nameUK="Пау аммарело"/>
+      <attribute_value id="18487" nameRU="Пихта" nameUK="Ялиця"/>
+      <attribute_value id="18488" nameRU="Платан" nameUK="Платан"/>
+      <attribute_value id="18489" nameRU="Робиния" nameUK="Робінія"/>
+      <attribute_value id="18490" nameRU="Розовое  дерево" nameUK="Рожеве дерево"/>
+      <attribute_value id="18491" nameRU="Рябина" nameUK="Горобина"/>
+      <attribute_value id="18492" nameRU="Самран" nameUK="Самран"/>
+      <attribute_value id="18493" nameRU="Самшит" nameUK="Самшит"/>
+      <attribute_value id="18494" nameRU="Сандал" nameUK="Сандал"/>
+      <attribute_value id="18495" nameRU="Сандал бразильский" nameUK="Сандал бразильський"/>
+      <attribute_value id="18496" nameRU="Сапо" nameUK="Сапо"/>
+      <attribute_value id="18497" nameRU="Сосна" nameUK="Сосна"/>
+      <attribute_value id="18498" nameRU="Тик" nameUK="Тік"/>
+      <attribute_value id="18499" nameRU="Тис" nameUK="Тіс"/>
+      <attribute_value id="18500" nameRU="Тигровое дерево" nameUK="Тигровое дерево"/>
+      <attribute_value id="18501" nameRU="Умнини" nameUK="Умнини"/>
+      <attribute_value id="18502" nameRU="Цирикоте" nameUK="Цирикоте"/>
+      <attribute_value id="18503" nameRU="Чечем" nameUK="Чечем"/>
+      <attribute_value id="18504" nameRU="Чорная пальма" nameUK="Чорна пальма"/>
+      <attribute_value id="18505" nameRU="Эбеновое дерево" nameUK="Ебенове дерево"/>
+      <attribute_value id="18506" nameRU="Ясень" nameUK="Ясень"/>
+      <attribute_value id="18507" nameRU="Ятоба" nameUK="Ятоба"/>
+      <attribute_value id="81906" nameRU="Массарандуба" nameUK="Массарандуба"/>
+      <attribute_value id="89476" nameRU="Яблоня" nameUK="Яблуня"/>
+      <attribute_value id="89477" nameRU="Черешня" nameUK="Черешня"/>
+      <attribute_value id="89478" nameRU="Слива" nameUK="Зливу"/>
+      <attribute_value id="89479" nameRU="Абрикос" nameUK="Абрикос"/>
+      <attribute_value id="89480" nameRU="Гикори" nameUK="Гікорі"/>
+    </attribute>
+    <attribute id="9973" nameRU="Материал рукоятки" type="singleselect" nameUK="Матеріал рукоятки">
+      <attribute_value id="82648" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="86809" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="86812" nameRU="Пластмасса" nameUK="Пластмаса"/>
+      <attribute_value id="170025" nameRU="Резина/металл" nameUK="Гума/метал"/>
+      <attribute_value id="306589" nameRU="Комбинированный" nameUK="Комбінований"/>
+    </attribute>
+    <attribute id="10255" nameRU="Ширина обработки" type="real" nameUK="Ширина обробки" measureUnitRU="мм" min="0" max="300" measureUnitUK="мм"/>
+    <attribute id="10324" nameRU="Количество зубцов/звездочек в культиваторе" type="integer" nameUK="Кількість зубців/зірочок в культиваторі"/>
+  </category>
+</categories>

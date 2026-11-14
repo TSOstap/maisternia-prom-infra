@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="140307" nameRU="Циркуляционные промышленные насосы" nameUK="Циркуляційні промислові насоси">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="500" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="176" nameRU="Количество скоростей" type="real" nameUK="Кількість швидкостей" measureUnitRU="шт" min="1" max="10" measureUnitUK="шт."/>
+    <attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+      <attribute_value id="7132" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="19913" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="27658" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="39731" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+      <attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+      <attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+    </attribute>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="394" nameRU="Защита от перегрева" type="bool" nameUK="Захист від перегріву"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="2053" nameRU="Напряжение сети" type="multiselect" nameUK="Напруга мережі">
+      <attribute_value id="11945" nameRU="220~240 В" nameUK="220~240 В"/>
+      <attribute_value id="11946" nameRU="380~400 В" nameUK="380~400 В"/>
+      <attribute_value id="35999" nameRU="100~120 В" nameUK="100~120 В"/>
+    </attribute>
+    <attribute id="2054" nameRU="Материал корпуса насоса" type="singleselect" nameUK="Матеріал корпусу насоса">
+      <attribute_value id="11947" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="11948" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="11949" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="11950" nameRU="Силумин" nameUK="Силумін"/>
+    </attribute>
+    <attribute id="2345" nameRU="Максимальная температура" type="integer" nameUK="Максимальна температура" measureUnitRU="град." min="0" max="120" measureUnitUK="град."/>
+    <attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+    <attribute id="3951" nameRU="Тип присоединения" type="singleselect" nameUK="Тип приєднання">
+      <attribute_value id="25765" nameRU="Фланцевое" nameUK="Фланцеве"/>
+      <attribute_value id="25766" nameRU="Муфтовое" nameUK="Муфтове"/>
+      <attribute_value id="25767" nameRU="Штуцерное" nameUK="Штуцерне"/>
+      <attribute_value id="25768" nameRU="Под приварку" nameUK="Під приварення"/>
+    </attribute>
+    <attribute id="4015" nameRU="Пропускная способность" type="real" nameUK="Пропускна здатність" measureUnitRU="куб. м/час" min="0" max="6500" measureUnitUK="куб.м/год"/>
+    <attribute id="4309" nameRU="Класс защиты корпусов электронного оборудования" type="singleselect" nameUK="Клас захисту корпусів електронного устаткування">
+      <attribute_value id="27642" nameRU="IPX4D" nameUK="IPX4D"/>
+      <attribute_value id="27643" nameRU="IPX5D" nameUK="IPX5D"/>
+      <attribute_value id="27644" nameRU="IP20" nameUK="IP20"/>
+      <attribute_value id="27645" nameRU="IP44" nameUK="IP44"/>
+      <attribute_value id="27646" nameRU="IP65" nameUK="IP65"/>
+      <attribute_value id="28458" nameRU="IP40" nameUK="IP40"/>
+      <attribute_value id="39734" nameRU="IP68" nameUK="IP68"/>
+    </attribute>
+    <attribute id="5161" nameRU="Минимальная температура окружающей среды" type="real" nameUK="Мінімальна температура навколишнього середовища" measureUnitRU="град." min="-100" max="10" measureUnitUK="град."/>
+    <attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+    <attribute id="5859" nameRU="Максимальный напор" type="real" nameUK="Максимальний напір" measureUnitRU="м" min="0" max="500" measureUnitUK="м"/>
+    <attribute id="5867" nameRU="Минимальная температура рабочей жидкости" type="real" nameUK="Мінімальна температура робочої рідини" measureUnitRU="град." min="-25" max="30" measureUnitUK="град."/>
+    <attribute id="5868" nameRU="Максимальная температура рабочей жидкости" type="real" nameUK="Максимальна температура робочої рідини" measureUnitRU="град." min="10" max="1000" measureUnitUK="град."/>
+    <attribute id="5870" nameRU="Установка насоса" type="singleselect" nameUK="Встановлення насоса">
+      <attribute_value id="39685" nameRU="Горизонтальная/вертикальная" nameUK="Горизонтальна/вертикальна"/>
+      <attribute_value id="39686" nameRU="Горизонтальная" nameUK="Горизонтальна"/>
+      <attribute_value id="39687" nameRU="Вертикальная" nameUK="Вертикальна"/>
+    </attribute>
+    <attribute id="5871" nameRU="Тип ротора" type="singleselect" nameUK="Тип ротора">
+      <attribute_value id="39711" nameRU="&quot;Мокрый&quot;" nameUK="Мокрий"/>
+      <attribute_value id="39712" nameRU="&quot;Сухой&quot;" nameUK="Сухий"/>
+    </attribute>
+    <attribute id="5872" nameRU="Диаметр разъема соединения" type="real" nameUK="Діаметр роз'єму з'єднання" measureUnitRU="дюйм" min="0" max="25" measureUnitUK="дюйм"/>
+    <attribute id="5875" nameRU="Плавный пуск двигателя" type="bool" nameUK="Плавний пуск двигуна"/>
+    <attribute id="5928" nameRU="Максимальное количество пусков в час" type="integer" nameUK="Максимальна кількість пусків в годину" measureUnitRU="шт" min="0" max="40" measureUnitUK="шт."/>
+    <attribute id="7882" nameRU="Потребляемая мощность (W)" type="real" nameUK="Споживана потужність (W)" measureUnitRU="кВт" min="0" max="100" measureUnitUK="кВт"/>
+    <attribute id="7947" nameRU="Переключение скоростей" type="multiselect" nameUK="Перемикання швидкостей">
+      <attribute_value id="66560" nameRU="Ручное" nameUK="Ручне"/>
+      <attribute_value id="66561" nameRU="Автоматическое" nameUK="Автоматичне"/>
+    </attribute>
+    <attribute id="7948" nameRU="Материал рабочего колеса" type="singleselect" nameUK="Матеріал робочого колеса">
+      <attribute_value id="66562" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="66563" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="66564" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="66565" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="66566" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="66567" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="66568" nameRU="Латунь" nameUK="Латунь"/>
+    </attribute>
+    <attribute id="7951" nameRU="Перекачиваемые среды" type="multiselect" nameUK="Перекачувані середи">
+      <attribute_value id="66582" nameRU="Чистая вода" nameUK="Чиста вода"/>
+      <attribute_value id="66583" nameRU="Техническая вода" nameUK="Технічна вода"/>
+      <attribute_value id="66584" nameRU="Вода с примесями" nameUK="Вода з домішками"/>
+      <attribute_value id="66585" nameRU="Конденсаты" nameUK="Конденсати"/>
+      <attribute_value id="66586" nameRU="Питательная вода" nameUK="Живильна вода"/>
+      <attribute_value id="66587" nameRU="Морская вода" nameUK="Морська вода"/>
+      <attribute_value id="66588" nameRU="Химически активные вещества" nameUK="Хімічно активні речовини"/>
+      <attribute_value id="66589" nameRU="Химически нейтральные вещества" nameUK="Хімічно нейтральні речовини"/>
+      <attribute_value id="66590" nameRU="Нефтепродукты" nameUK="Нафтопродукти"/>
+      <attribute_value id="66591" nameRU="Сжиженые углеводородные газы" nameUK="Зріджені вуглеводневі гази"/>
+      <attribute_value id="66592" nameRU="Спирты" nameUK="Спирти"/>
+      <attribute_value id="66593" nameRU="Канализационные вещества" nameUK="Каналізаційні речовини"/>
+      <attribute_value id="66594" nameRU="Абразивные гидросмеси" nameUK="Абразивні гідросуміші"/>
+      <attribute_value id="66595" nameRU="Токсичные вещества" nameUK="Токсичні речовини"/>
+      <attribute_value id="66596" nameRU="Взрыво-пожаро-опасные вещества" nameUK="Вибухо-пожежо-небезпечні речовини"/>
+      <attribute_value id="66597" nameRU="Легкозастывающие вещества" nameUK="Легкозастигаючі речовини"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="420517" nameRU="Монтажные патроны" nameUK="Монтажні патрони">
+    <attribute id="1559" nameRU="Упаковка" type="singleselect" nameUK="Упаковка">
+      <attribute_value id="45106" nameRU="Пакет" nameUK="Пакет"/>
+      <attribute_value id="45477" nameRU="Пачка" nameUK="Пачка"/>
+      <attribute_value id="70885" nameRU="Коробка" nameUK="Коробка"/>
+      <attribute_value id="70887" nameRU="Полиэтиленовый пакет" nameUK="Поліетиленовий пакет"/>
+      <attribute_value id="71169" nameRU="Мешок" nameUK="Мішок"/>
+      <attribute_value id="88284" nameRU="Ящик" nameUK="Ящик"/>
+      <attribute_value id="91778" nameRU="Цинк" nameUK="Цинк"/>
+    </attribute>
+    <attribute id="3474" nameRU="Количество в упаковке" type="integer" nameUK="Кількість в упаковці" measureUnitRU="шт" min="0" max="5000" measureUnitUK="шт."/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="7646" nameRU="Вес упаковки" type="real" nameUK="Вага упаковки" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+    <attribute id="10364" nameRU="Тип монтажного патрона" type="singleselect" nameUK="Тип монтажного патрону">
+      <attribute_value id="91643" nameRU="Д" nameUK="Д"/>
+      <attribute_value id="91644" nameRU="К" nameUK="До"/>
+      <attribute_value id="91645" nameRU="МПУ" nameUK="МПУ"/>
+    </attribute>
+    <attribute id="10367" nameRU="Энергоотдача" type="real" nameUK="Енерговіддача" measureUnitRU="Дж." min="0" max="5000" measureUnitUK="Дж."/>
+    <attribute id="10369" nameRU="Масса заряда" type="real" nameUK="Маса заряду" measureUnitRU="г" min="0" max="10" measureUnitUK="г"/>
+    <attribute id="10371" nameRU="Давление" type="real" nameUK="Тиск" measureUnitRU="МПа" min="0" max="1000" measureUnitUK="МПа"/>
+    <attribute id="10372" nameRU="Условная мощность" type="singleselect" nameUK="Умовна потужність">
+      <attribute_value id="91673" nameRU="Слабая" nameUK="Слабка"/>
+      <attribute_value id="91674" nameRU="Средняя" nameUK="Середня"/>
+      <attribute_value id="91675" nameRU="Сильная" nameUK="Сильна"/>
+      <attribute_value id="91676" nameRU="Сверхсильная" nameUK="Надсильна"/>
+      <attribute_value id="91677" nameRU="Низкая" nameUK="Низька"/>
+      <attribute_value id="91678" nameRU="Высокая" nameUK="Висока"/>
+    </attribute>
+  </category>
+</categories>

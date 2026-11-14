@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141003" nameRU="Компрессоры винтовые" nameUK="Гвинтові компресори">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="100000" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="115" nameRU="Объем ресивера" type="real" nameUK="Об'єм ресивера" measureUnitRU="л" min="0" max="500" measureUnitUK="л"/>
+    <attribute id="118" nameRU="Регулировка давления" type="bool" nameUK="Регулювання тиску"/>
+    <attribute id="119" nameRU="Система автоматической защиты" type="bool" nameUK="Система автоматичного захисту"/>
+    <attribute id="120" nameRU="Воздушный фильтр" type="bool" nameUK="Повітряний фільтр"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+      <attribute_value id="70839" nameRU="Электрический" nameUK="Електричний"/>
+    </attribute>
+    <attribute id="1900" nameRU="Система охлаждения двигателя" type="singleselect" nameUK="Система охолодження двигуна">
+      <attribute_value id="11954" nameRU="Воздушная" nameUK="Повітряна"/>
+      <attribute_value id="11955" nameRU="Водяная" nameUK="Водяна"/>
+    </attribute>
+    <attribute id="2049" nameRU="Максимальное давление" type="real" nameUK="Максимальний тиск" measureUnitRU="МПа" min="0" max="10000" measureUnitUK="МПа"/>
+    <attribute id="2053" nameRU="Напряжение сети" type="multiselect" nameUK="Напруга мережі">
+      <attribute_value id="11945" nameRU="220~240 В" nameUK="220~240 В"/>
+      <attribute_value id="11946" nameRU="380~400 В" nameUK="380~400 В"/>
+      <attribute_value id="35999" nameRU="100~120 В" nameUK="100~120 В"/>
+    </attribute>
+    <attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+    <attribute id="4817" nameRU="Количество колес" type="integer" nameUK="Кількість коліс" measureUnitRU="шт" min="1" max="10" measureUnitUK="шт."/>
+    <attribute id="5073" nameRU="Производительность" type="real" nameUK="Продуктивність" measureUnitRU="куб. м/мин" min="0" max="50000" measureUnitUK="куб. м/хв"/>
+    <attribute id="5161" nameRU="Минимальная температура окружающей среды" type="real" nameUK="Мінімальна температура навколишнього середовища" measureUnitRU="град." min="-100" max="10" measureUnitUK="град."/>
+    <attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+    <attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+    <attribute id="8015" nameRU="Номинальное давление" type="real" nameUK="Номінальний тиск" measureUnitRU="бар" min="0" max="50" measureUnitUK="бар"/>
+    <attribute id="9484" nameRU="Расход масла" type="real" nameUK="Витрата масла" measureUnitRU="куб. м/час" min="0" max="5" measureUnitUK="куб.м/год"/>
+    <attribute id="9671" nameRU="Расположение ресивера" type="singleselect" nameUK="Розташування ресивера">
+      <attribute_value id="77728" nameRU="Вертикально" nameUK="Вертикально"/>
+      <attribute_value id="77729" nameRU="Горизонтально" nameUK="Горизонтально"/>
+    </attribute>
+    <attribute id="9675" nameRU="Тип компрессора по мобильности" type="singleselect" nameUK="Тип компресора по мобільності">
+      <attribute_value id="77743" nameRU="Передвижной" nameUK="Пересувний"/>
+      <attribute_value id="77744" nameRU="Стационарный" nameUK="Стаціонарний"/>
+    </attribute>
+    <attribute id="9684" nameRU="Тип ротативного компресора" type="singleselect" nameUK="Тип ротативного компресора">
+      <attribute_value id="77778" nameRU="Спиральный" nameUK="Спіральний"/>
+      <attribute_value id="77779" nameRU="Винтовой" nameUK="Гвинтовий"/>
+      <attribute_value id="77780" nameRU="Пластинчастый" nameUK="Пластинчастий"/>
+      <attribute_value id="77781" nameRU="С катящимся ротором" nameUK="З ротором, що котиться"/>
+      <attribute_value id="77782" nameRU="Роторно-поршневой" nameUK="Роторно-поршневий"/>
+    </attribute>
+    <attribute id="9685" nameRU="Тип ротативного компрессора по применению смазки" type="singleselect" nameUK="Тип ротативного компресора за застосуванням мастила">
+      <attribute_value id="77783" nameRU="Масляный" nameUK="Масляний"/>
+      <attribute_value id="77784" nameRU="Безмасляный" nameUK="Безмасляний"/>
+    </attribute>
+    <attribute id="9728" nameRU="Система охлаждения компрессора" type="singleselect" nameUK="Система охолодження компресора">
+      <attribute_value id="78460" nameRU="Водяная" nameUK="Водяна"/>
+      <attribute_value id="78461" nameRU="Воздушная" nameUK="Повітряна"/>
+    </attribute>
+    <attribute id="18151" nameRU="Количество оборотов" type="real" nameUK="Кількість обертів" measureUnitRU="об/мин" min="0" max="12000" measureUnitUK="об/хв"/>
+  </category>
+</categories>

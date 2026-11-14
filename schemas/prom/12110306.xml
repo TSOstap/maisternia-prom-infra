@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="12110306" nameRU="Трансмиссионные стойки" nameUK="Трансмісійні стійки">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="1280" nameRU="Грузоподъемность" type="real" nameUK="Вантажопідйомність" measureUnitRU="кг" min="0" max="20000" measureUnitUK="кг"/>
+    <attribute id="1342" nameRU="Высота подъема" type="real" nameUK="Висота підйому" measureUnitRU="мм" min="0" max="2500" measureUnitUK="мм"/>
+    <attribute id="10234" nameRU="Высота общая" type="real" nameUK="Висота загальна" measureUnitRU="мм" min="0" max="3000" measureUnitUK="мм"/>
+    <attribute id="15669" nameRU="Ширина станины" type="real" nameUK="Ширина станини" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+  </category>
+</categories>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200378" nameRU="Наборы ключей" nameUK="Набори ключів">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="8271" nameRU="Омедненный инструмент" type="bool" nameUK="Оміднений інструмент"/>
+    <attribute id="8498" nameRU="Тип ключа" type="singleselect" nameUK="Тип ключа">
+      <attribute_value id="69360" nameRU="рожково-накидной" nameUK="ріжково-накидний"/>
+      <attribute_value id="69361" nameRU="рожково-разрезной" nameUK="ріжково-розрізний"/>
+      <attribute_value id="69362" nameRU="шарнирно-рожковый" nameUK="шарнірно-ріжковий"/>
+      <attribute_value id="69363" nameRU="шарнирно-накидной" nameUK="шарнірно-накидний"/>
+      <attribute_value id="69364" nameRU="шарнирно-разрезной" nameUK="шарнірно-розрізний"/>
+      <attribute_value id="69365" nameRU="рожковый с трещоткой" nameUK="ріжковий з тріскачкою"/>
+      <attribute_value id="69366" nameRU="накидной с трещоткой" nameUK="накидний з тріскачкою"/>
+      <attribute_value id="69367" nameRU="разрезной с трещоткой" nameUK="розрізної з тріскачкою"/>
+      <attribute_value id="69368" nameRU="шарнирно-торцевой" nameUK="шарнірно-торцевій"/>
+      <attribute_value id="69369" nameRU="рожковый" nameUK="ріжковий"/>
+      <attribute_value id="69409" nameRU="накидной" nameUK="накидний"/>
+      <attribute_value id="69410" nameRU="разрезной" nameUK="розрізної"/>
+      <attribute_value id="69411" nameRU="торцевой" nameUK="торцевий"/>
+      <attribute_value id="69412" nameRU="динамометрический" nameUK="динамометричний"/>
+      <attribute_value id="279486" nameRU="шестигранный" nameUK="шестигранний"/>
+      <attribute_value id="297817" nameRU="балонный" nameUK="балонний"/>
+      <attribute_value id="302210" nameRU="Рожково-накидной с трещеткой" nameUK="Рожково-накидний з тріскачкою"/>
+    </attribute>
+    <attribute id="8502" nameRU="Размер max" type="real" nameUK="Розмір max" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="8503" nameRU="Размер min" type="real" nameUK="Розмір min" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="8511" nameRU="Набор ключей" type="singleselect" nameUK="Набір ключів">
+      <attribute_value id="69398" nameRU="ключи однотипные" nameUK="ключі однотипні"/>
+      <attribute_value id="69399" nameRU="ключи комбинированные" nameUK="ключі комбіновані"/>
+    </attribute>
+    <attribute id="8526" nameRU="Количество ключей в наборе" type="integer" nameUK="Кількість ключів в наборі"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

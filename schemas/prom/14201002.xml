@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201002" nameRU="Ручные ножницы по металлу" nameUK="Ручні ножиці по металу">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="2" measureUnitUK="кг"/>
+    <attribute id="59" nameRU="Тип ножниц по металлу" type="singleselect" nameUK="Тип ножиць по металу">
+      <attribute_value id="7778" nameRU="Прямые" nameUK="Прямі"/>
+      <attribute_value id="7779" nameRU="Фигурные(изогнутые)" nameUK="Фігурні(вигнуті)"/>
+      <attribute_value id="7780" nameRU="Комбинированные" nameUK="Комбіновані"/>
+    </attribute>
+    <attribute id="123" nameRU="Длина инструмента" type="real" nameUK="Довжина інструменту" measureUnitRU="мм" min="0" max="300" measureUnitUK="мм"/>
+    <attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+    <attribute id="424" nameRU="Направленность" type="singleselect" nameUK="Спрямованість">
+      <attribute_value id="7781" nameRU="Правые" nameUK="Праві"/>
+      <attribute_value id="7782" nameRU="Левые" nameUK="Ліві"/>
+      <attribute_value id="278290" nameRU="Прямые" nameUK="Прямі"/>
+      <attribute_value id="360094" nameRU="«Восьмерка»" nameUK="&quot;Вісімка&quot;"/>
+      <attribute_value id="360095" nameRU="X-Y стерео" nameUK="X-Y стерео"/>
+      <attribute_value id="360096" nameRU="Долевые" nameUK="Дольові"/>
+      <attribute_value id="360097" nameRU="Круговая" nameUK="Кругова"/>
+      <attribute_value id="360098" nameRU="Линейно-градиентная" nameUK="Лінійно-градієнтна"/>
+    </attribute>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201514" nameRU="Оснастка для многофункциональных шлифмашин" nameUK="Оснащення для багатофункціональних шліфувальних машин">
+    <attribute id="128" nameRU="Объем" type="real" nameUK="Об`єм" measureUnitRU="г" min="0" max="100" measureUnitUK="г"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8057" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="8058" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="31381" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="73174" nameRU="Полиуретан" nameUK="Поліуретан"/>
+      <attribute_value id="169033" nameRU="Быстрорежущая сталь" nameUK="Швидкорізальна сталь"/>
+      <attribute_value id="169309" nameRU="Абразив" nameUK="Абразив"/>
+      <attribute_value id="172709" nameRU="Биметалл" nameUK="Біметал"/>
+      <attribute_value id="173768" nameRU="Твердосплавная сталь" nameUK="Твердосплавна сталь"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="166805" nameRU="Фреза" nameUK="Фреза"/>
+      <attribute_value id="168923" nameRU="Шлифовальная бумага" nameUK="Шліфувальний папір"/>
+      <attribute_value id="172592" nameRU="Бита" nameUK="Біта"/>
+      <attribute_value id="172593" nameRU="Держатель" nameUK="Тримач"/>
+      <attribute_value id="173771" nameRU="Диск пильный" nameUK="Диск пиляльний"/>
+      <attribute_value id="173772" nameRU="Насадка пильная сегментированная" nameUK="Насадка пиляльна сегментована"/>
+      <attribute_value id="173773" nameRU="Насадка пильная" nameUK="Насадка пиляльна"/>
+      <attribute_value id="173774" nameRU="Полотно пильное полукруглое" nameUK="Полотно пильне напівкругле"/>
+      <attribute_value id="173775" nameRU="Полотно пильное универсальное" nameUK="Полотно пильне універсальне"/>
+      <attribute_value id="173776" nameRU="Полотно пильное погружное" nameUK="Полотно занурювальне пиляльне"/>
+      <attribute_value id="173777" nameRU="Подошва шлифовальная эксцентриковая" nameUK="Підошва шліфувальна ексцентрикова"/>
+      <attribute_value id="173778" nameRU="Подошва шлифовальная дельтовидная" nameUK="Підошва шліфувальна дельтовідна"/>
+      <attribute_value id="173779" nameRU="Пластина шлифовальная" nameUK="Пластина шліфувальна"/>
+      <attribute_value id="173780" nameRU="Насадка шлифовальная" nameUK="Насадка шліфувальна"/>
+      <attribute_value id="173781" nameRU="Адаптер/Переходник" nameUK="Адаптер/Перехідник"/>
+      <attribute_value id="173782" nameRU="Шабер жесткий" nameUK="Шабер жорсткий"/>
+      <attribute_value id="173783" nameRU="Шабер гибкий" nameUK="Шабер гнучкий"/>
+      <attribute_value id="173784" nameRU="Рашпиль" nameUK="Рашпіль"/>
+      <attribute_value id="173785" nameRU="Вставка" nameUK="Вставка"/>
+      <attribute_value id="300842" nameRU="Подошва шлифовальная роторная" nameUK="Підошва шліфувальна роторна"/>
+      <attribute_value id="300846" nameRU="Проставка" nameUK="Проставка"/>
+    </attribute>
+    <attribute id="4245" nameRU="Толщина" type="real" nameUK="Товщина" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="15368" nameRU="Обработка материала" type="multiselect" nameUK="Обробка матеріалу">
+      <attribute_value id="166810" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="166811" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="166812" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="166813" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="166814" nameRU="Закаленная сталь" nameUK="Загартована сталь"/>
+      <attribute_value id="166815" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="166816" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="166817" nameRU="Графит" nameUK="Графіт"/>
+      <attribute_value id="166847" nameRU="Камень" nameUK="Камінь"/>
+      <attribute_value id="166848" nameRU="Бетон" nameUK="Бетон"/>
+      <attribute_value id="166851" nameRU="Плитка" nameUK="Плитка"/>
+      <attribute_value id="166852" nameRU="Гранит" nameUK="Граніт"/>
+      <attribute_value id="166853" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="166854" nameRU="Кирпич" nameUK="Цегла"/>
+      <attribute_value id="166855" nameRU="Абразив" nameUK="Абразив"/>
+      <attribute_value id="168098" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="168099" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="168100" nameRU="Хром" nameUK="Хром"/>
+      <attribute_value id="168101" nameRU="Серебро" nameUK="Срібло"/>
+      <attribute_value id="168102" nameRU="Лак" nameUK="Лак"/>
+      <attribute_value id="168103" nameRU="Гипс" nameUK="Гіпс"/>
+      <attribute_value id="168120" nameRU="Асбест" nameUK="Азбест"/>
+      <attribute_value id="168121" nameRU="Шифер" nameUK="Шифер"/>
+      <attribute_value id="173942" nameRU="Гипсокартон" nameUK="Гіпсокартон"/>
+      <attribute_value id="173943" nameRU="Мягкий пластик" nameUK="М'який пластик"/>
+      <attribute_value id="173944" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="173945" nameRU="Металлический профиль" nameUK="Металевий профіль"/>
+      <attribute_value id="173946" nameRU="Цветной металл" nameUK="Кольоровий метал"/>
+      <attribute_value id="173947" nameRU="Ламинат" nameUK="Ламінат"/>
+      <attribute_value id="173948" nameRU="Краска" nameUK="Фарба"/>
+      <attribute_value id="173949" nameRU="Клей" nameUK="Клей"/>
+      <attribute_value id="173950" nameRU="Плиточный клей" nameUK="Плитковий клей"/>
+      <attribute_value id="173951" nameRU="Штукатурные смеси" nameUK="Штукатурні суміші"/>
+      <attribute_value id="173952" nameRU="Керамическая плитка" nameUK="Керамічна плитка"/>
+      <attribute_value id="173953" nameRU="Пенобетон" nameUK="Пінобетон"/>
+      <attribute_value id="173954" nameRU="Газобетон" nameUK="Газобетон"/>
+      <attribute_value id="173955" nameRU="Железобетон" nameUK="Залізобетон"/>
+      <attribute_value id="173956" nameRU="Фанера" nameUK="Фанера"/>
+      <attribute_value id="173957" nameRU="Керамогранит" nameUK="Керамограніт"/>
+      <attribute_value id="173958" nameRU="Стекловолокно" nameUK="Скловолокно"/>
+    </attribute>
+    <attribute id="15898" nameRU="Применение оснастки" type="multiselect" nameUK="Застосування оснастки">
+      <attribute_value id="173931" nameRU="Резка" nameUK="Різання"/>
+      <attribute_value id="173932" nameRU="Пиление" nameUK="Пиляння"/>
+      <attribute_value id="173933" nameRU="Фрезерование" nameUK="Фрезерування"/>
+      <attribute_value id="173934" nameRU="Тонкое шлифование" nameUK="Тонке шліфування"/>
+      <attribute_value id="173935" nameRU="Грубое шлифование" nameUK="Грубе шліфування"/>
+      <attribute_value id="173936" nameRU="Шлифование" nameUK="Шліфування"/>
+      <attribute_value id="173937" nameRU="Полирование" nameUK="Полірування"/>
+      <attribute_value id="173938" nameRU="Зачистка/Чистка" nameUK="Зачистка/Чищення"/>
+      <attribute_value id="173939" nameRU="Закручивание/Откручивание" nameUK="Закручування/Відкручування"/>
+      <attribute_value id="173940" nameRU="Обработка углов" nameUK="Обробка кутів"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201401" nameRU="Строгальные ножи" nameUK="Строгальні ножі">
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="169033" nameRU="Быстрорежущая сталь" nameUK="Швидкорізальна сталь"/>
+      <attribute_value id="172618" nameRU="Инструментальная сталь" nameUK="Інструментальна сталь"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="172616" nameRU="Строгальный нож" nameUK="Стругальний ніж"/>
+      <attribute_value id="172617" nameRU="Бланкет" nameUK="Бланкет"/>
+    </attribute>
+    <attribute id="4245" nameRU="Толщина" type="real" nameUK="Товщина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="15780" nameRU="Твердосплавная напайка" type="bool" nameUK="Твердосплавна напайка"/>
+  </category>
+</categories>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="140310" nameRU="Бочковые насосы" nameUK="Бочкові насоси">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="1000" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="Вт" min="0" max="10000" measureUnitUK="Вт"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+    <attribute id="5073" nameRU="Производительность" type="real" nameUK="Продуктивність" measureUnitRU="литр/мин" min="0" max="5000" measureUnitUK="літр/хв"/>
+    <attribute id="5161" nameRU="Минимальная температура окружающей среды" type="real" nameUK="Мінімальна температура навколишнього середовища" measureUnitRU="град." min="-100" max="10" measureUnitUK="град."/>
+    <attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+    <attribute id="5867" nameRU="Минимальная температура рабочей жидкости" type="real" nameUK="Мінімальна температура робочої рідини" measureUnitRU="град." min="-25" max="30" measureUnitUK="град."/>
+    <attribute id="5868" nameRU="Максимальная температура рабочей жидкости" type="real" nameUK="Максимальна температура робочої рідини" measureUnitRU="град." min="10" max="150" measureUnitUK="град."/>
+    <attribute id="6212" nameRU="Напряжение питания" type="multiselect" nameUK="Напруга живлення">
+      <attribute_value id="42681" nameRU="220 В" nameUK="220 В"/>
+      <attribute_value id="42682" nameRU="380 В" nameUK="380 В"/>
+      <attribute_value id="125714" nameRU="12 В" nameUK="12 В"/>
+      <attribute_value id="125715" nameRU="24 В" nameUK="24 В"/>
+      <attribute_value id="200655" nameRU="36 В" nameUK="36 В"/>
+      <attribute_value id="253501" nameRU="42В" nameUK="42В"/>
+    </attribute>
+    <attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+    <attribute id="8055" nameRU="Максимальная кинематическая вязкость рабочей жидкости" type="real" nameUK="Максимальна кінематична в'язкість робочої рідини" measureUnitRU="кв. мм/с" min="0" max="5000" measureUnitUK="кв. мм/с"/>
+    <attribute id="8056" nameRU="Минимальная кинематическая вязкость рабочей жидкости" type="real" nameUK="Мінімальна кінематична в'язкість робочої рідини" measureUnitRU="кв. мм/с" min="0" max="5000" measureUnitUK="кв. мм/с"/>
+    <attribute id="8197" nameRU="Диаметр погружной части насоса" type="real" nameUK="Діаметр занурювальної частині насоса" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="8198" nameRU="Дополнительная функция бочкового насоса" type="multiselect" nameUK="Додаткова функція бочкового насосу">
+      <attribute_value id="67578" nameRU="Полное опорожнение" nameUK="Повне спорожнення"/>
+      <attribute_value id="67579" nameRU="Перемешивание" nameUK="Перемішування"/>
+    </attribute>
+    <attribute id="8199" nameRU="Материал бочкового насоса" type="singleselect" nameUK="Матеріал бочкового насоса">
+      <attribute_value id="67580" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+      <attribute_value id="67581" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="67582" nameRU="Алюминиевые сплавы" nameUK="Алюмінієві сплави"/>
+      <attribute_value id="67583" nameRU="Хастеллой" nameUK="Хастеллой"/>
+      <attribute_value id="67584" nameRU="Поливинилденфторид" nameUK="Полівінілденфторід"/>
+    </attribute>
+    <attribute id="8200" nameRU="Тип рабочего колеса бочкового насоса" type="singleselect" nameUK="Тип робочого колеса бочкового насосу">
+      <attribute_value id="67585" nameRU="Аксиальный" nameUK="Аксіальний"/>
+      <attribute_value id="67586" nameRU="Радиальный" nameUK="Радіальний"/>
+    </attribute>
+    <attribute id="8201" nameRU="Тип уплотнения бочкового насоса" type="singleselect" nameUK="Тип ущільнення бочкового насосу">
+      <attribute_value id="67587" nameRU="Торцовое механическое уплотнение" nameUK="Механічне ущільнення торцеве"/>
+      <attribute_value id="67588" nameRU="Без уплотнения" nameUK="Без ущільнення"/>
+    </attribute>
+    <attribute id="8202" nameRU="Тип привода бочкового насоса" type="multiselect" nameUK="Тип приводу бочкового насосу">
+      <attribute_value id="67589" nameRU="Электрический" nameUK="Електричний"/>
+      <attribute_value id="67590" nameRU="Пневматический" nameUK="Пневматичний"/>
+      <attribute_value id="67591" nameRU="Ручной" nameUK="Ручний"/>
+    </attribute>
+    <attribute id="8203" nameRU="Максимальная высота забора" type="real" nameUK="Максимальна висота огорожі" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+  </category>
+</categories>

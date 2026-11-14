@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="638" nameRU="Кофеварки и кофемашины" nameUK="Кавоварки та кавомашини">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="10000" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+    <attribute id="46" nameRU="Тип управления" type="singleselect" nameUK="Тип управління">
+      <attribute_value id="6923" nameRU="Механическое" nameUK="Механічне"/>
+      <attribute_value id="6924" nameRU="Сенсорное" nameUK="Сенсорне"/>
+      <attribute_value id="6925" nameRU="Электронное" nameUK="Електронне"/>
+      <attribute_value id="7030" nameRU="Тактовое" nameUK="Тактовое"/>
+    </attribute>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="128" nameRU="Объем" type="real" nameUK="Об`єм" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="149" nameRU="Глубина" type="real" nameUK="Глибина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+      <attribute_value id="7068" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="7069" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="7070" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="7071" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="7072" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="7075" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="7076" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="7077" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7078" nameRU="Антрацит" nameUK="Антрацит"/>
+      <attribute_value id="7079" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="7080" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="7081" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="7082" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="7083" nameRU="Медный" nameUK="Мідний"/>
+      <attribute_value id="7084" nameRU="Слоновая кость" nameUK="Слонова кістка"/>
+      <attribute_value id="7085" nameRU="Фисташковый" nameUK="Фісташковий"/>
+      <attribute_value id="7086" nameRU="Кремовый" nameUK="Кремовий"/>
+      <attribute_value id="7087" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="7088" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="7089" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="7090" nameRU="Малиновый" nameUK="Малиновий"/>
+      <attribute_value id="7091" nameRU="Сиреневый" nameUK="Бузковий"/>
+      <attribute_value id="7092" nameRU="Персиковый" nameUK="Персиковий"/>
+      <attribute_value id="7093" nameRU="Серебряный" nameUK="Срібний"/>
+      <attribute_value id="7094" nameRU="Другой" nameUK="Інший"/>
+      <attribute_value id="43982" nameRU="Светло-серый" nameUK="Світло-сірий"/>
+      <attribute_value id="44231" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="83208" nameRU="Прозрачный" nameUK="Прозорий"/>
+      <attribute_value id="102939" nameRU="Металлик" nameUK="Металік"/>
+      <attribute_value id="102940" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="102941" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="102942" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="272408" nameRU="Золотистый" nameUK="Золотистий"/>
+    </attribute>
+    <attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+      <attribute_value id="7132" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+      <attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+      <attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+    </attribute>
+    <attribute id="190" nameRU="Длина сетевого шнура" type="real" nameUK="Довжина мережевого шнура" measureUnitRU="м" min="0" max="10" measureUnitUK="м"/>
+    <attribute id="191" nameRU="Отсек для шнура" type="bool" nameUK="Відсік для шнура"/>
+    <attribute id="305" nameRU="Тип кофеварки" type="singleselect" nameUK="Тип кавоварки">
+      <attribute_value id="7576" nameRU="Капельная" nameUK="Крапельна"/>
+      <attribute_value id="7577" nameRU="Эспрессо" nameUK="Еспресо"/>
+      <attribute_value id="7578" nameRU="Гейзерная" nameUK="Гейзерна"/>
+      <attribute_value id="7579" nameRU="Комбинированная" nameUK="Комбінована"/>
+      <attribute_value id="7580" nameRU="Кофе &quot;по-турецки&quot;" nameUK="Кава &quot;по-турецьки&quot;"/>
+      <attribute_value id="216005" nameRU="Электротурка" nameUK="Електротурка"/>
+      <attribute_value id="279931" nameRU="Рожковая" nameUK="Ріжкова"/>
+      <attribute_value id="285754" nameRU="Капсульная" nameUK="Капсульна"/>
+    </attribute>
+    <attribute id="306" nameRU="Давление помпы" type="real" nameUK="Тиск помпи" measureUnitRU="бар" min="0" max="20" measureUnitUK="бар"/>
+    <attribute id="307" nameRU="Фильтр" type="multiselect" nameUK="Фільтр">
+      <attribute_value id="7581" nameRU="одноразовый" nameUK="одноразовий"/>
+      <attribute_value id="7582" nameRU="постоянный" nameUK="постійний"/>
+    </attribute>
+    <attribute id="308" nameRU="Контроль крепости кофе" type="bool" nameUK="Контроль міцності кави"/>
+    <attribute id="309" nameRU="Манометр" type="bool" nameUK="Манометр"/>
+    <attribute id="310" nameRU="Тип используемого кофе" type="multiselect" nameUK="Тип використовуваної кави">
+      <attribute_value id="7583" nameRU="Молотый" nameUK="Мелений"/>
+      <attribute_value id="7584" nameRU="Зерна" nameUK="Зерна"/>
+      <attribute_value id="7585" nameRU="Чалды" nameUK="Чалди"/>
+      <attribute_value id="7586" nameRU="Капсулы" nameUK="Капсули"/>
+    </attribute>
+    <attribute id="311" nameRU="Регулировка температуры кофе" type="bool" nameUK="Регулювання температури кави"/>
+    <attribute id="313" nameRU="Противокапельная система" type="bool" nameUK="Протикраплинна система"/>
+    <attribute id="314" nameRU="Способ приготовления эспрессо" type="singleselect" nameUK="Спосіб приготування еспрессо">
+      <attribute_value id="7587" nameRU="автоматический" nameUK="автоматичний"/>
+      <attribute_value id="7588" nameRU="полуавтоматический" nameUK="напівавтоматичний"/>
+    </attribute>
+    <attribute id="315" nameRU="Количество групп" type="singleselect" nameUK="Кількість груп">
+      <attribute_value id="7589" nameRU="1" nameUK="1"/>
+      <attribute_value id="7590" nameRU="2" nameUK="2"/>
+      <attribute_value id="7591" nameRU="3" nameUK="3"/>
+      <attribute_value id="7592" nameRU="4" nameUK="4"/>
+    </attribute>
+    <attribute id="316" nameRU="Материал рожка" type="singleselect" nameUK="Матеріал ріжка">
+      <attribute_value id="7593" nameRU="пластик" nameUK="пластик"/>
+      <attribute_value id="7594" nameRU="металл" nameUK="метал"/>
+    </attribute>
+    <attribute id="317" nameRU="Капуччинатор" type="bool" nameUK="Капучинатор"/>
+    <attribute id="318" nameRU="Способ приготовления капуччино" type="multiselect" nameUK="Спосіб приготування капуччино">
+      <attribute_value id="7595" nameRU="автоматический" nameUK="автоматичний"/>
+      <attribute_value id="7596" nameRU="ручной" nameUK="ручний"/>
+    </attribute>
+    <attribute id="319" nameRU="Таймер" type="bool" nameUK="Таймер"/>
+    <attribute id="320" nameRU="Встроенная кофемолка" type="bool" nameUK="Вбудована кофемолка"/>
+    <attribute id="321" nameRU="Регулировка степени помола" type="bool" nameUK="Регулювання ступеня помолу"/>
+    <attribute id="322" nameRU="Быстрый пар" type="bool" nameUK="Швидкий пар"/>
+    <attribute id="323" nameRU="Возможность подключения к водопроводу" type="bool" nameUK="Можливість підключення до водопроводу"/>
+    <attribute id="324" nameRU="Объем контейнера для зерен" type="real" nameUK="Об'єм контейнера для зерен" measureUnitRU="г" min="0" max="5000" measureUnitUK="г"/>
+    <attribute id="325" nameRU="Функция автоотключения" type="bool" nameUK="Функція автовідключення"/>
+    <attribute id="326" nameRU="Индикатор уровня воды" type="bool" nameUK="Індикатор рівня води"/>
+    <attribute id="327" nameRU="Индикатор работы" type="bool" nameUK="Індикатор роботи"/>
+    <attribute id="328" nameRU="Плита автоподогрева" type="bool" nameUK="Плита автопідігріва"/>
+    <attribute id="329" nameRU="Подогрев чашек" type="bool" nameUK="Підігрів чашок"/>
+    <attribute id="330" nameRU="Одновременное приготовление двух чашек" type="bool" nameUK="Одночасне приготування двох чашок"/>
+    <attribute id="332" nameRU="Съемный лоток для сбора капель" type="bool" nameUK="Знімний лоток для збору крапель"/>
+    <attribute id="333" nameRU="Автоматическая очистка от накипи" type="bool" nameUK="Автоматичне очищення від накипу"/>
+    <attribute id="335" nameRU="Дисплей" type="bool" nameUK="Дисплей"/>
+    <attribute id="336" nameRU="Подсветка дисплея" type="bool" nameUK="Підсвічування дисплея"/>
+    <attribute id="337" nameRU="Тип нагревателя" type="singleselect" nameUK="Тип нагрівача">
+      <attribute_value id="7597" nameRU="бойлер" nameUK="бойлер"/>
+      <attribute_value id="7598" nameRU="термоблок" nameUK="термоблок"/>
+    </attribute>
+    <attribute id="338" nameRU="Подача горячей воды" type="bool" nameUK="Подача гарячої води"/>
+    <attribute id="339" nameRU="Регулировка жесткости воды" type="bool" nameUK="Регулювання жорсткості води"/>
+    <attribute id="341" nameRU="Контейнер для отходов" type="bool" nameUK="Контейнер для відходів"/>
+    <attribute id="342" nameRU="Материал кофейника" type="singleselect" nameUK="Матеріал кавника">
+      <attribute_value id="7599" nameRU="стекло" nameUK="скло"/>
+      <attribute_value id="7600" nameRU="металл" nameUK="метал"/>
+      <attribute_value id="7601" nameRU="пластик" nameUK="пластик"/>
+    </attribute>
+    <attribute id="3253" nameRU="USB-интерфейс" type="bool" nameUK="USB-інтерфейс"/>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="158772" nameRU="Профессиональное" nameUK="Професійне"/>
+      <attribute_value id="170151" nameRU="Бытовое" nameUK="Побутове"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11171" nameRU="Другие функции и особенности" type="multiselect" nameUK="Інші функції і особливості">
+      <attribute_value id="331447" nameRU="Капучинатор " nameUK="Капучинатор"/>
+      <attribute_value id="331448" nameRU="Контроль крепости кофе" nameUK="Контроль міцності кави"/>
+      <attribute_value id="331449" nameRU="Индикатор работы" nameUK="Індикатор роботи  "/>
+      <attribute_value id="331450" nameRU="Регулировка температуры кофе" nameUK="Регулювання температури кави"/>
+      <attribute_value id="331451" nameRU="Индикатор уровня воды" nameUK="Індикатор рівня води"/>
+      <attribute_value id="331452" nameRU="Противокрапельная система" nameUK="Протикрапельна система"/>
+      <attribute_value id="331453" nameRU="Регулирование степени помола" nameUK="Регулювання ступеня помелу"/>
+      <attribute_value id="331454" nameRU="Подача пара" nameUK="Подача пари"/>
+      <attribute_value id="331455" nameRU="Автовыключение" nameUK="Автовимкнення"/>
+      <attribute_value id="331456" nameRU="Подача горячей воды" nameUK="Подача гарячої води"/>
+      <attribute_value id="331457" nameRU="Одновременное приготовление двух чашек" nameUK="Одночасне приготування двох чашок "/>
+      <attribute_value id="331458" nameRU="Автоматическая очистка от накипи" nameUK="Автоматичне очищення від накипу"/>
+      <attribute_value id="331459" nameRU="Подогрев чашек" nameUK="Підігрів чашок"/>
+      <attribute_value id="331460" nameRU="Дисплей" nameUK="Дисплей"/>
+      <attribute_value id="331461" nameRU="Блокировка от детей" nameUK="Блокування від дітей"/>
+      <attribute_value id="331462" nameRU="Энергосберегающий режим" nameUK="Енергоощадний режим"/>
+      <attribute_value id="331463" nameRU="Счетчик порций" nameUK="Лічильник порцій"/>
+      <attribute_value id="331464" nameRU="Регулируемая высота дозатора / подставки" nameUK="Регульована висота дозатора / підставки"/>
+      <attribute_value id="331465" nameRU="Таймер " nameUK="Таймер "/>
+    </attribute>
+    <attribute id="11725" nameRU="Сфера использования" type="multiselect" nameUK="Сфера використання">
+      <attribute_value id="114785" nameRU="HoReCa" nameUK="HoReCa"/>
+      <attribute_value id="114786" nameRU="Fast-food" nameUK="Fast-food"/>
+      <attribute_value id="114787" nameRU="Уличная торговля" nameUK="Вулична торгівля"/>
+      <attribute_value id="114788" nameRU="Торговые магазины" nameUK="Торгові магазини"/>
+      <attribute_value id="346196" nameRU="Бытовая" nameUK=""/>
+    </attribute>
+    <attribute id="11826" nameRU="Тип профессиональной кофемашины" type="singleselect" nameUK="Тип професійної кавомашини">
+      <attribute_value id="116006" nameRU="Традиционная" nameUK="Традиційна"/>
+      <attribute_value id="116007" nameRU="Автоматическая" nameUK="Автоматична"/>
+      <attribute_value id="116008" nameRU="Полуавтоматическая" nameUK="Напівавтоматична"/>
+    </attribute>
+    <attribute id="11834" nameRU="Интегрированная система учета (Шеф карта)" type="bool" nameUK="Інтегрована система обліку (Шеф карта)"/>
+    <attribute id="11853" nameRU="Вместимость контейнера для отходов" type="real" nameUK="Місткість контейнера для відходів" measureUnitRU="порц." min="0" max="200" measureUnitUK="порц."/>
+    <attribute id="12812" nameRU="Номинальное напряжение" type="singleselect" nameUK="Номінальна напруга">
+      <attribute_value id="127925" nameRU="220 В" nameUK="220 В"/>
+      <attribute_value id="127926" nameRU="380 В" nameUK="380 В"/>
+    </attribute>
+    <attribute id="12860" nameRU="Встраиваемая техника" type="singleselect" nameUK="Вбудована техніка">
+      <attribute_value id="128220" nameRU="Да" nameUK="Так"/>
+      <attribute_value id="128221" nameRU="Нет" nameUK="НІ"/>
+    </attribute>
+    <attribute id="19040" nameRU="Приготовление молочных напитков" type="singleselect" nameUK="Приготування молочних напоїв">
+      <attribute_value id="331442" nameRU="Автоматическое" nameUK="Автоматичне"/>
+      <attribute_value id="331443" nameRU="Ручное (панарелло)" nameUK="Ручне (панарелло)"/>
+      <attribute_value id="331444" nameRU="Отсутствует" nameUK="Відсутнє"/>
+    </attribute>
+  </category>
+</categories>

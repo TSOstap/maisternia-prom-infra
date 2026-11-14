@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13241405" nameRU="Запчасти и аксессуары для насосов" nameUK="Запчастини та аксесуари для насосів">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="732" nameRU="Рабочий диапазон" type="real" nameUK="Робочий діапазон" measureUnitRU="бар" min="0" max="500" measureUnitUK="бар"/>
+    <attribute id="1493" nameRU="Частота" type="real" nameUK="Частота" measureUnitRU="GHz" min="0" max="300" measureUnitUK="GHz"/>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="380" measureUnitUK="В"/>
+    <attribute id="4309" nameRU="Класс защиты корпусов электронного оборудования" type="singleselect" nameUK="Клас захисту корпусів електронного устаткування">
+      <attribute_value id="27642" nameRU="IPX4D" nameUK="IPX4D"/>
+      <attribute_value id="27643" nameRU="IPX5D" nameUK="IPX5D"/>
+      <attribute_value id="27644" nameRU="IP20" nameUK="IP20"/>
+      <attribute_value id="27645" nameRU="IP44" nameUK="IP44"/>
+      <attribute_value id="27646" nameRU="IP65" nameUK="IP65"/>
+      <attribute_value id="28458" nameRU="IP40" nameUK="IP40"/>
+      <attribute_value id="39734" nameRU="IP68" nameUK="IP68"/>
+      <attribute_value id="230795" nameRU="IPХ4" nameUK="ІРХ4"/>
+      <attribute_value id="230796" nameRU="IP24" nameUK="IP24"/>
+      <attribute_value id="234126" nameRU="IP54" nameUK="IP54"/>
+      <attribute_value id="248450" nameRU="IP47" nameUK="IP47"/>
+      <attribute_value id="248451" nameRU=" IPX24" nameUK="IPX24"/>
+      <attribute_value id="248452" nameRU="IP67 " nameUK="IP67"/>
+      <attribute_value id="248453" nameRU="IP21" nameUK="IP21"/>
+      <attribute_value id="248454" nameRU="IP52" nameUK="IP52"/>
+      <attribute_value id="248455" nameRU="IP56" nameUK="IP56"/>
+      <attribute_value id="248456" nameRU="IP66" nameUK="IP66"/>
+    </attribute>
+    <attribute id="5409" nameRU="Максимальная мощность" type="real" nameUK="Максимальна потужність" measureUnitRU="Вт" min="0" max="22000" measureUnitUK="Вт"/>
+    <attribute id="8916" nameRU="Внешний диаметр" type="real" nameUK="Зовнішній діаметр" measureUnitRU="мм" min="0" max="50" measureUnitUK="мм"/>
+    <attribute id="11250" nameRU="Тип запчасти" type="singleselect" nameUK="Тип запчастини">
+      <attribute_value id="218154" nameRU="Фильтр" nameUK="Фільтр"/>
+      <attribute_value id="277860" nameRU="Шланг" nameUK="Шланг"/>
+      <attribute_value id="282240" nameRU="Выключатель поплавковый" nameUK="Поплавковий вимикач"/>
+      <attribute_value id="282447" nameRU="Клапан обратный" nameUK="Клапан зворотний"/>
+      <attribute_value id="296805" nameRU="Фланец" nameUK="Фланець"/>
+      <attribute_value id="296806" nameRU="Мембрана" nameUK="Мембрана"/>
+      <attribute_value id="296807" nameRU="Реле" nameUK="Реле"/>
+      <attribute_value id="297728" nameRU="Контроллер давления " nameUK="Контролер тиску"/>
+      <attribute_value id="300884" nameRU="Ремкомплект" nameUK="Ремкомплект"/>
+      <attribute_value id="301459" nameRU="Трос" nameUK="Трос"/>
+      <attribute_value id="301601" nameRU="Манометр" nameUK="Манометр"/>
+      <attribute_value id="301602" nameRU="Соединитель" nameUK="З'єднувач"/>
+      <attribute_value id="310330" nameRU="Шнек" nameUK="Шнек"/>
+    </attribute>
+    <attribute id="18477" nameRU="Степень защиты, IP" type="multiselect" nameUK="Ступінь захисту, IP">
+      <attribute_value id="273247" nameRU="IP54" nameUK="IP54"/>
+      <attribute_value id="273248" nameRU="IP65" nameUK="IP65"/>
+      <attribute_value id="273701" nameRU="IP30" nameUK="IP30"/>
+    </attribute>
+  </category>
+</categories>

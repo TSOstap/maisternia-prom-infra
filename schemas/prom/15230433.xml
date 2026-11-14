@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="15230433" nameRU="Точилки для ножей" nameUK="Точила для ножів">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="10000" measureUnitUK="г"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="8807" nameRU="Батарейки" nameUK="Батарейки"/>
+      <attribute_value id="332654" nameRU="Сеть" nameUK="Мережа"/>
+    </attribute>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8058" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="33399" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="74169" nameRU="Комбинированный" nameUK="Комбінований"/>
+      <attribute_value id="111571" nameRU="ABS-пластик" nameUK="ABS-пластик"/>
+      <attribute_value id="168894" nameRU="Корунд" nameUK="Корунд"/>
+      <attribute_value id="169309" nameRU="Абразив" nameUK="Абразив"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="93776" nameRU="Мусат" nameUK="Мусат"/>
+      <attribute_value id="93777" nameRU="Точилка механическая" nameUK="Точилка механічна"/>
+      <attribute_value id="93778" nameRU="Точилка электрическая" nameUK="Точилка електрична"/>
+      <attribute_value id="93779" nameRU="Точильный камень" nameUK="Точильний камінь"/>
+      <attribute_value id="93780" nameRU="Набор точильных инструментов" nameUK="Набір інструментів точильних"/>
+      <attribute_value id="135000" nameRU="Запасная лента для точилки" nameUK="Запасна стрічка для стругачки"/>
+      <attribute_value id="135001" nameRU="Ластик" nameUK="Ластик"/>
+      <attribute_value id="172593" nameRU="Держатель" nameUK="Тримач"/>
+      <attribute_value id="188670" nameRU="Кронштейн" nameUK="Кронштейн"/>
+      <attribute_value id="303541" nameRU="Паста полировочная" nameUK="Паста полірувальна"/>
+      <attribute_value id="305498" nameRU="Стропа" nameUK="Стропа"/>
+    </attribute>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="234476" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="62747" nameRU="Универсальное" nameUK="Універсальне"/>
+      <attribute_value id="300991" nameRU="Для ножей " nameUK="Для ножів"/>
+      <attribute_value id="300992" nameRU="Для ножниц" nameUK="Для ножиць"/>
+      <attribute_value id="301026" nameRU="Для ножей и ножниц" nameUK="Для ножів та ножиць"/>
+    </attribute>
+    <attribute id="9973" nameRU="Материал рукоятки" type="singleselect" nameUK="Матеріал рукоятки">
+      <attribute_value id="82648" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="82649" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="82650" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="140018" nameRU="Углеродистая сталь" nameUK="Вуглецева сталь"/>
+      <attribute_value id="159944" nameRU="G10" nameUK="G10"/>
+      <attribute_value id="218386" nameRU="Микарта" nameUK="Микарта"/>
+      <attribute_value id="281459" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+      <attribute_value id="285724" nameRU="Пакка" nameUK="Пакка"/>
+      <attribute_value id="328383" nameRU="Стеклотекстолит" nameUK="Склотекстоліт"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10208" nameRU="Материал стержня" type="singleselect" nameUK="Матеріал стрижня">
+      <attribute_value id="306988" nameRU="Алмазный" nameUK="Алмазний"/>
+      <attribute_value id="307487" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="328384" nameRU="Высокоуглеродистая сталь" nameUK="Високовуглецева сталь"/>
+    </attribute>
+    <attribute id="13414" nameRU="Размещение" type="singleselect" nameUK="Розміщення">
+      <attribute_value id="135944" nameRU="Настольное" nameUK="Настільне"/>
+      <attribute_value id="351429" nameRU="Ручное" nameUK="Ручне"/>
+    </attribute>
+  </category>
+</categories>

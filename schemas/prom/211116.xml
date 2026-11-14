@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="211116" nameRU="Канцелярские ножи и ножницы" nameUK="Канцелярські ножі і ножиці ">
+    <attribute id="238" nameRU="Прорезиненная ручка" type="bool" nameUK="Прогумована ручка"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="1559" nameRU="Упаковка" type="singleselect" nameUK="Упаковка">
+      <attribute_value id="45475" nameRU="Блистер" nameUK="Блістер"/>
+      <attribute_value id="70887" nameRU="Полиэтиленовый пакет" nameUK="Поліетиленовий пакет"/>
+      <attribute_value id="123569" nameRU="Без упаковки" nameUK="Без упаковки"/>
+      <attribute_value id="139291" nameRU="Картонная" nameUK="Картонна"/>
+      <attribute_value id="276447" nameRU="Футляр" nameUK="Футляр"/>
+    </attribute>
+    <attribute id="4915" nameRU="Эргономичные ручки" type="bool" nameUK="Ергономічні ручки"/>
+    <attribute id="8230" nameRU="Вид товара" type="singleselect" nameUK="Вид товару">
+      <attribute_value id="139287" nameRU="Ножницы" nameUK="Ножиці"/>
+      <attribute_value id="139288" nameRU="Нож канцелярский" nameUK="Ніж канцелярський"/>
+      <attribute_value id="153860" nameRU="Лезвие для ножа канцелярского" nameUK="Лезо для канцелярського ножа"/>
+    </attribute>
+    <attribute id="8438" nameRU="Материал ручек" type="singleselect" nameUK="Матеріал ручок">
+      <attribute_value id="69057" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="139289" nameRU="Металл" nameUK="Метал"/>
+    </attribute>
+    <attribute id="8758" nameRU="Материал лезвия" type="singleselect" nameUK="Матеріал леза">
+      <attribute_value id="70686" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="70689" nameRU="Титан" nameUK="Титан"/>
+      <attribute_value id="110134" nameRU="Сталь" nameUK="Сталь"/>
+    </attribute>
+    <attribute id="9001" nameRU="Предназначение" type="multiselect" nameUK="Призначення">
+      <attribute_value id="132710" nameRU="Для дома" nameUK="Для дому"/>
+      <attribute_value id="139290" nameRU="Для офиса" nameUK="Для офісу"/>
+      <attribute_value id="219608" nameRU="Для детей" nameUK="Для дітей"/>
+    </attribute>
+    <attribute id="9781" nameRU="Полировка материала" type="singleselect" nameUK="Полірування матеріалу">
+      <attribute_value id="79598" nameRU="Зеркальная" nameUK="Дзеркальна"/>
+      <attribute_value id="79599" nameRU="Матовая" nameUK="Матова"/>
+      <attribute_value id="79600" nameRU="Матовая/зеркальная" nameUK="Матова/дзеркальна"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201516" nameRU="Масла, смазки для инструмента" nameUK="Оливи, мастила для інструменту">
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="174575" nameRU="Масло" nameUK="Масло"/>
+      <attribute_value id="174576" nameRU="Смазка" nameUK="Мастило"/>
+    </attribute>
+    <attribute id="1559" nameRU="Упаковка" type="singleselect" nameUK="Упаковка">
+      <attribute_value id="45106" nameRU="Пакет" nameUK="Пакет"/>
+      <attribute_value id="106276" nameRU="Бочка" nameUK="Бочка"/>
+      <attribute_value id="106278" nameRU="Фляга" nameUK="Фляга"/>
+      <attribute_value id="123100" nameRU="Канистра" nameUK="Каністра"/>
+      <attribute_value id="123569" nameRU="Без упаковки" nameUK="Без упаковки"/>
+      <attribute_value id="134533" nameRU="Ведро" nameUK="Відро"/>
+      <attribute_value id="137005" nameRU="Бутылка" nameUK="Пляшка"/>
+      <attribute_value id="137034" nameRU="Цистерна" nameUK="Цистерна"/>
+      <attribute_value id="137576" nameRU="Тюбик" nameUK="Тюбик"/>
+      <attribute_value id="151388" nameRU="Шприц" nameUK="Шприц"/>
+      <attribute_value id="151389" nameRU="Флакон" nameUK="Флакон"/>
+      <attribute_value id="172374" nameRU="Банка" nameUK="Банка"/>
+      <attribute_value id="174587" nameRU="Туба" nameUK="Туба"/>
+      <attribute_value id="246881" nameRU="Аэрозольный баллон" nameUK="Аерозольний балон"/>
+    </attribute>
+    <attribute id="12579" nameRU="Материал упаковки" type="singleselect" nameUK="Матеріал упаковки">
+      <attribute_value id="126365" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="126366" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="135380" nameRU="Полиэтилен" nameUK="Поліетилен"/>
+    </attribute>
+    <attribute id="13547" nameRU="Температура застывания" type="real" nameUK="Температура застигання" measureUnitRU="°С" min="-100" max="0" measureUnitUK="°С"/>
+    <attribute id="13548" nameRU="Температура вспышки" type="real" nameUK="Температура спалаху" measureUnitRU="°С" min="0" max="1000" measureUnitUK="°С"/>
+    <attribute id="15531" nameRU="Единица измерения" type="singleselect" nameUK="Одиниця виміру">
+      <attribute_value id="174588" nameRU="Килограмм" nameUK="Кілограм"/>
+      <attribute_value id="174589" nameRU="Грамм" nameUK="Грам"/>
+      <attribute_value id="174590" nameRU="Литр" nameUK="Літр"/>
+      <attribute_value id="174591" nameRU="Миллилитр" nameUK="Мілілітр"/>
+    </attribute>
+    <attribute id="15927" nameRU="Назначение смазочного материала" type="multiselect" nameUK="Призначення мастильного матеріалу">
+      <attribute_value id="174577" nameRU="Высокоскоростные механизмы" nameUK="Високошвидкісні механізми"/>
+      <attribute_value id="174578" nameRU="Гидравлические механизмы" nameUK="Гідравлічні механізми"/>
+      <attribute_value id="174579" nameRU="Циркуляционные механизмы" nameUK="Циркуляційні механізми"/>
+      <attribute_value id="174580" nameRU="Трансмиссии" nameUK="Трансмісії"/>
+      <attribute_value id="174581" nameRU="Компрессоры" nameUK="Компресори"/>
+      <attribute_value id="174582" nameRU="Оснастка для инструмента" nameUK="Оснастка для інструменту"/>
+      <attribute_value id="174583" nameRU="Пневматические механизмы" nameUK="Пневматичні механізми"/>
+      <attribute_value id="174584" nameRU="Направляющие скольжения" nameUK="Направляюча ковзання"/>
+      <attribute_value id="174585" nameRU="Цилиндры" nameUK="Циліндри"/>
+      <attribute_value id="174586" nameRU="Цепные приводы" nameUK="Ланцюгові приводи"/>
+    </attribute>
+    <attribute id="15928" nameRU="Вязкость по ISO" type="real" nameUK="В'язкість по ISO"/>
+    <attribute id="15929" nameRU="Плотность при 15°С" type="real" nameUK="Щільність при 15°С" measureUnitRU="кг/м³" min="0" max="10000" measureUnitUK="кг/м³"/>
+    <attribute id="15930" nameRU="Вязкость при 40°С" type="real" nameUK="В'язкість при 40°С" measureUnitRU="мм²/с" min="0" max="10000" measureUnitUK="мм²/с"/>
+    <attribute id="15931" nameRU="Вязкость при 100°С" type="real" nameUK="В'язкість при 100°С" measureUnitRU="мм²/с" min="0" max="10000" measureUnitUK="мм²/с"/>
+    <attribute id="15932" nameRU="Индекс вязкости" type="real" nameUK="Індекс в'язкості"/>
+    <attribute id="15939" nameRU="Количество смазочного материала в упаковке" type="real" nameUK="Кількість мастильного матеріалу в упаковці"/>
+  </category>
+</categories>

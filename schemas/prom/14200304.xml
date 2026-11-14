@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200304" nameRU="Напильники и надфили" nameUK="Напилки та надфілі">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="1000" measureUnitUK="г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="64738" nameRU="металл" nameUK="метал"/>
+    </attribute>
+    <attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="173784" nameRU="Рашпиль" nameUK="Рашпіль"/>
+      <attribute_value id="215728" nameRU="Надфиль" nameUK="Надфіль"/>
+      <attribute_value id="215729" nameRU="Напильник" nameUK="Напилок"/>
+      <attribute_value id="215730" nameRU="Планка для заточки цепи" nameUK="Планка для заточування ланцюга"/>
+    </attribute>
+    <attribute id="7617" nameRU="Форма сечения рабочей части" type="singleselect" nameUK="Форма перерізу робочої частини">
+      <attribute_value id="64780" nameRU="прямоугольная (плоская)" nameUK="прямокутна (плоска)"/>
+      <attribute_value id="64781" nameRU="квадратная" nameUK="квадратна"/>
+      <attribute_value id="64782" nameRU="треугольная (равносторонняя)" nameUK="трикутна (рівнобічна)"/>
+      <attribute_value id="64783" nameRU="треугольная (тупоугольная)" nameUK="трикутна (тупокутна)"/>
+      <attribute_value id="64784" nameRU="круглая" nameUK="кругла"/>
+      <attribute_value id="64785" nameRU="полукруглая" nameUK="напівкругла"/>
+      <attribute_value id="64786" nameRU="овальная" nameUK="овальна"/>
+      <attribute_value id="64787" nameRU="ромбическая" nameUK="ромбічна"/>
+      <attribute_value id="67059" nameRU="ножевая" nameUK="ножова"/>
+    </attribute>
+    <attribute id="7618" nameRU="Длина рабочей части" type="real" nameUK="Довжина робочої частини" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="8081" nameRU="Ширина рабочей части" type="real" nameUK="Ширина робочої частини" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

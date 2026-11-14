@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="15370801" nameRU="Манометры" nameUK="Манометри">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="°С" min="0" max="120" measureUnitUK="°С"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="79614" nameRU="Переходник" nameUK="Перехідник"/>
+      <attribute_value id="108255" nameRU="Электронный" nameUK="Електронний"/>
+      <attribute_value id="157871" nameRU="Мембранный" nameUK="Мембранний"/>
+      <attribute_value id="157873" nameRU="Трубчатый" nameUK="Трубчастий"/>
+      <attribute_value id="163434" nameRU="Пружинный" nameUK="Пружинний"/>
+      <attribute_value id="217749" nameRU="Жидкостный" nameUK="Рідинний"/>
+      <attribute_value id="217750" nameRU="Поршневой" nameUK="Поршневий"/>
+      <attribute_value id="217751" nameRU="Деформационный" nameUK="Деформаційний"/>
+    </attribute>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="°С" min="-100" max="0" measureUnitUK="°С"/>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="159389" nameRU="Железнодорожный" nameUK="Залізничний"/>
+      <attribute_value id="217752" nameRU="Общетехнический" nameUK="Загальнотехнічний"/>
+      <attribute_value id="217753" nameRU="Специальный" nameUK="Спеціальний"/>
+      <attribute_value id="217754" nameRU="Судовой" nameUK="Судновий"/>
+      <attribute_value id="217755" nameRU="Эталонный" nameUK="Еталонний"/>
+    </attribute>
+    <attribute id="6300" nameRU="Защита оборудования от воды и пыли IP" type="singleselect" nameUK="Захист обладнання від води і пилу IP">
+      <attribute_value id="43463" nameRU="IP10" nameUK="IP10"/>
+      <attribute_value id="43464" nameRU="IP11" nameUK="IP11"/>
+      <attribute_value id="43465" nameRU="IP12" nameUK="IP12"/>
+      <attribute_value id="43466" nameRU="IP13" nameUK="IP13"/>
+      <attribute_value id="43467" nameRU="IP14" nameUK="IP14"/>
+      <attribute_value id="43468" nameRU="IP15" nameUK="IP15"/>
+      <attribute_value id="43469" nameRU="IP16" nameUK="IP16"/>
+      <attribute_value id="43470" nameRU="IP17" nameUK="IP17"/>
+      <attribute_value id="43471" nameRU="IP18" nameUK="IP18"/>
+      <attribute_value id="43472" nameRU="IP19" nameUK="IP19"/>
+      <attribute_value id="43473" nameRU="IP20" nameUK="IP20"/>
+      <attribute_value id="43474" nameRU="IP21" nameUK="IP21"/>
+      <attribute_value id="43475" nameRU="IP22" nameUK="IP22"/>
+      <attribute_value id="43476" nameRU="IP23" nameUK="IP23"/>
+      <attribute_value id="43477" nameRU="IP24" nameUK="IP24"/>
+      <attribute_value id="43478" nameRU="IP25" nameUK="IP25"/>
+      <attribute_value id="43479" nameRU="IP26" nameUK="IP26"/>
+      <attribute_value id="43480" nameRU="IP27" nameUK="IP27"/>
+      <attribute_value id="43481" nameRU="IP28" nameUK="IP28"/>
+      <attribute_value id="43482" nameRU="IP29" nameUK="IP29"/>
+      <attribute_value id="43483" nameRU="IP30" nameUK="IP30"/>
+      <attribute_value id="43484" nameRU="IP31" nameUK="IP31"/>
+      <attribute_value id="43485" nameRU="IP32" nameUK="IP32"/>
+      <attribute_value id="43486" nameRU="IP33" nameUK="IP33"/>
+      <attribute_value id="43487" nameRU="IP34" nameUK="IP34"/>
+      <attribute_value id="43488" nameRU="IP35" nameUK="IP35"/>
+      <attribute_value id="43489" nameRU="IP36" nameUK="IP36"/>
+      <attribute_value id="43490" nameRU="IP37" nameUK="IP37"/>
+      <attribute_value id="43491" nameRU="IP38" nameUK="IP38"/>
+      <attribute_value id="43492" nameRU="IP39" nameUK="IP39"/>
+      <attribute_value id="43493" nameRU="IP40" nameUK="IP40"/>
+      <attribute_value id="43494" nameRU="IP41" nameUK="IP41"/>
+      <attribute_value id="43495" nameRU="IP42" nameUK="IP42"/>
+      <attribute_value id="43496" nameRU="IP44" nameUK="IP44"/>
+      <attribute_value id="43497" nameRU="IP45" nameUK="IP45"/>
+      <attribute_value id="43498" nameRU="IP46" nameUK="IP46"/>
+      <attribute_value id="43499" nameRU="IP47" nameUK="IP47"/>
+      <attribute_value id="43500" nameRU="IP48" nameUK="IP48"/>
+      <attribute_value id="43501" nameRU="IP49" nameUK="IP49"/>
+      <attribute_value id="43502" nameRU="IP50" nameUK="IP50"/>
+      <attribute_value id="43503" nameRU="IP51" nameUK="IP51"/>
+      <attribute_value id="43504" nameRU="IP52" nameUK="IP52"/>
+      <attribute_value id="43505" nameRU="IP53" nameUK="IP53"/>
+      <attribute_value id="43506" nameRU="IP54" nameUK="IP54"/>
+      <attribute_value id="43507" nameRU="IP55" nameUK="IP55"/>
+      <attribute_value id="43508" nameRU="IP56" nameUK="IP56"/>
+      <attribute_value id="43509" nameRU="IP57" nameUK="IP57"/>
+      <attribute_value id="43510" nameRU="IP58" nameUK="IP58"/>
+      <attribute_value id="43511" nameRU="IP59" nameUK="IP59"/>
+      <attribute_value id="43512" nameRU="IP60" nameUK="IP60"/>
+      <attribute_value id="43513" nameRU="IP61" nameUK="IP61"/>
+      <attribute_value id="43514" nameRU="IP62" nameUK="IP62"/>
+      <attribute_value id="43515" nameRU="IP63" nameUK="IP63"/>
+      <attribute_value id="43516" nameRU="IP64" nameUK="IP64"/>
+      <attribute_value id="43517" nameRU="IP65" nameUK="IP65"/>
+      <attribute_value id="43518" nameRU="IP66" nameUK="IP66"/>
+      <attribute_value id="43519" nameRU="IP67" nameUK="IP67"/>
+      <attribute_value id="43520" nameRU="IP68" nameUK="IP68"/>
+      <attribute_value id="43521" nameRU="IP43" nameUK="IP43"/>
+    </attribute>
+    <attribute id="7384" nameRU="Диаметр корпуса" type="real" nameUK="Діаметр корпусу" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="217763" nameRU="Самопишущий" nameUK="Самописний"/>
+      <attribute_value id="217764" nameRU="Виброустойчивый" nameUK="Вібростійкій"/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+    <attribute id="15531" nameRU="Единица измерения" type="singleselect" nameUK="Одиниця виміру">
+      <attribute_value id="217765" nameRU="МПа" nameUK="МПа"/>
+      <attribute_value id="217766" nameRU="кПа" nameUK="кПа"/>
+      <attribute_value id="235336" nameRU="Па" nameUK="Па"/>
+      <attribute_value id="235337" nameRU="Бар" nameUK="Бар"/>
+      <attribute_value id="274757" nameRU="Атм" nameUK="Атм"/>
+      <attribute_value id="280180" nameRU="мбар" nameUK="мбар"/>
+      <attribute_value id="280181" nameRU="гПа" nameUK="гПа"/>
+    </attribute>
+    <attribute id="17657" nameRU="Минимальный диапазон" type="real" nameUK="Мінімальний діапазон"/>
+    <attribute id="17658" nameRU="Максимальный диапазон" type="real" nameUK="Максимальний діапазон"/>
+    <attribute id="17659" nameRU="Среда измерения" type="singleselect" nameUK="Середа виміру">
+      <attribute_value id="217756" nameRU="Жидкость" nameUK="Рідина"/>
+      <attribute_value id="217757" nameRU="Пар" nameUK="Пар"/>
+      <attribute_value id="217758" nameRU="Газ" nameUK="Газ"/>
+      <attribute_value id="217759" nameRU="Кислород" nameUK="Кисень"/>
+      <attribute_value id="217760" nameRU="Жидкость/Пар/Газ/Кислород" nameUK="Рідина/Пар/Газ/Кисень"/>
+      <attribute_value id="217761" nameRU="Жидкость/Пар/Газ" nameUK="Рідина/Пар/Газ"/>
+      <attribute_value id="217762" nameRU="Жидкость/Газ" nameUK="Рідина/Газ"/>
+      <attribute_value id="274742" nameRU="Воздух" nameUK="Повітря"/>
+    </attribute>
+  </category>
+</categories>

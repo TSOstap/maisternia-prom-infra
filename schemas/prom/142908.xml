@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142908" nameRU="Складские ножничные подъемники" nameUK="Складські ножичні підйомники">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="100000" measureUnitUK="Вт"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="1000" measureUnitUK="л/год"/>
+    <attribute id="1280" nameRU="Грузоподъемность" type="real" nameUK="Вантажопідйомність" measureUnitRU="кг" min="0" max="90000" measureUnitUK="кг"/>
+    <attribute id="2320" nameRU="Максимальная высота подъема" type="real" nameUK="Максимальна висота підйому" measureUnitRU="мм" min="0" max="12000" measureUnitUK="мм"/>
+    <attribute id="4817" nameRU="Количество колес" type="integer" nameUK="Кількість коліс" measureUnitRU="шт" min="1" max="10" measureUnitUK="шт."/>
+    <attribute id="5576" nameRU="Диаметр колес" type="real" nameUK="Діаметр коліс" measureUnitRU="мм" min="0" max="300" measureUnitUK="мм"/>
+    <attribute id="5838" nameRU="Собственный вес" type="real" nameUK="Власна вага" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="5990" nameRU="Количество колес оснащенных тормозом" type="integer" nameUK="Кількість коліс оснащених гальмом" measureUnitRU="шт" min="0" max="10" measureUnitUK="шт."/>
+    <attribute id="6090" nameRU="Минимальная высота подъема" type="real" nameUK="Мінімальна висота підйому" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="6210" nameRU="Время подъема груза" type="real" nameUK="Час підйому вантажу" measureUnitRU="сек" min="0" max="500" measureUnitUK="сек"/>
+    <attribute id="6212" nameRU="Напряжение питания" type="multiselect" nameUK="Напруга живлення">
+      <attribute_value id="42681" nameRU="220 В" nameUK="220 В"/>
+      <attribute_value id="42682" nameRU="380 В" nameUK="380 В"/>
+    </attribute>
+    <attribute id="6213" nameRU="Напряжение управления" type="multiselect" nameUK="Напруга керування">
+      <attribute_value id="42683" nameRU="12 V" nameUK="12 V"/>
+      <attribute_value id="42684" nameRU="6 V" nameUK="6 V"/>
+      <attribute_value id="42685" nameRU="24 V" nameUK="24 V"/>
+    </attribute>
+    <attribute id="6215" nameRU="Максимальная ширина платформы" type="real" nameUK="Максимальна ширина платформи" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="6216" nameRU="Минимальная ширина платформы" type="real" nameUK="Мінімальна ширина платформи" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="6217" nameRU="Минимальная длина платформы" type="real" nameUK="Мінімальна довжина платформи" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="6218" nameRU="Максимальная длина платформы" type="real" nameUK="Максимальна довжина платформи" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="6219" nameRU="Защитные ограждения" type="bool" nameUK="Захисні огорожі"/>
+    <attribute id="6220" nameRU="Гидравлические запорные фиксаторы" type="bool" nameUK="Гідравлічні запірні фіксатори"/>
+    <attribute id="6221" nameRU="Стопор безопасности" type="bool" nameUK="Стопор безпеки"/>
+    <attribute id="6222" nameRU="Погрузочные откидные щитки" type="bool" nameUK="Навантажувальні відкидні щитки"/>
+    <attribute id="6223" nameRU="Ограничитель от скатывания" type="bool" nameUK="Обмежувач від скочування"/>
+    <attribute id="6224" nameRU="Колесная рама" type="bool" nameUK="Колісна рама"/>
+    <attribute id="6225" nameRU="Рама для вилочного погрузчика" type="bool" nameUK="Рама для вилочного навантажувача"/>
+    <attribute id="6226" nameRU="Количество ножниц" type="integer" nameUK="Кількість ножиць" measureUnitRU="шт" min="1" max="10" measureUnitUK="шт."/>
+    <attribute id="6227" nameRU="Ширина колес" type="real" nameUK="Ширина коліс" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="6465" nameRU="Количество поворотных колес" type="integer" nameUK="Кількість поворотних коліс" measureUnitRU="шт" min="0" max="10" measureUnitUK="шт."/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11813" nameRU="Тип ножничного подъемника" type="singleselect" nameUK="Тип ножничного підйомника">
+      <attribute_value id="115831" nameRU="Дизельный" nameUK="Дизельний"/>
+      <attribute_value id="115832" nameRU="Электрический" nameUK="Електричний"/>
+    </attribute>
+  </category>
+</categories>

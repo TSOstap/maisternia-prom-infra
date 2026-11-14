@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="190408" nameRU="Технические эндоскопы, видеоскопы" nameUK="Технічні ендоскопи, відеоскопи">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="1000" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+      <attribute_value id="11634" nameRU="Сеть 12В" nameUK="Мережа 12В"/>
+      <attribute_value id="40710" nameRU="Батарейки одноразовые" nameUK="Батарейки одноразові"/>
+      <attribute_value id="40711" nameRU="Батарейки аккумуляторного типа" nameUK="Батарейки акумуляторного типу"/>
+      <attribute_value id="53227" nameRU="Сеть 110В" nameUK="Мережа 110В"/>
+      <attribute_value id="122325" nameRU="Сеть 24В" nameUK="Мережа 24В"/>
+      <attribute_value id="122326" nameRU="Солнечные батареи" nameUK="Сонячні батареї"/>
+      <attribute_value id="141124" nameRU="PoE" nameUK="PoE"/>
+      <attribute_value id="146939" nameRU="USB" nameUK="USB"/>
+    </attribute>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="°С" min="0" max="1000" measureUnitUK="°С"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="610" nameRU="Подсветка" type="bool" nameUK="Підсвічування"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="205902" nameRU="Жесткий" nameUK="Жорсткий"/>
+      <attribute_value id="205903" nameRU="Гибкий" nameUK="Гнучкий"/>
+    </attribute>
+    <attribute id="1349" nameRU="Разрешение экрана" type="singleselect" nameUK="Роздільна здатність екрану">
+      <attribute_value id="9692" nameRU="1024×600 (WSVGA)" nameUK="1024×600 (WSVGA)"/>
+      <attribute_value id="44026" nameRU="160×200" nameUK="160×200"/>
+      <attribute_value id="44027" nameRU="256×192" nameUK="256×192"/>
+      <attribute_value id="44028" nameRU="320×200" nameUK="320×200"/>
+      <attribute_value id="44029" nameRU="320×240" nameUK="320×240"/>
+      <attribute_value id="44030" nameRU="320×256" nameUK="320×256"/>
+      <attribute_value id="44031" nameRU="400×240" nameUK="400×240"/>
+      <attribute_value id="44032" nameRU="400×288" nameUK="400×288"/>
+      <attribute_value id="44033" nameRU="640×200" nameUK="640×200"/>
+      <attribute_value id="44035" nameRU="480×270" nameUK="480×270"/>
+      <attribute_value id="44036" nameRU="512×256" nameUK="512×256"/>
+      <attribute_value id="44037" nameRU="466×288" nameUK="466×288"/>
+      <attribute_value id="44038" nameRU="480×320" nameUK="480×320"/>
+      <attribute_value id="44039" nameRU="640×256" nameUK="640×256"/>
+      <attribute_value id="44040" nameRU="640×272" nameUK="640×272"/>
+      <attribute_value id="44041" nameRU="512×342" nameUK="512×342"/>
+      <attribute_value id="44042" nameRU="640×288" nameUK="640×288"/>
+      <attribute_value id="44043" nameRU="512×384" nameUK="512×384"/>
+      <attribute_value id="44046" nameRU="640×350" nameUK="640×350"/>
+      <attribute_value id="44047" nameRU="640×400" nameUK="640×400"/>
+      <attribute_value id="44048" nameRU="640×480" nameUK="640×480"/>
+      <attribute_value id="44049" nameRU="640×512" nameUK="640×512"/>
+      <attribute_value id="44050" nameRU="720×348" nameUK="720x348"/>
+      <attribute_value id="44051" nameRU="720×350" nameUK="720×350"/>
+      <attribute_value id="44052" nameRU="720×360" nameUK="720×360"/>
+      <attribute_value id="44053" nameRU="784×640" nameUK="784×640"/>
+      <attribute_value id="44054" nameRU="800×480" nameUK="800×480"/>
+      <attribute_value id="44055" nameRU="800×600" nameUK="800×600"/>
+      <attribute_value id="44056" nameRU="800×640" nameUK="800×640"/>
+      <attribute_value id="44057" nameRU="854×466" nameUK="854×466"/>
+      <attribute_value id="44058" nameRU="854×480" nameUK="854×480"/>
+      <attribute_value id="44059" nameRU="960×540" nameUK="960×540"/>
+      <attribute_value id="44060" nameRU="960×640" nameUK="960×640"/>
+      <attribute_value id="44061" nameRU="1024×576" nameUK="1024×576"/>
+      <attribute_value id="44062" nameRU="1024×768 (XGA)" nameUK="1024×768 (XGA)"/>
+      <attribute_value id="44063" nameRU="1152×648" nameUK="1152×648"/>
+      <attribute_value id="44064" nameRU="1120×832" nameUK="1120×832"/>
+      <attribute_value id="44065" nameRU="1152×720" nameUK="1152×720"/>
+      <attribute_value id="44066" nameRU="1152×768" nameUK="1152×768"/>
+      <attribute_value id="44067" nameRU="1152×864" nameUK="1152×864"/>
+      <attribute_value id="44068" nameRU="1152×900" nameUK="1152×900"/>
+      <attribute_value id="44069" nameRU="1200×720" nameUK="1200×720"/>
+      <attribute_value id="44070" nameRU="1280×720" nameUK="1280×720"/>
+      <attribute_value id="44071" nameRU="1280×768" nameUK="1280×768"/>
+      <attribute_value id="44072" nameRU="1280×800" nameUK="1280×800"/>
+      <attribute_value id="44073" nameRU="1280×854" nameUK="1280×854"/>
+      <attribute_value id="44074" nameRU="1280×960" nameUK="1280×960"/>
+      <attribute_value id="44075" nameRU="1280×1024 (SXGA)" nameUK="1280×1024 (SXGA)"/>
+      <attribute_value id="44076" nameRU="1366×768" nameUK="1366×768"/>
+      <attribute_value id="44077" nameRU="1440×900" nameUK="1440×900"/>
+      <attribute_value id="44079" nameRU="1440×960" nameUK="1440×960"/>
+      <attribute_value id="44080" nameRU="1400×1050" nameUK="1400×1050"/>
+      <attribute_value id="44081" nameRU="1440×1080" nameUK="1440×1080"/>
+      <attribute_value id="44082" nameRU="1536×864" nameUK="1536×864"/>
+      <attribute_value id="44093" nameRU="1600×900" nameUK="1600×900"/>
+      <attribute_value id="44094" nameRU="1600×1024" nameUK="1600×1024"/>
+      <attribute_value id="44096" nameRU="1680×1050" nameUK="1680×1050"/>
+      <attribute_value id="44097" nameRU="1600×1200" nameUK="1600×1200"/>
+      <attribute_value id="44098" nameRU="Full HD (1920×1080)" nameUK="Full HD (1920×1080)"/>
+      <attribute_value id="44100" nameRU="1920×1200" nameUK="1920×1200"/>
+      <attribute_value id="44101" nameRU="1920×1280" nameUK="1920×1280"/>
+      <attribute_value id="44102" nameRU="1920×1440" nameUK="1920×1440"/>
+      <attribute_value id="44103" nameRU="2048×1080" nameUK="2048×1080"/>
+      <attribute_value id="44104" nameRU="2048×1152" nameUK="2048×1152"/>
+      <attribute_value id="44106" nameRU="2560×1440" nameUK="2560×1440"/>
+      <attribute_value id="44107" nameRU="2560×1600" nameUK="2560×1600"/>
+      <attribute_value id="44108" nameRU="2560×2048" nameUK="2560×2048"/>
+      <attribute_value id="44109" nameRU="2880×1800" nameUK="2880×1800"/>
+      <attribute_value id="44111" nameRU="3200×2048" nameUK="3200×2048"/>
+      <attribute_value id="44112" nameRU="3200×2400" nameUK="3200×2400"/>
+      <attribute_value id="44113" nameRU="4K Ultra HD (3840×2160)" nameUK="4K Ultra HD (3840×2160)"/>
+      <attribute_value id="44115" nameRU="5120×4096" nameUK="5120×4096"/>
+      <attribute_value id="44116" nameRU="6400×4096" nameUK="6400×4096"/>
+      <attribute_value id="44117" nameRU="6400×4800" nameUK="6400×4800"/>
+      <attribute_value id="44118" nameRU="7680×4320" nameUK="7680×4320"/>
+      <attribute_value id="44119" nameRU="7680×4800" nameUK="7680×4800"/>
+      <attribute_value id="45610" nameRU="128×128" nameUK="128×128"/>
+      <attribute_value id="123106" nameRU="960х240" nameUK="960х240"/>
+      <attribute_value id="127547" nameRU="64x64" nameUK="64x64"/>
+      <attribute_value id="127548" nameRU="128x160" nameUK="128x160"/>
+      <attribute_value id="127549" nameRU="64x126" nameUK="64x126"/>
+      <attribute_value id="127550" nameRU="64x128" nameUK="64x128"/>
+      <attribute_value id="147285" nameRU="1200х824" nameUK="1200х824"/>
+      <attribute_value id="147286" nameRU="1200х800" nameUK="1200х800"/>
+      <attribute_value id="147287" nameRU="768x1024" nameUK="768x1024"/>
+      <attribute_value id="147288" nameRU="272х480" nameUK="272х480"/>
+      <attribute_value id="147289" nameRU="758x1024" nameUK="758x1024"/>
+      <attribute_value id="148670" nameRU="2048×1536" nameUK="2048×1536"/>
+      <attribute_value id="157345" nameRU="480x234" nameUK="480x234"/>
+      <attribute_value id="157346" nameRU="384x240" nameUK="384x240"/>
+      <attribute_value id="162076" nameRU="640x1136" nameUK="640x1136"/>
+      <attribute_value id="173480" nameRU="1334×750 " nameUK="1334×750"/>
+      <attribute_value id="190611" nameRU="1800×1080" nameUK="1800×1080"/>
+      <attribute_value id="197842" nameRU="1920×1152" nameUK="1920×1152"/>
+      <attribute_value id="349522" nameRU="2750 × 1260" nameUK=""/>
+    </attribute>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="1000" measureUnitUK="В"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="°С" min="-1000" max="0" measureUnitUK="°С"/>
+    <attribute id="4850" nameRU="Длина камеры" type="real" nameUK="Довжина камери" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="6068" nameRU="Подсветка экрана" type="bool" nameUK="Підсвітка екрану"/>
+    <attribute id="6300" nameRU="Защита оборудования от воды и пыли IP" type="singleselect" nameUK="Захист обладнання від води і пилу IP">
+      <attribute_value id="43463" nameRU="IP10" nameUK="IP10"/>
+      <attribute_value id="43464" nameRU="IP11" nameUK="IP11"/>
+      <attribute_value id="43465" nameRU="IP12" nameUK="IP12"/>
+      <attribute_value id="43466" nameRU="IP13" nameUK="IP13"/>
+      <attribute_value id="43467" nameRU="IP14" nameUK="IP14"/>
+      <attribute_value id="43468" nameRU="IP15" nameUK="IP15"/>
+      <attribute_value id="43469" nameRU="IP16" nameUK="IP16"/>
+      <attribute_value id="43470" nameRU="IP17" nameUK="IP17"/>
+      <attribute_value id="43471" nameRU="IP18" nameUK="IP18"/>
+      <attribute_value id="43472" nameRU="IP19" nameUK="IP19"/>
+      <attribute_value id="43473" nameRU="IP20" nameUK="IP20"/>
+      <attribute_value id="43474" nameRU="IP21" nameUK="IP21"/>
+      <attribute_value id="43475" nameRU="IP22" nameUK="IP22"/>
+      <attribute_value id="43476" nameRU="IP23" nameUK="IP23"/>
+      <attribute_value id="43477" nameRU="IP24" nameUK="IP24"/>
+      <attribute_value id="43478" nameRU="IP25" nameUK="IP25"/>
+      <attribute_value id="43479" nameRU="IP26" nameUK="IP26"/>
+      <attribute_value id="43480" nameRU="IP27" nameUK="IP27"/>
+      <attribute_value id="43481" nameRU="IP28" nameUK="IP28"/>
+      <attribute_value id="43482" nameRU="IP29" nameUK="IP29"/>
+      <attribute_value id="43483" nameRU="IP30" nameUK="IP30"/>
+      <attribute_value id="43484" nameRU="IP31" nameUK="IP31"/>
+      <attribute_value id="43485" nameRU="IP32" nameUK="IP32"/>
+      <attribute_value id="43486" nameRU="IP33" nameUK="IP33"/>
+      <attribute_value id="43487" nameRU="IP34" nameUK="IP34"/>
+      <attribute_value id="43488" nameRU="IP35" nameUK="IP35"/>
+      <attribute_value id="43489" nameRU="IP36" nameUK="IP36"/>
+      <attribute_value id="43490" nameRU="IP37" nameUK="IP37"/>
+      <attribute_value id="43491" nameRU="IP38" nameUK="IP38"/>
+      <attribute_value id="43492" nameRU="IP39" nameUK="IP39"/>
+      <attribute_value id="43493" nameRU="IP40" nameUK="IP40"/>
+      <attribute_value id="43494" nameRU="IP41" nameUK="IP41"/>
+      <attribute_value id="43495" nameRU="IP42" nameUK="IP42"/>
+      <attribute_value id="43496" nameRU="IP44" nameUK="IP44"/>
+      <attribute_value id="43497" nameRU="IP45" nameUK="IP45"/>
+      <attribute_value id="43498" nameRU="IP46" nameUK="IP46"/>
+      <attribute_value id="43499" nameRU="IP47" nameUK="IP47"/>
+      <attribute_value id="43500" nameRU="IP48" nameUK="IP48"/>
+      <attribute_value id="43501" nameRU="IP49" nameUK="IP49"/>
+      <attribute_value id="43502" nameRU="IP50" nameUK="IP50"/>
+      <attribute_value id="43503" nameRU="IP51" nameUK="IP51"/>
+      <attribute_value id="43504" nameRU="IP52" nameUK="IP52"/>
+      <attribute_value id="43505" nameRU="IP53" nameUK="IP53"/>
+      <attribute_value id="43506" nameRU="IP54" nameUK="IP54"/>
+      <attribute_value id="43507" nameRU="IP55" nameUK="IP55"/>
+      <attribute_value id="43508" nameRU="IP56" nameUK="IP56"/>
+      <attribute_value id="43509" nameRU="IP57" nameUK="IP57"/>
+      <attribute_value id="43510" nameRU="IP58" nameUK="IP58"/>
+      <attribute_value id="43511" nameRU="IP59" nameUK="IP59"/>
+      <attribute_value id="43512" nameRU="IP60" nameUK="IP60"/>
+      <attribute_value id="43513" nameRU="IP61" nameUK="IP61"/>
+      <attribute_value id="43514" nameRU="IP62" nameUK="IP62"/>
+      <attribute_value id="43515" nameRU="IP63" nameUK="IP63"/>
+      <attribute_value id="43516" nameRU="IP64" nameUK="IP64"/>
+      <attribute_value id="43517" nameRU="IP65" nameUK="IP65"/>
+      <attribute_value id="43518" nameRU="IP66" nameUK="IP66"/>
+      <attribute_value id="43519" nameRU="IP67" nameUK="IP67"/>
+      <attribute_value id="43520" nameRU="IP68" nameUK="IP68"/>
+      <attribute_value id="43521" nameRU="IP43" nameUK="IP43"/>
+    </attribute>
+    <attribute id="7098" nameRU="Тип матрицы" type="singleselect" nameUK="Тип матриці">
+      <attribute_value id="60010" nameRU="TN+Film" nameUK="TN+Film"/>
+      <attribute_value id="60011" nameRU="IPS" nameUK="IPS"/>
+      <attribute_value id="60012" nameRU="MVA/PVA" nameUK="MVA/PVA"/>
+      <attribute_value id="107774" nameRU="TFT IPS" nameUK="TFT IPS"/>
+      <attribute_value id="107778" nameRU="TFT TN" nameUK="TFT TN"/>
+      <attribute_value id="113506" nameRU="CMOS" nameUK="CMOS"/>
+      <attribute_value id="113507" nameRU="CCD" nameUK="CCD"/>
+      <attribute_value id="113508" nameRU="CCD DIS" nameUK="CCD DIS"/>
+      <attribute_value id="113509" nameRU="Sony Ex-View CCD" nameUK="Sony Ex-View CCD"/>
+      <attribute_value id="113510" nameRU="Sony Super HAD CCD" nameUK="Sony Super HAD CCD"/>
+      <attribute_value id="113511" nameRU="Sony Super HAD CCD II" nameUK="Sony Super HAD CCD II"/>
+      <attribute_value id="113995" nameRU="Live-MOS" nameUK="Live-MOS"/>
+      <attribute_value id="113996" nameRU="Super CCD" nameUK="Super CCD"/>
+      <attribute_value id="119024" nameRU="TFT A-MVA" nameUK="TFT A-MVA"/>
+      <attribute_value id="119025" nameRU="TFT E-IPS" nameUK="TFT E-IPS"/>
+      <attribute_value id="119026" nameRU="TFT H-IPS" nameUK="TFT H-IPS"/>
+      <attribute_value id="119027" nameRU="TFT MVA" nameUK="TFT MVA"/>
+      <attribute_value id="119029" nameRU="TFT PVA" nameUK="TFT PVA"/>
+      <attribute_value id="119030" nameRU="TFT S-IPS" nameUK="TFT S-IPS"/>
+      <attribute_value id="119031" nameRU="TFT S-PVA" nameUK="TFT S-PVA"/>
+      <attribute_value id="145411" nameRU="BSI CMOS" nameUK="BSI CMOS"/>
+      <attribute_value id="145412" nameRU="EXR CMOS" nameUK="EXR CMOS"/>
+      <attribute_value id="145413" nameRU="X-Trans CMOS" nameUK="X-Trans CMOS"/>
+      <attribute_value id="145415" nameRU="СCD" nameUK="СCD"/>
+      <attribute_value id="146050" nameRU="PLS" nameUK="PLS"/>
+      <attribute_value id="146288" nameRU="CRT" nameUK="CRT"/>
+      <attribute_value id="146289" nameRU="D-ILA" nameUK="D-ILA"/>
+      <attribute_value id="146290" nameRU="DLP" nameUK="DLP"/>
+      <attribute_value id="146291" nameRU="LCD" nameUK="LCD"/>
+      <attribute_value id="146292" nameRU="LCoS" nameUK="LCoS"/>
+      <attribute_value id="146293" nameRU="SXRD" nameUK="SXRD"/>
+      <attribute_value id="147277" nameRU="E Ink Carta" nameUK="E Ink Carta"/>
+      <attribute_value id="147278" nameRU="E Ink Pearl" nameUK="E Ink Pearl"/>
+      <attribute_value id="147279" nameRU="E Ink Pearl HD" nameUK="E Ink Pearl HD"/>
+      <attribute_value id="147280" nameRU="E Ink Triton" nameUK="E Ink Triton"/>
+      <attribute_value id="147281" nameRU="E Ink VizPlex" nameUK="E Ink VizPlex"/>
+      <attribute_value id="147282" nameRU="E Ink" nameUK="E Ink"/>
+      <attribute_value id="147283" nameRU="SiPix" nameUK="SiPix"/>
+      <attribute_value id="147284" nameRU="TFT" nameUK="TFT"/>
+      <attribute_value id="148124" nameRU="MOS" nameUK="MOS"/>
+      <attribute_value id="152769" nameRU="DIS Sony CHIP" nameUK="DIS Sony CHIP"/>
+      <attribute_value id="152770" nameRU="SONY Exmor-R" nameUK="SONY Exmor R"/>
+      <attribute_value id="155744" nameRU="PixelPlus CMOS" nameUK="PixelPlus CMOS"/>
+      <attribute_value id="156725" nameRU="Panasonic CMOS" nameUK="Panasonic CMOS"/>
+      <attribute_value id="181241" nameRU="Sony CMOS" nameUK="Sony CMOS"/>
+    </attribute>
+    <attribute id="7135" nameRU="Угол обзора по вертикали" type="real" nameUK="Кут огляду по вертикалі" measureUnitRU="°" min="0" max="360" measureUnitUK="°"/>
+    <attribute id="7136" nameRU="Угол обзора по горизонтали" type="real" nameUK="Кут огляду по горизонталі" measureUnitRU="°" min="0" max="360" measureUnitUK="°"/>
+    <attribute id="7161" nameRU="Подсветка клавиш" type="bool" nameUK="Підсвічування клавіш"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+      <attribute_value id="231714" nameRU="Неликвид" nameUK="Неліквід"/>
+    </attribute>
+    <attribute id="11650" nameRU="Физический размер матрицы" type="singleselect" nameUK="Фізичний розмір матриці">
+      <attribute_value id="113529" nameRU="1″" nameUK="1&quot;"/>
+      <attribute_value id="113530" nameRU="1/1.8″" nameUK="1/1.8&quot;"/>
+      <attribute_value id="113531" nameRU="1/2″" nameUK="1/2&quot;"/>
+      <attribute_value id="113532" nameRU="1/2.5″" nameUK="1/2.5&quot;"/>
+      <attribute_value id="113533" nameRU="1/2.7″" nameUK="1/2.7&quot;"/>
+      <attribute_value id="113534" nameRU="1/2.8″" nameUK="1/2.8&quot;"/>
+      <attribute_value id="113535" nameRU="1/3&quot;" nameUK="1/3&quot;"/>
+      <attribute_value id="113536" nameRU="1/3.2&quot;" nameUK="1/3.2&quot;"/>
+      <attribute_value id="113537" nameRU="1/4″" nameUK="1/4&quot;"/>
+      <attribute_value id="113538" nameRU="1/5&quot;" nameUK="1/5&quot;"/>
+      <attribute_value id="113539" nameRU="1/6″" nameUK="1/6&quot;"/>
+      <attribute_value id="113540" nameRU="2/3″" nameUK="2/3&quot;"/>
+      <attribute_value id="145420" nameRU="1/2.3&quot; - 1/3&quot;" nameUK="1/2.3&quot; - 1/3&quot;"/>
+      <attribute_value id="145421" nameRU="1/1.6&quot; - 1/2&quot;" nameUK="1/1.6&quot; - 1/2&quot;"/>
+      <attribute_value id="145422" nameRU="13,2x8,8 мм - 18,7x14 мм" nameUK="13,2x8,8 мм - 18,7x14 мм"/>
+      <attribute_value id="145423" nameRU="APS-C" nameUK="APS-C"/>
+      <attribute_value id="145424" nameRU="Full frame" nameUK="Full frame"/>
+      <attribute_value id="145425" nameRU="Другой" nameUK="Інший"/>
+      <attribute_value id="148128" nameRU="1/2&quot; - 1/2.9&quot;" nameUK="1/2&quot; - 1/2.9&quot;"/>
+      <attribute_value id="148129" nameRU="1/3&quot; - 1/3.9&quot;" nameUK="1/3&quot; - 1/3.9&quot;"/>
+      <attribute_value id="148130" nameRU="1/4&quot; - 1/4.85&quot;" nameUK="1/4&quot; - 1/4.85&quot;"/>
+      <attribute_value id="148131" nameRU="1/5&quot; - 1/6&quot;" nameUK="1/5&quot; - 1/6&quot;"/>
+      <attribute_value id="148132" nameRU="1/8&quot; - 2/3&quot;" nameUK="1/8&quot; - 2/3&quot;"/>
+      <attribute_value id="190919" nameRU="1/2.5&quot; и меньше" nameUK="1/2.5 і менше"/>
+      <attribute_value id="190920" nameRU="1/2.4&quot;" nameUK="1/2.4&quot;"/>
+      <attribute_value id="190921" nameRU="1/2.3&quot;" nameUK="1/2.3&quot;"/>
+      <attribute_value id="190922" nameRU="1/2.0&quot;" nameUK="1/2.0&quot;"/>
+      <attribute_value id="190923" nameRU="1/1.8&quot;" nameUK="1/1.8&quot;"/>
+      <attribute_value id="190924" nameRU="1/1.8&quot; и более" nameUK="1/1.8&quot; і більше"/>
+      <attribute_value id="190925" nameRU="4/3&quot;" nameUK="4/3&quot;"/>
+      <attribute_value id="190929" nameRU="APS-H" nameUK="APS-H"/>
+      <attribute_value id="190938" nameRU="Big frame" nameUK="Big frame"/>
+      <attribute_value id="349991" nameRU="1/9&quot;" nameUK=""/>
+    </attribute>
+    <attribute id="11734" nameRU="Разрешающая способность (Мп)" type="real" nameUK="Роздільна здатність (Мп)"/>
+    <attribute id="12307" nameRU="Протокол связи" type="multiselect" nameUK="Протокол зв'язку">
+      <attribute_value id="120809" nameRU="Wi-Fi" nameUK="Wi-Fi"/>
+      <attribute_value id="120810" nameRU="Закрытый протокол" nameUK="Закритий протокол"/>
+      <attribute_value id="120811" nameRU="RS-232" nameUK="RS-232"/>
+      <attribute_value id="120812" nameRU="RS-422" nameUK="RS-422"/>
+      <attribute_value id="120813" nameRU="RS-485" nameUK="RS-485"/>
+      <attribute_value id="120814" nameRU="USB 2.0" nameUK="USB 2.0"/>
+      <attribute_value id="120815" nameRU="USB 3.0" nameUK="USB 3.0"/>
+      <attribute_value id="120816" nameRU="ИК-порт" nameUK="ІК-порт"/>
+      <attribute_value id="121954" nameRU="PCI" nameUK="PCI"/>
+      <attribute_value id="121956" nameRU="PCI 2.2" nameUK="PCI 2.2"/>
+      <attribute_value id="121957" nameRU="PCI-E x1" nameUK="PCI-E x1"/>
+      <attribute_value id="123261" nameRU="FC" nameUK="FC"/>
+      <attribute_value id="123265" nameRU="SC" nameUK="SC"/>
+      <attribute_value id="123267" nameRU="RJ-45" nameUK="RJ-45"/>
+      <attribute_value id="123269" nameRU="RJ-25(12)" nameUK="RJ-25(12)"/>
+      <attribute_value id="123270" nameRU="RJ-14" nameUK="RJ-14"/>
+      <attribute_value id="123271" nameRU="RJ-11" nameUK="RJ-11"/>
+      <attribute_value id="123278" nameRU="USB 2.0 Type A Plug" nameUK="USB 2.0 Type A Plug"/>
+      <attribute_value id="123280" nameRU="USB 2.0 Type A Jack" nameUK="USB 2.0 Type A Jack"/>
+      <attribute_value id="123282" nameRU="USB 2.0 Type B Plug" nameUK="USB 2.0 Type B Plug"/>
+      <attribute_value id="123283" nameRU="USB 2.0 Type B Jack" nameUK="USB 2.0 Type B Jack"/>
+      <attribute_value id="123285" nameRU="USB 2.0 Mini Type B 4 Position Plug" nameUK="USB 2.0 Mini Type B 4 Position Plug"/>
+      <attribute_value id="123287" nameRU="USB 2.0 Mini Type B 4 Position Jack" nameUK="USB 2.0 Mini Type B 4 Position Jack"/>
+      <attribute_value id="123296" nameRU="USB 2.0 Mini Type B 5 Position Plug" nameUK="USB 2.0 Mini Type B 5 Position Plug"/>
+      <attribute_value id="123299" nameRU="USB 2.0 Mini Type B 5 Position Jack" nameUK="USB 2.0 Mini Type B 5 Position Jack"/>
+      <attribute_value id="123306" nameRU="USB 2.0 Micro Type B Plug" nameUK="USB 2.0 Micro Type B Plug"/>
+      <attribute_value id="123310" nameRU="USB 2.0 Micro Type B Jack" nameUK="USB 2.0 Micro Type B Jack"/>
+      <attribute_value id="123317" nameRU="USB 3.0 Type A Plug" nameUK="USB 3.0 Type A Plug"/>
+      <attribute_value id="123318" nameRU="USB 3.0 Type A Jack" nameUK="USB 3.0 Type A Jack"/>
+      <attribute_value id="123321" nameRU="USB 3.0 Type B Plug" nameUK="USB 3.0 Type B Plug"/>
+      <attribute_value id="123322" nameRU="USB 3.0 Type B Jack" nameUK="USB 3.0 Type B Jack"/>
+      <attribute_value id="123330" nameRU="USB 3.0 Micro Type B Plug" nameUK="USB 3.0 Micro Type B Plug"/>
+      <attribute_value id="123334" nameRU="USB 3.0 Micro Type B Jack" nameUK="USB 3.0 Micro Type B Jack"/>
+      <attribute_value id="126621" nameRU="TCP" nameUK="TCP"/>
+      <attribute_value id="126622" nameRU="IP" nameUK="IP"/>
+      <attribute_value id="126623" nameRU="GPRS" nameUK="GPRS"/>
+      <attribute_value id="126624" nameRU="GSM" nameUK="GSM"/>
+      <attribute_value id="126769" nameRU="RCA" nameUK="RCA"/>
+      <attribute_value id="127380" nameRU="Dallas Touch Memory" nameUK="Dallas Touch Memory"/>
+      <attribute_value id="127381" nameRU="Wiegand" nameUK="Wiegand"/>
+      <attribute_value id="127382" nameRU="Wiegand 26" nameUK="Wiegand 26"/>
+      <attribute_value id="349992" nameRU="USB-A" nameUK=""/>
+      <attribute_value id="349993" nameRU="USB-C" nameUK=""/>
+      <attribute_value id="349994" nameRU="microUSB" nameUK=""/>
+      <attribute_value id="349995" nameRU="UVC" nameUK=""/>
+      <attribute_value id="349996" nameRU="OTG" nameUK=""/>
+    </attribute>
+    <attribute id="12312" nameRU="Монитор" type="singleselect" nameUK="Монітор">
+      <attribute_value id="120865" nameRU="Нет" nameUK="Немає"/>
+      <attribute_value id="120866" nameRU="CRT" nameUK="CRT"/>
+      <attribute_value id="120867" nameRU="LCD" nameUK="LCD"/>
+      <attribute_value id="120868" nameRU="LCD TFT" nameUK="LCD TFT"/>
+      <attribute_value id="120869" nameRU="LED" nameUK="LED"/>
+      <attribute_value id="120870" nameRU="TFT" nameUK="TFT"/>
+      <attribute_value id="120871" nameRU="ЖК" nameUK="РК"/>
+      <attribute_value id="134936" nameRU="OLED" nameUK="OLED"/>
+      <attribute_value id="205474" nameRU="VFD" nameUK="VFD"/>
+    </attribute>
+    <attribute id="12314" nameRU="Цветность монитора" type="singleselect" nameUK="Кольоровість монітора">
+      <attribute_value id="120877" nameRU="Цветной" nameUK="Кольоровий"/>
+      <attribute_value id="120878" nameRU="Черно-белый" nameUK="Чорно-білий"/>
+    </attribute>
+    <attribute id="12315" nameRU="Размер монитора" type="real" nameUK="Розмір монітора" measureUnitRU="дюйм" min="0" max="30" measureUnitUK="дюйм"/>
+    <attribute id="12316" nameRU="OSD-меню" type="bool" nameUK="OSD-меню"/>
+    <attribute id="12350" nameRU="Формат видео" type="multiselect" nameUK="Формат відео">
+      <attribute_value id="121995" nameRU="NTSC" nameUK="NTSC"/>
+      <attribute_value id="121996" nameRU="PAL" nameUK="PAL"/>
+      <attribute_value id="121997" nameRU="SÉCAM" nameUK="SÉCAM"/>
+      <attribute_value id="121998" nameRU="MUSE" nameUK="MUSE"/>
+      <attribute_value id="121999" nameRU="MAC" nameUK="MAC"/>
+      <attribute_value id="122000" nameRU="ISDB" nameUK="ISDB"/>
+      <attribute_value id="122001" nameRU="DVB" nameUK="DVB"/>
+      <attribute_value id="122002" nameRU="ATSC" nameUK="ATSC"/>
+      <attribute_value id="124415" nameRU="CCIR" nameUK="CCIR"/>
+    </attribute>
+    <attribute id="17459" nameRU="Тип передачи данных" type="singleselect" nameUK="Тип передачі даних">
+      <attribute_value id="205905" nameRU="Оптический" nameUK="Оптичний"/>
+      <attribute_value id="205906" nameRU="Оптоволоконный" nameUK="Оптоволоконний"/>
+      <attribute_value id="205907" nameRU="Видеосистема" nameUK="Відеосистема"/>
+      <attribute_value id="349997" nameRU="Видеоэндоскоп" nameUK="Відеоендоскоп"/>
+    </attribute>
+    <attribute id="17460" nameRU="Диаметр кабеля/трубки" type="real" nameUK="Діаметр кабелю/трубки" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="17461" nameRU="Длина кабеля/трубки" type="real" nameUK="Довжина кабелю/трубки" measureUnitRU="м" min="0" max="1000" measureUnitUK="м"/>
+    <attribute id="17462" nameRU="Диаметр камеры" type="real" nameUK="Діаметр камери" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+  </category>
+</categories>

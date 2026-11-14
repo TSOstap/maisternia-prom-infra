@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142702" nameRU="Магнитные фиксаторы" nameUK="Магнітні фіксатори">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="1403" nameRU="Масса" type="real" nameUK="Маса" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+    <attribute id="4245" nameRU="Толщина" type="real" nameUK="Товщина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10974" nameRU="Вид магнита" type="singleselect" nameUK="Вид магніту">
+      <attribute_value id="102444" nameRU="Постоянный" nameUK="Постійний"/>
+      <attribute_value id="151741" nameRU="Отключаемый" nameUK="Відключаємий"/>
+    </attribute>
+    <attribute id="10975" nameRU="Материал магнита" type="singleselect" nameUK="Матеріал магніту">
+      <attribute_value id="102462" nameRU="Феррит" nameUK="Ферит"/>
+      <attribute_value id="102463" nameRU="Неодим (NdFeB)" nameUK="Неодим (NdFeB)"/>
+      <attribute_value id="102464" nameRU="Самарий-кобальт (SmCo)" nameUK="Самарій-кобальт (SmCo)"/>
+      <attribute_value id="102465" nameRU="Альнико (Alnico)" nameUK="Альнико (Alnico)"/>
+      <attribute_value id="139386" nameRU="Винил" nameUK="Вініл"/>
+    </attribute>
+    <attribute id="14548" nameRU="Минимальное удерживающие усилие" type="real" nameUK="Мінімальне утримуюче зусилля" measureUnitRU="кг" min="0" max="50" measureUnitUK="кг"/>
+    <attribute id="14549" nameRU="Максимальное удерживающие усилие" type="real" nameUK="Максимальне утримуюче зусилля" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+    <attribute id="14551" nameRU="Углы удерживания" type="multiselect" nameUK="Кути утримування">
+      <attribute_value id="151742" nameRU="30°" nameUK="30°"/>
+      <attribute_value id="151743" nameRU="45°" nameUK="45°"/>
+      <attribute_value id="151744" nameRU="60°" nameUK="60°"/>
+      <attribute_value id="151745" nameRU="90°" nameUK="90°"/>
+      <attribute_value id="151746" nameRU="105°" nameUK="105°"/>
+      <attribute_value id="151747" nameRU="120°" nameUK="120°"/>
+      <attribute_value id="151748" nameRU="135°" nameUK="135°"/>
+      <attribute_value id="274777" nameRU="75°" nameUK="75°"/>
+      <attribute_value id="321712" nameRU="150°" nameUK=""/>
+      <attribute_value id="361567" nameRU="15°" nameUK=""/>
+    </attribute>
+  </category>
+</categories>

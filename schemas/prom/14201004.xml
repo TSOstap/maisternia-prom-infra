@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201004" nameRU="Метчики" nameUK="Мітчики">
+    <attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="169033" nameRU="Быстрорежущая сталь" nameUK="Швидкорізальна сталь"/>
+      <attribute_value id="169034" nameRU="Твердый сплав" nameUK="Твердий сплав"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="169209" nameRU="Ручной" nameUK="Ручний"/>
+      <attribute_value id="169213" nameRU="Машинный" nameUK="Машинний"/>
+      <attribute_value id="169214" nameRU="Машинно-ручной" nameUK="Машинно-ручної"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10152" nameRU="Шаг резьбы" type="real" nameUK="Крок різьби" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="15562" nameRU="Тип метчика" type="singleselect" nameUK="Тип мітчика">
+      <attribute_value id="169206" nameRU="Черновой" nameUK="Чернетковий"/>
+      <attribute_value id="169207" nameRU="Средний" nameUK="Середній"/>
+      <attribute_value id="169208" nameRU="Чистовой" nameUK="Чистовий"/>
+      <attribute_value id="308711" nameRU="Машинный" nameUK="Машинний"/>
+      <attribute_value id="308712" nameRU="Однопроходной" nameUK="Однопрохідний"/>
+    </attribute>
+    <attribute id="15564" nameRU="Профиль нарезаемой резьбы" type="singleselect" nameUK="Профіль нарізуваного різьблення">
+      <attribute_value id="169217" nameRU="Дюймовый" nameUK="Дюймовий"/>
+      <attribute_value id="169218" nameRU="Метрический" nameUK="Метричний"/>
+      <attribute_value id="169219" nameRU="Трубный" nameUK="Трубний"/>
+    </attribute>
+    <attribute id="15565" nameRU="Направление резьбы" type="singleselect" nameUK="Напрям різьби">
+      <attribute_value id="169221" nameRU="Левая" nameUK="Ліва"/>
+      <attribute_value id="169222" nameRU="Правая" nameUK="Права"/>
+    </attribute>
+  </category>
+</categories>

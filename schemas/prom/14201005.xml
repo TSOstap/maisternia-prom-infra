@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201005" nameRU="Твердосплавные инструменты" nameUK="Твердосплавні інструменти">
+    <attribute id="112" nameRU="Тип хвостовика" type="singleselect" nameUK="Тип хвостовика">
+      <attribute_value id="7043" nameRU="Цилиндрический" nameUK="Циліндричний"/>
+      <attribute_value id="142630" nameRU="Конический" nameUK="Конічний"/>
+    </attribute>
+    <attribute id="122" nameRU="Диаметр хвостовика" type="real" nameUK="Діаметр хвостовика" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8058" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="8059" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="61869" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="83883" nameRU="Титан" nameUK="Титан"/>
+      <attribute_value id="168897" nameRU="Эльбор" nameUK="Ельбор"/>
+      <attribute_value id="169033" nameRU="Быстрорежущая сталь" nameUK="Швидкорізальна сталь"/>
+      <attribute_value id="169034" nameRU="Твердый сплав" nameUK="Твердий сплав"/>
+      <attribute_value id="172618" nameRU="Инструментальная сталь" nameUK="Інструментальна сталь"/>
+      <attribute_value id="239421" nameRU="Жаропрочный сплав" nameUK="Жароміцний сплав"/>
+      <attribute_value id="306025" nameRU="Поликристаллический кубический алмаз" nameUK="Полікристалічний кубічний алмаз"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="87817" nameRU="Резец" nameUK="Різець"/>
+      <attribute_value id="142620" nameRU="Сверло" nameUK="Свердло"/>
+      <attribute_value id="143450" nameRU="Ручной" nameUK="Ручний"/>
+      <attribute_value id="166805" nameRU="Фреза" nameUK="Фреза"/>
+      <attribute_value id="169261" nameRU="Насадный" nameUK="Насадний"/>
+      <attribute_value id="179463" nameRU="Борфреза" nameUK="Борфреза"/>
+      <attribute_value id="179464" nameRU="Развертка" nameUK="Розгортка"/>
+      <attribute_value id="179465" nameRU="Заготовка" nameUK="Заготівля"/>
+      <attribute_value id="179466" nameRU="Метчик" nameUK="Мітчик"/>
+      <attribute_value id="179467" nameRU="Пластина" nameUK="Пластина"/>
+      <attribute_value id="239422" nameRU="Корпусная фреза со сменными пластинами" nameUK="Корпусні фреза зі змінними пластинами"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10176" nameRU="Количество зубьев" type="real" nameUK="Кількість зубів" measureUnitRU="шт" min="0" max="1000" measureUnitUK="шт."/>
+    <attribute id="10614" nameRU="Класс точности" type="singleselect" nameUK="Клас точності">
+      <attribute_value id="283820" nameRU="Н7" nameUK=""/>
+      <attribute_value id="283821" nameRU="Н8" nameUK=""/>
+      <attribute_value id="283822" nameRU="Н9" nameUK="Н9"/>
+    </attribute>
+    <attribute id="15368" nameRU="Обработка материала" type="multiselect" nameUK="Обробка матеріалу">
+      <attribute_value id="166810" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="166811" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="166812" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="166813" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="166814" nameRU="Закаленная сталь" nameUK="Загартована сталь"/>
+      <attribute_value id="166815" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="166816" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="166847" nameRU="Камень" nameUK="Камінь"/>
+      <attribute_value id="166848" nameRU="Бетон" nameUK="Бетон"/>
+      <attribute_value id="166851" nameRU="Плитка" nameUK="Плитка"/>
+      <attribute_value id="166852" nameRU="Гранит" nameUK="Граніт"/>
+      <attribute_value id="166853" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="166854" nameRU="Кирпич" nameUK="Цегла"/>
+      <attribute_value id="168098" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="168099" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="168100" nameRU="Хром" nameUK="Хром"/>
+      <attribute_value id="173945" nameRU="Металлический профиль" nameUK="Металевий профіль"/>
+      <attribute_value id="173946" nameRU="Цветной металл" nameUK="Кольоровий метал"/>
+      <attribute_value id="173952" nameRU="Керамическая плитка" nameUK="Керамічна плитка"/>
+      <attribute_value id="173955" nameRU="Железобетон" nameUK="Залізобетон"/>
+      <attribute_value id="173957" nameRU="Керамогранит" nameUK="Керамограніт"/>
+      <attribute_value id="227187" nameRU="Мрамор" nameUK="Мармур"/>
+      <attribute_value id="227190" nameRU="Тротуарная плитка" nameUK="Тротуарна плитка"/>
+      <attribute_value id="227192" nameRU="Армированный бетон" nameUK="Армований бетон"/>
+      <attribute_value id="227193" nameRU="Асфальт" nameUK="Асфальт"/>
+      <attribute_value id="227194" nameRU="Высокоармированный бетон" nameUK="Високоармований бетон"/>
+      <attribute_value id="227195" nameRU="Гидротехнический бетон" nameUK="Гідротехнічний бетон"/>
+      <attribute_value id="235938" nameRU="Мягкая древесина" nameUK="М'яка деревина"/>
+      <attribute_value id="235939" nameRU="Твердая древесина" nameUK="Тверда деревина"/>
+      <attribute_value id="235942" nameRU="Искусственный камень" nameUK="Штучний камінь"/>
+      <attribute_value id="240503" nameRU="Металлопластик" nameUK="Металопластик"/>
+      <attribute_value id="303621" nameRU="Жаропрочные и титановые сплавы" nameUK="Жароміцні та титанові сплави"/>
+    </attribute>
+    <attribute id="17994" nameRU="Радиус" type="real" nameUK="Радіус" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="17996" nameRU="Тип торца" type="singleselect" nameUK="Тип торця">
+      <attribute_value id="239625" nameRU="Прямой" nameUK="Прямий"/>
+      <attribute_value id="239626" nameRU="Радиусный" nameUK="Радіусний"/>
+    </attribute>
+    <attribute id="17997" nameRU="Геометрия" type="singleselect" nameUK="Геометрія">
+      <attribute_value id="239627" nameRU="CCMT" nameUK="CCMT"/>
+      <attribute_value id="239628" nameRU="CNMA" nameUK="CNMA"/>
+      <attribute_value id="239629" nameRU="CNMG" nameUK="CNMG"/>
+      <attribute_value id="239630" nameRU="SNMG" nameUK="SNMG"/>
+      <attribute_value id="277765" nameRU="WNMG" nameUK="WNMG"/>
+      <attribute_value id="277766" nameRU="VNMG" nameUK="VNMG"/>
+      <attribute_value id="277767" nameRU="VBMT" nameUK="VBMT"/>
+      <attribute_value id="277768" nameRU="DNMG" nameUK="DNMG"/>
+      <attribute_value id="277769" nameRU="CNMM" nameUK="CNMM"/>
+      <attribute_value id="277979" nameRU="DCMT" nameUK="DCMT"/>
+      <attribute_value id="277980" nameRU="TNMG" nameUK="TNMG"/>
+      <attribute_value id="277981" nameRU="APMT" nameUK="APMT"/>
+      <attribute_value id="278135" nameRU="SEET" nameUK="SEET"/>
+      <attribute_value id="278136" nameRU="LDMT" nameUK="LDMT"/>
+      <attribute_value id="278137" nameRU="APKT" nameUK="APKT"/>
+      <attribute_value id="278138" nameRU="SEEN" nameUK="SEEN"/>
+      <attribute_value id="278139" nameRU="R390" nameUK="R390"/>
+      <attribute_value id="278140" nameRU="ONGU" nameUK="ONGU"/>
+      <attribute_value id="278141" nameRU="PNER" nameUK="PNER"/>
+      <attribute_value id="278142" nameRU="MPHT" nameUK="MPHT"/>
+      <attribute_value id="278143" nameRU="SPMT" nameUK="SPMT"/>
+      <attribute_value id="278144" nameRU="WCMX" nameUK="WCMX"/>
+      <attribute_value id="290343" nameRU="YNMG" nameUK=""/>
+      <attribute_value id="290411" nameRU="TCMT" nameUK=""/>
+      <attribute_value id="290535" nameRU="BLMP" nameUK=""/>
+      <attribute_value id="290556" nameRU="MGMN" nameUK=""/>
+      <attribute_value id="290569" nameRU="GTN" nameUK=""/>
+      <attribute_value id="295363" nameRU="SCMT" nameUK=""/>
+      <attribute_value id="295396" nameRU="VCMT" nameUK=""/>
+      <attribute_value id="295412" nameRU="RNMN" nameUK=""/>
+      <attribute_value id="300610" nameRU="RCMT" nameUK="RCMT"/>
+      <attribute_value id="301419" nameRU="LNMT" nameUK=""/>
+      <attribute_value id="303300" nameRU="EPNW" nameUK=""/>
+      <attribute_value id="303325" nameRU="27VER" nameUK=""/>
+      <attribute_value id="303326" nameRU="27VNR" nameUK=""/>
+      <attribute_value id="303691" nameRU="3VER" nameUK=""/>
+      <attribute_value id="304086" nameRU="TPKN" nameUK=""/>
+      <attribute_value id="305489" nameRU="SPMG" nameUK=""/>
+      <attribute_value id="305564" nameRU="WNMM" nameUK=""/>
+      <attribute_value id="309832" nameRU="SPGT" nameUK=""/>
+      <attribute_value id="310501" nameRU="LNKT" nameUK=""/>
+      <attribute_value id="310502" nameRU="ONHU" nameUK=""/>
+      <attribute_value id="319927" nameRU="GR" nameUK=""/>
+      <attribute_value id="341259" nameRU="XPHT" nameUK=""/>
+      <attribute_value id="344308" nameRU="WNMU" nameUK=""/>
+      <attribute_value id="345627" nameRU="DCEX" nameUK="DCEX"/>
+    </attribute>
+  </category>
+</categories>

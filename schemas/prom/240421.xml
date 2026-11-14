@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="240421" nameRU="Туристические столы" nameUK="Туристичні столи">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="50" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="1200" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="3500" measureUnitUK="мм"/>
+    <attribute id="513" nameRU="Максимально допустимая нагрузка" type="integer" nameUK="Максимально допустиме навантаження" measureUnitRU="кг" min="0" max="150" measureUnitUK="кг"/>
+    <attribute id="518" nameRU="Чехол для хранения и транспортировки" type="bool" nameUK="Чохол для зберігання й транспортування"/>
+    <attribute id="534" nameRU="Возможность регулировки опор по высоте" type="bool" nameUK="Можливість регулювання по висоті опор"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="3500" measureUnitUK="мм"/>
+    <attribute id="542" nameRU="Высота в сложенном виде" type="integer" nameUK="Висота в складеному вигляді" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="548" nameRU="Ширина в сложенном виде" type="integer" nameUK="Ширина у складеному вигляді" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="924" nameRU="Складная конструкция для хранения и транспортировки" type="bool" nameUK="Складна конструкція для зберігання і транспортування"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="263113" nameRU="Капучино" nameUK="Капучино"/>
+      <attribute_value id="266237" nameRU="Айвори" nameUK="Айворі"/>
+      <attribute_value id="266644" nameRU="Антрацит" nameUK="Антрацит"/>
+      <attribute_value id="311014" nameRU="Табако" nameUK="Табако"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="6301" nameRU="Материал столешницы" type="singleselect" nameUK="Матеріал стільниці">
+      <attribute_value id="43522" nameRU="Ламинированная ДСП" nameUK="Ламінована ДСП"/>
+      <attribute_value id="43524" nameRU="ДСП покрытая пластиком" nameUK="ДСП вкрита пластиком"/>
+      <attribute_value id="43527" nameRU="МДФ крашеный" nameUK="МДФ фарбований"/>
+      <attribute_value id="43528" nameRU="МДФ покрытый пластиком" nameUK="МДФ вкритий пластиком"/>
+      <attribute_value id="43529" nameRU="МДФ пленочный" nameUK="МДФ плівковий"/>
+      <attribute_value id="43530" nameRU="МДФ ламинированный" nameUK="МДФ ламінований"/>
+      <attribute_value id="43531" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="43532" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="43533" nameRU="Стекло" nameUK="Скло"/>
+      <attribute_value id="43536" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="43537" nameRU="Фанера" nameUK="Фанера"/>
+      <attribute_value id="43539" nameRU="Искусственный ротанг" nameUK="Штучний ротанг"/>
+      <attribute_value id="43592" nameRU="Натуральное дерево" nameUK="Натуральне дерево"/>
+      <attribute_value id="43945" nameRU="ДСП" nameUK="ДСП"/>
+      <attribute_value id="43946" nameRU="МДФ" nameUK="МДФ"/>
+      <attribute_value id="44558" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="60003" nameRU="Ламинированная ДВП" nameUK="Ламінована ДВП"/>
+      <attribute_value id="60004" nameRU="ДВП" nameUK="ДВП"/>
+      <attribute_value id="60006" nameRU="Ткань" nameUK="Тканина"/>
+      <attribute_value id="215831" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="281185" nameRU="Полиэфирный материал" nameUK="Поліефірний матеріал"/>
+      <attribute_value id="302905" nameRU="Стекловолокно" nameUK="Скловолокно"/>
+      <attribute_value id="306539" nameRU="Полиэтилен" nameUK="Поліетилен"/>
+      <attribute_value id="306784" nameRU="Базальт" nameUK="Базальт"/>
+      <attribute_value id="332632" nameRU="Полиэстер" nameUK="Поліестер"/>
+      <attribute_value id="361345" nameRU="HPL" nameUK=""/>
+    </attribute>
+    <attribute id="6328" nameRU="Форма стола" type="singleselect" nameUK="Форма столу">
+      <attribute_value id="43754" nameRU="Круглый" nameUK="Круглий"/>
+      <attribute_value id="43755" nameRU="Овальный" nameUK="Овальний"/>
+      <attribute_value id="43756" nameRU="Прямоугольный" nameUK="Прямокутний"/>
+      <attribute_value id="43757" nameRU="Квадратный" nameUK="Квадратний"/>
+      <attribute_value id="345482" nameRU="Полукруглый" nameUK="Напівкруглий"/>
+    </attribute>
+    <attribute id="7099" nameRU="Материал каркаса (опор)" type="singleselect" nameUK="Матеріал каркасу (опор)">
+      <attribute_value id="60015" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="60016" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="60018" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="60019" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="60020" nameRU="Натуральное дерево" nameUK="Натуральне дерево"/>
+      <attribute_value id="62407" nameRU="Дюралюминий" nameUK="Дюралюміній"/>
+      <attribute_value id="329091" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+    </attribute>
+    <attribute id="7101" nameRU="Отверстие в столешнице для зонта" type="bool" nameUK="Отвір у стільниці для парасольки"/>
+    <attribute id="7370" nameRU="Глубина в сложенном виде" type="integer" nameUK="Глибина у складеному вигляді" measureUnitRU="мм" min="0" max="1200" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

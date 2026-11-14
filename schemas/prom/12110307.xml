@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="12110307" nameRU="Гидравлические подкатные краны" nameUK="Гідравлічні підкатні крани">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="300" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="1280" nameRU="Грузоподъемность" type="real" nameUK="Вантажопідйомність" measureUnitRU="кг" min="0" max="2000" measureUnitUK="кг"/>
+    <attribute id="1342" nameRU="Высота подъема" type="real" nameUK="Висота підйому" measureUnitRU="мм" min="0" max="3000" measureUnitUK="мм"/>
+    <attribute id="2285" nameRU="Вылет стрелы" type="real" nameUK="Виліт стріли" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="15670" nameRU="Ширина общая" type="real" nameUK="Ширина загальна" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="15671" nameRU="Высота колонны" type="real" nameUK="Висота колони" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="15672" nameRU="Длина лап" type="real" nameUK="Довжина лап" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+  </category>
+</categories>
