@@ -3,6 +3,7 @@
 import { mtKey, mtSku, mtText } from "./text.mjs";
 import { DEFAULT_PRICING, mtSameDiscount, ownerCost, rowPrices } from "./pricing.mjs";
 import { prosaleFor } from "./prosale.mjs";
+import { effectiveAvailability } from "./owner-availability.mjs";
 
 /** Операційні колонки F:M — єдине, що оновлення має право змінювати. Порядок фіксований. */
 export const LIVE_COLUMNS = Object.freeze([
@@ -62,9 +63,12 @@ export function planRows(rows, offers, stamp, pricing = DEFAULT_PRICING) {
     const match = matchOffer(row, offer);
     let next = before.slice();
     if (match === MATCH.OK) {
+      // Рішення власника 14.11: «Наявність власника» — діє, поки постачальник не змінить свою наявність (src/core/owner-availability.mjs;
+      // очищення клітинки — лише «Оновити ціни й наявність», src/core/prices-only.mjs).
+      const available = effectiveAvailability(row, offer.available).available;
       // Рішення власника 06.11: «Ціна власника» (ціна постачальника, яку власник знає раніше за фід) — замість ціни з фіду.
       // Рішення власника 14.11: «Ціна вручну» (лише поки ціна постачальника та сама) / «Надбавка» (−1…+5) — rowPrices.
-      const p = rowPrices(row, ownerCost(row) ?? offer.price, offer.available, pricing, prosaleFor(row, pricing));
+      const p = rowPrices(row, ownerCost(row) ?? offer.price, available, pricing, prosaleFor(row, pricing));
       next = [offer.price, p.base, p.final, p.discount, p.availability, offer.quantity === "" ? before[5] : Number(offer.quantity), match, stamp];
       // Та сама знижка в іншому поданні (0.2 у %-клітинці = «20%») — не зміна.
       if (mtSameDiscount(before[3], next[3])) next[3] = before[3];

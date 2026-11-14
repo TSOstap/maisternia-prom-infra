@@ -24,7 +24,9 @@ test("контракт власності: усі колонки описані;
   const s = contract.sheets.get(T);
   for (const k of MAIN_HEADERS) assert.ok(s.columns.has(k), "немає в контракті: " + k);
   for (const k of SEO_FIELDS) { assert.deepEqual(s.columns.get(k).writers, ["sync"], k); assert.equal(s.columns.get(k).gate, "field-state", k); }
-  for (const k of ["SEO заголовок UA", "SEO опис RU", "SEO рішення", "Продаж рішення", "Ціна власника", "Наявність власника"]) assert.deepEqual(s.columns.get(k).writers, [], k);
+  for (const k of ["SEO заголовок UA", "SEO опис RU", "SEO рішення", "Продаж рішення", "Ціна власника"]) assert.deepEqual(s.columns.get(k).writers, [], k);
+  // Рішення власника 14.11: «Наявність власника» — система (sync) лише СПОЖИВАЄ значення: очищує клітинку, коли постачальник оновив наявність.
+  assert.deepEqual(s.columns.get("Наявність власника").writers, ["sync"]); assert.equal(s.columns.get("Наявність власника").gate, "cmd-consume");
   assert.ok(!writableColumns(contract, T, "sync").includes("Offer ID"));
   assert.throws(() => assertWritable(contract, "Невідомий аркуш", "sync", ["X"]), /не описаний/);
 });
