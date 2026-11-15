@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1250357" nameRU="Запчасти для триммеров и газонокосилок" nameUK="Запчастини для тримерів і газонокосарок">
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="329339" nameRU="Для бензиновых газонокосилок " nameUK="Для бензинових газонокосарок"/>
+      <attribute_value id="329340" nameRU="Для электрических газонокосилок" nameUK="Для електричних газонокосарок"/>
+      <attribute_value id="329341" nameRU="Для триммеров" nameUK="Для тримерів"/>
+      <attribute_value id="330031" nameRU="Для бензопилы" nameUK="Для бензопили"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="18586" nameRU="Оригинал" type="bool" nameUK="Оригінал"/>
+  </category>
+</categories>

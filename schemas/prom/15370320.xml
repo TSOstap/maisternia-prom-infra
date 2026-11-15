@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="15370320" nameRU="Детекторы скрытой проводки" nameUK="Детектори прихованої проводки">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="1000" measureUnitUK="г"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+      <attribute_value id="11634" nameRU="Сеть 12В" nameUK="Мережа 12В"/>
+      <attribute_value id="40710" nameRU="Батарейки одноразовые" nameUK="Батарейки одноразові"/>
+      <attribute_value id="40711" nameRU="Батарейки аккумуляторного типа" nameUK="Батарейки акумуляторного типу"/>
+      <attribute_value id="53227" nameRU="Сеть 110В" nameUK="Мережа 110В"/>
+      <attribute_value id="122325" nameRU="Сеть 24В" nameUK="Мережа 24В"/>
+      <attribute_value id="122326" nameRU="Солнечные батареи" nameUK="Сонячні батареї"/>
+      <attribute_value id="141124" nameRU="PoE" nameUK="PoE"/>
+      <attribute_value id="146939" nameRU="USB" nameUK="USB"/>
+    </attribute>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="°С" min="0" max="100" measureUnitUK="°С"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="336" nameRU="Подсветка дисплея" type="bool" nameUK="Підсвічування дисплея"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="1338" nameRU="Время работы" type="real" nameUK="Час роботи" measureUnitRU="час" min="0" max="1000" measureUnitUK="годин"/>
+    <attribute id="1349" nameRU="Разрешение экрана" type="singleselect" nameUK="Роздільна здатність екрану">
+      <attribute_value id="9692" nameRU="1024×600 (WSVGA)" nameUK="1024×600 (WSVGA)"/>
+      <attribute_value id="44026" nameRU="160×200" nameUK="160×200"/>
+      <attribute_value id="44027" nameRU="256×192" nameUK="256×192"/>
+      <attribute_value id="44028" nameRU="320×200" nameUK="320×200"/>
+      <attribute_value id="44029" nameRU="320×240" nameUK="320×240"/>
+      <attribute_value id="44030" nameRU="320×256" nameUK="320×256"/>
+      <attribute_value id="44031" nameRU="400×240" nameUK="400×240"/>
+      <attribute_value id="44032" nameRU="400×288" nameUK="400×288"/>
+      <attribute_value id="44033" nameRU="640×200" nameUK="640×200"/>
+      <attribute_value id="44035" nameRU="480×270" nameUK="480×270"/>
+      <attribute_value id="44036" nameRU="512×256" nameUK="512×256"/>
+      <attribute_value id="44037" nameRU="466×288" nameUK="466×288"/>
+      <attribute_value id="44038" nameRU="480×320" nameUK="480×320"/>
+      <attribute_value id="44039" nameRU="640×256" nameUK="640×256"/>
+      <attribute_value id="44040" nameRU="640×272" nameUK="640×272"/>
+      <attribute_value id="44041" nameRU="512×342" nameUK="512×342"/>
+      <attribute_value id="44042" nameRU="640×288" nameUK="640×288"/>
+      <attribute_value id="44043" nameRU="512×384" nameUK="512×384"/>
+      <attribute_value id="44046" nameRU="640×350" nameUK="640×350"/>
+      <attribute_value id="44047" nameRU="640×400" nameUK="640×400"/>
+      <attribute_value id="44048" nameRU="640×480" nameUK="640×480"/>
+      <attribute_value id="44049" nameRU="640×512" nameUK="640×512"/>
+      <attribute_value id="44050" nameRU="720×348" nameUK="720x348"/>
+      <attribute_value id="44051" nameRU="720×350" nameUK="720×350"/>
+      <attribute_value id="44052" nameRU="720×360" nameUK="720×360"/>
+      <attribute_value id="44053" nameRU="784×640" nameUK="784×640"/>
+      <attribute_value id="44054" nameRU="800×480" nameUK="800×480"/>
+      <attribute_value id="44055" nameRU="800×600" nameUK="800×600"/>
+      <attribute_value id="44056" nameRU="800×640" nameUK="800×640"/>
+      <attribute_value id="44057" nameRU="854×466" nameUK="854×466"/>
+      <attribute_value id="44058" nameRU="854×480" nameUK="854×480"/>
+      <attribute_value id="44059" nameRU="960×540" nameUK="960×540"/>
+      <attribute_value id="44060" nameRU="960×640" nameUK="960×640"/>
+      <attribute_value id="44061" nameRU="1024×576" nameUK="1024×576"/>
+      <attribute_value id="44062" nameRU="1024×768 (XGA)" nameUK="1024×768 (XGA)"/>
+      <attribute_value id="44063" nameRU="1152×648" nameUK="1152×648"/>
+      <attribute_value id="44064" nameRU="1120×832" nameUK="1120×832"/>
+      <attribute_value id="44065" nameRU="1152×720" nameUK="1152×720"/>
+      <attribute_value id="44066" nameRU="1152×768" nameUK="1152×768"/>
+      <attribute_value id="44067" nameRU="1152×864" nameUK="1152×864"/>
+      <attribute_value id="44068" nameRU="1152×900" nameUK="1152×900"/>
+      <attribute_value id="44069" nameRU="1200×720" nameUK="1200×720"/>
+      <attribute_value id="44070" nameRU="1280×720" nameUK="1280×720"/>
+      <attribute_value id="44071" nameRU="1280×768" nameUK="1280×768"/>
+      <attribute_value id="44072" nameRU="1280×800" nameUK="1280×800"/>
+      <attribute_value id="44073" nameRU="1280×854" nameUK="1280×854"/>
+      <attribute_value id="44074" nameRU="1280×960" nameUK="1280×960"/>
+      <attribute_value id="44075" nameRU="1280×1024 (SXGA)" nameUK="1280×1024 (SXGA)"/>
+      <attribute_value id="44076" nameRU="1366×768" nameUK="1366×768"/>
+      <attribute_value id="44077" nameRU="1440×900" nameUK="1440×900"/>
+      <attribute_value id="44079" nameRU="1440×960" nameUK="1440×960"/>
+      <attribute_value id="44080" nameRU="1400×1050" nameUK="1400×1050"/>
+      <attribute_value id="44081" nameRU="1440×1080" nameUK="1440×1080"/>
+      <attribute_value id="44082" nameRU="1536×864" nameUK="1536×864"/>
+      <attribute_value id="44093" nameRU="1600×900" nameUK="1600×900"/>
+      <attribute_value id="44094" nameRU="1600×1024" nameUK="1600×1024"/>
+      <attribute_value id="44096" nameRU="1680×1050" nameUK="1680×1050"/>
+      <attribute_value id="44097" nameRU="1600×1200" nameUK="1600×1200"/>
+      <attribute_value id="44098" nameRU="Full HD (1920×1080)" nameUK="Full HD (1920×1080)"/>
+      <attribute_value id="44100" nameRU="1920×1200" nameUK="1920×1200"/>
+      <attribute_value id="44101" nameRU="1920×1280" nameUK="1920×1280"/>
+      <attribute_value id="44102" nameRU="1920×1440" nameUK="1920×1440"/>
+      <attribute_value id="44103" nameRU="2048×1080" nameUK="2048×1080"/>
+      <attribute_value id="44104" nameRU="2048×1152" nameUK="2048×1152"/>
+      <attribute_value id="44106" nameRU="2560×1440" nameUK="2560×1440"/>
+      <attribute_value id="44107" nameRU="2560×1600" nameUK="2560×1600"/>
+      <attribute_value id="44108" nameRU="2560×2048" nameUK="2560×2048"/>
+      <attribute_value id="44109" nameRU="2880×1800" nameUK="2880×1800"/>
+      <attribute_value id="44111" nameRU="3200×2048" nameUK="3200×2048"/>
+      <attribute_value id="44112" nameRU="3200×2400" nameUK="3200×2400"/>
+      <attribute_value id="44113" nameRU="4K Ultra HD (3840×2160)" nameUK="4K Ultra HD (3840×2160)"/>
+      <attribute_value id="44115" nameRU="5120×4096" nameUK="5120×4096"/>
+      <attribute_value id="44116" nameRU="6400×4096" nameUK="6400×4096"/>
+      <attribute_value id="44117" nameRU="6400×4800" nameUK="6400×4800"/>
+      <attribute_value id="44118" nameRU="7680×4320" nameUK="7680×4320"/>
+      <attribute_value id="44119" nameRU="7680×4800" nameUK="7680×4800"/>
+      <attribute_value id="45610" nameRU="128×128" nameUK="128×128"/>
+      <attribute_value id="123106" nameRU="960х240" nameUK="960х240"/>
+      <attribute_value id="127547" nameRU="64x64" nameUK="64x64"/>
+      <attribute_value id="127548" nameRU="128x160" nameUK="128x160"/>
+      <attribute_value id="127549" nameRU="64x126" nameUK="64x126"/>
+      <attribute_value id="127550" nameRU="64x128" nameUK="64x128"/>
+      <attribute_value id="147285" nameRU="1200х824" nameUK="1200х824"/>
+      <attribute_value id="147286" nameRU="1200х800" nameUK="1200х800"/>
+      <attribute_value id="147287" nameRU="768x1024" nameUK="768x1024"/>
+      <attribute_value id="147288" nameRU="272х480" nameUK="272х480"/>
+      <attribute_value id="147289" nameRU="758x1024" nameUK="758x1024"/>
+      <attribute_value id="148670" nameRU="2048×1536" nameUK="2048×1536"/>
+      <attribute_value id="157345" nameRU="480x234" nameUK="480x234"/>
+      <attribute_value id="157346" nameRU="384x240" nameUK="384x240"/>
+      <attribute_value id="162076" nameRU="640x1136" nameUK="640x1136"/>
+      <attribute_value id="173480" nameRU="1334×750 " nameUK="1334×750"/>
+      <attribute_value id="190611" nameRU="1800×1080" nameUK="1800×1080"/>
+      <attribute_value id="197842" nameRU="1920×1152" nameUK="1920×1152"/>
+      <attribute_value id="349522" nameRU="2750 × 1260" nameUK=""/>
+    </attribute>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="1000" measureUnitUK="В"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="°С" min="-100" max="0" measureUnitUK="°С"/>
+    <attribute id="6036" nameRU="Индикация" type="singleselect" nameUK="Індикація">
+      <attribute_value id="52701" nameRU="Звуковая" nameUK="Звукова"/>
+      <attribute_value id="52702" nameRU="Световая" nameUK="Світлова"/>
+      <attribute_value id="52711" nameRU="Звуковая/Световая/Вибро" nameUK="Звукова/Світлова/Вібро"/>
+      <attribute_value id="61678" nameRU="Вибросигнал" nameUK="Вібросигнал"/>
+      <attribute_value id="126987" nameRU="Световая/Звуковая" nameUK="Світлова/Звукова"/>
+      <attribute_value id="135408" nameRU="Нет" nameUK="Немає"/>
+    </attribute>
+    <attribute id="6937" nameRU="Количество строк" type="integer" nameUK="Кількість рядків"/>
+    <attribute id="7158" nameRU="Количество символов в строке" type="integer" nameUK="Кількість символів в рядку"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+      <attribute_value id="231714" nameRU="Неликвид" nameUK="Неліквід"/>
+    </attribute>
+    <attribute id="12061" nameRU="Дополнительный источник питания" type="multiselect" nameUK="Додаткове джерело живлення">
+      <attribute_value id="117151" nameRU="Сеть 12В" nameUK="Мережа 12В"/>
+      <attribute_value id="117152" nameRU="Сеть 110В" nameUK="Мережа 110В"/>
+      <attribute_value id="117153" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="117155" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+      <attribute_value id="117157" nameRU="Батарейки одноразовые" nameUK="Батарейки одноразові"/>
+      <attribute_value id="117158" nameRU="Батарейки аккумуляторного типа" nameUK="Батарейки акумуляторного типу"/>
+      <attribute_value id="117159" nameRU="Солнечные батареи" nameUK="Сонячні батареї"/>
+      <attribute_value id="117160" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="122327" nameRU="Сеть 24В" nameUK="Мережа 24В"/>
+      <attribute_value id="141125" nameRU="PoE" nameUK="PoE"/>
+    </attribute>
+    <attribute id="12312" nameRU="Монитор" type="singleselect" nameUK="Монітор">
+      <attribute_value id="120865" nameRU="Нет" nameUK="Немає"/>
+      <attribute_value id="120866" nameRU="CRT" nameUK="CRT"/>
+      <attribute_value id="120867" nameRU="LCD" nameUK="LCD"/>
+      <attribute_value id="120868" nameRU="LCD TFT" nameUK="LCD TFT"/>
+      <attribute_value id="120869" nameRU="LED" nameUK="LED"/>
+      <attribute_value id="120870" nameRU="TFT" nameUK="TFT"/>
+      <attribute_value id="120871" nameRU="ЖК" nameUK="РК"/>
+      <attribute_value id="134936" nameRU="OLED" nameUK="OLED"/>
+    </attribute>
+    <attribute id="12314" nameRU="Цветность монитора" type="singleselect" nameUK="Кольоровість монітора">
+      <attribute_value id="120877" nameRU="Цветной" nameUK="Кольоровий"/>
+      <attribute_value id="120878" nameRU="Черно-белый" nameUK="Чорно-білий"/>
+    </attribute>
+    <attribute id="12315" nameRU="Размер монитора" type="real" nameUK="Розмір монітора" measureUnitRU="дюйм" min="0" max="30" measureUnitUK="дюйм"/>
+    <attribute id="12316" nameRU="OSD-меню" type="bool" nameUK="OSD-меню"/>
+    <attribute id="15092" nameRU="Высота символа" type="real" nameUK="Висота символу" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="17339" nameRU="Максимальная глубина обнаружения" type="real" nameUK="Максимальна глибина виявлення" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="17340" nameRU="Обнаружение черных металлов" type="real" nameUK="Виявлення чорних металів" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="17341" nameRU="Обнаружение цветных металлов" type="real" nameUK="Виявлення кольорових металів" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="17342" nameRU="Обнаружение проводки под напряжением" type="real" nameUK="Виявлення проводки під напругою" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="17343" nameRU="Обнаружение древесины" type="real" nameUK="Виявлення деревини" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="17344" nameRU="Автоматическое отключение" type="real" nameUK="Автоматичне відключення" measureUnitRU="мин" min="0" max="100" measureUnitUK="хв"/>
+  </category>
+</categories>

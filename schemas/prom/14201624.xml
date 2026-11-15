@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201624" nameRU="Бензобуры" nameUK="Бензобури">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="7000" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+    <attribute id="8" nameRU="Реверс" type="bool" nameUK="Реверс"/>
+    <attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+    <attribute id="12" nameRU="Поддержка постоянного количества оборотов под нагрузкой" type="bool" nameUK="Підтримка постійного числа обертів під навантаженням"/>
+    <attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="10000" measureUnitUK="об/хв"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="116" nameRU="Количество цилиндров" type="singleselect" nameUK="Кількість циліндрів">
+      <attribute_value id="7047" nameRU="1" nameUK="1"/>
+      <attribute_value id="7048" nameRU="2" nameUK="2"/>
+    </attribute>
+    <attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="700" measureUnitUK="куб. см"/>
+    <attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="л. с." min="0" max="30" measureUnitUK="к. с."/>
+    <attribute id="349" nameRU="Емкость топливного бака" type="real" nameUK="Ємність паливного бака" measureUnitRU="мл" min="0" max="2000" measureUnitUK="мл"/>
+    <attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="10" measureUnitUK="л/год"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="360" nameRU="Праймер" type="bool" nameUK="Праймер"/>
+    <attribute id="361" nameRU="Легкий запуск" type="bool" nameUK="Легкий запуск"/>
+    <attribute id="363" nameRU="Максимальный диаметр бура" type="real" nameUK="Максимальний діаметр бура" measureUnitRU="мм" min="0" max="400" measureUnitUK="мм"/>
+    <attribute id="365" nameRU="Глубина бурения" type="real" nameUK="Глибина буріння" measureUnitRU="м" min="0" max="10" measureUnitUK="м"/>
+    <attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+      <attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+      <attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+    </attribute>
+    <attribute id="8196" nameRU="Максимальный крутящий момент" type="real" nameUK="Максимальний крутний момент" measureUnitRU="H*m" min="0" max="1500" measureUnitUK="H*m"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="12599" nameRU="Тип охлаждения" type="singleselect" nameUK="Тип охолодження">
+      <attribute_value id="289167" nameRU="Воздушный" nameUK="Повітряний"/>
+    </attribute>
+    <attribute id="17915" nameRU="Коэффициент понижения" type="singleselect" nameUK="Коефіцієнт зниження">
+      <attribute_value id="235900" nameRU="35:1" nameUK="35:1"/>
+      <attribute_value id="235901" nameRU="30:1" nameUK="30:1"/>
+      <attribute_value id="281561" nameRU="25:1" nameUK="25:1"/>
+      <attribute_value id="289059" nameRU="40:1" nameUK=""/>
+      <attribute_value id="345895" nameRU="16:1" nameUK="16:1"/>
+    </attribute>
+  </category>
+</categories>

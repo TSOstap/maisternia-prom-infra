@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="625" nameRU="Увлажнители и очистители воздуха" nameUK="Зволожувачі та очищувачі повітря">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="2500" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="50" measureUnitUK="кг"/>
+    <attribute id="46" nameRU="Тип управления" type="singleselect" nameUK="Тип управління">
+      <attribute_value id="6923" nameRU="Механическое" nameUK="Механічне"/>
+      <attribute_value id="6924" nameRU="Сенсорное" nameUK="Сенсорне"/>
+      <attribute_value id="6925" nameRU="Электронное" nameUK="Електронне"/>
+    </attribute>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град. C" min="0" max="50"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="2500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="149" nameRU="Глубина" type="real" nameUK="Глибина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+      <attribute_value id="7068" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="7069" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="7070" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="7071" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="7072" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="7075" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="7076" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="7077" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7078" nameRU="Антрацит" nameUK="Антрацит"/>
+      <attribute_value id="7079" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="7080" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="7081" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="7082" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="7083" nameRU="Медный" nameUK="Мідний"/>
+      <attribute_value id="7084" nameRU="Слоновая кость" nameUK="Слонова кістка"/>
+      <attribute_value id="7085" nameRU="Фисташковый" nameUK="Фісташковий"/>
+      <attribute_value id="7086" nameRU="Кремовый" nameUK="Кремовий"/>
+      <attribute_value id="7087" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="7088" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="7089" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="7090" nameRU="Малиновый" nameUK="Малиновий"/>
+      <attribute_value id="7091" nameRU="Сиреневый" nameUK="Бузковий"/>
+      <attribute_value id="7092" nameRU="Персиковый" nameUK="Персиковий"/>
+      <attribute_value id="7093" nameRU="Серебряный" nameUK="Срібний"/>
+      <attribute_value id="7094" nameRU="Другой" nameUK="Інший"/>
+    </attribute>
+    <attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+      <attribute_value id="7132" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7867" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="37990" nameRU="Стеклокерамика" nameUK="Склокераміка"/>
+      <attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="298855" nameRU="Цинковый сплав" nameUK="Цинковий сплав"/>
+      <attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+      <attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+      <attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+    </attribute>
+    <attribute id="307" nameRU="Фильтр" type="multiselect" nameUK="Фільтр">
+      <attribute_value id="38562" nameRU="HEPA-фильтр" nameUK="HEPA-фільтр"/>
+      <attribute_value id="38563" nameRU="Предварительный фильтр" nameUK="Попередній фільтр"/>
+      <attribute_value id="38565" nameRU="Угольный фильтр" nameUK="Вугільний фільтр"/>
+      <attribute_value id="38567" nameRU="Электростатический фильтр" nameUK="Електростатичний фільтр"/>
+      <attribute_value id="38569" nameRU="ULPA-фильтр" nameUK="ULPA-фільтр"/>
+      <attribute_value id="38571" nameRU="HIMOP–фильтр" nameUK="HIMOP–фільтр"/>
+      <attribute_value id="38573" nameRU="Фотокаталитический фильтр" nameUK="Фотокаталітичний фільтр"/>
+    </attribute>
+    <attribute id="319" nameRU="Таймер" type="bool" nameUK="Таймер"/>
+    <attribute id="327" nameRU="Индикатор работы" type="bool" nameUK="Індикатор роботи"/>
+    <attribute id="335" nameRU="Дисплей" type="bool" nameUK="Дисплей"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="80" measureUnitUK="дБ"/>
+    <attribute id="367" nameRU="Автоотключение при отсутствии воды" type="bool" nameUK="Автовідключення при відсутності води"/>
+    <attribute id="467" nameRU="Защита от детей" type="bool" nameUK="Захист від дітей"/>
+    <attribute id="610" nameRU="Подсветка" type="bool" nameUK="Підсвічування"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="165280" nameRU="Очиститель" nameUK="Очисник"/>
+      <attribute_value id="165281" nameRU="Увлажнитель" nameUK="Зволожувач"/>
+      <attribute_value id="165282" nameRU="Очиститель/увлажнитель" nameUK="Очищувач/зволожувач"/>
+      <attribute_value id="178692" nameRU="Ароматизатор" nameUK="Ароматизатор"/>
+    </attribute>
+    <attribute id="802" nameRU="Пульт дистанционного управления" type="bool" nameUK="Пульт дистанційного керування"/>
+    <attribute id="898" nameRU="УФ-лампа" type="bool" nameUK="УФ-лампа"/>
+    <attribute id="948" nameRU="Объем резервуара для воды" type="real" nameUK="Об'єм резервуара для води" measureUnitRU="л" min="0" max="20" measureUnitUK="л"/>
+    <attribute id="1331" nameRU="Озонирование" type="bool" nameUK="Озонування"/>
+    <attribute id="1391" nameRU="Ароматизация" type="bool" nameUK="Ароматизація"/>
+    <attribute id="1980" nameRU="Тип питания" type="multiselect" nameUK="Тип живлення">
+      <attribute_value id="11692" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="11693" nameRU="Сеть 220 В" nameUK="Мережа 220 В"/>
+      <attribute_value id="11694" nameRU="Сеть 380 В" nameUK="Мережа 380 В"/>
+      <attribute_value id="11695" nameRU="Сеть 12 В" nameUK="Мережа 12 В"/>
+      <attribute_value id="12002" nameRU="Сеть 115 В" nameUK="Мережа 115 В"/>
+      <attribute_value id="12624" nameRU="Сеть 24 В" nameUK="Мережа 24 В"/>
+      <attribute_value id="21680" nameRU="Батарейки" nameUK="Батарейки"/>
+      <attribute_value id="138709" nameRU="USB-порт" nameUK="USB-порт"/>
+      <attribute_value id="268919" nameRU="Блок питания " nameUK="Блок живлення"/>
+    </attribute>
+    <attribute id="2392" nameRU="Тип установки" type="multiselect" nameUK="Тип встановлення">
+      <attribute_value id="36482" nameRU="Напольный" nameUK="Підлоговий"/>
+      <attribute_value id="36483" nameRU="Настенный" nameUK="Настінний"/>
+      <attribute_value id="36484" nameRU="Потолочный" nameUK="Стельовий"/>
+      <attribute_value id="36487" nameRU="Настольный" nameUK="Настільний"/>
+    </attribute>
+    <attribute id="3129" nameRU="Функция ионизации" type="bool" nameUK="Функція іонізації"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град. C" min="50" max="10"/>
+    <attribute id="5619" nameRU="Рекомендуемый объем помещения" type="real" nameUK="Рекомендований об'єм приміщення" measureUnitRU="куб. м" min="0" max="1100" measureUnitUK="куб. м"/>
+    <attribute id="5641" nameRU="Встроенный гигростат" type="bool" nameUK="Вбудований гігростат"/>
+    <attribute id="5670" nameRU="Тип увлажнителя" type="singleselect" nameUK="Тип зволожувача">
+      <attribute_value id="37885" nameRU="Традиционный" nameUK="Традиційний"/>
+      <attribute_value id="37886" nameRU="Паровой" nameUK="Паровий"/>
+      <attribute_value id="37887" nameRU="Ультразвуковой" nameUK="Ультразвуковий"/>
+      <attribute_value id="37888" nameRU="Мойка воздуха" nameUK="Мийка повітря"/>
+    </attribute>
+    <attribute id="5675" nameRU="Применение прибора" type="multiselect" nameUK="Застосування приладу">
+      <attribute_value id="37949" nameRU="Для дома, квартиры" nameUK="Для будинку, квартири"/>
+      <attribute_value id="37950" nameRU="Для детской комнаты" nameUK="Для дитячої кімнати"/>
+      <attribute_value id="37951" nameRU="Для людей, страдающих аллергией" nameUK="Для людей, страждаючих алергією"/>
+      <attribute_value id="37952" nameRU="Для растений в зимних садах, оранжереях, теплицах" nameUK="Для рослин в зимових садах, оранжереях, теплицях"/>
+      <attribute_value id="37953" nameRU="Для мебели, паркета, музыкальных инструментов" nameUK="Для меблів, паркету, музичних інструментів"/>
+      <attribute_value id="37954" nameRU="Для книг в библиотеках, художественных музеях, галереях" nameUK="Для книг у бібліотеках, художніх музеях, галереях"/>
+      <attribute_value id="37955" nameRU="Для офисов и других коммерческих объектов" nameUK="Для офісів та інших комерційних об'єктів"/>
+      <attribute_value id="37956" nameRU="Для больниц, санаториев, пансионатов" nameUK="Для лікарень, санаторіїв, пансіонатів"/>
+    </attribute>
+    <attribute id="5677" nameRU="Ночной режим работы" type="bool" nameUK="Нічний режим роботи"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10674" nameRU="Регулировка интенсивности испарения" type="bool" nameUK="Регулювання інтенсивності випаровування"/>
+  </category>
+</categories>

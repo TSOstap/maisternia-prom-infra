@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1250360" nameRU="Думперы, мини-самосвалы" nameUK="Думпери, міні-самоскиди">
+    <attribute id="46" nameRU="Тип управления" type="singleselect" nameUK="Тип управління">
+      <attribute_value id="18603" nameRU="Ручное" nameUK="Ручне"/>
+      <attribute_value id="95182" nameRU="Дистанционное" nameUK="Дистанційне"/>
+      <attribute_value id="275013" nameRU="Пультом" nameUK="Пультом"/>
+    </attribute>
+    <attribute id="82" nameRU="Объем масляного бака" type="real" nameUK="Об'єм масляного бака" measureUnitRU="л" min="0" max="10" measureUnitUK="л"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="116" nameRU="Количество цилиндров" type="singleselect" nameUK="Кількість циліндрів">
+      <attribute_value id="7047" nameRU="1" nameUK="1"/>
+      <attribute_value id="7049" nameRU="3" nameUK="3"/>
+      <attribute_value id="7050" nameRU="4" nameUK="4"/>
+    </attribute>
+    <attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="150000" measureUnitUK="куб. см"/>
+    <attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="5" measureUnitUK="л/год"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8057" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="31381" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+      <attribute_value id="9284" nameRU="Бензиновый" nameUK="Бензиновий"/>
+      <attribute_value id="9285" nameRU="Дизельный" nameUK="Дизельний"/>
+      <attribute_value id="70839" nameRU="Электрический" nameUK="Електричний"/>
+    </attribute>
+    <attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+      <attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+      <attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+    </attribute>
+    <attribute id="1280" nameRU="Грузоподъемность" type="real" nameUK="Вантажопідйомність" measureUnitRU="кг" min="0" max="5000" measureUnitUK="кг"/>
+    <attribute id="1454" nameRU="Напряжение батареи" type="real" nameUK="Напруга батареї" measureUnitRU="В" min="0" max="50" measureUnitUK="В"/>
+    <attribute id="1582" nameRU="Объем платформы самосвала" type="real" nameUK="Об'єм платформи самоскида" measureUnitRU="куб. м" min="0" max="20" measureUnitUK="куб. м"/>
+    <attribute id="1584" nameRU="Направление разгрузки" type="singleselect" nameUK="Напрямок розвантаження">
+      <attribute_value id="10031" nameRU="Назад" nameUK="Назад"/>
+      <attribute_value id="10032" nameRU="Влево" nameUK="Вліво"/>
+      <attribute_value id="10033" nameRU="Вправо" nameUK="Вправо"/>
+      <attribute_value id="276258" nameRU="Боковая" nameUK="Бічна"/>
+      <attribute_value id="276296" nameRU="Трехсторонняя" nameUK="Тристороння"/>
+      <attribute_value id="345447" nameRU="Вперед" nameUK="Вперед"/>
+    </attribute>
+    <attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+    <attribute id="3017" nameRU="Количество двигателей" type="real" nameUK="Кількість двигунів" measureUnitRU="шт" min="1" max="3" measureUnitUK="шт."/>
+    <attribute id="3817" nameRU="Мощность электродвигателя" type="real" nameUK="Потужність електродвигуна" measureUnitRU="кВт" min="0" max="500" measureUnitUK="кВт"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30788" nameRU="Алый" nameUK="Червоний"/>
+      <attribute_value id="30789" nameRU="Малиновый" nameUK="Малиновий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30794" nameRU="Кофе с молоком" nameUK="Кава з молоком"/>
+      <attribute_value id="30795" nameRU="Терракота" nameUK="Теракота"/>
+      <attribute_value id="30796" nameRU="Персиковый" nameUK="Персиковий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30798" nameRU="Песочный" nameUK="Пісочний"/>
+      <attribute_value id="30799" nameRU="Янтарный" nameUK="Бурштиновий"/>
+      <attribute_value id="30800" nameRU="Лимонный" nameUK="Лимонний"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30802" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30807" nameRU="Индиго" nameUK="Індиго"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30809" nameRU="Сиреневый" nameUK="Бузковий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30813" nameRU="Светло-серый" nameUK="Світло-сірий"/>
+      <attribute_value id="30814" nameRU="Темно-серый" nameUK="Темно-сірий"/>
+      <attribute_value id="30815" nameRU="Сливовый" nameUK="Сливовий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="66120" nameRU="Прозрачный" nameUK="Прозорий"/>
+      <attribute_value id="69144" nameRU="Стальной" nameUK="Сталевий"/>
+      <attribute_value id="106289" nameRU="Хром" nameUK="Хром"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="234474" nameRU="Серебряный" nameUK="Срібний"/>
+      <attribute_value id="234476" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="261105" nameRU="Медный" nameUK="Мідний"/>
+      <attribute_value id="261106" nameRU="GROSSDORF" nameUK="GROSSDORF"/>
+      <attribute_value id="262793" nameRU="Белый с патиной" nameUK="Білий з патиною"/>
+      <attribute_value id="262794" nameRU="Бронзовый" nameUK="Бронзовий"/>
+      <attribute_value id="262795" nameRU="Черный с золотом" nameUK="Чорний з золотом"/>
+      <attribute_value id="263060" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="263113" nameRU="Капучино" nameUK="Капучино"/>
+      <attribute_value id="263114" nameRU="Шоколад" nameUK="Шоколад"/>
+      <attribute_value id="263239" nameRU="Аквамарин" nameUK="Аквамарин"/>
+      <attribute_value id="263240" nameRU="Сапфир" nameUK="Сапфір"/>
+      <attribute_value id="263241" nameRU="Пшеничный" nameUK="Пшеничний"/>
+      <attribute_value id="263242" nameRU="Коралловый" nameUK="Кораловий"/>
+      <attribute_value id="263243" nameRU="Цитрусовый" nameUK="Цитрусовий"/>
+      <attribute_value id="264226" nameRU="Молоко" nameUK="Молоко"/>
+      <attribute_value id="264227" nameRU="Темно-синий" nameUK="Темно-синій"/>
+      <attribute_value id="264228" nameRU="Ярко-зеленый" nameUK="Яскраво-зелений"/>
+      <attribute_value id="264229" nameRU="Ярко-фиолетовый" nameUK="Яскраво-фіолетовий"/>
+      <attribute_value id="264230" nameRU="капучино" nameUK="капучіно"/>
+      <attribute_value id="264231" nameRU="Пудровый" nameUK="Пудровий"/>
+      <attribute_value id="264235" nameRU="Кремовый" nameUK="Кремовий"/>
+      <attribute_value id="264236" nameRU="Светлый кэмел" nameUK="Світлий кемел"/>
+      <attribute_value id="264237" nameRU="Темно-зеленый" nameUK="Темно-зелений"/>
+      <attribute_value id="264917" nameRU="Черно-красный " nameUK="Чорно-червоний"/>
+      <attribute_value id="264918" nameRU="Drovosek" nameUK="Drovosek"/>
+      <attribute_value id="264919" nameRU="Mechanics Wear" nameUK="Mechanics Wear"/>
+      <attribute_value id="264961" nameRU="Салатово-черный" nameUK="Салатово-чорний"/>
+      <attribute_value id="265615" nameRU="Секционное крашение" nameUK="Секційне фарбування"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="265837" nameRU="Натуральный" nameUK="Натуральний"/>
+      <attribute_value id="265850" nameRU="Какао" nameUK="Какао"/>
+      <attribute_value id="265852" nameRU="Ментоловый" nameUK="Ментоловий"/>
+      <attribute_value id="265853" nameRU="Липовый" nameUK="Липовий"/>
+      <attribute_value id="265855" nameRU="Кофе" nameUK="Кава"/>
+      <attribute_value id="265948" nameRU="Amethyst" nameUK="Amethyst"/>
+      <attribute_value id="265975" nameRU="Молочный" nameUK="Молочний"/>
+      <attribute_value id="266026" nameRU="Пудра" nameUK="Пудра"/>
+      <attribute_value id="266027" nameRU="Черно-белый" nameUK="Чорно-білий"/>
+      <attribute_value id="266111" nameRU="Горчичный" nameUK="Гірчичний"/>
+      <attribute_value id="266138" nameRU="Вишнёвый" nameUK="Вишневий"/>
+      <attribute_value id="266139" nameRU="Графитовый" nameUK="Графітовий"/>
+      <attribute_value id="266140" nameRU="Шоколадный" nameUK="Шоколадний"/>
+      <attribute_value id="266141" nameRU="Тёмно коричневый" nameUK="Темно коричневий"/>
+      <attribute_value id="266142" nameRU="Мокко" nameUK="Мокко"/>
+      <attribute_value id="266143" nameRU="Венги" nameUK="Угор"/>
+      <attribute_value id="266235" nameRU="Меланжевый" nameUK="Меланжевий"/>
+      <attribute_value id="266236" nameRU="Лавандовый" nameUK="Лавандовий"/>
+      <attribute_value id="266237" nameRU="Айвори" nameUK="Айворі"/>
+      <attribute_value id="266238" nameRU="Лён" nameUK="Льон"/>
+      <attribute_value id="266239" nameRU="Кирпичный" nameUK="Цегляний"/>
+      <attribute_value id="266256" nameRU="Черно-оливковый" nameUK="Чорно-оливковий"/>
+      <attribute_value id="266257" nameRU="Синий с красным" nameUK="Синій з червоним"/>
+      <attribute_value id="266267" nameRU="Койот" nameUK="Койот"/>
+      <attribute_value id="266269" nameRU="Акрил" nameUK="Акрил"/>
+      <attribute_value id="266270" nameRU="Мятный" nameUK="М'ятний"/>
+      <attribute_value id="266361" nameRU="Марсала" nameUK="Марсала"/>
+      <attribute_value id="266375" nameRU="Серебристий" nameUK="Срібляста"/>
+      <attribute_value id="266383" nameRU="Слоновая кость" nameUK="Слонова кістка"/>
+      <attribute_value id="266461" nameRU="Телесный" nameUK="Тілесний"/>
+      <attribute_value id="266464" nameRU="Фрез" nameUK="Фрез"/>
+      <attribute_value id="266465" nameRU="Фисташковый" nameUK="Фісташковий"/>
+      <attribute_value id="266466" nameRU="Лиловый" nameUK="Ліловий"/>
+      <attribute_value id="266467" nameRU="Бутылочный" nameUK="Пляшковий"/>
+      <attribute_value id="266468" nameRU="Светло-голубой" nameUK="Світло-блакитний"/>
+      <attribute_value id="266469" nameRU="Электрик" nameUK="Електрик"/>
+      <attribute_value id="266470" nameRU="Голубая бирюза" nameUK="Блакитна бірюза"/>
+      <attribute_value id="266471" nameRU="Морская волна" nameUK="Морська хвиля"/>
+      <attribute_value id="266472" nameRU="Неоново-розовый" nameUK="Неоново-рожевий"/>
+      <attribute_value id="266473" nameRU="Неоново-оранжевый" nameUK="Неоново-помаранчевий"/>
+      <attribute_value id="266474" nameRU="Лаймовый" nameUK="Лаймовий"/>
+      <attribute_value id="266475" nameRU="Травяной" nameUK="Трав'яний"/>
+      <attribute_value id="266535" nameRU="Рыжий" nameUK="Рудий"/>
+      <attribute_value id="266549" nameRU="Дуб" nameUK="Дуб"/>
+      <attribute_value id="266550" nameRU="Дуб белёный" nameUK="Дуб білений"/>
+      <attribute_value id="266551" nameRU="Ясень" nameUK="Ясень"/>
+      <attribute_value id="266552" nameRU="Венге" nameUK="Венге"/>
+      <attribute_value id="266553" nameRU="Вишня" nameUK="Вишня"/>
+      <attribute_value id="266554" nameRU="Дуб розовый" nameUK="Дуб рожевий"/>
+      <attribute_value id="266643" nameRU="Титан" nameUK="Титан"/>
+      <attribute_value id="266644" nameRU="Антрацит" nameUK="Антрацит"/>
+      <attribute_value id="266645" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="266833" nameRU="Экри" nameUK="Экри"/>
+      <attribute_value id="266896" nameRU="Полынь" nameUK="Полин"/>
+      <attribute_value id="267095" nameRU="Золото" nameUK="Золото"/>
+      <attribute_value id="267096" nameRU="Матовый хром" nameUK="Матовий хром"/>
+      <attribute_value id="267117" nameRU="Шафрановый" nameUK="Шафрановий"/>
+      <attribute_value id="267143" nameRU="Silver-blue" nameUK="Silver-blue"/>
+      <attribute_value id="267144" nameRU="Black-blue" nameUK="Black-blue"/>
+      <attribute_value id="267172" nameRU="Бьянка" nameUK="Бьянка"/>
+      <attribute_value id="267173" nameRU="Серебро антик" nameUK="Срібло антик"/>
+      <attribute_value id="267174" nameRU="Коричневый Муар" nameUK="Коричневий Муар"/>
+      <attribute_value id="267175" nameRU="Тёмное серебро" nameUK="Темне срібло"/>
+      <attribute_value id="267176" nameRU="Золотой дуб" nameUK="Золотий дуб"/>
+      <attribute_value id="267177" nameRU="Анегри светлый" nameUK="Анегри світлий"/>
+      <attribute_value id="267179" nameRU="Тёмный анегри" nameUK="Темний анегри"/>
+      <attribute_value id="267180" nameRU="Чёрный абрикос" nameUK="Чорний абрикос"/>
+      <attribute_value id="267181" nameRU="Орех" nameUK="Горіх"/>
+      <attribute_value id="267325" nameRU="Никель сатин" nameUK="Нікель сатин"/>
+      <attribute_value id="267441" nameRU="Ирис" nameUK="Ірис"/>
+      <attribute_value id="267442" nameRU="Небо" nameUK="Небо"/>
+      <attribute_value id="267443" nameRU="Бирюза" nameUK="Бірюза"/>
+      <attribute_value id="267444" nameRU="Крестовка" nameUK="Крестовка"/>
+      <attribute_value id="267445" nameRU="Баклажан" nameUK="Баклажан"/>
+      <attribute_value id="267446" nameRU="Жемчуг" nameUK="Перли"/>
+      <attribute_value id="267447" nameRU="Джинс" nameUK="Джинс"/>
+      <attribute_value id="267448" nameRU="Махагон" nameUK="Махагон"/>
+      <attribute_value id="267449" nameRU="Браун" nameUK="Браун"/>
+      <attribute_value id="267450" nameRU="Мята" nameUK="М'ята"/>
+      <attribute_value id="267451" nameRU="Светлый джинс" nameUK="Джинс світлий"/>
+      <attribute_value id="267458" nameRU="Чайная Роза" nameUK="Чайна Троянда"/>
+      <attribute_value id="267468" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="267485" nameRU="Розовое золото" nameUK="Рожеве золото"/>
+      <attribute_value id="267486" nameRU="Розовый металлик" nameUK="Рожевий металік"/>
+      <attribute_value id="267487" nameRU="Изумрудный" nameUK="Смарагдовий"/>
+      <attribute_value id="267488" nameRU="Розовая пастель" nameUK="Рожева пастель"/>
+      <attribute_value id="267489" nameRU="Бургунди" nameUK="Бургунді"/>
+      <attribute_value id="267490" nameRU="Тиффани" nameUK="Тіффані"/>
+      <attribute_value id="267491" nameRU="Пурпурный" nameUK="Пурпурний"/>
+      <attribute_value id="267492" nameRU="Радуга" nameUK="Веселка"/>
+      <attribute_value id="267517" nameRU="Светлое серебро" nameUK="Світле срібло"/>
+      <attribute_value id="267526" nameRU="Светло-розовый" nameUK="Світло-рожевий"/>
+      <attribute_value id="267588" nameRU="Камуфляж" nameUK="Камуфляж"/>
+      <attribute_value id="267600" nameRU="Марсал" nameUK="Марсал"/>
+      <attribute_value id="267627" nameRU="Античная бронза" nameUK="Антична бронза"/>
+      <attribute_value id="267628" nameRU="Античное золото" nameUK="Античне золото"/>
+      <attribute_value id="267629" nameRU="Античное серебро" nameUK="Античне срібло"/>
+      <attribute_value id="267630" nameRU=" Сталистый " nameUK="Сталистый"/>
+      <attribute_value id="267631" nameRU="Светлое золото" nameUK="Світле золото"/>
+      <attribute_value id="267632" nameRU="Воронёная сталь" nameUK="Вороніння сталь"/>
+      <attribute_value id="267977" nameRU="Светло-синий" nameUK="Світло-синій"/>
+      <attribute_value id="267994" nameRU="Металлик" nameUK="Металік"/>
+      <attribute_value id="268006" nameRU="Серебро" nameUK="Срібло"/>
+      <attribute_value id="268101" nameRU="Каштановый" nameUK="Каштановий"/>
+      <attribute_value id="268102" nameRU="Небесный" nameUK="Небесний"/>
+      <attribute_value id="268103" nameRU="Фиалка" nameUK="Фіалка"/>
+      <attribute_value id="268142" nameRU="Жаккард" nameUK="Жаккард"/>
+      <attribute_value id="268158" nameRU="Хром матовый" nameUK="Хром матовий"/>
+      <attribute_value id="268159" nameRU="Сатин" nameUK="Сатин"/>
+      <attribute_value id="268160" nameRU="Медь " nameUK="Мідь"/>
+      <attribute_value id="268161" nameRU="Матовое золото" nameUK="Матове золото"/>
+      <attribute_value id="268162" nameRU="Черный матовый " nameUK="Чорний матовий"/>
+      <attribute_value id="268173" nameRU="Айвери" nameUK="Айвери"/>
+      <attribute_value id="268174" nameRU="Темно-бежевый" nameUK="Темно-бежевий"/>
+      <attribute_value id="268176" nameRU="Баклажанный" nameUK="Баклажановий"/>
+      <attribute_value id="268177" nameRU="Светло-коричневый" nameUK="Світло-коричневий"/>
+      <attribute_value id="268178" nameRU="Ультра зеленый" nameUK="Ультра зелений"/>
+      <attribute_value id="268179" nameRU="Ультра оранжевый" nameUK="Ультра помаранчевий"/>
+      <attribute_value id="268180" nameRU="Ультра розовый" nameUK="Ультра рожевий"/>
+      <attribute_value id="268184" nameRU="Антик" nameUK="Антик"/>
+      <attribute_value id="268185" nameRU="Никель" nameUK="Нікель"/>
+      <attribute_value id="268186" nameRU="Блек никель" nameUK="Блек нікель"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="268189" nameRU="Светлый хаки" nameUK="Світлий хакі"/>
+      <attribute_value id="268190" nameRU="Темно-голубой" nameUK="Темно-блакитний"/>
+      <attribute_value id="268215" nameRU="Синий Ирис" nameUK="Синій Ірис"/>
+      <attribute_value id="268360" nameRU="Маджента " nameUK="Маджента"/>
+      <attribute_value id="268361" nameRU="Барвинок" nameUK="Барвінок"/>
+      <attribute_value id="268456" nameRU="Двухцветный" nameUK="Двоколірний"/>
+      <attribute_value id="268556" nameRU="Нефритовый" nameUK="Нефритовий"/>
+      <attribute_value id="268557" nameRU="Светло-салатовый" nameUK="Світло-салатовий"/>
+      <attribute_value id="268558" nameRU="Темная фуксия " nameUK="Темна фуксія"/>
+      <attribute_value id="268568" nameRU="Розовое золото " nameUK="Рожеве золото"/>
+      <attribute_value id="268589" nameRU="Военный" nameUK="Військовий"/>
+      <attribute_value id="268590" nameRU="Милитари" nameUK="Мілітарі"/>
+      <attribute_value id="268591" nameRU="Маскировочный" nameUK="Маскувальний"/>
+      <attribute_value id="268664" nameRU="Без цвета" nameUK="Без кольору"/>
+      <attribute_value id="268742" nameRU="Полупрозрачный" nameUK="Напівпрозорий"/>
+      <attribute_value id="268803" nameRU="Под дерево" nameUK="Під дерево"/>
+      <attribute_value id="268840" nameRU="Колеруемый" nameUK="Колеруємий"/>
+      <attribute_value id="268855" nameRU="Серо-коричневый" nameUK="Сіро-коричневий"/>
+      <attribute_value id="268856" nameRU="Фрезовый" nameUK="Фрезовий"/>
+      <attribute_value id="268930" nameRU="Темно-фиолетовый" nameUK="Темно-фіолетовий"/>
+      <attribute_value id="268931" nameRU="Шампань" nameUK="Шампань"/>
+      <attribute_value id="268932" nameRU="Темно-розовый" nameUK="Темно-рожевий"/>
+      <attribute_value id="269005" nameRU="Полированный хром" nameUK="Полірований хром"/>
+      <attribute_value id="269020" nameRU="Матовый никель" nameUK="Матовий нікель"/>
+      <attribute_value id="269021" nameRU="Матовая бронза" nameUK="Матова бронза"/>
+      <attribute_value id="269022" nameRU="Черный хром" nameUK="Чорний хром"/>
+      <attribute_value id="269023" nameRU="Черный/полированный хром" nameUK="Чорний/полірований хром"/>
+      <attribute_value id="269024" nameRU="Античная матовая старая бронза" nameUK="Антична матова стара бронза"/>
+      <attribute_value id="269025" nameRU="Матовый антрацит" nameUK="Матовий антрацит"/>
+      <attribute_value id="269026" nameRU="Матовый старый хром" nameUK="Старий хром матовий"/>
+      <attribute_value id="269033" nameRU="Морковный" nameUK="Морквяний"/>
+      <attribute_value id="269074" nameRU="Нейтральный" nameUK="Нейтральний"/>
+      <attribute_value id="269182" nameRU="Камуфляж Пиксель" nameUK="Камуфляж Піксель"/>
+      <attribute_value id="269413" nameRU="Дуб сонома" nameUK="Дуб сонома"/>
+      <attribute_value id="269414" nameRU="Урбан" nameUK="Урбан"/>
+      <attribute_value id="269415" nameRU="Венге/молочный" nameUK="Венге/молочний"/>
+      <attribute_value id="269416" nameRU="Бук" nameUK="Бук"/>
+      <attribute_value id="269560" nameRU="Светло-зеленый" nameUK="Світло-зелений"/>
+      <attribute_value id="269598" nameRU="Светло-красный" nameUK="Світло-червоний"/>
+      <attribute_value id="269599" nameRU="Светло-желтый" nameUK="Світло-жовтий"/>
+      <attribute_value id="269600" nameRU="Красно-коричневый" nameUK="Червоно-коричневий"/>
+      <attribute_value id="269601" nameRU="Цвет шиповника" nameUK="Колір шипшини"/>
+      <attribute_value id="269602" nameRU="Жемчужно-пудровый" nameUK="Перлинно-пудровий"/>
+      <attribute_value id="269668" nameRU="white" nameUK="white"/>
+      <attribute_value id="269690" nameRU="Сосна" nameUK="Сосна"/>
+      <attribute_value id="269691" nameRU="Палисандр" nameUK="Палісандр"/>
+      <attribute_value id="269692" nameRU="Тик" nameUK="Тік"/>
+      <attribute_value id="269695" nameRU="Красное золото" nameUK="Червоне золото"/>
+      <attribute_value id="269696" nameRU="Хамелеон" nameUK="Хамелеон"/>
+      <attribute_value id="269697" nameRU="Сирень" nameUK="Бузок"/>
+      <attribute_value id="269698" nameRU="Шелк" nameUK="Шовк"/>
+      <attribute_value id="269699" nameRU="Галька" nameUK="Галька"/>
+      <attribute_value id="269700" nameRU="Белый матовый" nameUK="Білий матовий"/>
+      <attribute_value id="269701" nameRU="Серо-бежевый" nameUK="Сіро-бежевий"/>
+      <attribute_value id="269702" nameRU="Янтарь" nameUK="Бурштин"/>
+      <attribute_value id="269703" nameRU="Терра" nameUK="Терра"/>
+      <attribute_value id="269704" nameRU="Графит" nameUK="Графіт"/>
+      <attribute_value id="269705" nameRU="Черное дерево" nameUK="Чорне дерево"/>
+      <attribute_value id="269706" nameRU="Ппиния" nameUK="Ппиния"/>
+      <attribute_value id="269707" nameRU="Каштан" nameUK="Каштан"/>
+      <attribute_value id="269876" nameRU="Карамель" nameUK="Карамель"/>
+      <attribute_value id="269877" nameRU="Горчица" nameUK="Гірчиця"/>
+      <attribute_value id="269878" nameRU="Сизый" nameUK="Сизий"/>
+      <attribute_value id="270010" nameRU="Васильковый" nameUK="Волошковий"/>
+      <attribute_value id="270011" nameRU="Корица" nameUK="Кориця"/>
+      <attribute_value id="270012" nameRU="Кэмел" nameUK="Кемел"/>
+      <attribute_value id="270106" nameRU="ДалСВЯЗЬ" nameUK="ДалСВЯЗЬ"/>
+      <attribute_value id="270120" nameRU="Перламутровый" nameUK="Перламутровий"/>
+      <attribute_value id="270130" nameRU="Темно-коричневый" nameUK="Темно-коричневий"/>
+      <attribute_value id="270161" nameRU="Дуб сонома + белый" nameUK="Дуб сонома + білий"/>
+      <attribute_value id="270162" nameRU="Венге + белый" nameUK="Венге + білий"/>
+      <attribute_value id="270305" nameRU="Комбинированный цвет" nameUK="Комбінований колір"/>
+      <attribute_value id="270445" nameRU="Светло-бежевый" nameUK="Світло-бежевий"/>
+      <attribute_value id="270596" nameRU="Лососевый" nameUK="Лососевий"/>
+      <attribute_value id="270598" nameRU="Светло бежевый" nameUK="Світло бежевий"/>
+      <attribute_value id="270635" nameRU="Калифорнийская секвойя" nameUK="Каліфорнійська секвоя"/>
+      <attribute_value id="270659" nameRU="Ягода" nameUK="Ягода"/>
+      <attribute_value id="270711" nameRU="бесцветный" nameUK="безбарвний"/>
+      <attribute_value id="270713" nameRU="White" nameUK="White"/>
+      <attribute_value id="270714" nameRU="Black" nameUK="Black"/>
+      <attribute_value id="270715" nameRU="Caramel" nameUK="Caramel"/>
+      <attribute_value id="270716" nameRU="Bordeaux" nameUK="Bordeaux"/>
+      <attribute_value id="270717" nameRU="Cobalt" nameUK="Cobalt"/>
+      <attribute_value id="270718" nameRU="Golden Yellow NL" nameUK="Golden Yellow NL"/>
+      <attribute_value id="270719" nameRU="Blue Super" nameUK="Super Blue"/>
+      <attribute_value id="270720" nameRU="Red" nameUK="Red"/>
+      <attribute_value id="270721" nameRU="Lemon NL" nameUK="Lemon NL"/>
+      <attribute_value id="270722" nameRU="Light Brown" nameUK="Light Brown"/>
+      <attribute_value id="270723" nameRU="Mahogane" nameUK="Mahogane"/>
+      <attribute_value id="270733" nameRU="Серо - сиреневый" nameUK="Сіро - бузковий"/>
+      <attribute_value id="270738" nameRU="Светло - бирюзовый" nameUK="Світло - бірюзовий"/>
+      <attribute_value id="270781" nameRU="Минт" nameUK="Мінт"/>
+      <attribute_value id="270795" nameRU="Желто-золотой" nameUK="Жовто-золотий"/>
+      <attribute_value id="270819" nameRU="Пепельно - розовый" nameUK="Попелясто - рожевий"/>
+      <attribute_value id="270831" nameRU="Сакс" nameUK="Сакс"/>
+      <attribute_value id="270955" nameRU="Розово - фрезовый" nameUK="Рожево - фрезовий"/>
+      <attribute_value id="271010" nameRU="Темно розовый" nameUK="Темно рожевий"/>
+      <attribute_value id="271011" nameRU="Меланж" nameUK="Меланж"/>
+      <attribute_value id="271034" nameRU="Светлая лагуна" nameUK="Світла лагуна"/>
+      <attribute_value id="271100" nameRU="Серо-розовый" nameUK="Сіро-рожевий"/>
+      <attribute_value id="271418" nameRU="Бамбуковий" nameUK="Бамбуковий"/>
+      <attribute_value id="271419" nameRU="Гранатовий" nameUK="Гранатовий"/>
+      <attribute_value id="271421" nameRU="Светло-фиолетовый" nameUK="Світло-фіолетовий"/>
+      <attribute_value id="271447" nameRU="Камуфляж лесной" nameUK="Камуфляж лісовий"/>
+      <attribute_value id="271692" nameRU="Белый мрамор" nameUK="Білий мармур"/>
+      <attribute_value id="271760" nameRU="Дуб крафт белый" nameUK="Дуб білий крафт"/>
+      <attribute_value id="271772" nameRU="Сонома" nameUK="Сонома"/>
+      <attribute_value id="271818" nameRU="Бело-розовый" nameUK="Біло-рожевий"/>
+      <attribute_value id="272044" nameRU="Лазурный" nameUK="Блакитний"/>
+      <attribute_value id="272045" nameRU="Золотой" nameUK="Золотий"/>
+      <attribute_value id="272095" nameRU="Жемчужный" nameUK="Перлинний"/>
+      <attribute_value id="272137" nameRU="Белое - Золото" nameUK="Біле Золото"/>
+      <attribute_value id="272352" nameRU="Темная пудра" nameUK="Темна пудра"/>
+      <attribute_value id="272355" nameRU="Светлая пудра" nameUK="Світла пудра"/>
+      <attribute_value id="272496" nameRU="Орех темный" nameUK="Горіх темний"/>
+      <attribute_value id="272651" nameRU="Карри" nameUK="Каррі"/>
+      <attribute_value id="272652" nameRU="Античный розовый" nameUK="Античний рожевий"/>
+      <attribute_value id="272724" nameRU="Кофейный" nameUK="Кавовий"/>
+      <attribute_value id="272884" nameRU="Ярко-розовый" nameUK="Яскраво-рожевий"/>
+      <attribute_value id="272901" nameRU="Крафт" nameUK="Крафт"/>
+      <attribute_value id="273114" nameRU="Темно-красный" nameUK="Темно-червоний"/>
+      <attribute_value id="273267" nameRU="Дуб Тахо" nameUK="Дуб Тахо"/>
+      <attribute_value id="273366" nameRU="светлый дуб" nameUK="світлий дуб"/>
+      <attribute_value id="273367" nameRU="патина бежевая" nameUK="патина бежева"/>
+      <attribute_value id="273368" nameRU="патина коричневая" nameUK="патина коричнева"/>
+      <attribute_value id="273493" nameRU="Цинк" nameUK="Цинк"/>
+      <attribute_value id="273545" nameRU="Серо-зеленый" nameUK="Сіро-зелений"/>
+      <attribute_value id="273627" nameRU="Венге new" nameUK="Венге new"/>
+      <attribute_value id="273628" nameRU="Венге 3D" nameUK="Венге 3D"/>
+      <attribute_value id="273630" nameRU="Сандал" nameUK="Сандал"/>
+      <attribute_value id="273631" nameRU="Кедр" nameUK="Кедр"/>
+      <attribute_value id="273634" nameRU="Патина" nameUK="Патина"/>
+      <attribute_value id="273636" nameRU="Магнолия" nameUK="Магнолія"/>
+      <attribute_value id="273637" nameRU="Ольха 3D" nameUK="Вільха 3D"/>
+      <attribute_value id="273668" nameRU="Дуб серый" nameUK="Дуб сірий"/>
+      <attribute_value id="273671" nameRU="Бук шато" nameUK="Бук шато"/>
+      <attribute_value id="273672" nameRU="Бук табачный" nameUK="Бук тютюновий"/>
+      <attribute_value id="273673" nameRU="Ясень new" nameUK="Ясень new"/>
+      <attribute_value id="273674" nameRU="Дуб атлант" nameUK="Дуб атлант"/>
+      <attribute_value id="273675" nameRU="Венге браун" nameUK="Венге браун"/>
+      <attribute_value id="273775" nameRU="Тёмно-бежевый" nameUK="Темно-бежевий"/>
+      <attribute_value id="274061" nameRU="Кобальт" nameUK="Кобальт"/>
+      <attribute_value id="274128" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="274409" nameRU="Серо-голубой" nameUK="Сіро-блакитний"/>
+      <attribute_value id="274820" nameRU="Черно-желтый" nameUK="Чорно-жовтий"/>
+      <attribute_value id="274984" nameRU="Темно-зелёный" nameUK="Темно-зелений"/>
+      <attribute_value id="276281" nameRU="Grey" nameUK="Grey"/>
+      <attribute_value id="276282" nameRU="Green" nameUK="Green"/>
+      <attribute_value id="276284" nameRU="Blue" nameUK="Blue"/>
+      <attribute_value id="276582" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="277115" nameRU="Темно-оранжевый" nameUK="Темно-оранжевий"/>
+      <attribute_value id="277519" nameRU="Дуб грей" nameUK="Дуб грей"/>
+      <attribute_value id="277583" nameRU="Dorato" nameUK="Dorato"/>
+      <attribute_value id="277584" nameRU="Дуб Магма" nameUK="Дуб Магма"/>
+      <attribute_value id="277585" nameRU="Дуб Меренго" nameUK="Дуб Меренго"/>
+      <attribute_value id="277586" nameRU="Дуб Светлый" nameUK="Дуб Світлий"/>
+      <attribute_value id="278445" nameRU="Нюд" nameUK="Нюд"/>
+      <attribute_value id="278668" nameRU="Черный металлик" nameUK="Чорний металік"/>
+      <attribute_value id="278697" nameRU="Коньячный" nameUK="Коньячний"/>
+      <attribute_value id="278735" nameRU="Белый-глянец" nameUK="Білий глянець"/>
+      <attribute_value id="278774" nameRU="Ярко-оранжевый" nameUK="Яскраво-оранжевий"/>
+      <attribute_value id="278865" nameRU="Серо-синий" nameUK="Сіро-синій"/>
+      <attribute_value id="279051" nameRU="Дуб шато" nameUK="Дуб шато"/>
+      <attribute_value id="279135" nameRU="Визон" nameUK="Візон"/>
+      <attribute_value id="279308" nameRU="Черно-бежевый" nameUK="Чорно-бежевий"/>
+      <attribute_value id="279321" nameRU="Ярко-голубой" nameUK="Яскраво-блакитний"/>
+      <attribute_value id="279356" nameRU="Охра" nameUK="Вохра"/>
+      <attribute_value id="279764" nameRU="Венге темный" nameUK="Венге темний"/>
+      <attribute_value id="279932" nameRU="Ниагара" nameUK="Ніагара"/>
+      <attribute_value id="280605" nameRU="Бело-салатовый" nameUK="Біло-салатовий"/>
+      <attribute_value id="281686" nameRU="Ярко-салатовый" nameUK="Яскраво-салатовий"/>
+      <attribute_value id="281716" nameRU="Ольха" nameUK="Вільха"/>
+      <attribute_value id="281749" nameRU="Пепельный" nameUK="Попелястий"/>
+      <attribute_value id="281792" nameRU="Светло-терракотовый" nameUK="Світло-теракотовий"/>
+      <attribute_value id="281874" nameRU="Бурый" nameUK="Бурий"/>
+      <attribute_value id="283913" nameRU="Дуб Немо Латте" nameUK="Дуб Немо Латте"/>
+      <attribute_value id="289935" nameRU="Дуб крафт золотой" nameUK="Дуб крафт золотий"/>
+      <attribute_value id="290142" nameRU="Дуб Нортон" nameUK="Дуб Нортон"/>
+      <attribute_value id="290143" nameRU="Клен белый" nameUK="Клен білий"/>
+      <attribute_value id="292372" nameRU="Камуфляж Мультикам" nameUK="Камуфляж Мультикам"/>
+      <attribute_value id="292374" nameRU="Камуфляж Вудленд" nameUK="Камуфляж Вудленд"/>
+      <attribute_value id="292440" nameRU="Мультикам" nameUK="Мультикам"/>
+      <attribute_value id="294696" nameRU="Латунь полированная" nameUK="Латунь полірована"/>
+      <attribute_value id="295266" nameRU="Бук шале" nameUK="Бук шале"/>
+      <attribute_value id="295780" nameRU="Венге/ Дуб Шервуд" nameUK="Венге/ Дуб Шервуд"/>
+      <attribute_value id="298008" nameRU="Латте" nameUK="Латте"/>
+      <attribute_value id="299636" nameRU="Дуб Табак" nameUK="Дуб Табак"/>
+      <attribute_value id="299668" nameRU="Венге темный + белый" nameUK="Венге темний + білий"/>
+      <attribute_value id="299669" nameRU="Венге темный + дуб молочный" nameUK="Венге темний + дуб молочний"/>
+      <attribute_value id="299670" nameRU="Венге темный + крафт золотой" nameUK="Венге темний + крафт золотий"/>
+      <attribute_value id="299671" nameRU="Дуб молочный + венге темный" nameUK="Дуб молочний + венге темний"/>
+      <attribute_value id="299672" nameRU="Дуб сонома + трюфель" nameUK="Дуб сонома + трюфель"/>
+      <attribute_value id="299673" nameRU="Нимфея Альба" nameUK="Німфея Альба"/>
+      <attribute_value id="299674" nameRU="Яблоня" nameUK="Яблуня"/>
+      <attribute_value id="299675" nameRU="Ясень Шимо светлый" nameUK="Ясен Шимо світлий"/>
+      <attribute_value id="299676" nameRU="Ясень Шимо темный" nameUK="Ясен Шимо темний"/>
+      <attribute_value id="299677" nameRU="Ясень шимо темный + ясень шимо светлый" nameUK="Ясен шимо темний + ясен шимо світлий"/>
+      <attribute_value id="299679" nameRU="дуб молочный" nameUK="дуб молочний"/>
+      <attribute_value id="299878" nameRU="Венге аруша" nameUK="Венге аруша"/>
+      <attribute_value id="299880" nameRU="Дуб Фрегат" nameUK="Дуб Фрегат"/>
+      <attribute_value id="299881" nameRU="Дуб Морас" nameUK="Дуб Морас"/>
+      <attribute_value id="299882" nameRU="Дуб Клондайк" nameUK="Дуб Клондайк"/>
+      <attribute_value id="299883" nameRU="Кантри" nameUK="Кантрі"/>
+      <attribute_value id="299888" nameRU="Урбан Лайт" nameUK="Урбан Лайт"/>
+      <attribute_value id="300401" nameRU="Дуб шамони светлый" nameUK="Дуб шамоні світлий"/>
+      <attribute_value id="302229" nameRU="Вайт Клауд" nameUK=""/>
+      <attribute_value id="302245" nameRU="Айс Грей" nameUK=""/>
+      <attribute_value id="304738" nameRU="Silver" nameUK=""/>
+      <attribute_value id="305000" nameRU="Дуб Палена" nameUK="Дуб Палена"/>
+      <attribute_value id="305001" nameRU="Венге Луизиана" nameUK="Венге Луїзіана"/>
+      <attribute_value id="305002" nameRU="Дуб Борас" nameUK="Дуб Борас"/>
+      <attribute_value id="305077" nameRU="Мрамор" nameUK="Мармур"/>
+      <attribute_value id="311014" nameRU="Табако" nameUK="Табако"/>
+      <attribute_value id="312846" nameRU="Градиент" nameUK=""/>
+      <attribute_value id="313488" nameRU="Дуб Артизан" nameUK=""/>
+      <attribute_value id="314908" nameRU="Крафт золотой" nameUK="Крафт золотий"/>
+      <attribute_value id="315237" nameRU="Макадамия" nameUK="Макадамія"/>
+      <attribute_value id="318358" nameRU="Графит + Дуб крафт золотой" nameUK="Графіт + Дуб крафт золотий"/>
+      <attribute_value id="321808" nameRU="Зеркальный" nameUK="Дзеркальний"/>
+      <attribute_value id="321809" nameRU="С ресунком" nameUK="З малюнком"/>
+      <attribute_value id="321816" nameRU="Титановый" nameUK="Титановий"/>
+      <attribute_value id="322040" nameRU="Теплый песок" nameUK="Теплий пісок"/>
+      <attribute_value id="322043" nameRU="Голден Сенд" nameUK="Голден Сенд"/>
+      <attribute_value id="322044" nameRU="Чили" nameUK="Чілі"/>
+      <attribute_value id="322049" nameRU="Миндаль" nameUK="Мигдаль"/>
+      <attribute_value id="329303" nameRU="Дуб сонома+ Нимфея Альба" nameUK="Дуб сонома+ Німфея Альба"/>
+      <attribute_value id="329645" nameRU="Болотный" nameUK="Болотний"/>
+      <attribute_value id="338941" nameRU="Аляска" nameUK=""/>
+      <attribute_value id="338942" nameRU="Дуб Крафт Серый" nameUK="Дуб Крафт Сірий"/>
+      <attribute_value id="338943" nameRU="Яблоко Лорано" nameUK="Яблуко Лорано"/>
+      <attribute_value id="338944" nameRU="Бук светлый" nameUK="Бук світлий"/>
+      <attribute_value id="339608" nameRU="Ольха Темная" nameUK=""/>
+      <attribute_value id="340192" nameRU="Белый/красный" nameUK="Білий/червоний"/>
+      <attribute_value id="340278" nameRU="Дымчатый" nameUK="Димчастий"/>
+      <attribute_value id="341337" nameRU="Прозрачный черный" nameUK="Прозорий чорний"/>
+      <attribute_value id="341338" nameRU="Серебристый черный" nameUK="Сріблястий чорний"/>
+      <attribute_value id="341571" nameRU="Дуб Ливорно" nameUK="Дуб Ліворно"/>
+      <attribute_value id="344506" nameRU="Сонома трюфель" nameUK="Сонома трюфель"/>
+      <attribute_value id="344508" nameRU="Индастриал" nameUK="Індастріал"/>
+      <attribute_value id="346839" nameRU="Орех светлый" nameUK="Горіх світлий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="6926" nameRU="Тип грузового автомобиля" type="singleselect" nameUK="Тип вантажного автомобіля">
+      <attribute_value id="52444" nameRU="Самосвал" nameUK="Самоскид"/>
+      <attribute_value id="347161" nameRU="Думпер" nameUK="Думпер"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10424" nameRU="Количество аккумуляторов" type="real" nameUK="Кількість акумуляторів" measureUnitRU="шт" min="0" max="5" measureUnitUK="шт."/>
+    <attribute id="12599" nameRU="Тип охлаждения" type="singleselect" nameUK="Тип охолодження">
+      <attribute_value id="289167" nameRU="Воздушный" nameUK="Повітряний"/>
+    </attribute>
+    <attribute id="12646" nameRU="Тип запуска" type="singleselect" nameUK="Тип запуску">
+      <attribute_value id="174964" nameRU="Ручной" nameUK="Ручний"/>
+      <attribute_value id="174965" nameRU="Электростартер" nameUK="Електростартер"/>
+    </attribute>
+    <attribute id="14358" nameRU="Механизм подъема" type="singleselect" nameUK="Механізм підйому">
+      <attribute_value id="147060" nameRU="Ручной" nameUK="Ручний"/>
+      <attribute_value id="147061" nameRU="Гидравлический" nameUK="Гідравлічний"/>
+    </attribute>
+    <attribute id="14589" nameRU="Количество передач" type="singleselect" nameUK="Кількість передач">
+      <attribute_value id="152329" nameRU="1 вперед" nameUK="1 вперед"/>
+      <attribute_value id="152330" nameRU="1 вперед/1 назад" nameUK="1 вперед/1 назад"/>
+      <attribute_value id="152331" nameRU="2 вперед/1 назад" nameUK="2 вперед/1 назад"/>
+      <attribute_value id="152332" nameRU="3 вперед/1 назад" nameUK="3 вперед/1 назад"/>
+      <attribute_value id="152333" nameRU="4 вперед/1 назад" nameUK="4 вперед/1 назад"/>
+      <attribute_value id="152334" nameRU="4 вперед/2 назад" nameUK="4 вперед/2 назад"/>
+      <attribute_value id="152335" nameRU="6 вперед/1 назад" nameUK="6 вперед/1 назад"/>
+      <attribute_value id="178555" nameRU="5 вперед/2 назад" nameUK="5 вперед/2 назад"/>
+      <attribute_value id="181240" nameRU="2 вперед/2 назад" nameUK="2 вперед/2 назад"/>
+      <attribute_value id="203547" nameRU="4 вперед/3 назад" nameUK="4 вперед/3 назад"/>
+      <attribute_value id="290714" nameRU="4 вперед/4 назад" nameUK=""/>
+      <attribute_value id="347137" nameRU="3 вперед/ 2 назад" nameUK="3 вперед/ 2 назад"/>
+    </attribute>
+    <attribute id="15345" nameRU="Теоретическая скорость движения вперед" type="real" nameUK="Теоретична швидкість руху вперед" measureUnitRU="км/ч" min="1" max="200" measureUnitUK="км/год"/>
+    <attribute id="16146" nameRU="Мощность в л.с." type="real" nameUK="Потужність" measureUnitRU="л. с." min="0" max="200" measureUnitUK="к. с."/>
+    <attribute id="18886" nameRU="Страна регистрации бренда" type="singleselect" nameUK="Країна реєстрації бренда">
+      <attribute_value id="309627" nameRU="Австралия" nameUK="Австралія"/>
+      <attribute_value id="309628" nameRU="Австрия" nameUK="Австрія"/>
+      <attribute_value id="309629" nameRU="Азербайджан" nameUK="Азербайджан"/>
+      <attribute_value id="309630" nameRU="Албания" nameUK="Албанія"/>
+      <attribute_value id="309631" nameRU="Алжир" nameUK="Алжир"/>
+      <attribute_value id="309632" nameRU="Ангола" nameUK="Ангола"/>
+      <attribute_value id="309633" nameRU="Андорра" nameUK="Андора"/>
+      <attribute_value id="309634" nameRU="Антигуа и Барбуда" nameUK="Антигуа та Барбуда"/>
+      <attribute_value id="309635" nameRU="Аргентина" nameUK="Аргентина"/>
+      <attribute_value id="309636" nameRU="Армения" nameUK="Арменія"/>
+      <attribute_value id="309637" nameRU="Афганистан" nameUK="Афганістан"/>
+      <attribute_value id="309638" nameRU="Багамские острова" nameUK="Багамські острови"/>
+      <attribute_value id="309639" nameRU="Бангладеш" nameUK="Бангладеш"/>
+      <attribute_value id="309640" nameRU="Барбадос" nameUK="Барбадос"/>
+      <attribute_value id="309641" nameRU="Бахрейн" nameUK="Бахрейн"/>
+      <attribute_value id="309642" nameRU="Беларусь" nameUK="Білорусь"/>
+      <attribute_value id="309643" nameRU="Белиз" nameUK="Беліз"/>
+      <attribute_value id="309644" nameRU="Бельгия" nameUK="Бельгія"/>
+      <attribute_value id="309645" nameRU="Бенин" nameUK="Бенін"/>
+      <attribute_value id="309646" nameRU="Болгария" nameUK="Болгарія"/>
+      <attribute_value id="309647" nameRU="Боливия" nameUK=""/>
+      <attribute_value id="309648" nameRU="Босния и Герцеговина" nameUK="Боснія і Герцеговина"/>
+      <attribute_value id="309649" nameRU="Ботсвана" nameUK="Ботсвана"/>
+      <attribute_value id="309650" nameRU="Бразилия" nameUK="Бразилія"/>
+      <attribute_value id="309651" nameRU="Бруней-Даруссалам" nameUK="Бруней-Даруссалам"/>
+      <attribute_value id="309652" nameRU="Буркина-Фасо" nameUK="Буркина-Фасо"/>
+      <attribute_value id="309653" nameRU="Бурунди" nameUK="Бурунди"/>
+      <attribute_value id="309654" nameRU="Бутан" nameUK="Бутан"/>
+      <attribute_value id="309655" nameRU="Вануату" nameUK="Вануату"/>
+      <attribute_value id="309656" nameRU="Венгрия" nameUK="Угорщина"/>
+      <attribute_value id="309657" nameRU="Венесуэла" nameUK="Венесуела"/>
+      <attribute_value id="309658" nameRU="Вьетнам" nameUK="В'єтнам"/>
+      <attribute_value id="309659" nameRU="Габон" nameUK="Габон"/>
+      <attribute_value id="309660" nameRU="Гаити" nameUK="Гаїті"/>
+      <attribute_value id="309661" nameRU="Гайана" nameUK="Гайана"/>
+      <attribute_value id="309662" nameRU="Гамбия" nameUK="Гамбія"/>
+      <attribute_value id="309663" nameRU="Гана" nameUK="Гана"/>
+      <attribute_value id="309664" nameRU="Гватемала" nameUK="Гватемала"/>
+      <attribute_value id="309665" nameRU="Гвинея" nameUK="Гвінея"/>
+      <attribute_value id="309666" nameRU="Гвинея-Бисау" nameUK="Гвінея-Бісау"/>
+      <attribute_value id="309667" nameRU="Германия" nameUK="Німеччина"/>
+      <attribute_value id="309668" nameRU="Гондурас" nameUK="Гондурас"/>
+      <attribute_value id="309669" nameRU="Гренада" nameUK="Гренада"/>
+      <attribute_value id="309670" nameRU="Греция" nameUK="Греція"/>
+      <attribute_value id="309671" nameRU="Грузия" nameUK="Грузія"/>
+      <attribute_value id="309672" nameRU="Дания" nameUK="Данія"/>
+      <attribute_value id="309673" nameRU="Демократическая Республика Конго" nameUK="Демократична Республіка Конго"/>
+      <attribute_value id="309674" nameRU="Джибути" nameUK="Джібуті"/>
+      <attribute_value id="309675" nameRU="Доминика" nameUK="Домініка"/>
+      <attribute_value id="309676" nameRU="Доминиканская Республика" nameUK="Домініканська республіка"/>
+      <attribute_value id="309677" nameRU="Египет" nameUK="Єгипет"/>
+      <attribute_value id="309678" nameRU="Замбия" nameUK="Замбія"/>
+      <attribute_value id="309679" nameRU="Зимбабве" nameUK="Зімбабве"/>
+      <attribute_value id="309680" nameRU="Израиль" nameUK="Ізраїль"/>
+      <attribute_value id="309681" nameRU="Индия" nameUK="Індія"/>
+      <attribute_value id="309682" nameRU="Индонезия" nameUK="Індонезія"/>
+      <attribute_value id="309683" nameRU="Иордания" nameUK="Йорданія"/>
+      <attribute_value id="309684" nameRU="Ирак" nameUK="Ірак"/>
+      <attribute_value id="309685" nameRU="Иран" nameUK="Іран"/>
+      <attribute_value id="309686" nameRU="Ирландия" nameUK="Ірландія"/>
+      <attribute_value id="309687" nameRU="Исландия" nameUK=""/>
+      <attribute_value id="309688" nameRU="Испания" nameUK="Іспанія"/>
+      <attribute_value id="309689" nameRU="Италия" nameUK="Італія"/>
+      <attribute_value id="309690" nameRU="Йемен" nameUK="Йемен"/>
+      <attribute_value id="309691" nameRU="Кабо-Верде" nameUK="Кабо-Верде"/>
+      <attribute_value id="309692" nameRU="Казахстан" nameUK="Казахстан"/>
+      <attribute_value id="309693" nameRU="Камбоджа" nameUK="Камбоджа"/>
+      <attribute_value id="309694" nameRU="Камерун" nameUK="Камерун"/>
+      <attribute_value id="309695" nameRU="Канада" nameUK="Канада"/>
+      <attribute_value id="309696" nameRU="Катар" nameUK="Катар"/>
+      <attribute_value id="309697" nameRU="Кения" nameUK="Кенія"/>
+      <attribute_value id="309698" nameRU="Кипр" nameUK="Кіпр"/>
+      <attribute_value id="309699" nameRU="Кирибати" nameUK="Кірібаті"/>
+      <attribute_value id="309700" nameRU="Китай" nameUK="Китай"/>
+      <attribute_value id="309701" nameRU="Колумбия" nameUK="Колумбія"/>
+      <attribute_value id="309702" nameRU="Коморские Острова" nameUK="Коморські острови"/>
+      <attribute_value id="309703" nameRU="Конго" nameUK="Конго"/>
+      <attribute_value id="309704" nameRU="Корейская Народно-Демократическая Республика" nameUK="Корейська Народно-Демократична Республіка"/>
+      <attribute_value id="309705" nameRU="Коста-Рика" nameUK="Коста-Ріка"/>
+      <attribute_value id="309706" nameRU="Кот-д’Ивуар" nameUK="Кот-д’Івуар"/>
+      <attribute_value id="309707" nameRU="Куба" nameUK="Куба"/>
+      <attribute_value id="309708" nameRU="Кувейт" nameUK="Кувейт"/>
+      <attribute_value id="309709" nameRU="Кыргызстан" nameUK="Киргизстан"/>
+      <attribute_value id="309710" nameRU="Лаосская Народно-Демократическая Республика" nameUK="Лаоська Народно-Демократична Республіка"/>
+      <attribute_value id="309711" nameRU="Латвия" nameUK="Латвія"/>
+      <attribute_value id="309712" nameRU="Лесото" nameUK="Лесото"/>
+      <attribute_value id="309713" nameRU="Либерия" nameUK="Ліберія"/>
+      <attribute_value id="309714" nameRU="Ливан" nameUK="Ліван"/>
+      <attribute_value id="309715" nameRU="Ливия" nameUK="Лівія"/>
+      <attribute_value id="309716" nameRU="Литва" nameUK="Литва"/>
+      <attribute_value id="309717" nameRU="Лихтенштейн" nameUK="Ліхтенштейн"/>
+      <attribute_value id="309718" nameRU="Люксембург" nameUK="Люксембург"/>
+      <attribute_value id="309719" nameRU="Маврикий" nameUK="Маврікій"/>
+      <attribute_value id="309720" nameRU="Мавритания" nameUK="Мавританія"/>
+      <attribute_value id="309721" nameRU="Мадагаскар" nameUK="Мадагаскар"/>
+      <attribute_value id="309722" nameRU="Малави" nameUK="Малаві"/>
+      <attribute_value id="309723" nameRU="Малайзия" nameUK="Малайзія"/>
+      <attribute_value id="309724" nameRU="Мали" nameUK="Малі"/>
+      <attribute_value id="309725" nameRU="Мальдивы" nameUK="Мальдиви"/>
+      <attribute_value id="309726" nameRU="Мальта" nameUK="Мальта"/>
+      <attribute_value id="309727" nameRU="Марокко" nameUK="Марокко"/>
+      <attribute_value id="309728" nameRU="Маршалловы Острова" nameUK="Маршаллові острови"/>
+      <attribute_value id="309729" nameRU="Мексика" nameUK="Мексика"/>
+      <attribute_value id="309730" nameRU="Мозамбик" nameUK="Мозамбік"/>
+      <attribute_value id="309731" nameRU="Монако" nameUK="Монако"/>
+      <attribute_value id="309732" nameRU="Монголия" nameUK="Монголія"/>
+      <attribute_value id="309733" nameRU="Мьянма" nameUK="Мьянма"/>
+      <attribute_value id="309734" nameRU="Намибия" nameUK="Намібія"/>
+      <attribute_value id="309735" nameRU="Науру" nameUK="Науру"/>
+      <attribute_value id="309736" nameRU="Непал" nameUK="Непал"/>
+      <attribute_value id="309737" nameRU="Нигер" nameUK="Республіка Нігер"/>
+      <attribute_value id="309738" nameRU="Нигерия" nameUK="Нігерія"/>
+      <attribute_value id="309739" nameRU="Нидерланды" nameUK="Нідерланди"/>
+      <attribute_value id="309740" nameRU="Никарагуа" nameUK="Нікарагуа"/>
+      <attribute_value id="309741" nameRU="Ниуэ" nameUK="Ніуе"/>
+      <attribute_value id="309742" nameRU="Новая Зеландия" nameUK="Нова Зеландія"/>
+      <attribute_value id="309743" nameRU="Норвегия" nameUK="Норвегія"/>
+      <attribute_value id="309744" nameRU="Объединенная Республика Танзания" nameUK="Об'єднана Республіка Танзанія"/>
+      <attribute_value id="309745" nameRU="Объединенные Арабские Эмираты" nameUK="Об'єднані Арабські Емірати"/>
+      <attribute_value id="309746" nameRU="Оман" nameUK="Оман"/>
+      <attribute_value id="309747" nameRU="Острова Кука" nameUK="Острови Кука"/>
+      <attribute_value id="309748" nameRU="Пакистан" nameUK="Пакистан"/>
+      <attribute_value id="309749" nameRU="Панама" nameUK="Панама"/>
+      <attribute_value id="309750" nameRU="Папуа — Новая Гвинея" nameUK="Папуа Нова Гвінея"/>
+      <attribute_value id="309751" nameRU="Парагвай" nameUK="Парагвай"/>
+      <attribute_value id="309752" nameRU="Перу" nameUK="Перу"/>
+      <attribute_value id="309753" nameRU="Польша" nameUK="Польща"/>
+      <attribute_value id="309754" nameRU="Португалия" nameUK="Португалія"/>
+      <attribute_value id="309755" nameRU="Республика Корея" nameUK="Республіка Корея"/>
+      <attribute_value id="309756" nameRU="Республика Молдова" nameUK="Республіка Молдова"/>
+      <attribute_value id="309757" nameRU="Руанда" nameUK="Руанда"/>
+      <attribute_value id="309758" nameRU="Румыния" nameUK="Румунія"/>
+      <attribute_value id="309759" nameRU="Сальвадор" nameUK="Сальвадор"/>
+      <attribute_value id="309760" nameRU="Самоа" nameUK="Самоа"/>
+      <attribute_value id="309761" nameRU="Сан-Марино" nameUK="Сан-Маріно"/>
+      <attribute_value id="309762" nameRU="Сан-Томе и Принсипи" nameUK="Сан-Томе та Прінсіпі"/>
+      <attribute_value id="309763" nameRU="Саудовская Аравия" nameUK="Саудівська Аравія"/>
+      <attribute_value id="309764" nameRU="Святой Престол" nameUK="Святий Престол"/>
+      <attribute_value id="309765" nameRU="Северная Македония" nameUK="Північна Македонія"/>
+      <attribute_value id="309766" nameRU="Сейшельские Острова" nameUK="Сейшельські острови"/>
+      <attribute_value id="309767" nameRU="Сенегал" nameUK="Сенегал"/>
+      <attribute_value id="309768" nameRU="Сент-Винсент и Гренадины" nameUK="Сент-Вінсент та Гренадини"/>
+      <attribute_value id="309769" nameRU="Сент-Китс и Невис" nameUK="Сент-Кітс і Невіс"/>
+      <attribute_value id="309770" nameRU="Сент-Люсия" nameUK="Сент-Люсія"/>
+      <attribute_value id="309771" nameRU="Сербия" nameUK="Сербія"/>
+      <attribute_value id="309772" nameRU="Сингапур" nameUK="Сингапур"/>
+      <attribute_value id="309773" nameRU="Сирийская Арабская Республика" nameUK="Сирійська Арабська Республіка"/>
+      <attribute_value id="309774" nameRU="Словакия" nameUK="Словакія"/>
+      <attribute_value id="309775" nameRU="Словения" nameUK="Словенія"/>
+      <attribute_value id="309776" nameRU="Соединенные Штаты Америки" nameUK="Сполучені Штати Америки"/>
+      <attribute_value id="309777" nameRU="Соломоновы Острова" nameUK="Соломонові острови"/>
+      <attribute_value id="309778" nameRU="Сомали" nameUK="Сомалі"/>
+      <attribute_value id="309779" nameRU="Судан" nameUK="Судан"/>
+      <attribute_value id="309780" nameRU="Суринам" nameUK="Сурінам"/>
+      <attribute_value id="309781" nameRU="Сьерра-Леоне" nameUK="Сьєрра-Леоне"/>
+      <attribute_value id="309782" nameRU="Таджикистан" nameUK="Таджикістан"/>
+      <attribute_value id="309783" nameRU="Таиланд" nameUK="Таїланд"/>
+      <attribute_value id="309784" nameRU="Тимор-Лешти" nameUK="Тимор-Лешті"/>
+      <attribute_value id="309785" nameRU="Того" nameUK="Того"/>
+      <attribute_value id="309786" nameRU="Тонга" nameUK="Тонга"/>
+      <attribute_value id="309787" nameRU="Тринидад и Тобаго" nameUK="Трінідад і Тобаго"/>
+      <attribute_value id="309788" nameRU="Тувалу" nameUK="Тувалу"/>
+      <attribute_value id="309789" nameRU="Тунис" nameUK="Туніс"/>
+      <attribute_value id="309790" nameRU="Туркменистан" nameUK="Туркменістан"/>
+      <attribute_value id="309791" nameRU="Турция" nameUK="Туреччина"/>
+      <attribute_value id="309792" nameRU="Уганда" nameUK="Уганда"/>
+      <attribute_value id="309793" nameRU="Узбекистан" nameUK="Узбекистан"/>
+      <attribute_value id="309794" nameRU="Украина" nameUK="Україна"/>
+      <attribute_value id="309795" nameRU="Уругвай" nameUK="Уругвай"/>
+      <attribute_value id="309796" nameRU="Фиджи" nameUK="Фіджи"/>
+      <attribute_value id="309797" nameRU="Филиппины" nameUK="Філіппіни"/>
+      <attribute_value id="309798" nameRU="Финляндия" nameUK="Фінляндія"/>
+      <attribute_value id="309799" nameRU="Франция" nameUK="Франція"/>
+      <attribute_value id="309800" nameRU="Хорватия" nameUK="Хорватія"/>
+      <attribute_value id="309801" nameRU="Центральноафриканская Республика" nameUK="Центральноафриканська Республіка"/>
+      <attribute_value id="309802" nameRU="Чад" nameUK="Чад"/>
+      <attribute_value id="309803" nameRU="Черногория" nameUK="Черногорія"/>
+      <attribute_value id="309804" nameRU="Чешская Республика" nameUK="Чеська Республіка"/>
+      <attribute_value id="309805" nameRU="Чили" nameUK="Чілі"/>
+      <attribute_value id="309806" nameRU="Швейцария" nameUK="Швейцарія"/>
+      <attribute_value id="309807" nameRU="Швеция" nameUK="Швеція"/>
+      <attribute_value id="309808" nameRU="Шри-Ланка" nameUK="Шрі-Ланка"/>
+      <attribute_value id="309809" nameRU="Эквадор" nameUK="Еквадор"/>
+      <attribute_value id="309810" nameRU="Экваториальная Гвинея" nameUK="Екваторіальна Гвінея"/>
+      <attribute_value id="309811" nameRU="Эритрея" nameUK="Еритрея"/>
+      <attribute_value id="309812" nameRU="Эсватини" nameUK="Есватині"/>
+      <attribute_value id="309813" nameRU="Эстония" nameUK="Естонія"/>
+      <attribute_value id="309814" nameRU="Эфиопия" nameUK="Ефіопія"/>
+      <attribute_value id="309815" nameRU="Южная Африка" nameUK="Південна Африка"/>
+      <attribute_value id="309816" nameRU="Ямайка" nameUK="Ямайка"/>
+      <attribute_value id="309817" nameRU="Япония" nameUK="Японія"/>
+    </attribute>
+    <attribute id="19068" nameRU="Тип шасси" type="singleselect" nameUK="Тип шасі">
+      <attribute_value id="332934" nameRU="Колесный" nameUK="Колісний"/>
+      <attribute_value id="332935" nameRU="Гусеничный" nameUK="Гусеничний"/>
+    </attribute>
+    <attribute id="19208" nameRU="Скорость движения назад" type="real" nameUK="Швидкість руху назад" measureUnitRU="км/ч" min="0" max="200" measureUnitUK="км/год"/>
+    <attribute id="19210" nameRU="Назначення думпера" type="multiselect" nameUK="Призначення думпера">
+      <attribute_value id="345234" nameRU="Транспортировка почвы" nameUK="Транспортування ґрунту"/>
+      <attribute_value id="345235" nameRU="Транспортировка песка" nameUK="Транспортування піску"/>
+      <attribute_value id="345236" nameRU="Транспортировка щебня" nameUK="Транспортування щебеню"/>
+      <attribute_value id="345237" nameRU="Транспортировка стройматериалов" nameUK="Транспортування будматеріалів"/>
+      <attribute_value id="345238" nameRU="Транспортировка садовых отходов" nameUK="Транспортування садових відходів"/>
+    </attribute>
+    <attribute id="19264" nameRU="Тип передвижения" type="singleselect" nameUK="Тип пересування">
+      <attribute_value id="346747" nameRU="Самоходная" nameUK="Самохідна"/>
+      <attribute_value id="346748" nameRU="Несамоходная" nameUK="Несамохідна"/>
+    </attribute>
+  </category>
+</categories>

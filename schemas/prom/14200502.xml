@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200502" nameRU="Пневмошлифмашины" nameUK="Пневмошліфмашіни">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+    <attribute id="12" nameRU="Поддержка постоянного количества оборотов под нагрузкой" type="bool" nameUK="Підтримка постійного числа обертів під навантаженням"/>
+    <attribute id="20" nameRU="Подключение пылесборника / пылесоса" type="bool" nameUK="Підключення пилозбірника/пилососа"/>
+    <attribute id="22" nameRU="Кейс в комплекте" type="bool" nameUK="Кейс в комплекті"/>
+    <attribute id="24" nameRU="Блокировка кнопки включения" type="bool" nameUK="Блокування кнопки включення"/>
+    <attribute id="25" nameRU="Блокировка шпинделя" type="bool" nameUK="Блокування шпинделя"/>
+    <attribute id="33" nameRU="Дополнительная рукоятка" type="bool" nameUK="Додаткова рукоятка"/>
+    <attribute id="58" nameRU="Максимальный диаметр диска" type="real" nameUK="Максимальний діаметр диска" measureUnitRU="мм" min="0" max="400" measureUnitUK="мм"/>
+    <attribute id="67" nameRU="Длина ленты/листа" type="real" nameUK="Довжина стрічки/листа" measureUnitRU="мм" min="0" max="700" measureUnitUK="мм"/>
+    <attribute id="68" nameRU="Ширина ленты/листа" type="real" nameUK="Ширина стрічки/листа" measureUnitRU="мм" min="0" max="150" measureUnitUK="мм"/>
+    <attribute id="69" nameRU="Размер цанги" type="real" nameUK="Розмір цанги" measureUnitRU="мм" min="0" max="12" measureUnitUK="мм"/>
+    <attribute id="72" nameRU="Амплитуда колебаний" type="real" nameUK="Амплітуда коливань" measureUnitRU="мм" min="0" max="10" measureUnitUK="мм"/>
+    <attribute id="77" nameRU="Защитный кожух" type="bool" nameUK="Захисний кожух"/>
+    <attribute id="79" nameRU="Диаметр посадочного отверстия" type="real" nameUK="Діаметр посадкового отвору" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="40000" measureUnitUK="об/хв"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="12" measureUnitUK="бар"/>
+    <attribute id="106" nameRU="Расход воздуха" type="real" nameUK="Витрата повітря" measureUnitRU="литр/мин" min="0" max="4500" measureUnitUK="літр/хв"/>
+    <attribute id="107" nameRU="Диаметр входного штуцера" type="singleselect" nameUK="Діаметр вхідного штуцера">
+      <attribute_value id="7023" nameRU="1&quot;" nameUK="1&quot;"/>
+      <attribute_value id="7024" nameRU="2&quot;" nameUK="2&quot;"/>
+      <attribute_value id="7025" nameRU="1/2&quot;" nameUK="1/2&quot;"/>
+      <attribute_value id="7026" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="7027" nameRU="1/8&quot;" nameUK="1/8&quot;"/>
+      <attribute_value id="7028" nameRU="3/4&quot;" nameUK="3/4&quot;"/>
+      <attribute_value id="7029" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+    </attribute>
+    <attribute id="108" nameRU="Внутренний диаметр шланга" type="real" nameUK="Внутрішній діаметр шланга" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="109" nameRU="Переходной штуцер" type="bool" nameUK="Перехідний штуцер"/>
+    <attribute id="110" nameRU="Набор насадок" type="bool" nameUK="Набір насадок"/>
+    <attribute id="111" nameRU="Тип пневмошлифмашины" type="singleselect" nameUK="Тип пневмошліфмашіни">
+      <attribute_value id="7031" nameRU="Угловая" nameUK="Кутова"/>
+      <attribute_value id="7032" nameRU="Прямая" nameUK="Пряма"/>
+      <attribute_value id="7033" nameRU="Ленточная" nameUK="Стрічкова"/>
+      <attribute_value id="7034" nameRU="Вибрационная" nameUK="Вібраційна"/>
+      <attribute_value id="7035" nameRU="Эксцентриковая" nameUK="Ексцентрикова"/>
+      <attribute_value id="7036" nameRU="Полировальная" nameUK="Полірувальна"/>
+      <attribute_value id="278353" nameRU="Планетарная" nameUK="Планетарна"/>
+      <attribute_value id="278955" nameRU="Роторная" nameUK="Роторна"/>
+      <attribute_value id="288998" nameRU="Цанговая" nameUK="Цангова"/>
+      <attribute_value id="293463" nameRU="Отрезная" nameUK="Відрізна"/>
+      <attribute_value id="293464" nameRU="Орбитальная" nameUK="Орбітальна"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="18813" nameRU="Тип пневмодвигателя" type="multiselect" nameUK="Тип пневмодвигуна">
+      <attribute_value id="302046" nameRU="Лопастный" nameUK="Лопатевий"/>
+      <attribute_value id="302047" nameRU="Турбинный" nameUK="Турбінний"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200374" nameRU="Строительные карандаши, маркеры" nameUK="Будівельні олівці, маркери">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+      <attribute_value id="63901" nameRU="Карандаш" nameUK="Олівець"/>
+      <attribute_value id="63902" nameRU="Маркер" nameUK="Маркер"/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="93225" nameRU="Жидкий" nameUK="Рідкий"/>
+      <attribute_value id="286023" nameRU="Перманентный" nameUK="Перманентний"/>
+      <attribute_value id="286024" nameRU="Кислотный" nameUK="Кислотний"/>
+      <attribute_value id="286025" nameRU="Твердый" nameUK="Твердий"/>
+    </attribute>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="7530" nameRU="Рабочая поверхность" type="multiselect" nameUK="Робоча поверхня">
+      <attribute_value id="63903" nameRU="Бетон" nameUK="Бетон"/>
+      <attribute_value id="63904" nameRU="Стекло" nameUK="Скло"/>
+      <attribute_value id="63905" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="63906" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="63907" nameRU="Камень" nameUK="Камінь"/>
+      <attribute_value id="63908" nameRU="Кирпич" nameUK="Цегла"/>
+      <attribute_value id="63909" nameRU="Штукатурка" nameUK="Штукатурка"/>
+      <attribute_value id="63910" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="63911" nameRU="Гипсокартон" nameUK="Гіпсокартон"/>
+      <attribute_value id="63912" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="63913" nameRU="Пенопласт" nameUK="Пінопласт"/>
+      <attribute_value id="256151" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="256155" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="286106" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="286107" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="286108" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="286109" nameRU="Железо" nameUK=""/>
+    </attribute>
+    <attribute id="7531" nameRU="Вариант исполнения карандаша" type="singleselect" nameUK="Варіант виконання олівця">
+      <attribute_value id="63914" nameRU="Простой" nameUK="Простий"/>
+      <attribute_value id="63915" nameRU="Механический" nameUK="Механічний"/>
+    </attribute>
+    <attribute id="7532" nameRU="Пишущий материал" type="singleselect" nameUK="Пишучий матеріал">
+      <attribute_value id="63916" nameRU="Уголь" nameUK="Вугілля"/>
+      <attribute_value id="63917" nameRU="Графит" nameUK="Графіт"/>
+      <attribute_value id="63918" nameRU="Сухая краска" nameUK="Суха фарба"/>
+      <attribute_value id="63919" nameRU="Воск" nameUK="Віск"/>
+      <attribute_value id="63920" nameRU="Сланец" nameUK="Сланець"/>
+      <attribute_value id="321869" nameRU="Силикон" nameUK="Силікон"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

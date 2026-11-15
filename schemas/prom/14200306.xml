@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200306" nameRU="Строительные ножи, ножницы" nameUK="Будівельні ножі, ножиці">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="2000" measureUnitUK="г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="123" nameRU="Длина инструмента" type="real" nameUK="Довжина інструменту" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="64738" nameRU="металл" nameUK="метал"/>
+      <attribute_value id="300888" nameRU="Резина/Пластик" nameUK="Гума/Пластик"/>
+    </attribute>
+    <attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+    <attribute id="435" nameRU="Длина лезвия" type="real" nameUK="Довжина леза" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="436" nameRU="Ширина лезвия" type="real" nameUK="Ширина леза" measureUnitRU="мм" min="0" max="50" measureUnitUK="мм"/>
+    <attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+      <attribute_value id="139984" nameRU="Ножницы" nameUK="Ножиці"/>
+      <attribute_value id="237302" nameRU="Нож" nameUK="Ніж"/>
+    </attribute>
+    <attribute id="7042" nameRU="Форм-фактор" type="singleselect" nameUK="Форм-фактор">
+      <attribute_value id="66569" nameRU="выдвижной" nameUK="висувний"/>
+      <attribute_value id="66570" nameRU="складной" nameUK="складаний"/>
+      <attribute_value id="66571" nameRU="монолитный" nameUK="монолітний"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="301899" nameRU="Диэлектрические" nameUK="Діелектричні"/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+  </category>
+</categories>

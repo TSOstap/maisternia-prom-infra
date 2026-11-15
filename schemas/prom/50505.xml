@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="50505" nameRU="Металлоискатели, металлодетекторы" nameUK="Металошукачі, металодетектори">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="10000" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+      <attribute_value id="11634" nameRU="Сеть 12В" nameUK="Мережа 12В"/>
+      <attribute_value id="40710" nameRU="Батарейки одноразовые" nameUK="Батарейки одноразові"/>
+      <attribute_value id="40711" nameRU="Батарейки аккумуляторного типа" nameUK="Батарейки акумуляторного типу"/>
+      <attribute_value id="53227" nameRU="Сеть 110В" nameUK="Мережа 110В"/>
+      <attribute_value id="122325" nameRU="Сеть 24В" nameUK="Мережа 24В"/>
+      <attribute_value id="122326" nameRU="Солнечные батареи" nameUK="Сонячні батареї"/>
+      <attribute_value id="141124" nameRU="PoE" nameUK="PoE"/>
+      <attribute_value id="146939" nameRU="USB" nameUK="USB"/>
+    </attribute>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8057" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="8698" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="31381" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="33402" nameRU="Ткань" nameUK="Тканина"/>
+      <attribute_value id="33523" nameRU="Стекло" nameUK="Скло"/>
+      <attribute_value id="34121" nameRU="МДФ" nameUK="МДФ"/>
+      <attribute_value id="34523" nameRU="Искусственный камень" nameUK="Штучний камінь"/>
+      <attribute_value id="74169" nameRU="Комбинированный" nameUK="Комбінований"/>
+      <attribute_value id="76305" nameRU="Ударопрочное стекло" nameUK="Ударостійке скло"/>
+      <attribute_value id="111571" nameRU="ABS-пластик" nameUK="ABS-пластик"/>
+      <attribute_value id="137204" nameRU="Ударопрочный пластик" nameUK="Ударостійкий пластик"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="146703" nameRU="Комплектующее" nameUK="Комплектуюче"/>
+      <attribute_value id="155080" nameRU="Грунтовый" nameUK="Грунтовий"/>
+      <attribute_value id="155081" nameRU="Подводный" nameUK="Підводний"/>
+      <attribute_value id="155082" nameRU="Глубинный" nameUK="Глибинний"/>
+      <attribute_value id="155083" nameRU="Досмотровый ручной" nameUK="Досмотровий ручний"/>
+      <attribute_value id="155084" nameRU="Досмотровый арочный" nameUK="Досмотровий арочний"/>
+      <attribute_value id="155085" nameRU="Досмотровый арочный складной" nameUK="Досмотровий арочний складаний"/>
+      <attribute_value id="155086" nameRU="Досмотровый для скрытой установки" nameUK="Досмотровий для прихованої установки"/>
+      <attribute_value id="155087" nameRU="Досмотровый для шлюзовых кабин" nameUK="Досмотровий для шлюзових кабін"/>
+      <attribute_value id="206346" nameRU="Амфибия" nameUK="Амфібія"/>
+    </attribute>
+    <attribute id="746" nameRU="Индикация режима работы" type="bool" nameUK="Індикація режиму роботи"/>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="380" measureUnitUK="В"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="-100" max="0" measureUnitUK="град."/>
+    <attribute id="4015" nameRU="Пропускная способность" type="real" nameUK="Пропускна здатність" measureUnitRU="чел/мин" min="0" max="1000" measureUnitUK="чол/хв"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="292440" nameRU="Мультикам" nameUK="Мультикам"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5618" nameRU="Ширина прохода" type="real" nameUK="Ширина проходу" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="7931" nameRU="Фонарик" type="bool" nameUK="Ліхтарик"/>
+    <attribute id="8757" nameRU="Чехол" type="singleselect" nameUK="Чохол">
+      <attribute_value id="70682" nameRU="Есть" nameUK="Є"/>
+      <attribute_value id="70683" nameRU="Нет" nameUK="Немає"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+      <attribute_value id="231714" nameRU="Неликвид" nameUK="Неліквід"/>
+    </attribute>
+    <attribute id="12061" nameRU="Дополнительный источник питания" type="multiselect" nameUK="Додаткове джерело живлення">
+      <attribute_value id="117151" nameRU="Сеть 12В" nameUK="Мережа 12В"/>
+      <attribute_value id="117152" nameRU="Сеть 110В" nameUK="Мережа 110В"/>
+      <attribute_value id="117153" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="117155" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+      <attribute_value id="117157" nameRU="Батарейки одноразовые" nameUK="Батарейки одноразові"/>
+      <attribute_value id="117158" nameRU="Батарейки аккумуляторного типа" nameUK="Батарейки акумуляторного типу"/>
+      <attribute_value id="117159" nameRU="Солнечные батареи" nameUK="Сонячні батареї"/>
+      <attribute_value id="117160" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="122327" nameRU="Сеть 24В" nameUK="Мережа 24В"/>
+      <attribute_value id="141125" nameRU="PoE" nameUK="PoE"/>
+    </attribute>
+    <attribute id="12277" nameRU="Значение выходного тока" type="real" nameUK="Значення вихідного струму" measureUnitRU="А" min="0" max="5000" measureUnitUK="А"/>
+    <attribute id="12323" nameRU="Минимальная рабочая частота" type="real" nameUK="Мінімальна робоча частота" measureUnitRU="кГц" min="0" max="1000" measureUnitUK="кГц"/>
+    <attribute id="12324" nameRU="Максимальная рабочая частота" type="real" nameUK="Максимальная рабочая частота" measureUnitRU="кГц" min="0" max="1000" measureUnitUK="кГц"/>
+    <attribute id="14867" nameRU="Максимальная глубина поиска" type="real" nameUK="Максимальна глибина пошуку" measureUnitRU="м" min="0" max="1000" measureUnitUK="м"/>
+    <attribute id="14868" nameRU="Количество программ детектирования" type="integer" nameUK="Кількість програм детектування"/>
+    <attribute id="14869" nameRU="Количество контрольных зон" type="integer" nameUK="Кількість контрольних зон"/>
+    <attribute id="14870" nameRU="Ширина контролируемой зоны" type="real" nameUK="Ширина контрольованої зони" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="14871" nameRU="Настройка" type="singleselect" nameUK="Налаштування">
+      <attribute_value id="155088" nameRU="Ручная" nameUK="Ручна"/>
+      <attribute_value id="155089" nameRU="Автоматическая" nameUK="Автоматична"/>
+      <attribute_value id="155090" nameRU="Ручная/Автоматическая" nameUK="Ручне/Автоматичне"/>
+    </attribute>
+    <attribute id="14872" nameRU="Вероятность ложных срабатываний" type="real" nameUK="Ймовірність помилкових спрацьовувань" measureUnitRU="%" min="0" max="100" measureUnitUK="%"/>
+    <attribute id="14873" nameRU="Балансировка грунта" type="bool" nameUK="Балансування грунту"/>
+    <attribute id="14874" nameRU="Дискриминатор" type="bool" nameUK="Дискримінатор"/>
+    <attribute id="14875" nameRU="Настройка чувствительности" type="bool" nameUK="Налаштування чутливості"/>
+    <attribute id="14876" nameRU="Целеуказание" type="bool" nameUK="Цілевказування"/>
+    <attribute id="14884" nameRU="Стойкость к влаге" type="bool" nameUK="Стійкість до вологи"/>
+    <attribute id="16176" nameRU="Форма катушки" type="singleselect" nameUK="Форма котушки">
+      <attribute_value id="179744" nameRU="Круглая" nameUK="Кругла"/>
+      <attribute_value id="179745" nameRU="Эллиптическая" nameUK="Еліптична"/>
+    </attribute>
+    <attribute id="16450" nameRU="Тип катушки" type="singleselect" nameUK="Тип котушки">
+      <attribute_value id="186668" nameRU="Моно" nameUK="Моно"/>
+      <attribute_value id="186669" nameRU="DD" nameUK="DD"/>
+    </attribute>
+    <attribute id="16451" nameRU="Диаметр катушки (дюйм)" type="real" nameUK="Діаметр котушки (дюйм)"/>
+    <attribute id="16452" nameRU="Диаметр катушки (см)" type="real" nameUK="Діаметр котушки (см)"/>
+    <attribute id="16453" nameRU="Длина катушки (дюйм)" type="real" nameUK="Довжина котушки (дюйм)"/>
+    <attribute id="16454" nameRU="Длина катушки (см)" type="real" nameUK="Довжина котушки (см)"/>
+    <attribute id="16455" nameRU="Ширина катушки (дюйм)" type="real" nameUK="Ширина котушки (дюйм)"/>
+    <attribute id="16456" nameRU="Ширина катушки (см)" type="real" nameUK="Ширина котушки (см)"/>
+    <attribute id="18067" nameRU="Выбор количества контрольных зон" type="multiselect" nameUK="Вибір кількості контрольних зон">
+      <attribute_value id="243927" nameRU="1" nameUK="1"/>
+      <attribute_value id="243928" nameRU="2" nameUK="2"/>
+      <attribute_value id="243929" nameRU="3" nameUK="3"/>
+      <attribute_value id="243930" nameRU="4" nameUK="4"/>
+      <attribute_value id="243931" nameRU="5" nameUK="5"/>
+      <attribute_value id="243932" nameRU="6" nameUK="6"/>
+      <attribute_value id="243933" nameRU="8" nameUK="8"/>
+      <attribute_value id="243934" nameRU="12" nameUK="12"/>
+      <attribute_value id="243935" nameRU="18" nameUK="18"/>
+      <attribute_value id="243936" nameRU="24" nameUK="24"/>
+      <attribute_value id="243937" nameRU="33" nameUK="33"/>
+      <attribute_value id="243938" nameRU="45" nameUK="45"/>
+      <attribute_value id="246886" nameRU="16" nameUK="16"/>
+    </attribute>
+  </category>
+</categories>

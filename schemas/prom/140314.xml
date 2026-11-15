@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="140314" nameRU="Мотопомпы" nameUK="Мотопомпи">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5000" measureUnitUK="кг"/>
+    <attribute id="82" nameRU="Объем масляного бака" type="real" nameUK="Об'єм масляного бака" measureUnitRU="л" min="0" max="2" measureUnitUK="л"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="116" nameRU="Количество цилиндров" type="singleselect" nameUK="Кількість циліндрів">
+      <attribute_value id="7047" nameRU="1" nameUK="1"/>
+      <attribute_value id="7048" nameRU="2" nameUK="2"/>
+      <attribute_value id="7049" nameRU="3" nameUK="3"/>
+      <attribute_value id="7050" nameRU="4" nameUK="4"/>
+    </attribute>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="10000" measureUnitUK="куб. см"/>
+    <attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="кВт" min="0" max="10000" measureUnitUK="кВт"/>
+    <attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="1000" measureUnitUK="л/год"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+      <attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+      <attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+    </attribute>
+    <attribute id="1079" nameRU="Марка двигателя" type="free" nameUK="Марка двигуна"/>
+    <attribute id="1277" nameRU="Время автономной работы" type="integer" nameUK="Час автономної роботи" measureUnitRU="час" min="0" max="100" measureUnitUK="годин"/>
+    <attribute id="1342" nameRU="Высота подъема" type="real" nameUK="Висота підйому" measureUnitRU="м" min="0" max="30" measureUnitUK="м"/>
+    <attribute id="1438" nameRU="Тип топлива" type="singleselect" nameUK="Тип палива">
+      <attribute_value id="9835" nameRU="Бензин" nameUK="Бензин"/>
+      <attribute_value id="29824" nameRU="Дизельное" nameUK="Дизельне"/>
+      <attribute_value id="29827" nameRU="Газ" nameUK="Газ"/>
+      <attribute_value id="64304" nameRU="Спирт" nameUK="Спирт"/>
+    </attribute>
+    <attribute id="2049" nameRU="Максимальное давление" type="real" nameUK="Максимальний тиск" measureUnitRU="бар" min="0" max="1000" measureUnitUK="бар"/>
+    <attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+    <attribute id="3634" nameRU="Коэффициент полезного действия" type="real" nameUK="Коефіцієнт корисної дії" measureUnitRU="%" min="0" max="100" measureUnitUK="%"/>
+    <attribute id="5161" nameRU="Минимальная температура окружающей среды" type="real" nameUK="Мінімальна температура навколишнього середовища" measureUnitRU="град." min="-100" max="10" measureUnitUK="град."/>
+    <attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+    <attribute id="5859" nameRU="Максимальный напор" type="real" nameUK="Максимальний напір" measureUnitRU="м" min="0" max="500" measureUnitUK="м"/>
+    <attribute id="5867" nameRU="Минимальная температура рабочей жидкости" type="real" nameUK="Мінімальна температура робочої рідини" measureUnitRU="град." min="-25" max="30" measureUnitUK="град."/>
+    <attribute id="5868" nameRU="Максимальная температура рабочей жидкости" type="real" nameUK="Максимальна температура робочої рідини" measureUnitRU="град." min="10" max="150" measureUnitUK="град."/>
+    <attribute id="5927" nameRU="Диаметр перекачиваемых частиц" type="real" nameUK="Діаметр перекачуваних частинок" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="7366" nameRU="Максимальная пропускная способность" type="real" nameUK="Максимальна пропускна здатність" measureUnitRU="куб. м/час" min="0" max="500" measureUnitUK="куб.м/год"/>
+    <attribute id="7951" nameRU="Перекачиваемые среды" type="multiselect" nameUK="Перекачувані середи">
+      <attribute_value id="66582" nameRU="Чистая вода" nameUK="Чиста вода"/>
+      <attribute_value id="66583" nameRU="Техническая вода" nameUK="Технічна вода"/>
+      <attribute_value id="66584" nameRU="Вода с примесями" nameUK="Вода з домішками"/>
+      <attribute_value id="66585" nameRU="Конденсаты" nameUK="Конденсати"/>
+      <attribute_value id="66586" nameRU="Питательная вода" nameUK="Живильна вода"/>
+      <attribute_value id="66587" nameRU="Морская вода" nameUK="Морська вода"/>
+      <attribute_value id="66588" nameRU="Химически активные вещества" nameUK="Хімічно активні речовини"/>
+      <attribute_value id="66589" nameRU="Химически нейтральные вещества" nameUK="Хімічно нейтральні речовини"/>
+      <attribute_value id="66590" nameRU="Нефтепродукты" nameUK="Нафтопродукти"/>
+      <attribute_value id="66591" nameRU="Сжиженые углеводородные газы" nameUK="Зріджені вуглеводневі гази"/>
+      <attribute_value id="66592" nameRU="Спирты" nameUK="Спирти"/>
+      <attribute_value id="66593" nameRU="Канализационные вещества" nameUK="Каналізаційні речовини"/>
+      <attribute_value id="66594" nameRU="Абразивные гидросмеси" nameUK="Абразивні гідросуміші"/>
+      <attribute_value id="66595" nameRU="Токсичные вещества" nameUK="Токсичні речовини"/>
+      <attribute_value id="66596" nameRU="Взрыво-пожаро-опасные вещества" nameUK="Вибухо-пожежо-небезпечні речовини"/>
+      <attribute_value id="66597" nameRU="Легкозастывающие вещества" nameUK="Легкозастигаючі речовини"/>
+      <attribute_value id="301358" nameRU="Грязная вода" nameUK="Брудна вода"/>
+    </attribute>
+    <attribute id="8055" nameRU="Максимальная кинематическая вязкость рабочей жидкости" type="real" nameUK="Максимальна кінематична в'язкість робочої рідини" measureUnitRU="кв. мм/с" min="0" max="5000" measureUnitUK="кв. мм/с"/>
+    <attribute id="8056" nameRU="Минимальная кинематическая вязкость рабочей жидкости" type="real" nameUK="Мінімальна кінематична в'язкість робочої рідини" measureUnitRU="кв. мм/с" min="0" max="5000" measureUnitUK="кв. мм/с"/>
+    <attribute id="8338" nameRU="Диаметр присоединительного патрубка" type="singleselect" nameUK="Діаметр приєднувального патрубка">
+      <attribute_value id="68602" nameRU="5/16&quot;" nameUK="5/16&quot;"/>
+      <attribute_value id="68603" nameRU="1 1/2&quot;" nameUK="1 1/2&quot;"/>
+      <attribute_value id="68604" nameRU="1 1/4&quot;" nameUK="1 1/4&quot;"/>
+      <attribute_value id="68605" nameRU="7/8&quot;" nameUK="7/8&quot;"/>
+      <attribute_value id="68606" nameRU="7/16&quot;" nameUK="7/16&quot;"/>
+      <attribute_value id="68607" nameRU="3/16&quot;" nameUK="3/16&quot;"/>
+      <attribute_value id="68608" nameRU="3 3/4&quot;" nameUK="3 3/4&quot;"/>
+      <attribute_value id="68609" nameRU="3/4&quot;" nameUK="3/4&quot;"/>
+      <attribute_value id="68610" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+      <attribute_value id="68611" nameRU="5/8&quot;" nameUK="5/8&quot;"/>
+      <attribute_value id="68612" nameRU="1/2&quot;" nameUK="1/2&quot;"/>
+      <attribute_value id="68613" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="68614" nameRU="1/8&quot;" nameUK="1/8&quot;"/>
+      <attribute_value id="68615" nameRU="2&quot;" nameUK="2&quot;"/>
+      <attribute_value id="68616" nameRU="2&quot;1/2" nameUK="2&quot;1/2"/>
+      <attribute_value id="68617" nameRU="1&quot;" nameUK="1&quot;"/>
+      <attribute_value id="68618" nameRU="3&quot;" nameUK="3&quot;"/>
+      <attribute_value id="68619" nameRU="1 1/8&quot;" nameUK="1 1/8&quot;"/>
+      <attribute_value id="68620" nameRU="1 3/4&quot;" nameUK="1 3/4&quot;"/>
+      <attribute_value id="68621" nameRU="1 5/8&quot;" nameUK="1 5/8&quot;"/>
+      <attribute_value id="68622" nameRU="1 7/8&quot;" nameUK="1 7/8&quot;"/>
+      <attribute_value id="68623" nameRU="2 1/4&quot;" nameUK="2 1/4&quot;"/>
+      <attribute_value id="68624" nameRU="2 3/4&quot;" nameUK="2 3/4&quot;"/>
+      <attribute_value id="68625" nameRU="2 3/8&quot;" nameUK="2 3/8&quot;"/>
+      <attribute_value id="68626" nameRU="2 5/8&quot;" nameUK="2 5/8&quot;"/>
+      <attribute_value id="68627" nameRU="3 1/2&quot;" nameUK="3 1/2&quot;"/>
+      <attribute_value id="68628" nameRU="3 1/4&quot;" nameUK="3 1/4&quot;"/>
+      <attribute_value id="68629" nameRU="4&quot;" nameUK="4&quot;"/>
+      <attribute_value id="68630" nameRU="5&quot;" nameUK="5&quot;"/>
+      <attribute_value id="68631" nameRU="9/16&quot;" nameUK="9/16&quot;"/>
+    </attribute>
+    <attribute id="8504" nameRU="Минимальная пропускная способность" type="real" nameUK="Мінімальна пропускна здатність" measureUnitRU="куб. м/час" min="0" max="500" measureUnitUK="куб.м/год"/>
+    <attribute id="8570" nameRU="Глубина всасывания" type="real" nameUK="Глибина всмоктування" measureUnitRU="м" min="0" max="100" measureUnitUK="м"/>
+    <attribute id="8571" nameRU="Масляной датчик" type="bool" nameUK="Масляний датчик"/>
+    <attribute id="8572" nameRU="Емкость системы смазки" type="real" nameUK="Ємність системи змащування" measureUnitRU="л" min="0" max="20" measureUnitUK="л"/>
+    <attribute id="11247" nameRU="Датчик уровня масла" type="bool" nameUK="Датчик рівня мастила"/>
+    <attribute id="12599" nameRU="Тип охлаждения" type="singleselect" nameUK="Тип охолодження">
+      <attribute_value id="289167" nameRU="Воздушный" nameUK="Повітряний"/>
+    </attribute>
+    <attribute id="12646" nameRU="Тип запуска" type="singleselect" nameUK="Тип запуску">
+      <attribute_value id="174964" nameRU="Ручной" nameUK="Ручний"/>
+    </attribute>
+    <attribute id="18666" nameRU="Продуктивность" type="real" nameUK=" Продуктивність" measureUnitRU="л.с." min="0" max="100" measureUnitUK="к.с."/>
+  </category>
+</categories>

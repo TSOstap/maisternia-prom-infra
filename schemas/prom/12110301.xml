@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="12110301" nameRU="Подъемники автомобильные" nameUK="Підйомники автомобільні">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="кВт" min="0" max="50" measureUnitUK="кВт"/>
+    <attribute id="1280" nameRU="Грузоподъемность" type="real" nameUK="Вантажопідйомність" measureUnitRU="кг" min="0" max="30000" measureUnitUK="кг"/>
+    <attribute id="1342" nameRU="Высота подъема" type="real" nameUK="Висота підйому" measureUnitRU="см" min="0" max="1000" measureUnitUK="см"/>
+    <attribute id="6212" nameRU="Напряжение питания" type="multiselect" nameUK="Напруга живлення">
+      <attribute_value id="42681" nameRU="220 В" nameUK="220 В"/>
+      <attribute_value id="42682" nameRU="380 В" nameUK="380 В"/>
+      <attribute_value id="125714" nameRU="12 В" nameUK="12 В"/>
+      <attribute_value id="125715" nameRU="24 В" nameUK="24 В"/>
+    </attribute>
+    <attribute id="6269" nameRU="Высота подхвата" type="real" nameUK="Висота підхоплення" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="12794" nameRU="Время подъема" type="real" nameUK="Час підйому" measureUnitRU="сек" min="0" max="200" measureUnitUK="сек"/>
+    <attribute id="15651" nameRU="Тип автомобильного подъемника" type="singleselect" nameUK="Тип автомобільного підйомника">
+      <attribute_value id="170327" nameRU="Подъемники одностоечные" nameUK="Підйомники одностійкові"/>
+      <attribute_value id="170328" nameRU="Подъемники двухстоечные" nameUK="Підйомники двостійкові"/>
+      <attribute_value id="170329" nameRU="Подъемники четырехстоечные" nameUK="Підйомники чотирьохстійкові"/>
+      <attribute_value id="170330" nameRU="Подъёмники ножничные" nameUK="Підйомники ножичні"/>
+      <attribute_value id="170331" nameRU="Подъёмники плунжерные" nameUK="Підйомники плунжерні"/>
+      <attribute_value id="170332" nameRU="Подъёмники колонные" nameUK="Підйомники колонні"/>
+    </attribute>
+    <attribute id="15655" nameRU="Вылет задних лап" type="real" nameUK="Виліт задніх лап" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="15656" nameRU="Вылет передних лап" type="real" nameUK="Виліт передніх лап" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="15657" nameRU="Высота переезда" type="real" nameUK="Висота переїзду" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="15658" nameRU="Время опускания" type="real" nameUK="Час опускання" measureUnitRU="сек" min="0" max="200" measureUnitUK="сек"/>
+    <attribute id="15659" nameRU="Количество масла" type="real" nameUK="Кількість масла" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+    <attribute id="15660" nameRU="Давление масла" type="real" nameUK="Тиск масла" measureUnitRU="бар" min="0" max="500" measureUnitUK="бар"/>
+  </category>
+</categories>

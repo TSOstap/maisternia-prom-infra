@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200330" nameRU="Динамометрические ключи" nameUK="Динамометричні ключі">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="123" nameRU="Длина инструмента" type="real" nameUK="Довжина інструменту" measureUnitRU="мм" min="0" max="3000" measureUnitUK="мм"/>
+    <attribute id="7878" nameRU="Зажимное усилие" type="real" nameUK="Затискне зусилля" measureUnitRU="H*m" min="0" max="5000" measureUnitUK="H*m"/>
+    <attribute id="7912" nameRU="Размер присоединительных головок" type="multiselect" nameUK="Розмір приєднувальних головок">
+      <attribute_value id="66157" nameRU="1/2&quot;" nameUK="1/2&quot;"/>
+      <attribute_value id="66158" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="66159" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+      <attribute_value id="66160" nameRU="3/4&quot;" nameUK="3/4&quot;"/>
+      <attribute_value id="245719" nameRU="1&quot;" nameUK="1&quot;"/>
+    </attribute>
+    <attribute id="8271" nameRU="Омедненный инструмент" type="bool" nameUK="Оміднений інструмент"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="300904" nameRU="Рукава пожарные" nameUK="Рукави пожежні">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="1000" measureUnitUK="град."/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="МПа" min="0" max="60" measureUnitUK="МПа"/>
+    <attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="м" min="0" max="100" measureUnitUK="м"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="-100" max="0" measureUnitUK="град."/>
+    <attribute id="13396" nameRU="Тип рукава" type="singleselect" nameUK="Тип рукава">
+      <attribute_value id="135804" nameRU="Рукав пожарный всасывающий" nameUK="Рукав пожежний всмоктуючий"/>
+      <attribute_value id="135805" nameRU="Рукав пожарный напорный" nameUK="Рукав пожежний напірний"/>
+      <attribute_value id="135806" nameRU="Рукав пожарный напорно-всасывающий" nameUK="Рукав пожежний напірно-всмоктуючий"/>
+    </attribute>
+    <attribute id="13397" nameRU="Применение рукава" type="multiselect" nameUK="Застосування рукава">
+      <attribute_value id="135811" nameRU="Для пожарных кранов" nameUK="Для пожежних кранів"/>
+      <attribute_value id="135812" nameRU="Для пожарных мотопомп" nameUK="Для пожежних мотопомп"/>
+      <attribute_value id="135813" nameRU="Для пожарной техники" nameUK="Для пожежної техніки"/>
+      <attribute_value id="135814" nameRU="Для внутренних пожарных кранов" nameUK="Для внутрішніх пожежних кранів"/>
+      <attribute_value id="135815" nameRU="Для наружных пожарных кранов" nameUK="Для зовнішніх пожежних кранів"/>
+      <attribute_value id="135816" nameRU="Универсальный" nameUK="Універсальний"/>
+      <attribute_value id="135817" nameRU="Морозостойкий" nameUK="Морозостійкий"/>
+      <attribute_value id="135818" nameRU="Для внешних пожарных водоисточников" nameUK="Для зовнішніх пожежних вододжерел"/>
+    </attribute>
+    <attribute id="13398" nameRU="Материал рукава" type="multiselect" nameUK="Матеріал рукава">
+      <attribute_value id="135827" nameRU="Брезент" nameUK="Брезент"/>
+      <attribute_value id="135828" nameRU="Текстильная нить" nameUK="Текстильна нитка"/>
+      <attribute_value id="135829" nameRU="Капроновая нить" nameUK="Капронова нитка"/>
+      <attribute_value id="135830" nameRU="Полиэфирная нить" nameUK="Поліефірна нитка"/>
+      <attribute_value id="135831" nameRU="Синтетическая ткань" nameUK="Синтетична тканина"/>
+      <attribute_value id="135832" nameRU="Латекс" nameUK="Латекс"/>
+      <attribute_value id="135833" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="135834" nameRU="Армирующий каркас" nameUK="Армуючий каркас"/>
+    </attribute>
+    <attribute id="13399" nameRU="Покрытие внутри" type="multiselect" nameUK="Покриття всередині">
+      <attribute_value id="135835" nameRU="Нет" nameUK="Немає"/>
+      <attribute_value id="135836" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="135837" nameRU="Полимер" nameUK="Полімер"/>
+      <attribute_value id="135838" nameRU="Металлическое армирование (оплетка)" nameUK="Металеве армування (оплітка)"/>
+    </attribute>
+    <attribute id="13400" nameRU="Покрытие снаружи" type="multiselect" nameUK="Покриття зовні">
+      <attribute_value id="135839" nameRU="Нет" nameUK="Немає"/>
+      <attribute_value id="135840" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="135841" nameRU="Полимер" nameUK="Полімер"/>
+      <attribute_value id="135842" nameRU="Металлическое армирование (оплетка)" nameUK="Металеве армування (оплітка)"/>
+    </attribute>
+    <attribute id="13401" nameRU="Вид соединительных головок" type="multiselect" nameUK="Вид з'єднувальних головок">
+      <attribute_value id="135843" nameRU="Богданова" nameUK="Богданова"/>
+      <attribute_value id="135844" nameRU="Шторц" nameUK="Шторц"/>
+      <attribute_value id="135845" nameRU="РОТТ" nameUK="РОТТ"/>
+    </attribute>
+    <attribute id="13402" nameRU="Материал соединительных головок" type="multiselect" nameUK="Матеріал з'єднувальних головок">
+      <attribute_value id="135846" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="135847" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="135848" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="135849" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="135850" nameRU="Оцинкованная сталь" nameUK="Оцинкована сталь"/>
+      <attribute_value id="135851" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="135852" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="135853" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="135854" nameRU="Комбинированный" nameUK="Комбінований"/>
+    </attribute>
+    <attribute id="13403" nameRU="Разрывное давление" type="real" nameUK="Розривний тиск" measureUnitRU="МПа" min="0" max="60" measureUnitUK="МПа"/>
+    <attribute id="13404" nameRU="Стойкость к износу" type="integer" nameUK="Стійкість до зносу" measureUnitRU="циклов" min="0" max="10000" measureUnitUK="циклів"/>
+    <attribute id="13405" nameRU="Маслостойкость" type="bool" nameUK="Маслостійкість"/>
+    <attribute id="13406" nameRU="Min радиус сгиба" type="real" nameUK="Min радіус згину" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+  </category>
+</categories>

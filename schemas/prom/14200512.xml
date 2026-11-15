@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200512" nameRU="Пневматические степлеры" nameUK="Пневматичні степлери">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5" measureUnitUK="кг"/>
+    <attribute id="22" nameRU="Кейс в комплекте" type="bool" nameUK="Кейс в комплекті"/>
+    <attribute id="24" nameRU="Блокировка кнопки включения" type="bool" nameUK="Блокування кнопки включення"/>
+    <attribute id="52" nameRU="Крепежное средство" type="singleselect" nameUK="Кріпильний засіб">
+      <attribute_value id="6934" nameRU="Скобы" nameUK="Скоби"/>
+      <attribute_value id="6935" nameRU="Гвозди" nameUK="Цвяхи"/>
+      <attribute_value id="6936" nameRU="Скобы и гвозди" nameUK="Скоби і цвяхи"/>
+      <attribute_value id="273279" nameRU="Шпилька" nameUK="Шпилька"/>
+    </attribute>
+    <attribute id="53" nameRU="Регулировка силы удара" type="bool" nameUK="Регулювання сили удару"/>
+    <attribute id="54" nameRU="Возможность двойного удара" type="bool" nameUK="Можливість подвійного удару"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="12" measureUnitUK="бар"/>
+    <attribute id="106" nameRU="Расход воздуха" type="real" nameUK="Витрата повітря" measureUnitRU="литр/мин" min="0" max="500" measureUnitUK="літр/хв"/>
+    <attribute id="107" nameRU="Диаметр входного штуцера" type="singleselect" nameUK="Діаметр вхідного штуцера">
+      <attribute_value id="7023" nameRU="1&quot;" nameUK="1&quot;"/>
+      <attribute_value id="7024" nameRU="2&quot;" nameUK="2&quot;"/>
+      <attribute_value id="7025" nameRU="1/2&quot;" nameUK="1/2&quot;"/>
+      <attribute_value id="7026" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="7027" nameRU="1/8&quot;" nameUK="1/8&quot;"/>
+      <attribute_value id="7028" nameRU="3/4&quot;" nameUK="3/4&quot;"/>
+      <attribute_value id="7029" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+    </attribute>
+    <attribute id="108" nameRU="Внутренний диаметр шланга" type="real" nameUK="Внутрішній діаметр шланга" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="109" nameRU="Переходной штуцер" type="bool" nameUK="Перехідний штуцер"/>
+    <attribute id="132" nameRU="Длина скобы" type="real" nameUK="Довжина скоби" measureUnitRU="мм" min="0" max="50" measureUnitUK="мм"/>
+    <attribute id="133" nameRU="Ширина скобы" type="real" nameUK="Ширина скоби" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="134" nameRU="Длина гвоздя" type="real" nameUK="Довжина цвяха" measureUnitRU="мм" min="0" max="120" measureUnitUK="мм"/>
+    <attribute id="135" nameRU="Емкость контейнера" type="integer" nameUK="Ємність контейнера" measureUnitRU="шт" min="0" max="500" measureUnitUK="шт."/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

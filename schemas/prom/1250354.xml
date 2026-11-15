@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1250354" nameRU="Поливочные шланги" nameUK="Шланги для поливу">
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="атм" min="0" max="30" measureUnitUK="атм"/>
+    <attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="205" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="м" min="0" max="200" measureUnitUK="м"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="291520" nameRU="Шланг" nameUK="Шланг"/>
+      <attribute_value id="358758" nameRU="Лента для капельного полива" nameUK="Стрічка для крапельного поливу"/>
+      <attribute_value id="358759" nameRU="Трубка для капельного полива" nameUK="Трубка для крапельного поливу"/>
+      <attribute_value id="358761" nameRU="Лента туман" nameUK="Стрічка туман"/>
+    </attribute>
+    <attribute id="2828" nameRU="Минимальное рабочее давление" type="real" nameUK="Мінімальний робочий тиск" measureUnitRU="Бар" min="0" max="10" measureUnitUK="Бар"/>
+    <attribute id="2837" nameRU="Максимальное рабочее давление" type="real" nameUK="Максимальний робочий тиск" measureUnitRU="Бар" min="0" max="30" measureUnitUK="Бар"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="-50" max="0" measureUnitUK="град."/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="66120" nameRU="Прозрачный" nameUK="Прозорий"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5137" nameRU="Количество слоев" type="singleselect" nameUK="Кількість шарів">
+      <attribute_value id="113130" nameRU="1" nameUK="1"/>
+      <attribute_value id="113131" nameRU="2" nameUK="2"/>
+      <attribute_value id="113132" nameRU="3" nameUK="3"/>
+      <attribute_value id="113133" nameRU="4" nameUK="4"/>
+      <attribute_value id="113134" nameRU="5" nameUK="5"/>
+      <attribute_value id="113135" nameRU="6" nameUK="6"/>
+    </attribute>
+    <attribute id="6444" nameRU="Материал шланга" type="singleselect" nameUK="Матеріал шланга">
+      <attribute_value id="44262" nameRU="Силикон" nameUK="Силікон"/>
+      <attribute_value id="52719" nameRU="ПВХ" nameUK="ПВХ"/>
+      <attribute_value id="113141" nameRU="Полиуретан" nameUK="Поліуретан"/>
+      <attribute_value id="292449" nameRU="Латекс" nameUK=""/>
+      <attribute_value id="308758" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="308759" nameRU="Полиэстер" nameUK="Поліестер"/>
+      <attribute_value id="310021" nameRU="Полиэтилен" nameUK="Поліетилен"/>
+      <attribute_value id="310166" nameRU="ПВХ+резина" nameUK="ПВХ+гума"/>
+    </attribute>
+    <attribute id="6799" nameRU="Толщина стенки" type="real" nameUK="Товщина стінки" measureUnitRU="мм" min="0" max="20" measureUnitUK="мм"/>
+    <attribute id="7148" nameRU="Длина бухты" type="real" nameUK="Довжина бухти" measureUnitRU="м" min="0" max="5000" measureUnitUK="м"/>
+    <attribute id="8230" nameRU="Вид товара" type="singleselect" nameUK="Вид товару">
+      <attribute_value id="304447" nameRU="Шланг" nameUK="Шланг"/>
+      <attribute_value id="304448" nameRU="Лента для капельного полива" nameUK="Стрічка для крапельного поливу"/>
+      <attribute_value id="304449" nameRU="Трубка для капельного поливу" nameUK="Трубка для крапельного поливу"/>
+      <attribute_value id="309822" nameRU="Лента туман" nameUK="Стрічка туман"/>
+    </attribute>
+    <attribute id="9948" nameRU="Вес 1 п.м." type="real" nameUK="Вага 1 п.м." measureUnitRU="кг" min="0" max="5" measureUnitUK="кг"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11610" nameRU="Армированный шланг" type="bool" nameUK="Армований шланг"/>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="314734" nameRU="Морозостойкость" nameUK="Морозостійкість"/>
+      <attribute_value id="344444" nameRU="С распылителем" nameUK="З розпилювачем"/>
+      <attribute_value id="359212" nameRU="Армированные" nameUK="Армовані"/>
+      <attribute_value id="359213" nameRU="Устойчивые к УФ-излучению" nameUK="Стійкі до УФ-випромінювання"/>
+      <attribute_value id="359214" nameRU="Устойчивые к перегибам" nameUK="Стійкі до перегинів"/>
+    </attribute>
+    <attribute id="14832" nameRU="Расстояние между водовыпусками/эмиттерами" type="real" nameUK="Відстань між водовипусками/емітером" measureUnitRU="см" min="0" max="200" measureUnitUK="см"/>
+    <attribute id="17842" nameRU="Диаметр шланга (&quot;)" type="singleselect" nameUK="Діаметр шланга (&quot;)">
+      <attribute_value id="232182" nameRU="1&quot;" nameUK="1&quot;"/>
+      <attribute_value id="232183" nameRU="3/4&quot;" nameUK="3/4&quot;"/>
+      <attribute_value id="232184" nameRU="1/2&quot;" nameUK="1/2&quot;"/>
+      <attribute_value id="232185" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+      <attribute_value id="232186" nameRU="2&quot;" nameUK="2&quot;"/>
+      <attribute_value id="232187" nameRU="3/16&quot;" nameUK="3/16&quot;"/>
+      <attribute_value id="232188" nameRU="5/4&quot;" nameUK="5/4&quot;"/>
+      <attribute_value id="232189" nameRU="5/8&quot;" nameUK="5/8&quot;"/>
+      <attribute_value id="277982" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="278872" nameRU="1.25&quot;" nameUK="1.25&quot;"/>
+      <attribute_value id="308762" nameRU="1 1/4&quot;" nameUK=""/>
+      <attribute_value id="310167" nameRU="4&quot;" nameUK=""/>
+      <attribute_value id="310231" nameRU="1 1/2&quot;" nameUK=""/>
+      <attribute_value id="310232" nameRU="3&quot;" nameUK=""/>
+      <attribute_value id="329442" nameRU="6&quot;" nameUK="6&quot;"/>
+      <attribute_value id="362392" nameRU="8&quot;" nameUK=""/>
+    </attribute>
+    <attribute id="17843" nameRU="Минимальная температура воды" type="real" nameUK="Мінімальна температура води" measureUnitRU="град." min="-10" max="-5" measureUnitUK="град."/>
+    <attribute id="17844" nameRU="Максимальная температура воды" type="real" nameUK="Максимальна температура води" measureUnitRU="град." min="0" max="60" measureUnitUK="град."/>
+    <attribute id="17845" nameRU="Увеличение шланга при подаче воды до" type="singleselect" nameUK="Збільшення шланга при подачі води до">
+      <attribute_value id="232203" nameRU="Нет" nameUK="Немає"/>
+      <attribute_value id="232204" nameRU="7,5 м" nameUK="7,5 м"/>
+      <attribute_value id="232205" nameRU="15 м" nameUK="15 м"/>
+      <attribute_value id="232206" nameRU="22,5 м" nameUK="22,5 м"/>
+      <attribute_value id="232207" nameRU="30 м" nameUK="30 м"/>
+      <attribute_value id="266380" nameRU="45 м" nameUK="45 м"/>
+      <attribute_value id="266381" nameRU="60 м" nameUK="60 м"/>
+      <attribute_value id="266382" nameRU="75 м" nameUK="75 м"/>
+      <attribute_value id="292450" nameRU="37,5 м" nameUK=""/>
+      <attribute_value id="292451" nameRU="52,5 м" nameUK=""/>
+      <attribute_value id="308876" nameRU="22 м" nameUK=""/>
+      <attribute_value id="321773" nameRU="91,2 м" nameUK="91,2 м"/>
+      <attribute_value id="328338" nameRU="7.6 м" nameUK=""/>
+      <attribute_value id="328341" nameRU="15,5 м" nameUK=""/>
+      <attribute_value id="328342" nameRU="22,9 м" nameUK=""/>
+      <attribute_value id="328343" nameRU="30,4 м" nameUK=""/>
+    </attribute>
+    <attribute id="18178" nameRU="Расход воды (м3/час)" type="real" nameUK="Витрата води (м3/год)"/>
+    <attribute id="18179" nameRU="Фильтрация, Меш (Mesh)" type="integer" nameUK="Фільтрація, Меш (Mesh)"/>
+  </category>
+</categories>

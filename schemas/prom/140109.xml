@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="140109" nameRU="Комплектующие для компрессоров" nameUK="Комплектуючі для компресорів">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="2837" nameRU="Максимальное рабочее давление" type="real" nameUK="Максимальний робочий тиск" measureUnitRU="мм/рт. ст." min="0.0" max="200.0" measureUnitUK="мм/рт.ст."/>
+    <attribute id="18442" nameRU="Сила тока" type="integer" nameUK="Сила струму" measureUnitRU="А" min="0" max="50" measureUnitUK="А"/>
+  </category>
+</categories>

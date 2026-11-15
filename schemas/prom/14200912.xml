@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200912" nameRU="Гидравлические напольные прессы" nameUK="Гідравлічні підлогові преси">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="50000" measureUnitUK="кг"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="149" nameRU="Глубина" type="real" nameUK="Глибина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="309" nameRU="Манометр" type="bool" nameUK="Манометр"/>
+    <attribute id="4560" nameRU="Длина хода штока" type="real" nameUK="Довжина ходу штока" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="4994" nameRU="Расстояние между стойками" type="real" nameUK="Відстань між стійками" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="6208" nameRU="Максимальная рабочая высота" type="real" nameUK="Максимальна робоча висота" measureUnitRU="мм" min="0" max="3000" measureUnitUK="мм"/>
+    <attribute id="8923" nameRU="Максимальное усилие" type="real" nameUK="Максимальне зусилля" measureUnitRU="т" min="0" max="500" measureUnitUK="т"/>
+    <attribute id="9117" nameRU="Клапан ограничения давления" type="bool" nameUK="Клапан обмеження тиску"/>
+    <attribute id="9140" nameRU="Рабочая высота (платформа в верхнем положении)" type="real" nameUK="Робоча висота (платформа у верхньому положенні)" measureUnitRU="мм" min="0" max="3000" measureUnitUK="мм"/>
+    <attribute id="9141" nameRU="Рабочая высота (платформа в нижнем положении)" type="real" nameUK="Робоча висота (платформа в нижньому положенні)" measureUnitRU="мм" min="0" max="3000" measureUnitUK="мм"/>
+  </category>
+</categories>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142614" nameRU="Станины, верстаки, рабочие столы" nameUK="Станини, верстаки, робочі столи">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="250" measureUnitUK="кг"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="4000" measureUnitUK="мм"/>
+    <attribute id="149" nameRU="Глубина" type="real" nameUK="Глибина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+      <attribute_value id="7069" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="7070" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="7071" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="7072" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="7075" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="7094" nameRU="Другой" nameUK="Інший"/>
+      <attribute_value id="43982" nameRU="Светло-серый" nameUK="Світло-сірий"/>
+    </attribute>
+    <attribute id="642" nameRU="Толщина столешницы" type="integer" nameUK="Товщина стільниці" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="673" nameRU="Тип направляющих для выдвижных ящиков" type="multiselect" nameUK="Тип направляючих для висувних скриньок">
+      <attribute_value id="8249" nameRU="Роликовые" nameUK="Роликові"/>
+      <attribute_value id="8250" nameRU="Телескопические (шариковые)" nameUK="Телескопічні (кулькові)"/>
+      <attribute_value id="8251" nameRU="Метабоксы" nameUK="Метабокси"/>
+      <attribute_value id="8252" nameRU="Тандембоксы" nameUK="Тандембокси"/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="146703" nameRU="Комплектующее" nameUK="Комплектуюче"/>
+      <attribute_value id="179602" nameRU="Готовое оборудование" nameUK="Готове обладнання"/>
+    </attribute>
+    <attribute id="723" nameRU="Выдвижной ящик" type="integer" nameUK="Висувний ящик" measureUnitRU="шт" min="0" max="20" measureUnitUK="шт."/>
+    <attribute id="724" nameRU="Тип опор" type="multiselect" nameUK="Тип опор">
+      <attribute_value id="8702" nameRU="Ножки" nameUK="Ніжки"/>
+      <attribute_value id="23670" nameRU="Колесные опоры" nameUK="Колісні опори"/>
+      <attribute_value id="179533" nameRU="Регулируемые опоры" nameUK="Регульовані опори"/>
+    </attribute>
+    <attribute id="1136" nameRU="Покрытие корпуса" type="multiselect" nameUK="Покриття корпусу">
+      <attribute_value id="44191" nameRU="Порошковая краска" nameUK="Порошкова фарба"/>
+      <attribute_value id="179573" nameRU="Влагонепроницаемая пропитка" nameUK="Вологонепроникне просочення"/>
+    </attribute>
+    <attribute id="1956" nameRU="Дверка" type="integer" nameUK="Дверка" measureUnitRU="шт" min="0" max="6" measureUnitUK="шт."/>
+    <attribute id="2297" nameRU="Полное выдвижение ящика" type="bool" nameUK="Повне висування скриньки"/>
+    <attribute id="2458" nameRU="Тип оборудования" type="singleselect" nameUK="Тип обладнання">
+      <attribute_value id="179603" nameRU="Стол верстачный" nameUK="Стіл верстачний"/>
+      <attribute_value id="179604" nameRU="Верстак слесарный" nameUK="Верстат слюсарний"/>
+      <attribute_value id="179605" nameRU="Тумба слесарная" nameUK="Тумба слюсарна"/>
+      <attribute_value id="242817" nameRU="Верстак столярный" nameUK="Верстат столярний"/>
+      <attribute_value id="242818" nameRU="Верстак комбинированный" nameUK="Верстат комбінований"/>
+      <attribute_value id="242819" nameRU="Верстак универсальный" nameUK="Верстат універсальний"/>
+      <attribute_value id="253052" nameRU="Станина" nameUK="Станина"/>
+      <attribute_value id="348604" nameRU="Козел для распиловки древесины" nameUK="Козел для розпилювання деревини"/>
+    </attribute>
+    <attribute id="6301" nameRU="Материал столешницы" type="singleselect" nameUK="Матеріал стільниці">
+      <attribute_value id="43532" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="43536" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="43537" nameRU="Фанера" nameUK="Фанера"/>
+      <attribute_value id="43542" nameRU="Бамбук" nameUK="Бамбук"/>
+      <attribute_value id="43592" nameRU="Натуральное дерево" nameUK="Натуральне дерево"/>
+      <attribute_value id="43945" nameRU="ДСП" nameUK="ДСП"/>
+      <attribute_value id="43946" nameRU="МДФ" nameUK="МДФ"/>
+    </attribute>
+    <attribute id="6356" nameRU="Максимальная нагрузка на полку" type="real" nameUK="Максимальне навантаження на полицю" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+    <attribute id="6408" nameRU="Тип верстака" type="singleselect" nameUK="Тип верстака">
+      <attribute_value id="43935" nameRU="Бестумбовый" nameUK="Бестумбовий"/>
+      <attribute_value id="43936" nameRU="Однотумбовый" nameUK="Однотумбовий"/>
+      <attribute_value id="43937" nameRU="Двухтумбовый" nameUK="Двотумбовий"/>
+      <attribute_value id="222241" nameRU="Трехтумбовый" nameUK="Трьохтумбовий"/>
+    </attribute>
+    <attribute id="6409" nameRU="Материал корпуса верстака" type="singleselect" nameUK="Матеріал корпусу верстака">
+      <attribute_value id="43939" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="43940" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="179569" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="242820" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="284921" nameRU="Бамбук" nameUK="Бамбук"/>
+      <attribute_value id="348605" nameRU="Пластик" nameUK="Пластик"/>
+    </attribute>
+    <attribute id="6410" nameRU="Чехол столешницы" type="singleselect" nameUK="Чохол стільниці">
+      <attribute_value id="43950" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="43951" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="43952" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="43953" nameRU="Оцинкованная сталь" nameUK="Оцинкована сталь"/>
+      <attribute_value id="43954" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="43970" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="44200" nameRU="Черный металл" nameUK="Чорний метал"/>
+    </attribute>
+    <attribute id="6411" nameRU="Кант столешницы" type="singleselect" nameUK="Кант стільниці">
+      <attribute_value id="43956" nameRU="Оцинкованная сталь" nameUK="Оцинкована сталь"/>
+      <attribute_value id="43967" nameRU="Алюминий" nameUK="Алюміній"/>
+    </attribute>
+    <attribute id="6412" nameRU="Цвет фасада" type="singleselect" nameUK="Колір фасаду">
+      <attribute_value id="43987" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="43988" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="43989" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="43990" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="43991" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="43992" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="43993" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="43994" nameRU="Другой" nameUK="Інший"/>
+      <attribute_value id="43995" nameRU="Светло-серый" nameUK="Світло-сірий"/>
+    </attribute>
+    <attribute id="6413" nameRU="Максимальная нагрузка на столешницу" type="real" nameUK="Максимальне навантаження на стільницю" measureUnitRU="кг" min="0" max="1500" measureUnitUK="кг"/>
+    <attribute id="6414" nameRU="Максимальная нагрузка на выдвижной ящик" type="real" nameUK="Максимальне навантаження на висувний ящик" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+    <attribute id="6415" nameRU="Толщина материала корпуса" type="singleselect" nameUK="Товщина матеріалу корпусу">
+      <attribute_value id="44015" nameRU="1 (мм.)" nameUK="1 (мм)"/>
+      <attribute_value id="44016" nameRU="1-1.5 (мм)" nameUK="1-1.5 (мм)"/>
+      <attribute_value id="44017" nameRU="1.5 (мм.)" nameUK="1.5 (мм)"/>
+      <attribute_value id="44018" nameRU="2 (мм.)" nameUK="2 (мм)"/>
+    </attribute>
+    <attribute id="6416" nameRU="Толщина дополнительного покрытия столешницы" type="integer" nameUK="Товщина додаткового покриття стільниці" measureUnitRU="мм" min="0" max="30" measureUnitUK="мм"/>
+    <attribute id="6437" nameRU="Внутренняя полка" type="integer" nameUK="Внутрішня полиця" measureUnitRU="шт" min="0" max="10" measureUnitUK="шт."/>
+    <attribute id="6438" nameRU="Внешняя полка" type="integer" nameUK="Зовнішня полиця" measureUnitRU="шт" min="0" max="10" measureUnitUK="шт."/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="12385" nameRU="Тип комплектующего" type="singleselect" nameUK="Тип комплектуючого">
+      <attribute_value id="179607" nameRU="Замок для выдвижных ящиков" nameUK="Замок для висувних ящиків"/>
+      <attribute_value id="179609" nameRU="Опора верстака" nameUK="Опора верстата"/>
+      <attribute_value id="179610" nameRU="Замок для дверок" nameUK="Замок для дверцят"/>
+      <attribute_value id="179611" nameRU="Перфорированная панель" nameUK="Перфорована панель"/>
+      <attribute_value id="179612" nameRU="Разделители для выдвижных ящиков" nameUK="Розділювачі для висувних ящиків"/>
+      <attribute_value id="179613" nameRU="Кювета" nameUK="Кювета"/>
+      <attribute_value id="179614" nameRU="Линейка под кюветы" nameUK="Лінійка під кювети"/>
+      <attribute_value id="179615" nameRU="Крючок" nameUK="Гачок"/>
+      <attribute_value id="179616" nameRU="Лампа дневного освещения" nameUK="Лампа денного освітлення"/>
+      <attribute_value id="179617" nameRU="Блок розеток" nameUK="Блок розеток"/>
+      <attribute_value id="179694" nameRU="Столешница" nameUK="Стільниця"/>
+      <attribute_value id="350302" nameRU="Баллоны" nameUK=""/>
+      <attribute_value id="350303" nameRU="Блоки питания" nameUK=""/>
+      <attribute_value id="350304" nameRU="Датчики давления" nameUK=""/>
+      <attribute_value id="350305" nameRU="Диверторы" nameUK=""/>
+      <attribute_value id="350306" nameRU="Дренажные хомуты" nameUK=""/>
+      <attribute_value id="350307" nameRU="Клапаны" nameUK=""/>
+      <attribute_value id="350308" nameRU="Ключи для колбы фильтра" nameUK=""/>
+      <attribute_value id="350309" nameRU="Ограничители потока" nameUK=""/>
+      <attribute_value id="350310" nameRU="Ротаметры для воды" nameUK=""/>
+      <attribute_value id="350311" nameRU="Структуризатор воды" nameUK=""/>
+      <attribute_value id="350312" nameRU="Трубки" nameUK=""/>
+    </attribute>
+  </category>
+</categories>

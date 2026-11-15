@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="63022" nameRU="Пароочистители" nameUK="Пароочисники">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="2200" measureUnitUK="Вт"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="24" measureUnitUK="міс"/>
+    <attribute id="379" nameRU="Мерный стакан" type="bool" nameUK="Мірний стакан"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="143450" nameRU="Ручной" nameUK="Ручний"/>
+      <attribute_value id="236033" nameRU="Пароочиститель" nameUK="Пароочисник"/>
+      <attribute_value id="322113" nameRU="Паровая швабра" nameUK="Парова швабра"/>
+    </attribute>
+    <attribute id="1242" nameRU="Тип насадки" type="singleselect" nameUK="Тип насадки">
+      <attribute_value id="218856" nameRU="Одинарная" nameUK="Одинарна"/>
+      <attribute_value id="218857" nameRU="Двойная" nameUK="Подвійна"/>
+    </attribute>
+    <attribute id="1244" nameRU="Длина шнура" type="real" nameUK="Довжина шнура" measureUnitRU="м" min="0" max="5" measureUnitUK="м"/>
+    <attribute id="1507" nameRU="Максимальное давление пара" type="real" nameUK="Максимальний тиск пари" measureUnitRU="бар" min="0" max="5" measureUnitUK="бар"/>
+    <attribute id="1509" nameRU="Время нагрева до образования пара" type="real" nameUK="Час нагріву до утворення пари" measureUnitRU="мин" min="0" max="60" measureUnitUK="хв"/>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="220" measureUnitUK="В"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="7367" nameRU="Емкость резервуара" type="real" nameUK="Ємність резервуара" measureUnitRU="л" min="0" max="3" measureUnitUK="л"/>
+    <attribute id="10371" nameRU="Давление" type="real" nameUK="Тиск" measureUnitRU="Бар" min="0" max="5" measureUnitUK="Бар"/>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="185947" nameRU="Защита от перегрева" nameUK="Захист від перегріву"/>
+      <attribute_value id="187058" nameRU="Съемный бак для воды" nameUK="Знімний бак для води"/>
+      <attribute_value id="209003" nameRU="Предохранительный клапан" nameUK="Запобіжний клапан"/>
+      <attribute_value id="209004" nameRU="Автоотключение при отсутствии воды" nameUK="Автовідключення при відсутності води"/>
+      <attribute_value id="322116" nameRU="Регулировка расхода пара" nameUK="Регулювання витрати пари"/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+    <attribute id="13134" nameRU="Функции" type="multiselect" nameUK="Функції">
+      <attribute_value id="169227" nameRU="Защита от перегрева" nameUK="Захист від перегріву"/>
+      <attribute_value id="360518" nameRU="Отключение при недостатке воды" nameUK="Відключення при нестачі води"/>
+      <attribute_value id="360519" nameRU="Предохранительный клапан" nameUK="Запобіжний клапан"/>
+      <attribute_value id="360520" nameRU="Регулировка расхода пара" nameUK="Регулювання витрати пари"/>
+      <attribute_value id="360521" nameRU="Съемный бак" nameUK="Знімний бак"/>
+    </attribute>
+    <attribute id="19000" nameRU="Насадки и щетки" type="singleselect" nameUK="Насадки та щітки">
+      <attribute_value id="322107" nameRU="Для пола" nameUK="Для підлоги"/>
+      <attribute_value id="322108" nameRU="Для мебели" nameUK="Для меблів"/>
+      <attribute_value id="322109" nameRU="Для тканей" nameUK="Для тканин"/>
+      <attribute_value id="322110" nameRU="Для мытья окон" nameUK="Для миття вікон"/>
+      <attribute_value id="322111" nameRU="Для точечной уборки" nameUK="Для точкового прибирання"/>
+      <attribute_value id="322112" nameRU="Для плитки" nameUK="Для плитки"/>
+    </attribute>
+  </category>
+</categories>

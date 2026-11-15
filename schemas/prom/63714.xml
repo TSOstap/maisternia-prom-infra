@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="63714" nameRU="Штативы и крепления для фото-, видеотехники" nameUK="Штативи та кріплення для фото-, відеотехніки">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="50" measureUnitUK="кг"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8057" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="8698" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="83884" nameRU="Карбон" nameUK="Карбон"/>
+      <attribute_value id="115869" nameRU="Алюминиевый сплав" nameUK="Алюмінієвий сплав"/>
+      <attribute_value id="116399" nameRU="Магниевый сплав" nameUK="Магнієвий сплав"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="120517" nameRU="Подставка" nameUK="Підставка"/>
+      <attribute_value id="129430" nameRU="Поплавок" nameUK="Поплавок"/>
+      <attribute_value id="134943" nameRU="Монопод" nameUK="Монопод"/>
+      <attribute_value id="134949" nameRU="Трипод" nameUK="Трипод"/>
+      <attribute_value id="138117" nameRU="Стойка" nameUK="Стійка"/>
+      <attribute_value id="141690" nameRU="Платформа" nameUK="Платформа"/>
+      <attribute_value id="154923" nameRU="Адаптер" nameUK="Адаптер"/>
+      <attribute_value id="169021" nameRU="Головка" nameUK="Головка"/>
+      <attribute_value id="170400" nameRU="Стойка журавль" nameUK="Стійка журавель"/>
+      <attribute_value id="172256" nameRU="Клетка" nameUK="Клітка"/>
+      <attribute_value id="188670" nameRU="Кронштейн" nameUK="Кронштейн"/>
+      <attribute_value id="191200" nameRU="Струбцина, прищепка" nameUK="Струбцина, прищіпка"/>
+      <attribute_value id="191201" nameRU="Монопод для селфи" nameUK="Монопод для селфи"/>
+      <attribute_value id="294350" nameRU="Стабилизатор" nameUK="Стабілізатор"/>
+    </attribute>
+    <attribute id="807" nameRU="Количество секций" type="integer" nameUK="Кількість секцій"/>
+    <attribute id="2718" nameRU="Максимальная нагрузка" type="real" nameUK="Максимальне навантаження" measureUnitRU="кг" min="0" max="40" measureUnitUK="кг"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="106289" nameRU="Хром" nameUK="Хром"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10376" nameRU="Максимальная высота штатива" type="real" nameUK="Максимальна висота штатива" measureUnitRU="мм" min="0" max="3000" measureUnitUK="мм"/>
+    <attribute id="11840" nameRU="Тип головки" type="singleselect" nameUK="Тип головки">
+      <attribute_value id="191207" nameRU="3D" nameUK="3D"/>
+      <attribute_value id="191208" nameRU="2D" nameUK="2D"/>
+      <attribute_value id="191209" nameRU="Шаровая" nameUK="Кульова"/>
+    </attribute>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="179643" nameRU="Встроенный уровень" nameUK="Вбудований рівень"/>
+      <attribute_value id="191202" nameRU="Дистанционное управление" nameUK="Дистанційне управління"/>
+      <attribute_value id="272753" nameRU="RGB подсветка" nameUK="Підсвітка RGB"/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+    <attribute id="16229" nameRU="Длина в сложенном состоянии" type="real" nameUK="Довжина у складеному стані" measureUnitRU="мм" min="0" max="3000" measureUnitUK="мм"/>
+  </category>
+</categories>

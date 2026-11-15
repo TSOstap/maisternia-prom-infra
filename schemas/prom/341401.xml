@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="341401" nameRU="Автомобильные лебедки" nameUK="Автомобільні лебідки">
+    <attribute id="2138" nameRU="Класс защиты" type="singleselect" nameUK="Клас захисту">
+      <attribute_value id="231401" nameRU="67" nameUK="67"/>
+      <attribute_value id="231402" nameRU="68" nameUK="68"/>
+      <attribute_value id="305230" nameRU="66" nameUK=""/>
+    </attribute>
+    <attribute id="2191" nameRU="Функциональное назначение" type="multiselect" nameUK="Функціональне призначення">
+      <attribute_value id="231325" nameRU="Квадроцикл" nameUK="Квадроцикл"/>
+      <attribute_value id="231327" nameRU="Легковое авто" nameUK="Легкове авто"/>
+      <attribute_value id="231329" nameRU="Кроссовер" nameUK="Кросовер"/>
+      <attribute_value id="231330" nameRU="Переносная" nameUK="Переносна"/>
+      <attribute_value id="231331" nameRU="Снегоходная" nameUK="Снігохідна"/>
+      <attribute_value id="231332" nameRU="Спортивная" nameUK="Спортивна"/>
+      <attribute_value id="231334" nameRU="Эвакуаторная" nameUK="Евакуаторна"/>
+      <attribute_value id="231337" nameRU="Утилитарная" nameUK="Утилітарна"/>
+    </attribute>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="2000" measureUnitUK="В"/>
+    <attribute id="3823" nameRU="Тип редуктора" type="singleselect" nameUK="Тип редуктора">
+      <attribute_value id="108498" nameRU="Червячный" nameUK="Черв'ячний"/>
+      <attribute_value id="108499" nameRU="Планетарный" nameUK="Планетарний"/>
+      <attribute_value id="108501" nameRU="Комбинированный" nameUK="Комбінований"/>
+      <attribute_value id="231405" nameRU="Прямозубый" nameUK="Прямозубий"/>
+    </attribute>
+    <attribute id="9971" nameRU="Материал троса" type="singleselect" nameUK="Матеріал троса">
+      <attribute_value id="82639" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="246383" nameRU="Синтетика" nameUK="Синтетика"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10425" nameRU="Комплектация инструмента" type="multiselect" nameUK="Комплектація інструменту">
+      <attribute_value id="231413" nameRU="Радиоуправление в комплекте " nameUK="Радіоуправління в комплекті "/>
+      <attribute_value id="231414" nameRU="Трос синтетический" nameUK="Трос синтетичний"/>
+      <attribute_value id="231415" nameRU="Трос стальной" nameUK="Трос сталевий"/>
+    </attribute>
+    <attribute id="15419" nameRU="Тяговое усилие" type="integer" nameUK="Тягове зусилля" measureUnitRU="кг" min="1" max="10000" measureUnitUK="кг"/>
+    <attribute id="15421" nameRU="Диаметр троса" type="real" nameUK="Діаметр троса" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="15424" nameRU="Длина троса" type="real" nameUK="Довжина троса" measureUnitRU="м" min="0" max="200" measureUnitUK="м"/>
+    <attribute id="17838" nameRU="Привод лебедки" type="multiselect" nameUK="Привід лебідки">
+      <attribute_value id="231467" nameRU="12V" nameUK="12V"/>
+      <attribute_value id="231468" nameRU="14V" nameUK="14V"/>
+      <attribute_value id="231478" nameRU="Гидравлический" nameUK="Гідравлічний"/>
+    </attribute>
+    <attribute id="17839" nameRU="Интегрированное управление" type="bool" nameUK="Інтегроване управління"/>
+    <attribute id="18319" nameRU="Артикул производителя" type="free" nameUK="Артикул виробника"/>
+    <attribute id="18477" nameRU="Степень защиты, IP" type="multiselect" nameUK="Ступінь захисту, IP">
+      <attribute_value id="304469" nameRU="IP67" nameUK=""/>
+      <attribute_value id="304470" nameRU="IP68" nameUK=""/>
+      <attribute_value id="304682" nameRU="IP66" nameUK=""/>
+    </attribute>
+  </category>
+</categories>

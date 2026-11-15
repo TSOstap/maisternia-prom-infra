@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1250341" nameRU="Аэраторы, скарификаторы" nameUK="Аератори, скарифікатори">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="5000" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+      <attribute_value id="53227" nameRU="Сеть 110В" nameUK="Мережа 110В"/>
+    </attribute>
+    <attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+      <attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+      <attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+      <attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+      <attribute_value id="10614" nameRU="Li-Pol" nameUK="Li-Pol"/>
+    </attribute>
+    <attribute id="82" nameRU="Объем масляного бака" type="real" nameUK="Об'єм масляного бака" measureUnitRU="л" min="0" max="2" measureUnitUK="л"/>
+    <attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="10000" measureUnitUK="об/хв"/>
+    <attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="5" measureUnitUK="А. г"/>
+    <attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="40" measureUnitUK="В"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="116" nameRU="Количество цилиндров" type="singleselect" nameUK="Кількість циліндрів">
+      <attribute_value id="7047" nameRU="1" nameUK="1"/>
+      <attribute_value id="7048" nameRU="2" nameUK="2"/>
+      <attribute_value id="7049" nameRU="3" nameUK="3"/>
+      <attribute_value id="7050" nameRU="4" nameUK="4"/>
+    </attribute>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+      <attribute_value id="19913" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+    </attribute>
+    <attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="1000" measureUnitUK="куб. см"/>
+    <attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="л. с." min="0" max="20" measureUnitUK="к. с."/>
+    <attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="10" measureUnitUK="л/год"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="89430" nameRU="Аэратор" nameUK="Аератор"/>
+      <attribute_value id="89431" nameRU="Скарификатор" nameUK="Скарифікатор"/>
+      <attribute_value id="89432" nameRU="Аэратор-скарификатор" nameUK="Аератор-скарифікатор"/>
+    </attribute>
+    <attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+      <attribute_value id="338835" nameRU="Бесщеточный" nameUK="Безщітковий"/>
+    </attribute>
+    <attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+      <attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+      <attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+    </attribute>
+    <attribute id="1079" nameRU="Марка двигателя" type="free" nameUK="Марка двигуна"/>
+    <attribute id="1266" nameRU="Класс" type="singleselect" nameUK="Клас">
+      <attribute_value id="204573" nameRU="Профессиональный" nameUK="Професійний"/>
+    </attribute>
+    <attribute id="1688" nameRU="Время работы от аккумулятора" type="real" nameUK="Час роботи від акумулятора" measureUnitRU="мин" min="0" max="600" measureUnitUK="хв"/>
+    <attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="10" measureUnitUK="л"/>
+    <attribute id="3137" nameRU="Количество оборотов двигателя" type="real" nameUK="Кількість обертів двигуна" measureUnitRU="об/мин" min="0" max="5000" measureUnitUK="об/хв"/>
+    <attribute id="4097" nameRU="Глубина обработки" type="real" nameUK="Глибина обробки" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="5073" nameRU="Производительность" type="real" nameUK="Продуктивність" measureUnitRU="кв. м/час" min="0" max="2000" measureUnitUK="кв.м/год"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10026" nameRU="Тип травосборника" type="singleselect" nameUK="Тип травозбірника">
+      <attribute_value id="84166" nameRU="Мягкий" nameUK="М'який"/>
+      <attribute_value id="84167" nameRU="Жесткий" nameUK="Жорсткий"/>
+      <attribute_value id="85029" nameRU="Комбинированный" nameUK="Комбінований"/>
+    </attribute>
+    <attribute id="10027" nameRU="Объем травосборника" type="real" nameUK="Об'єм травозбірника" measureUnitRU="л" min="0" max="200" measureUnitUK="л"/>
+    <attribute id="10054" nameRU="Тип привода колес" type="singleselect" nameUK="Тип приводу коліс">
+      <attribute_value id="84943" nameRU="Передний" nameUK="Передній"/>
+      <attribute_value id="84944" nameRU="Задний" nameUK="Задній"/>
+      <attribute_value id="84945" nameRU="Полный" nameUK="Повний"/>
+      <attribute_value id="84946" nameRU="Нет" nameUK="Немає"/>
+    </attribute>
+    <attribute id="10077" nameRU="Тип привода" type="singleselect" nameUK="Тип приводу">
+      <attribute_value id="85057" nameRU="Электродвигатель (от сети)" nameUK="Електродвигун (від мережі)"/>
+      <attribute_value id="85058" nameRU="Бензиновый двигатель" nameUK="Бензиновий двигун"/>
+      <attribute_value id="85059" nameRU="Дизельный двигатель" nameUK="Дизельний двигун"/>
+      <attribute_value id="85060" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="85061" nameRU="Ручной привод" nameUK="Ручний привід"/>
+    </attribute>
+    <attribute id="10255" nameRU="Ширина обработки" type="real" nameUK="Ширина обробки" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="10257" nameRU="Количество регулировок глубины обработки" type="singleselect" nameUK="Кількість регулювань глибини обробки">
+      <attribute_value id="89891" nameRU="1" nameUK="1"/>
+      <attribute_value id="89892" nameRU="2" nameUK="2"/>
+      <attribute_value id="89893" nameRU="3" nameUK="3"/>
+      <attribute_value id="89894" nameRU="4" nameUK="4"/>
+      <attribute_value id="89895" nameRU="5" nameUK="5"/>
+      <attribute_value id="89896" nameRU="6" nameUK="6"/>
+      <attribute_value id="89897" nameRU="7" nameUK="7"/>
+      <attribute_value id="89898" nameRU="8" nameUK="8"/>
+      <attribute_value id="89899" nameRU="9" nameUK="9"/>
+      <attribute_value id="89900" nameRU="10" nameUK="10"/>
+      <attribute_value id="350584" nameRU="18" nameUK=""/>
+    </attribute>
+    <attribute id="10258" nameRU="Количество ножей на валу скарификатора" type="real" nameUK="Кількість ножів на валу скарифікатора"/>
+    <attribute id="10259" nameRU="Количество ножей (спиц) на валу аэратора" type="real" nameUK="Кількість ножів (спиць) на валу аератора"/>
+    <attribute id="10424" nameRU="Количество аккумуляторов" type="real" nameUK="Кількість акумуляторів" measureUnitRU="шт" min="0" max="5" measureUnitUK="шт."/>
+  </category>
+</categories>

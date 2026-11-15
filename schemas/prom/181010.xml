@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="181010" nameRU="Ножи для охоты, рыбалки и туризма" nameUK="Ножі для полювання, риболовлі та туризму">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="2000" measureUnitUK="г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="390" nameRU="Длина рукоятки" type="real" nameUK="Довжина рукоятки" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="435" nameRU="Длина лезвия" type="real" nameUK="Довжина леза" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="436" nameRU="Ширина лезвия" type="real" nameUK="Ширина леза" measureUnitRU="мм" min="0" max="110" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="128191" nameRU="С фиксированным клинком" nameUK="З фіксованим клинком"/>
+      <attribute_value id="128192" nameRU="Складной" nameUK="Складаний"/>
+    </attribute>
+    <attribute id="3780" nameRU="Длина ножа" type="real" nameUK="Довжина ножа" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30802" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="234476" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="266267" nameRU="Койот" nameUK="Койот"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="268840" nameRU="Колеруемый" nameUK="Колеруємий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5242" nameRU="Поверхность" type="singleselect" nameUK="Поверхня">
+      <attribute_value id="34393" nameRU="Матовая" nameUK="Матова"/>
+      <attribute_value id="34394" nameRU="Глянцевая" nameUK="Глянцева"/>
+      <attribute_value id="70881" nameRU="Глянцевая/матовая" nameUK="Глянцевий/матовий"/>
+      <attribute_value id="277430" nameRU="Сатин" nameUK="Сатин"/>
+      <attribute_value id="282777" nameRU="Стоунвош" nameUK="Стоунвош"/>
+      <attribute_value id="282778" nameRU="Зеркальная" nameUK="Дзеркальна"/>
+      <attribute_value id="284925" nameRU="Антибликовая" nameUK="Антивідблискова"/>
+      <attribute_value id="288730" nameRU="Кованная" nameUK="Кована"/>
+      <attribute_value id="293214" nameRU="Тефлон" nameUK=""/>
+      <attribute_value id="294056" nameRU="Титан" nameUK=""/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="77739" nameRU="Подводная охота" nameUK="Підводне полювання"/>
+      <attribute_value id="143508" nameRU="Рыбалка" nameUK="Рибалка"/>
+      <attribute_value id="143509" nameRU="Туризм" nameUK="Туризм"/>
+      <attribute_value id="143510" nameRU="Охота" nameUK="Полювання"/>
+      <attribute_value id="205709" nameRU="Тактический" nameUK="Тактичний"/>
+      <attribute_value id="233845" nameRU="Повседневный" nameUK="Повсякденний"/>
+      <attribute_value id="282431" nameRU="Метательные" nameUK="Метальні"/>
+    </attribute>
+    <attribute id="8234" nameRU="Твердость режущего лезвия" type="real" nameUK="Твердість ріжучого леза" measureUnitRU="HRC" min="0" max="100" measureUnitUK="HRC"/>
+    <attribute id="8758" nameRU="Материал лезвия" type="singleselect" nameUK="Матеріал леза">
+      <attribute_value id="70686" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="70687" nameRU="Молибденовая сталь" nameUK="Молібденова сталь"/>
+      <attribute_value id="70688" nameRU="Углеродистая сталь" nameUK="Вуглецева сталь"/>
+      <attribute_value id="70689" nameRU="Титан" nameUK="Титан"/>
+      <attribute_value id="82645" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="82646" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="83035" nameRU="Цинковый сплав" nameUK="Цинковий сплав"/>
+      <attribute_value id="110134" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="160022" nameRU="Дамасская сталь" nameUK="Дамаська сталь"/>
+      <attribute_value id="275106" nameRU="D2" nameUK="D2"/>
+      <attribute_value id="275107" nameRU="AUS-8" nameUK="AUS-8"/>
+      <attribute_value id="280818" nameRU="Sandvik 12C27" nameUK="Sandvik 12C27"/>
+      <attribute_value id="281910" nameRU="8Cr13Mov" nameUK="8Cr13Mov"/>
+      <attribute_value id="282021" nameRU="9Cr14Mov" nameUK="9Cr14Mov"/>
+      <attribute_value id="282022" nameRU="7Cr17Mov" nameUK="7Cr17Mov"/>
+      <attribute_value id="282023" nameRU="3Cr13" nameUK="3Cr13"/>
+      <attribute_value id="282024" nameRU="440C" nameUK="440C"/>
+      <attribute_value id="282025" nameRU="4116 Krupp" nameUK="4116 Krupp"/>
+      <attribute_value id="282102" nameRU="9Cr19Mov" nameUK="9Cr19Mov"/>
+      <attribute_value id="282103" nameRU="420" nameUK="420"/>
+      <attribute_value id="282104" nameRU="5Cr15Mov" nameUK="5Cr15Mov"/>
+      <attribute_value id="282108" nameRU="S35VN" nameUK="S35VN"/>
+      <attribute_value id="282109" nameRU="BD1" nameUK="BD1"/>
+      <attribute_value id="282110" nameRU="9Cr18MoV" nameUK="9Cr18MoV"/>
+      <attribute_value id="282111" nameRU="CTS XHP" nameUK="CTS XHP"/>
+      <attribute_value id="282145" nameRU="420J2" nameUK="420J2"/>
+      <attribute_value id="282267" nameRU="440A" nameUK="440A"/>
+      <attribute_value id="282344" nameRU="50x14 MF" nameUK="50x14 MF"/>
+      <attribute_value id="282429" nameRU="65X13" nameUK="65X13"/>
+      <attribute_value id="282445" nameRU="40Х13" nameUK="40Х13"/>
+      <attribute_value id="282478" nameRU="95Х18" nameUK="95Х18"/>
+      <attribute_value id="282479" nameRU="65Х13" nameUK="65Х13"/>
+      <attribute_value id="283817" nameRU="Sandvik 14C28N" nameUK="Sandvik 14C28N"/>
+      <attribute_value id="283968" nameRU="VG-10" nameUK="VG-10"/>
+      <attribute_value id="284420" nameRU="5Cr13Mov" nameUK="5Cr13Mov"/>
+      <attribute_value id="284421" nameRU="7cr13Mov" nameUK="7cr13Mov"/>
+      <attribute_value id="284422" nameRU="8Cr14Mov" nameUK="8Cr14Mov"/>
+      <attribute_value id="284423" nameRU="7Cr13Mov﻿" nameUK="7Cr13Mov﻿"/>
+      <attribute_value id="284764" nameRU="M390" nameUK="M390"/>
+      <attribute_value id="284827" nameRU="8Cr15MoV" nameUK="8Cr15MoV"/>
+      <attribute_value id="284897" nameRU="8Cr17MoV" nameUK="8Cr17MoV"/>
+      <attribute_value id="284907" nameRU="50Х14МФ" nameUK="50Х14МФ"/>
+      <attribute_value id="285268" nameRU="N690" nameUK="N690"/>
+      <attribute_value id="285688" nameRU="CPM-S30V" nameUK="CPM-S30V"/>
+      <attribute_value id="289573" nameRU="3Cr13MoV" nameUK="3Cr13MoV"/>
+      <attribute_value id="289868" nameRU="CTS-BD1" nameUK="CTS-BD1"/>
+      <attribute_value id="289869" nameRU="CPM Cru-Wear" nameUK="CPM Cru-Wear"/>
+      <attribute_value id="289943" nameRU="154CM" nameUK="154CM"/>
+      <attribute_value id="289975" nameRU="X50CrMoV15" nameUK="X50CrMoV15"/>
+      <attribute_value id="290046" nameRU="N695" nameUK="N695"/>
+      <attribute_value id="290230" nameRU="CPM 20CV" nameUK="CPM 20CV"/>
+      <attribute_value id="290680" nameRU="8Cr13MoV﻿" nameUK="8Cr13MoV﻿"/>
+      <attribute_value id="290825" nameRU="420HC" nameUK="420HC"/>
+      <attribute_value id="291619" nameRU="440B" nameUK="440B"/>
+      <attribute_value id="293579" nameRU="Nitro-V" nameUK="Nitro-V"/>
+      <attribute_value id="293631" nameRU="1095 Cro-Van " nameUK="1095 Cro-Van "/>
+      <attribute_value id="293703" nameRU="AUS-10" nameUK="AUS-10"/>
+      <attribute_value id="293928" nameRU="SK-5" nameUK="SK-5"/>
+      <attribute_value id="294051" nameRU="AUS-6" nameUK="AUS-6"/>
+      <attribute_value id="294055" nameRU="12С27" nameUK="12С27"/>
+      <attribute_value id="297685" nameRU="4034SS" nameUK="4034SS"/>
+      <attribute_value id="297687" nameRU="AUS10A" nameUK="AUS10A"/>
+      <attribute_value id="297876" nameRU="Nitrox" nameUK="Nitrox"/>
+      <attribute_value id="298200" nameRU="4Cr14" nameUK="4Cr14"/>
+      <attribute_value id="298213" nameRU="4Cr13" nameUK="4Cr13"/>
+      <attribute_value id="332830" nameRU="Spring Steel" nameUK=""/>
+      <attribute_value id="345690" nameRU="10Cr15CoMoV" nameUK=""/>
+      <attribute_value id="348388" nameRU="425HC" nameUK=""/>
+    </attribute>
+    <attribute id="8760" nameRU="Толщина лезвия" type="real" nameUK="Товщина леза" measureUnitRU="мм" min="0" max="6" measureUnitUK="мм"/>
+    <attribute id="9973" nameRU="Материал рукоятки" type="singleselect" nameUK="Матеріал рукоятки">
+      <attribute_value id="82648" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="82649" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="82650" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="82651" nameRU="Бакелит" nameUK="Бакеліт"/>
+      <attribute_value id="82652" nameRU="Силикон" nameUK="Силікон"/>
+      <attribute_value id="82653" nameRU="Нейлон" nameUK="Нейлон"/>
+      <attribute_value id="82654" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="86809" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="86812" nameRU="Пластмасса" nameUK="Пластмаса"/>
+      <attribute_value id="111026" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="126631" nameRU="ЭВА" nameUK="ЕВА"/>
+      <attribute_value id="126632" nameRU="Пробка" nameUK="Пробка"/>
+      <attribute_value id="140012" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="140015" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="140016" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="140021" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="159944" nameRU="G10" nameUK="G10"/>
+      <attribute_value id="204574" nameRU="Кожа" nameUK="Шкіра"/>
+      <attribute_value id="207423" nameRU="Прорезиненный пластик" nameUK="Прогумований пластик"/>
+      <attribute_value id="218386" nameRU="Микарта" nameUK="Микарта"/>
+      <attribute_value id="281459" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+      <attribute_value id="281735" nameRU="Углеродное волокно" nameUK="Вуглецеве волокно"/>
+      <attribute_value id="282105" nameRU="GRN" nameUK="GRN"/>
+      <attribute_value id="283959" nameRU="Титан" nameUK=""/>
+      <attribute_value id="284418" nameRU="Термопластик" nameUK="Термопластик"/>
+      <attribute_value id="284429" nameRU="Карбон" nameUK=""/>
+      <attribute_value id="285374" nameRU="Алюминиевый сплав" nameUK="Алюмінієвий сплав"/>
+      <attribute_value id="289248" nameRU="Эластрон" nameUK="Еластрон"/>
+      <attribute_value id="289754" nameRU="Шнур" nameUK=""/>
+      <attribute_value id="293629" nameRU="Zytel" nameUK=""/>
+      <attribute_value id="293630" nameRU="Ultramid" nameUK=""/>
+      <attribute_value id="293702" nameRU="Griv-Ex" nameUK=""/>
+      <attribute_value id="293929" nameRU="Kray-Ex" nameUK=""/>
+      <attribute_value id="295183" nameRU="Kraton" nameUK=""/>
+      <attribute_value id="297693" nameRU="Полиамид" nameUK="Поліамід"/>
+      <attribute_value id="300651" nameRU="FRN" nameUK="FRN"/>
+      <attribute_value id="301844" nameRU="Paracord" nameUK=""/>
+      <attribute_value id="303710" nameRU="FRP" nameUK=""/>
+      <attribute_value id="303724" nameRU="Finnish birch" nameUK=""/>
+    </attribute>
+    <attribute id="9974" nameRU="Заточка лезвия" type="singleselect" nameUK="Заточка леза">
+      <attribute_value id="82663" nameRU="Двусторонняя" nameUK="Двостороння"/>
+      <attribute_value id="82664" nameRU="Односторонняя" nameUK="Одностороння"/>
+      <attribute_value id="284419" nameRU="Комбинированная" nameUK="Комбінована"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10559" nameRU="Материал чехла" type="singleselect" nameUK="Матеріал чохла">
+      <attribute_value id="275335" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="276850" nameRU="Нейлон" nameUK="Нейлон"/>
+      <attribute_value id="293628" nameRU="Кожа" nameUK="Шкіра"/>
+      <attribute_value id="294057" nameRU="Cordura" nameUK=""/>
+    </attribute>
+    <attribute id="11454" nameRU="Вес ножа" type="real" nameUK="Вага ножа" measureUnitRU="г" min="0" max="2000" measureUnitUK="г"/>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="128015" nameRU="Металлическая клипса" nameUK="Металева кліпса"/>
+      <attribute_value id="136192" nameRU="Серрейтор для очистки чешуи" nameUK="Серрейтор для очищення луски"/>
+      <attribute_value id="136193" nameRU="Открывалка для бутылок" nameUK="Відкривачка для пляшок"/>
+      <attribute_value id="289185" nameRU="Консервный нож" nameUK="Консервний ніж"/>
+      <attribute_value id="300068" nameRU="Предохранитель" nameUK="Запобіжник"/>
+      <attribute_value id="300069" nameRU="Флипер" nameUK="Фліпер"/>
+      <attribute_value id="302008" nameRU="Коврик" nameUK="Килимок"/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+    <attribute id="13875" nameRU="Материал ножен" type="singleselect" nameUK="Матеріал піхов">
+      <attribute_value id="139479" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="139480" nameRU="Искусственная кожа" nameUK="Штучна шкіра"/>
+      <attribute_value id="139481" nameRU="Натуральная кожа" nameUK="Натуральна шкіра"/>
+      <attribute_value id="139482" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="139483" nameRU="Полиэстер" nameUK="Поліестер"/>
+      <attribute_value id="269596" nameRU="Ткань" nameUK="Тканина"/>
+      <attribute_value id="275108" nameRU="Кордура" nameUK="Кордура"/>
+      <attribute_value id="275109" nameRU="Нейлон" nameUK="Нейлон"/>
+      <attribute_value id="275110" nameRU="Отсутствует" nameUK="Відсутній"/>
+      <attribute_value id="293701" nameRU="Celcon" nameUK=""/>
+      <attribute_value id="300278" nameRU="Kydex" nameUK=""/>
+      <attribute_value id="307938" nameRU="Металл" nameUK="Метал"/>
+    </attribute>
+    <attribute id="16229" nameRU="Длина в сложенном состоянии" type="real" nameUK="Довжина у складеному стані" measureUnitRU="см" min="0" max="100" measureUnitUK="см"/>
+  </category>
+</categories>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200335" nameRU="Механические степлеры" nameUK="Механічні степлери">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="2" measureUnitUK="кг"/>
+    <attribute id="52" nameRU="Крепежное средство" type="singleselect" nameUK="Кріпильний засіб">
+      <attribute_value id="6934" nameRU="Скобы" nameUK="Скоби"/>
+      <attribute_value id="6935" nameRU="Гвозди" nameUK="Цвяхи"/>
+      <attribute_value id="6936" nameRU="Скобы и гвозди" nameUK="Скоби і цвяхи"/>
+      <attribute_value id="234406" nameRU="Штифты" nameUK="Штифти"/>
+      <attribute_value id="234408" nameRU="Скобы, гвозди и штифты" nameUK="Скоби, цвяхи і штифти"/>
+    </attribute>
+    <attribute id="53" nameRU="Регулировка силы удара" type="bool" nameUK="Регулювання сили удару"/>
+    <attribute id="54" nameRU="Возможность двойного удара" type="bool" nameUK="Можливість подвійного удару"/>
+    <attribute id="92" nameRU="Максимальное количество ударов" type="real" nameUK="Максимальна кількість ударів" measureUnitRU="уд/мин" min="0" max="40" measureUnitUK="уд/хв"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="110" nameRU="Набор насадок" type="bool" nameUK="Набір насадок"/>
+    <attribute id="132" nameRU="Длина скобы" type="real" nameUK="Довжина скоби" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="133" nameRU="Ширина скобы" type="real" nameUK="Ширина скоби" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="134" nameRU="Длина гвоздя" type="real" nameUK="Довжина цвяха" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="135" nameRU="Емкость контейнера" type="integer" nameUK="Ємність контейнера" measureUnitRU="шт" min="0" max="500" measureUnitUK="шт."/>
+    <attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="217735" nameRU="Рычажный" nameUK="Важільний"/>
+      <attribute_value id="234401" nameRU="Молотковый" nameUK="Молотковий"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="17890" nameRU="Тип крепежа" type="multiselect" nameUK="Тип кріплення">
+      <attribute_value id="234435" nameRU="Тип 13" nameUK="Тип 13"/>
+      <attribute_value id="234436" nameRU="Тип 28" nameUK="Тип 28"/>
+      <attribute_value id="234437" nameRU="Тип 36" nameUK="Тип 36"/>
+      <attribute_value id="234438" nameRU="Тип 37" nameUK="Тип 37"/>
+      <attribute_value id="234439" nameRU="Тип 51" nameUK="Тип 51"/>
+      <attribute_value id="234440" nameRU="Тип 52" nameUK="Тип 52"/>
+      <attribute_value id="234441" nameRU="Тип 53" nameUK="Тип 53"/>
+      <attribute_value id="234442" nameRU="Тип 53F" nameUK="Тип 53F"/>
+      <attribute_value id="234443" nameRU="Тип 54" nameUK="Тип 54"/>
+      <attribute_value id="234444" nameRU="Тип 55" nameUK="Тип 55"/>
+      <attribute_value id="234445" nameRU="Тип 55 (осмоленные)" nameUK="Тип 55 (обсмолені)"/>
+      <attribute_value id="234446" nameRU="Тип 57" nameUK="Тип 57"/>
+      <attribute_value id="234447" nameRU="Тип 58" nameUK="Тип 58"/>
+      <attribute_value id="234448" nameRU="Тип 59" nameUK="Тип 59"/>
+      <attribute_value id="234449" nameRU="Тип 140" nameUK="Тип 140"/>
+      <attribute_value id="234450" nameRU="Тип 40" nameUK="Тип 40"/>
+      <attribute_value id="234451" nameRU="Тип 41" nameUK="Тип 41"/>
+      <attribute_value id="234452" nameRU="Тип 47" nameUK="Тип 47"/>
+      <attribute_value id="234453" nameRU="Тип 48" nameUK="Тип 48"/>
+      <attribute_value id="234454" nameRU="Тип 49" nameUK="Тип 49"/>
+    </attribute>
+    <attribute id="17891" nameRU="Минимальная длина скобы" type="real" nameUK="Мінімальна довжина скоби" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="17892" nameRU="Максимальная длина скобы" type="real" nameUK="Максимальна довжина скоби" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="17893" nameRU="Минимальная ширина скобы" type="real" nameUK="Мінімальна ширина скоби" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="17894" nameRU="Максимальная ширина скобы" type="real" nameUK="Максимальна ширина скоби" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="17895" nameRU="Минимальная длина гвоздя" type="real" nameUK="Мінімальна довжина цвяха" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="17896" nameRU="Максимальная длина гвоздя" type="real" nameUK="Максимальна довжина цвяха" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+  </category>
+</categories>

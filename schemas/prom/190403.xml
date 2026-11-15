@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="190403" nameRU="Лазерные дальномеры" nameUK="Лазерні далекоміри">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="1000" measureUnitUK="г"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="8807" nameRU="Батарейки" nameUK="Батарейки"/>
+    </attribute>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="70" measureUnitUK="град."/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="50" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="250" measureUnitUK="мм"/>
+    <attribute id="699" nameRU="Измерительная шкала" type="multiselect" nameUK="Вимірювальна шкала">
+      <attribute_value id="8522" nameRU="Метрическая" nameUK="Метрична"/>
+      <attribute_value id="8523" nameRU="Дюймы" nameUK="Дюйми"/>
+      <attribute_value id="8524" nameRU="Футы" nameUK="Фути"/>
+    </attribute>
+    <attribute id="745" nameRU="Класс лазера" type="singleselect" nameUK="Клас лазера">
+      <attribute_value id="8808" nameRU="Класс 1" nameUK="Клас 1"/>
+      <attribute_value id="8809" nameRU="Класс 2" nameUK="Клас 2"/>
+      <attribute_value id="8810" nameRU="Класс 2b" nameUK="Клас 2b"/>
+      <attribute_value id="8811" nameRU="Класс 3" nameUK="Клас 3"/>
+      <attribute_value id="8812" nameRU="Класс 3b" nameUK="Клас 3b"/>
+      <attribute_value id="8813" nameRU="Класс 4" nameUK="Клас 4"/>
+      <attribute_value id="303839" nameRU="Класс 1М" nameUK="Клас 1М"/>
+    </attribute>
+    <attribute id="747" nameRU="Лазерный диод" type="real" nameUK="Лазерний діод" measureUnitRU="нм" min="0" max="1000" measureUnitUK="нм"/>
+    <attribute id="1338" nameRU="Время работы" type="real" nameUK="Час роботи" measureUnitRU="измерений" min="0" max="10000" measureUnitUK="вимірювань"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="-50" max="0" measureUnitUK="град."/>
+    <attribute id="5984" nameRU="Тип батарейки" type="multiselect" nameUK="Тип батарейки">
+      <attribute_value id="40717" nameRU="ААА" nameUK="ААА"/>
+      <attribute_value id="40718" nameRU="АА" nameUK="АА"/>
+      <attribute_value id="40719" nameRU="С" nameUK="З"/>
+      <attribute_value id="40720" nameRU="D" nameUK="D"/>
+      <attribute_value id="40721" nameRU="Крона" nameUK="Крона"/>
+      <attribute_value id="303637" nameRU="CR2" nameUK=""/>
+      <attribute_value id="303639" nameRU="CR123" nameUK=""/>
+    </attribute>
+    <attribute id="5985" nameRU="Количество батареек" type="integer" nameUK="Кількість батарейок" measureUnitRU="шт" min="1" max="8" measureUnitUK="шт."/>
+    <attribute id="6038" nameRU="Точность измерения +/-" type="real" nameUK="Точність вимірювання +/-" measureUnitRU="мм" min="0" max="5" measureUnitUK="мм"/>
+    <attribute id="6300" nameRU="Защита оборудования от воды и пыли IP" type="singleselect" nameUK="Захист обладнання від води і пилу IP">
+      <attribute_value id="43463" nameRU="IP10" nameUK="IP10"/>
+      <attribute_value id="43464" nameRU="IP11" nameUK="IP11"/>
+      <attribute_value id="43465" nameRU="IP12" nameUK="IP12"/>
+      <attribute_value id="43466" nameRU="IP13" nameUK="IP13"/>
+      <attribute_value id="43467" nameRU="IP14" nameUK="IP14"/>
+      <attribute_value id="43468" nameRU="IP15" nameUK="IP15"/>
+      <attribute_value id="43469" nameRU="IP16" nameUK="IP16"/>
+      <attribute_value id="43470" nameRU="IP17" nameUK="IP17"/>
+      <attribute_value id="43471" nameRU="IP18" nameUK="IP18"/>
+      <attribute_value id="43472" nameRU="IP19" nameUK="IP19"/>
+      <attribute_value id="43473" nameRU="IP20" nameUK="IP20"/>
+      <attribute_value id="43474" nameRU="IP21" nameUK="IP21"/>
+      <attribute_value id="43475" nameRU="IP22" nameUK="IP22"/>
+      <attribute_value id="43476" nameRU="IP23" nameUK="IP23"/>
+      <attribute_value id="43477" nameRU="IP24" nameUK="IP24"/>
+      <attribute_value id="43478" nameRU="IP25" nameUK="IP25"/>
+      <attribute_value id="43479" nameRU="IP26" nameUK="IP26"/>
+      <attribute_value id="43480" nameRU="IP27" nameUK="IP27"/>
+      <attribute_value id="43481" nameRU="IP28" nameUK="IP28"/>
+      <attribute_value id="43482" nameRU="IP29" nameUK="IP29"/>
+      <attribute_value id="43483" nameRU="IP30" nameUK="IP30"/>
+      <attribute_value id="43484" nameRU="IP31" nameUK="IP31"/>
+      <attribute_value id="43485" nameRU="IP32" nameUK="IP32"/>
+      <attribute_value id="43486" nameRU="IP33" nameUK="IP33"/>
+      <attribute_value id="43487" nameRU="IP34" nameUK="IP34"/>
+      <attribute_value id="43488" nameRU="IP35" nameUK="IP35"/>
+      <attribute_value id="43489" nameRU="IP36" nameUK="IP36"/>
+      <attribute_value id="43490" nameRU="IP37" nameUK="IP37"/>
+      <attribute_value id="43491" nameRU="IP38" nameUK="IP38"/>
+      <attribute_value id="43492" nameRU="IP39" nameUK="IP39"/>
+      <attribute_value id="43493" nameRU="IP40" nameUK="IP40"/>
+      <attribute_value id="43494" nameRU="IP41" nameUK="IP41"/>
+      <attribute_value id="43495" nameRU="IP42" nameUK="IP42"/>
+      <attribute_value id="43496" nameRU="IP44" nameUK="IP44"/>
+      <attribute_value id="43497" nameRU="IP45" nameUK="IP45"/>
+      <attribute_value id="43498" nameRU="IP46" nameUK="IP46"/>
+      <attribute_value id="43499" nameRU="IP47" nameUK="IP47"/>
+      <attribute_value id="43500" nameRU="IP48" nameUK="IP48"/>
+      <attribute_value id="43501" nameRU="IP49" nameUK="IP49"/>
+      <attribute_value id="43502" nameRU="IP50" nameUK="IP50"/>
+      <attribute_value id="43503" nameRU="IP51" nameUK="IP51"/>
+      <attribute_value id="43504" nameRU="IP52" nameUK="IP52"/>
+      <attribute_value id="43505" nameRU="IP53" nameUK="IP53"/>
+      <attribute_value id="43506" nameRU="IP54" nameUK="IP54"/>
+      <attribute_value id="43507" nameRU="IP55" nameUK="IP55"/>
+      <attribute_value id="43508" nameRU="IP56" nameUK="IP56"/>
+      <attribute_value id="43509" nameRU="IP57" nameUK="IP57"/>
+      <attribute_value id="43510" nameRU="IP58" nameUK="IP58"/>
+      <attribute_value id="43511" nameRU="IP59" nameUK="IP59"/>
+      <attribute_value id="43512" nameRU="IP60" nameUK="IP60"/>
+      <attribute_value id="43513" nameRU="IP61" nameUK="IP61"/>
+      <attribute_value id="43514" nameRU="IP62" nameUK="IP62"/>
+      <attribute_value id="43515" nameRU="IP63" nameUK="IP63"/>
+      <attribute_value id="43516" nameRU="IP64" nameUK="IP64"/>
+      <attribute_value id="43517" nameRU="IP65" nameUK="IP65"/>
+      <attribute_value id="43518" nameRU="IP66" nameUK="IP66"/>
+      <attribute_value id="43519" nameRU="IP67" nameUK="IP67"/>
+      <attribute_value id="43520" nameRU="IP68" nameUK="IP68"/>
+      <attribute_value id="43521" nameRU="IP43" nameUK="IP43"/>
+      <attribute_value id="294136" nameRU="IPX7" nameUK=""/>
+      <attribute_value id="303636" nameRU="IPХ5" nameUK=""/>
+      <attribute_value id="303840" nameRU="IPX4" nameUK=""/>
+    </attribute>
+    <attribute id="6463" nameRU="Максимальная дальность измерений" type="real" nameUK="Максимальна дальність вимірювань" measureUnitRU="м" min="0" max="10000" measureUnitUK="м"/>
+    <attribute id="6464" nameRU="Минимальная дальность измерений" type="real" nameUK="Мінімальна дальність вимірювань" measureUnitRU="м" min="0" max="10" measureUnitUK="м"/>
+    <attribute id="6471" nameRU="Номинальное время измерения" type="real" nameUK="Номінальний час вимірювання" measureUnitRU="сек" min="0" max="1" measureUnitUK="сек"/>
+    <attribute id="6472" nameRU="Максимальное время измерения" type="real" nameUK="Максимальний час вимірювання" measureUnitRU="сек" min="1" max="5" measureUnitUK="сек"/>
+    <attribute id="6478" nameRU="Сложение/вычитание результатов измерения" type="bool" nameUK="Додавання/віднімання результатів вимірювання"/>
+    <attribute id="6479" nameRU="Вычисление площади" type="bool" nameUK="Обчислення площі"/>
+    <attribute id="6480" nameRU="Вычисление объема" type="bool" nameUK="Обчислення об'єму"/>
+    <attribute id="9715" nameRU="Дополнительные функции" type="multiselect" nameUK="Додаткові функції">
+      <attribute_value id="78250" nameRU="Таймер" nameUK="Таймер"/>
+      <attribute_value id="133823" nameRU="Подсветка дисплея" nameUK="Підсвічування дисплея"/>
+      <attribute_value id="133883" nameRU="Встроенная память" nameUK="Вбудована пам'ять"/>
+      <attribute_value id="187974" nameRU="Разбивка на отрезки" nameUK="Розбиття на відрізки"/>
+      <attribute_value id="187989" nameRU="Расстояние в обход препятствий" nameUK="Відстань в обхід перешкод"/>
+      <attribute_value id="187990" nameRU="Измерение наклонных объектов" nameUK="Вимірювання похилих об'єктів"/>
+      <attribute_value id="187991" nameRU="Вычисление угла" nameUK="Обчислення кута"/>
+      <attribute_value id="187992" nameRU="Функции Пифагора" nameUK="Функції Піфагора"/>
+      <attribute_value id="187993" nameRU="Площадь стен" nameUK="Площа стін"/>
+      <attribute_value id="187994" nameRU="Bluetooth" nameUK="Bluetooth"/>
+      <attribute_value id="187995" nameRU="Датчик наклона" nameUK="Датчик нахилу"/>
+      <attribute_value id="187996" nameRU="Визирование по экрану" nameUK="Візування по екрану"/>
+      <attribute_value id="187997" nameRU="Непрерывное измерение" nameUK="Безперервне вимірювання"/>
+      <attribute_value id="188006" nameRU="Функции измерения трапеции" nameUK="Функції вимірювання трапеції"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+      <attribute_value id="231714" nameRU="Неликвид" nameUK="Неліквід"/>
+    </attribute>
+    <attribute id="14092" nameRU="Конструктивные особенности" type="multiselect" nameUK="Конструктивні особливості">
+      <attribute_value id="187971" nameRU="Многопозиционная скоба" nameUK="Багатопозиційна скоба"/>
+      <attribute_value id="187972" nameRU="Резьба под штатив" nameUK="Різьба під штатив"/>
+      <attribute_value id="187999" nameRU="Оптический визир" nameUK="Оптичний візир"/>
+    </attribute>
+    <attribute id="14718" nameRU="Датчик скорости" type="bool" nameUK="Датчик швидкості"/>
+    <attribute id="18951" nameRU="Датчик высоты" type="bool" nameUK="Датчик висоти"/>
+  </category>
+</categories>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1281107" nameRU="Разбрасыватели удобрений" nameUK="Розкидачі добрив">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="л.с." min="0" max="120" measureUnitUK="к.с."/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="277792" nameRU="Навесной" nameUK="Навісний"/>
+      <attribute_value id="277793" nameRU="Прицепной" nameUK="Причіпний"/>
+    </attribute>
+    <attribute id="1403" nameRU="Масса" type="real" nameUK="Маса" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="4107" nameRU="Объем бака" type="real" nameUK="Об'єм бака" measureUnitRU="л" min="0" max="15000" measureUnitUK="л"/>
+    <attribute id="18552" nameRU="Рабочая ширина разбрасывания" type="real" nameUK=" Робоча ширина розкидання" measureUnitRU="м" min="0" max="50" measureUnitUK="м"/>
+    <attribute id="18553" nameRU="Количество распределяющих дисков" type="multiselect" nameUK=" Кількість розподіляючих дисків">
+      <attribute_value id="277794" nameRU="1" nameUK="1"/>
+      <attribute_value id="277795" nameRU="2" nameUK="2"/>
+      <attribute_value id="277796" nameRU="3" nameUK="3"/>
+      <attribute_value id="277797" nameRU="4" nameUK="4"/>
+    </attribute>
+    <attribute id="18554" nameRU="Количество лопаток на распределяющем диске" type="multiselect" nameUK="Кількість лопаток на розподільчому диску">
+      <attribute_value id="277798" nameRU="1" nameUK="1"/>
+      <attribute_value id="277799" nameRU="2" nameUK="2"/>
+      <attribute_value id="277800" nameRU="3" nameUK="3"/>
+      <attribute_value id="277801" nameRU="4" nameUK="4"/>
+    </attribute>
+  </category>
+</categories>

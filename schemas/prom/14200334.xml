@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200334" nameRU="Воротки, трещотки" nameUK="Воротки, тріскачки">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="123" nameRU="Длина инструмента" type="real" nameUK="Довжина інструменту" measureUnitRU="мм" min="0" max="900" measureUnitUK="мм"/>
+    <attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+      <attribute_value id="66143" nameRU="вороток отвертка" nameUK="вороток викрутка"/>
+      <attribute_value id="66144" nameRU="вороток Т-образный" nameUK="вороток Т-подібний"/>
+      <attribute_value id="66145" nameRU="вороток Г-образный (L-образный)" nameUK="вороток Г-подібний (L-подібний)"/>
+      <attribute_value id="66147" nameRU="вороток шарнирный" nameUK="вороток"/>
+      <attribute_value id="66148" nameRU="вороток для плашек" nameUK="вороток для плашок"/>
+      <attribute_value id="66150" nameRU="вороток удлинитель" nameUK="вороток подовжувач"/>
+      <attribute_value id="66152" nameRU="вороток коленчатый" nameUK="вороток колінчастий"/>
+      <attribute_value id="66153" nameRU="трещотка (вороток с храповым механизмом)" nameUK="тріскачка (вороток з храповим механізмом)"/>
+      <attribute_value id="267080" nameRU="Коловорот" nameUK="Коловорот"/>
+      <attribute_value id="330571" nameRU="Вороток для метчиков" nameUK="Вороток для мітчиків"/>
+    </attribute>
+    <attribute id="7912" nameRU="Размер присоединительных головок" type="multiselect" nameUK="Розмір приєднувальних головок">
+      <attribute_value id="66157" nameRU="1/2&quot;" nameUK="1/2&quot;"/>
+      <attribute_value id="66158" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="66159" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+      <attribute_value id="66160" nameRU="3/4&quot;" nameUK="3/4&quot;"/>
+      <attribute_value id="245719" nameRU="1&quot;" nameUK="1&quot;"/>
+    </attribute>
+    <attribute id="7913" nameRU="Резьба метрическая" type="singleselect" nameUK="Різьба метрична">
+      <attribute_value id="66168" nameRU="M0.25" nameUK="M0.25"/>
+      <attribute_value id="66169" nameRU="M1.1" nameUK="M1.1"/>
+      <attribute_value id="66170" nameRU="M5" nameUK="M5"/>
+      <attribute_value id="66171" nameRU="M17" nameUK="M17"/>
+      <attribute_value id="66172" nameRU="M0.3" nameUK="M0.3"/>
+      <attribute_value id="66173" nameRU="M1.2" nameUK="M1.2"/>
+      <attribute_value id="66174" nameRU="M5.5" nameUK="M5.5"/>
+      <attribute_value id="66175" nameRU="M18" nameUK="M18"/>
+      <attribute_value id="66176" nameRU="M0.35" nameUK="M0.35"/>
+      <attribute_value id="66177" nameRU="M1.4" nameUK="M1.4"/>
+      <attribute_value id="66178" nameRU="M6" nameUK="M6"/>
+      <attribute_value id="66179" nameRU="M20" nameUK="M20"/>
+      <attribute_value id="66180" nameRU="M0.4" nameUK="M0.4"/>
+      <attribute_value id="66181" nameRU="M1.6" nameUK="M1.6"/>
+      <attribute_value id="66182" nameRU="M7" nameUK="M7"/>
+      <attribute_value id="66183" nameRU="M22" nameUK="M22"/>
+      <attribute_value id="66184" nameRU="M0.45" nameUK="M0.45"/>
+      <attribute_value id="66185" nameRU="M1.8" nameUK="M1.8"/>
+      <attribute_value id="66186" nameRU="M8" nameUK="M8"/>
+      <attribute_value id="66187" nameRU="M24" nameUK="M24"/>
+      <attribute_value id="66188" nameRU="M0.5" nameUK="M0.5"/>
+      <attribute_value id="66189" nameRU="M2" nameUK="M2"/>
+      <attribute_value id="66190" nameRU="M9" nameUK="M9"/>
+      <attribute_value id="66191" nameRU="M25" nameUK="M25"/>
+      <attribute_value id="66192" nameRU="M0.55" nameUK="M0.55"/>
+      <attribute_value id="66193" nameRU="M2.2" nameUK="M2.2"/>
+      <attribute_value id="66194" nameRU="M10" nameUK="M10"/>
+      <attribute_value id="66195" nameRU="M26" nameUK="M26"/>
+      <attribute_value id="66196" nameRU="M0.6" nameUK="M0.6"/>
+      <attribute_value id="66197" nameRU="M2.5" nameUK="M2.5"/>
+      <attribute_value id="66198" nameRU="M11" nameUK="M11"/>
+      <attribute_value id="66199" nameRU="M27" nameUK="M27"/>
+      <attribute_value id="66200" nameRU="M0.7" nameUK="M0.7"/>
+      <attribute_value id="66201" nameRU="M3" nameUK="M3"/>
+      <attribute_value id="66202" nameRU="M12" nameUK="M12"/>
+      <attribute_value id="66207" nameRU="M28" nameUK="M28"/>
+      <attribute_value id="66208" nameRU="M0.8" nameUK="M0.8"/>
+      <attribute_value id="66209" nameRU="M3.5" nameUK="M3.5"/>
+      <attribute_value id="66210" nameRU="M30" nameUK="M30"/>
+      <attribute_value id="66211" nameRU="M0.9" nameUK="M0.9"/>
+      <attribute_value id="66212" nameRU="M4" nameUK="M4"/>
+      <attribute_value id="66213" nameRU="M15" nameUK="M15"/>
+      <attribute_value id="66214" nameRU="M32" nameUK="M32"/>
+      <attribute_value id="66215" nameRU="M1" nameUK="M1"/>
+      <attribute_value id="66216" nameRU="M4.5" nameUK="M4.5"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10176" nameRU="Количество зубьев" type="real" nameUK="Кількість зубів"/>
+  </category>
+</categories>

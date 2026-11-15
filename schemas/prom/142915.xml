@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142915" nameRU="Гидравлические ручные тележки" nameUK="Гідравлічні ручні візки">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="1280" nameRU="Грузоподъемность" type="real" nameUK="Вантажопідйомність" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="5838" nameRU="Собственный вес" type="real" nameUK="Власна вага" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="6083" nameRU="Высота вил" type="real" nameUK="Висота вил" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="6084" nameRU="Ширина вил" type="real" nameUK="Ширина вил" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="6085" nameRU="Длина вил" type="real" nameUK="Довжина вил" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="6086" nameRU="Ширина роликов на вилах" type="real" nameUK="Ширина роликів на вилах" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="6087" nameRU="Диаметр роликов на вилах" type="real" nameUK="Діаметр роликів на вилах" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="6088" nameRU="Ширина рулевых колес" type="real" nameUK="Ширина рульових коліс" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="6089" nameRU="Диаметр рулевых колес" type="real" nameUK="Діаметр рульових коліс" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="6090" nameRU="Минимальная высота подъема" type="real" nameUK="Мінімальна висота підйому" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="6091" nameRU="Максимальная высота подъема груза" type="real" nameUK="Максимальна висота підйому вантажу" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="6092" nameRU="Радиус разворота" type="real" nameUK="Радіус розвороту" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="6095" nameRU="Максимальный диаметр рулона для погрузки" type="real" nameUK="Максимальний діаметр рулону для вантаження" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="6096" nameRU="Минимальный диаметр рулона для погрузки" type="real" nameUK="Мінімальний діаметр рулону для завантаження" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

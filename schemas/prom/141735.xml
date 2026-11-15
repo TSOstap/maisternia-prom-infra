@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141735" nameRU="Многофункциональные инструменты" nameUK="Багатофункціональні інструменти">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="100000" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+    </attribute>
+    <attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+      <attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+      <attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+      <attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+      <attribute_value id="10614" nameRU="Li-Pol" nameUK="Li-Pol"/>
+    </attribute>
+    <attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="40000" measureUnitUK="об/хв"/>
+    <attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="5" measureUnitUK="А. г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+  </category>
+</categories>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200506" nameRU="Бытовые воздушные компрессоры" nameUK="Побутові повітряні компресори">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="10000" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="200" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+    </attribute>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="18" measureUnitUK="бар"/>
+    <attribute id="114" nameRU="Тип поршневого компрессора" type="singleselect" nameUK="Тип поршневого компресора">
+      <attribute_value id="7045" nameRU="с прямым приводом" nameUK="з прямим приводом"/>
+      <attribute_value id="7046" nameRU="с ременным приводом" nameUK="з ремінним приводом"/>
+    </attribute>
+    <attribute id="115" nameRU="Объем ресивера" type="real" nameUK="Об'єм ресивера" measureUnitRU="л" min="0" max="500" measureUnitUK="л"/>
+    <attribute id="116" nameRU="Количество цилиндров" type="singleselect" nameUK="Кількість циліндрів">
+      <attribute_value id="7047" nameRU="1" nameUK="1"/>
+      <attribute_value id="7048" nameRU="2" nameUK="2"/>
+      <attribute_value id="7049" nameRU="3" nameUK="3"/>
+      <attribute_value id="7050" nameRU="4" nameUK="4"/>
+    </attribute>
+    <attribute id="117" nameRU="Производительность компрессора" type="real" nameUK="Продуктивність компресора" measureUnitRU="литр/мин" min="0" max="2000" measureUnitUK="літр/хв"/>
+    <attribute id="118" nameRU="Регулировка давления" type="bool" nameUK="Регулювання тиску"/>
+    <attribute id="119" nameRU="Система автоматической защиты" type="bool" nameUK="Система автоматичного захисту"/>
+    <attribute id="120" nameRU="Воздушный фильтр" type="bool" nameUK="Повітряний фільтр"/>
+    <attribute id="121" nameRU="Возможность транспортировки" type="bool" nameUK="Можливість транспортування"/>
+    <attribute id="10371" nameRU="Давление" type="real" nameUK="Тиск" measureUnitRU="Бар" min="0" max="300" measureUnitUK="Бар"/>
+  </category>
+</categories>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141719" nameRU="Электроножницы по металлу" nameUK="Електроножиці по металу">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="1500" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+    </attribute>
+    <attribute id="28" nameRU="Максимальная частота движения режущего инструмента" type="real" nameUK="Максимальна частота руху ріжучого інструменту" measureUnitRU="ход/мин" min="0" max="7000" measureUnitUK="хід/хв"/>
+    <attribute id="59" nameRU="Тип ножниц по металлу" type="singleselect" nameUK="Тип ножиць по металу">
+      <attribute_value id="6939" nameRU="Листовые" nameUK="Листові"/>
+      <attribute_value id="6940" nameRU="Вырубные(высечные)" nameUK="Вирубні(висічні)"/>
+      <attribute_value id="6941" nameRU="Шлицевые" nameUK="Шліцьові"/>
+      <attribute_value id="6960" nameRU="Арматурные" nameUK="Арматурні"/>
+    </attribute>
+    <attribute id="60" nameRU="Максимальная толщина реза" type="real" nameUK="Максимальна товщина різу" measureUnitRU="мм" min="0" max="8" measureUnitUK="мм"/>
+    <attribute id="61" nameRU="Минимальный радиус резания" type="real" nameUK="Мінімальний радіус різання" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+      <attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+      <attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+      <attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+    </attribute>
+    <attribute id="63" nameRU="Дополнительный аккумулятор" type="bool" nameUK="Додатковий акумулятор"/>
+    <attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="5" measureUnitUK="А. г"/>
+    <attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="36" measureUnitUK="В"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

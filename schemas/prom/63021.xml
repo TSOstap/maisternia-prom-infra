@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="63021" nameRU="Вертикальные (аккумуляторные) пылесосы" nameUK="Вертикальні (акумуляторні) пилососи">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="24" measureUnitUK="міс"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="90" measureUnitUK="дБ"/>
+    <attribute id="1338" nameRU="Время работы" type="real" nameUK="Час роботи" measureUnitRU="мин" min="0" max="100" measureUnitUK="хв"/>
+    <attribute id="1346" nameRU="Объем пылесборника" type="real" nameUK="Об'єм пилозбірника" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+    <attribute id="1689" nameRU="Тип уборки" type="multiselect" nameUK="Тип прибирання">
+      <attribute_value id="10625" nameRU="Сухая " nameUK="Суха "/>
+      <attribute_value id="10626" nameRU="Влажная" nameUK="Волога"/>
+    </attribute>
+    <attribute id="3971" nameRU="Материал щетки" type="singleselect" nameUK="Матеріал щітки">
+      <attribute_value id="25931" nameRU="пластик" nameUK="пластик"/>
+      <attribute_value id="293136" nameRU="Натуральный ворс" nameUK="Натуральний ворс"/>
+    </attribute>
+    <attribute id="4173" nameRU="Быстрая зарядка" type="bool" nameUK="Швидка зарядка"/>
+    <attribute id="4737" nameRU="Мощность" type="real" nameUK="Потужність" measureUnitRU="Вт" min="0" max="1000" measureUnitUK="Вт"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="15370711" nameRU="Угломеры" nameUK="Кутоміри">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="1000" measureUnitUK="г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+      <attribute_value id="8700" nameRU="Механический угломер" nameUK="Механічний кутомір"/>
+      <attribute_value id="8701" nameRU="Цифровой угломер" nameUK="Цифровий кутомір"/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8059" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="8696" nameRU="Пластмасса" nameUK="Пластмаса"/>
+      <attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="8698" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="718" nameRU="Измерительные колбы" type="multiselect" nameUK="Вимірювальні колби">
+      <attribute_value id="8681" nameRU="1-на колба 45°" nameUK="1-колба 45°"/>
+      <attribute_value id="8682" nameRU="1-на колба 90°" nameUK="1-колба 90°"/>
+      <attribute_value id="8683" nameRU="1-на колба 180°" nameUK="1-колба 180°"/>
+      <attribute_value id="8684" nameRU="2-е колбы 45°" nameUK="2-е колби 45°"/>
+      <attribute_value id="8685" nameRU="2-е колбы 90°" nameUK="2-е колби 90°"/>
+      <attribute_value id="8686" nameRU="2-е колбы 180°" nameUK="2-е колби 180°"/>
+    </attribute>
+    <attribute id="721" nameRU="Диапазон измерений от 0 до" type="real" nameUK="Діапазон вимірювань від 0 до" measureUnitRU="град." min="0" max="360" measureUnitUK="град."/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+      <attribute_value id="231714" nameRU="Неликвид" nameUK="Неліквід"/>
+    </attribute>
+  </category>
+</categories>

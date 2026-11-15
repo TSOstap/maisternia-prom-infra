@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="82105" nameRU="Моющие и чистящие средства" nameUK="Мийні та чистячі засоби">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="20000" measureUnitUK="г"/>
+    <attribute id="128" nameRU="Объем" type="real" nameUK="Об`єм" measureUnitRU="мл" min="0" max="20000" measureUnitUK="мл"/>
+    <attribute id="3216" nameRU="Упаковка средства" type="singleselect" nameUK="Упаковка засобу">
+      <attribute_value id="21314" nameRU="Банка" nameUK="Банка"/>
+      <attribute_value id="44995" nameRU="Канистра" nameUK="Каністра"/>
+      <attribute_value id="137318" nameRU="Бутылка" nameUK="Пляшка"/>
+      <attribute_value id="275591" nameRU="Саше" nameUK="Саше"/>
+      <attribute_value id="279121" nameRU="Шприц" nameUK="Шприц"/>
+      <attribute_value id="329714" nameRU="Картонная коробка" nameUK="Картонна коробка"/>
+      <attribute_value id="353262" nameRU="Дой-пак" nameUK="Дой-пак"/>
+      <attribute_value id="360099" nameRU="Аэрозоль" nameUK="Аерозоль"/>
+    </attribute>
+    <attribute id="3474" nameRU="Количество в упаковке" type="integer" nameUK="Кількість в упаковці" measureUnitRU="шт" min="0" max="100" measureUnitUK="шт."/>
+    <attribute id="4414" nameRU="Тип средства" type="singleselect" nameUK="Тип засобу">
+      <attribute_value id="28026" nameRU="Крем" nameUK="Крем"/>
+      <attribute_value id="28028" nameRU="Гель" nameUK="Гель"/>
+      <attribute_value id="28035" nameRU="Молочко" nameUK="Молочко"/>
+      <attribute_value id="28039" nameRU="Спрей" nameUK="Спрей"/>
+      <attribute_value id="36837" nameRU="Пена" nameUK="Піна"/>
+      <attribute_value id="66900" nameRU="Таблетки" nameUK="Таблетки"/>
+      <attribute_value id="66901" nameRU="Порошок" nameUK="Порошок"/>
+      <attribute_value id="66918" nameRU="Паста" nameUK="Паста"/>
+      <attribute_value id="135437" nameRU="Жидкость" nameUK="Рідина"/>
+      <attribute_value id="135783" nameRU="Туалетный блок" nameUK="Туалетний блок"/>
+      <attribute_value id="139788" nameRU="Карандаш" nameUK="Олівець"/>
+      <attribute_value id="140286" nameRU="Гранулы" nameUK="Гранули"/>
+      <attribute_value id="275445" nameRU="Концентрат" nameUK="Концентрат"/>
+      <attribute_value id="277525" nameRU="Полироль" nameUK="Поліроль"/>
+      <attribute_value id="304754" nameRU="Стикер" nameUK="Стікер"/>
+      <attribute_value id="350100" nameRU="Браслет-репеллент" nameUK="Браслет-репеллент"/>
+      <attribute_value id="350101" nameRU="Брелок-репеллент" nameUK="Брелок-репеллент"/>
+      <attribute_value id="350402" nameRU="Шиммер" nameUK="Шимер"/>
+    </attribute>
+    <attribute id="5242" nameRU="Поверхность" type="singleselect" nameUK="Поверхня">
+      <attribute_value id="145034" nameRU="Гладкая" nameUK="Гладка"/>
+      <attribute_value id="346012" nameRU="Акрил" nameUK="Акрил"/>
+      <attribute_value id="346013" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="346014" nameRU="Кафель" nameUK="Кахель"/>
+      <attribute_value id="346015" nameRU="Линолеум, виниловые покрытия" nameUK="Лінолеум, вінілові покриття"/>
+      <attribute_value id="346016" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="346017" nameRU="Мрамор, натуральный камень" nameUK="Мармур, натуральний камінь"/>
+      <attribute_value id="346019" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="346020" nameRU="Обивка" nameUK="Оббивка"/>
+      <attribute_value id="346021" nameRU="Обои" nameUK="Шпалери"/>
+      <attribute_value id="346022" nameRU="ПВХ" nameUK="ПВХ"/>
+      <attribute_value id="346023" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="346024" nameRU="Кожа" nameUK="Шкіра"/>
+      <attribute_value id="346025" nameRU="Ламинат, пробка" nameUK="Ламінат, пробка"/>
+      <attribute_value id="346026" nameRU="Стеклокерамика" nameUK="Склокераміка"/>
+      <attribute_value id="346027" nameRU="Эмаль" nameUK="Емаль"/>
+      <attribute_value id="346028" nameRU="Камень" nameUK="Камінь"/>
+      <attribute_value id="346029" nameRU="Паркет" nameUK="Паркет"/>
+      <attribute_value id="346030" nameRU="Стекло/зеркала" nameUK="Скло/дзеркала"/>
+      <attribute_value id="346031" nameRU="Экраны" nameUK="Екрани"/>
+    </attribute>
+    <attribute id="9001" nameRU="Предназначение" type="multiselect" nameUK="Призначення">
+      <attribute_value id="345992" nameRU="Универсальный" nameUK="Універсальний"/>
+      <attribute_value id="345993" nameRU="Для кухни" nameUK="Для кухонь"/>
+      <attribute_value id="345994" nameRU="Для раковин" nameUK="Для раковин"/>
+      <attribute_value id="345995" nameRU="Для ванной" nameUK="Для ванної"/>
+      <attribute_value id="345996" nameRU="Для душевой кабины" nameUK="Для душової кабіни"/>
+      <attribute_value id="345997" nameRU="Для плитки" nameUK="Для плитки"/>
+      <attribute_value id="345998" nameRU="Для зеркал" nameUK="Для дзеркал"/>
+      <attribute_value id="345999" nameRU="Для канализации" nameUK="Для каналізації"/>
+      <attribute_value id="346000" nameRU="Для прочистки труб" nameUK="Для прочищення труб"/>
+      <attribute_value id="346001" nameRU="Для унитаза" nameUK="Для унітаза"/>
+      <attribute_value id="346002" nameRU="Для туалета" nameUK="Для туалету"/>
+      <attribute_value id="346003" nameRU="Для ковров" nameUK="Для килимів"/>
+      <attribute_value id="346004" nameRU="Для пола" nameUK="Для підлоги"/>
+      <attribute_value id="346005" nameRU="Для стен" nameUK="Для стін"/>
+      <attribute_value id="346006" nameRU="Для мебели" nameUK="Для меблів"/>
+      <attribute_value id="346007" nameRU="Для мягкой мебели" nameUK="Для м'яких меблів"/>
+      <attribute_value id="346008" nameRU="Для санитарных помещений" nameUK="Для санітарних приміщень"/>
+      <attribute_value id="346009" nameRU="Для грилей/барбекю" nameUK="Для грилів/барбекю"/>
+      <attribute_value id="346010" nameRU="Для кальяна" nameUK="Для кальяну"/>
+      <attribute_value id="361252" nameRU="Для стекол" nameUK="Для скла"/>
+    </attribute>
+    <attribute id="13332" nameRU="Особенность средства" type="singleselect" nameUK="Особливість засобу">
+      <attribute_value id="135589" nameRU="Органическое" nameUK="Органічне"/>
+      <attribute_value id="135590" nameRU="Неорганическое" nameUK="Неорганічне"/>
+      <attribute_value id="278836" nameRU="ЭКО" nameUK="Еко"/>
+      <attribute_value id="315195" nameRU="Без хлора" nameUK="Без хлору"/>
+    </attribute>
+    <attribute id="13387" nameRU="Основное назначение средства" type="multiselect" nameUK="Основне призначення засобу">
+      <attribute_value id="135770" nameRU="Для чистки ковров" nameUK="Для чищення килимів"/>
+      <attribute_value id="135771" nameRU="Для туалета" nameUK="Для туалету"/>
+      <attribute_value id="135772" nameRU="Для ванной" nameUK="Для ванної"/>
+      <attribute_value id="135773" nameRU="Для стекол, окон, зеркал" nameUK="Для скла, вікон, дзеркал"/>
+      <attribute_value id="135774" nameRU="Универсальное" nameUK="Універсальне"/>
+      <attribute_value id="135775" nameRU="Для паркета" nameUK="Для паркету"/>
+      <attribute_value id="135776" nameRU="Для ламината" nameUK="Для ламінату"/>
+      <attribute_value id="135777" nameRU="Для очистки водосточных труб" nameUK="Для очищення водостічних труб"/>
+      <attribute_value id="135778" nameRU="Для дезинфекции" nameUK="Для дезінфекції"/>
+      <attribute_value id="135856" nameRU="Для кухонь" nameUK="Для кухонь"/>
+      <attribute_value id="139803" nameRU="Для грилей/барбекю" nameUK="Для грилів/барбекю"/>
+      <attribute_value id="170190" nameRU="Для пола" nameUK="Для підлоги"/>
+      <attribute_value id="170204" nameRU="Для стен" nameUK="Для стін"/>
+      <attribute_value id="223503" nameRU="Для линолеума" nameUK="Для лінолеуму"/>
+      <attribute_value id="223504" nameRU="Для кафеля" nameUK="Для кахлю"/>
+      <attribute_value id="238260" nameRU="Для чистки камня" nameUK="Для чищення каменю"/>
+      <attribute_value id="266454" nameRU="Для кондиционеров" nameUK="Для кондиціонерів"/>
+      <attribute_value id="277527" nameRU="Восстанавливающее средство" nameUK="Відновлюючий засіб"/>
+      <attribute_value id="277570" nameRU="Для деревянных поверхностей" nameUK="Для дерев'яних поверхонь"/>
+      <attribute_value id="277622" nameRU="Для чистки металлических изделий" nameUK="Для чищення металевих виробів"/>
+      <attribute_value id="277645" nameRU="Для чистки экранов" nameUK="Для чищення екранів"/>
+      <attribute_value id="283699" nameRU="Для стеклокерамики" nameUK="Для склокераміки"/>
+      <attribute_value id="291666" nameRU="Удаление запахов" nameUK=""/>
+      <attribute_value id="293239" nameRU="Против плесени" nameUK="Проти цвілі"/>
+      <attribute_value id="293241" nameRU="Против жира и нагара" nameUK="Проти жиру та нагару"/>
+      <attribute_value id="299807" nameRU="От ржавчины" nameUK="Від іржі"/>
+      <attribute_value id="300335" nameRU="Для кальяна" nameUK="Для кальяну"/>
+      <attribute_value id="300362" nameRU="Для удаления накипи" nameUK="Для видалення накипу"/>
+      <attribute_value id="302726" nameRU="Для пластика" nameUK="Для пластику"/>
+      <attribute_value id="328780" nameRU="Для мебели" nameUK="Для меблів"/>
+      <attribute_value id="341031" nameRU="Против скольжения" nameUK="Проти ковзання"/>
+      <attribute_value id="341032" nameRU="Для каменных поверхностей" nameUK="Для кам'яних поверхонь"/>
+      <attribute_value id="341149" nameRU="Для душевых кабин" nameUK="Для душових кабін"/>
+      <attribute_value id="344464" nameRU="Для раковин" nameUK="Для раковин"/>
+      <attribute_value id="344465" nameRU="Для плитки" nameUK="Для плитки"/>
+      <attribute_value id="344466" nameRU="Для зеркал" nameUK="Для дзеркал"/>
+      <attribute_value id="344467" nameRU="Для канализации" nameUK="Для каналізації"/>
+      <attribute_value id="344468" nameRU="Для прочистки труб" nameUK="Для прочищення труб"/>
+      <attribute_value id="344469" nameRU="Для унитаза" nameUK="Для унітаза"/>
+      <attribute_value id="344470" nameRU="Для ковров" nameUK="Для килимів"/>
+      <attribute_value id="344471" nameRU="Для мягкой мебели" nameUK="Для м'яких меблів"/>
+      <attribute_value id="344472" nameRU="Для санитарных помещений" nameUK="Для санітарних приміщень"/>
+      <attribute_value id="345168" nameRU="Для удаление пятен" nameUK="Для видалення плям"/>
+      <attribute_value id="345561" nameRU="Для нержавеющей стали" nameUK="Для нержавіючої сталі"/>
+    </attribute>
+    <attribute id="19224" nameRU="Загрязнение" type="multiselect" nameUK="Забруднення">
+      <attribute_value id="346037" nameRU="Бактерии и микробы" nameUK="Бактерії та мікроби"/>
+      <attribute_value id="346038" nameRU="Грибок" nameUK="Грибок"/>
+      <attribute_value id="346039" nameRU="Грязь" nameUK="Грязь"/>
+      <attribute_value id="346040" nameRU="Жир" nameUK="Жир"/>
+      <attribute_value id="346041" nameRU="Известковый налет" nameUK="Вапняний наліт"/>
+      <attribute_value id="346042" nameRU="Неприятный запах" nameUK="Неприємний запах"/>
+      <attribute_value id="346043" nameRU="Плесень" nameUK="Цвіль"/>
+      <attribute_value id="346044" nameRU="Различные загрязнения" nameUK="Різні забруднення"/>
+      <attribute_value id="346045" nameRU="Ржавчина" nameUK="Іржа"/>
+      <attribute_value id="346046" nameRU="Сажа и нагар" nameUK="Сажа та нагар"/>
+      <attribute_value id="346047" nameRU="Уриновые отложения" nameUK="Уринові відкладення"/>
+      <attribute_value id="346048" nameRU="Стойкие загрязнения и отложения" nameUK="Стійкі забруднення й відкладення"/>
+      <attribute_value id="346049" nameRU="Белковые загрязнения" nameUK="Білкові забруднення"/>
+      <attribute_value id="346050" nameRU="Воск" nameUK="Віск"/>
+      <attribute_value id="346051" nameRU="Жевательная резинка" nameUK="Жувальна гумка"/>
+      <attribute_value id="346052" nameRU="Засорение" nameUK="Засмічення"/>
+      <attribute_value id="346053" nameRU="Масляные загрязнения" nameUK="Масляні забруднення"/>
+      <attribute_value id="346054" nameRU="Накипь" nameUK="Накип"/>
+      <attribute_value id="346055" nameRU="Наклейки и клейкие остатки" nameUK="Наклейки й клейкі залишки"/>
+      <attribute_value id="346056" nameRU="Остатки мыла" nameUK="Залишки мила"/>
+      <attribute_value id="346057" nameRU="Остатки пищи" nameUK="Залишки їжі"/>
+      <attribute_value id="346058" nameRU="Остатки цемента" nameUK="Залишки цементу"/>
+      <attribute_value id="346059" nameRU="Отпечатки пальцев" nameUK="Відбитки пальців"/>
+      <attribute_value id="346060" nameRU="Пыль" nameUK="Пил"/>
+      <attribute_value id="346061" nameRU="Пятна" nameUK="Плями"/>
+      <attribute_value id="346062" nameRU="Царапины" nameUK="Подряпини"/>
+      <attribute_value id="346063" nameRU="Запах" nameUK="Запах"/>
+    </attribute>
+  </category>
+</categories>

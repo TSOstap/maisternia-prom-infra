@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13040602" nameRU="Затирочные машины" nameUK="Затиральні машини">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="6600" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="500" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+    </attribute>
+    <attribute id="82" nameRU="Объем масляного бака" type="real" nameUK="Об'єм масляного бака" measureUnitRU="л" min="0" max="10" measureUnitUK="л"/>
+    <attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="5000" measureUnitUK="об/хв"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="12" measureUnitUK="міс"/>
+    <attribute id="116" nameRU="Количество цилиндров" type="singleselect" nameUK="Кількість циліндрів">
+      <attribute_value id="7047" nameRU="1" nameUK="1"/>
+      <attribute_value id="7048" nameRU="2" nameUK="2"/>
+      <attribute_value id="7049" nameRU="3" nameUK="3"/>
+      <attribute_value id="7050" nameRU="4" nameUK="4"/>
+    </attribute>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="2500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="2500" measureUnitUK="мм"/>
+    <attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="1000" measureUnitUK="куб. см"/>
+    <attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="л. с." min="0" max="40" measureUnitUK="к. с."/>
+    <attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="24" measureUnitUK="л/год"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="2500" measureUnitUK="мм"/>
+    <attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+      <attribute_value id="9284" nameRU="Бензиновый" nameUK="Бензиновий"/>
+      <attribute_value id="9285" nameRU="Дизельный" nameUK="Дизельний"/>
+    </attribute>
+    <attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+      <attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+      <attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+    </attribute>
+    <attribute id="1079" nameRU="Марка двигателя" type="free" nameUK="Марка двигуна"/>
+    <attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+    <attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="50" max="60" measureUnitUK="Гц"/>
+    <attribute id="3137" nameRU="Количество оборотов двигателя" type="real" nameUK="Кількість обертів двигуна" measureUnitRU="об/мин" min="0" max="5000" measureUnitUK="об/хв"/>
+    <attribute id="3215" nameRU="Диаметр заглаживающего диска" type="real" nameUK="Діаметр загладжувального диску" measureUnitRU="мм" min="0" max="3000" measureUnitUK="мм"/>
+    <attribute id="3218" nameRU="Частота вращения диска/лопастей" type="real" nameUK="Частота обертання диска/лопатей" measureUnitRU="об/мин" min="0" max="200" measureUnitUK="об/хв"/>
+    <attribute id="3219" nameRU="Количество лопастей" type="integer" nameUK="Кількість лопатей" measureUnitRU="шт" min="1" max="10" measureUnitUK="шт."/>
+    <attribute id="3222" nameRU="Тип затирочной машины" type="singleselect" nameUK="Тип затирочної машини">
+      <attribute_value id="21425" nameRU="Двухроторная" nameUK="Двороторна"/>
+      <attribute_value id="21426" nameRU="Однороторная" nameUK="Однороторна"/>
+    </attribute>
+    <attribute id="3223" nameRU="Производительность затирочной машины" type="real" nameUK="Продуктивність затирочної машини" measureUnitRU="кв. м/час" min="0" max="200" measureUnitUK="кв.м/год"/>
+    <attribute id="3256" nameRU="Угол наклона лопастей" type="real" nameUK="Кут нахилу лопатей" measureUnitRU="град." min="0" max="30" measureUnitUK="град."/>
+    <attribute id="3817" nameRU="Мощность электродвигателя" type="real" nameUK="Потужність електродвигуна" measureUnitRU="кВт" min="0" max="500" measureUnitUK="кВт"/>
+    <attribute id="7367" nameRU="Емкость резервуара" type="real" nameUK="Ємність резервуара" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10077" nameRU="Тип привода" type="singleselect" nameUK="Тип приводу">
+      <attribute_value id="174531" nameRU="ДВС" nameUK="ДВС"/>
+      <attribute_value id="174532" nameRU="Электрический" nameUK="Електричний"/>
+    </attribute>
+  </category>
+</categories>

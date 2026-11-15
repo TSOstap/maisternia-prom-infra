@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200312" nameRU="Роботы для мойки окон" nameUK="Роботи для миття вікон">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="1500" measureUnitUK="г"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="146644" nameRU="Стеклоочиститель" nameUK="Склоочисник"/>
+      <attribute_value id="291934" nameRU="Робот-мойщик" nameUK="Робот-мийник"/>
+      <attribute_value id="291936" nameRU="Щетка магнитная" nameUK="Щітка магнітна"/>
+    </attribute>
+    <attribute id="1688" nameRU="Время работы от аккумулятора" type="real" nameUK="Час роботи від акумулятора" measureUnitRU="мин" min="0" max="360" measureUnitUK="хв"/>
+    <attribute id="1804" nameRU="Зарядное устройство" type="bool" nameUK="Зарядний пристрій"/>
+    <attribute id="1980" nameRU="Тип питания" type="multiselect" nameUK="Тип живлення">
+      <attribute_value id="11692" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="11693" nameRU="Сеть 220 В" nameUK="Мережа 220 В"/>
+      <attribute_value id="21680" nameRU="Батарейки" nameUK="Батарейки"/>
+    </attribute>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="234476" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="14194" nameRU="Оснащение" type="multiselect" nameUK="Оснащення">
+      <attribute_value id="322233" nameRU="С пультом ДУ " nameUK="З пультом ДК"/>
+      <attribute_value id="322234" nameRU="С вакуумной присоской" nameUK="З вакуумним присоском"/>
+      <attribute_value id="322235" nameRU="С регулировкой воздушного потока" nameUK="З регулюванням повітряного потоку"/>
+      <attribute_value id="322236" nameRU="С вибрацией" nameUK="З вібрацією"/>
+      <attribute_value id="322237" nameRU="С индикатором заполнености пылесборника" nameUK="З індикатор заповнення пилозбірника"/>
+      <attribute_value id="322238" nameRU="Контейнер для сбора жидкости " nameUK="Контейнер для збирання рідини"/>
+    </attribute>
+    <attribute id="14314" nameRU="Рабочая ширина насадки" type="real" nameUK="Робоча ширина насадки" measureUnitRU="мм" min="0" max="400" measureUnitUK="мм"/>
+    <attribute id="19006" nameRU="Выходной фильтр" type="singleselect" nameUK="Вихідний фільтр">
+      <attribute_value id="322230" nameRU="НЕРА" nameUK="НЕРА"/>
+      <attribute_value id="322231" nameRU="Аквафильтр" nameUK="Аквафільтр"/>
+      <attribute_value id="322232" nameRU="Микрофильтр" nameUK="Мікрофільтр"/>
+    </attribute>
+  </category>
+</categories>

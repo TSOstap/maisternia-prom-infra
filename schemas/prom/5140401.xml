@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="5140401" nameRU="Инверторы" nameUK="Інвертори">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="300" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+      <attribute_value id="7068" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="7076" nameRU="Серебристый" nameUK="Сріблястий"/>
+    </attribute>
+    <attribute id="186" nameRU="Защита от перегрузок" type="bool" nameUK="Захист від перевантажень"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="394" nameRU="Защита от перегрева" type="bool" nameUK="Захист від перегріву"/>
+    <attribute id="426" nameRU="Номинальная мощность" type="real" nameUK="Номінальна потужність" measureUnitRU="Вт" min="0" max="500000" measureUnitUK="Вт"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="1493" nameRU="Частота" type="real" nameUK="Частота" measureUnitRU="Гц" min="0" max="60" measureUnitUK="Гц"/>
+    <attribute id="4057" nameRU="Минимальная рабочая температура окружающей среды" type="real" nameUK="Мінімальна робоча температура навколишнього середовища" measureUnitRU="град." min="-50" max="0" measureUnitUK="град."/>
+    <attribute id="4058" nameRU="Максимальная рабочая температура окружающей среды" type="real" nameUK="Максимальна робоча температура навколишнього середовища" measureUnitRU="град." min="0" max="500" measureUnitUK="град."/>
+    <attribute id="5409" nameRU="Максимальная мощность" type="real" nameUK="Максимальна потужність" measureUnitRU="Вт" min="0" max="45000" measureUnitUK="Вт"/>
+    <attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+    <attribute id="7294" nameRU="Виды индикации" type="multiselect" nameUK="Види індикації">
+      <attribute_value id="61679" nameRU="Звуковая" nameUK="Звукова"/>
+      <attribute_value id="61680" nameRU="Световая" nameUK="Світлова"/>
+      <attribute_value id="61681" nameRU="Вибро" nameUK="Вібро"/>
+    </attribute>
+    <attribute id="9320" nameRU="Солнечная батарея" type="bool" nameUK="Сонячна батарея"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10451" nameRU="КПД, не менее" type="real" nameUK="ККД, не менше" measureUnitRU="%" min="1" max="100" measureUnitUK="%"/>
+    <attribute id="10483" nameRU="Тип рабочей величины" type="singleselect" nameUK="Тип робочої величини">
+      <attribute_value id="93666" nameRU="Ток" nameUK="Струм"/>
+      <attribute_value id="93667" nameRU="Напряжение" nameUK="Напруга"/>
+      <attribute_value id="93668" nameRU="Мощность" nameUK="Потужність"/>
+      <attribute_value id="93669" nameRU="Частота" nameUK="Частота"/>
+    </attribute>
+    <attribute id="10484" nameRU="Количество аналоговых выходов" type="integer" nameUK="Кількість аналогових виходів"/>
+    <attribute id="10485" nameRU="Количество аналоговых входов" type="integer" nameUK="Кількість аналогових входів"/>
+    <attribute id="10486" nameRU="Количество дискретных входов" type="integer" nameUK="Кількість дискретних входів"/>
+    <attribute id="10487" nameRU="Количество дискретных выходов" type="integer" nameUK="Кількість дискретних виходів"/>
+    <attribute id="10488" nameRU="Номинальное входное напряжение" type="singleselect" nameUK="Номінальна вхідна напруга">
+      <attribute_value id="93741" nameRU="12 В" nameUK="12 В"/>
+      <attribute_value id="93742" nameRU="24 В" nameUK="24 В"/>
+      <attribute_value id="93743" nameRU="48 В" nameUK="48 В"/>
+      <attribute_value id="186873" nameRU="36 В" nameUK="36 В"/>
+      <attribute_value id="186874" nameRU="72 В" nameUK="72 В"/>
+      <attribute_value id="186875" nameRU="96 В" nameUK="96 В"/>
+      <attribute_value id="186876" nameRU="120 В" nameUK="120 В"/>
+      <attribute_value id="190793" nameRU="220 В" nameUK="220 В"/>
+      <attribute_value id="190794" nameRU="380 В" nameUK="380 В"/>
+      <attribute_value id="230011" nameRU="1000 В" nameUK="1000 В"/>
+      <attribute_value id="233947" nameRU="500 В" nameUK="500 В"/>
+      <attribute_value id="234566" nameRU="580 В" nameUK="580 В"/>
+      <attribute_value id="234800" nameRU="900 В" nameUK="900 В"/>
+      <attribute_value id="234801" nameRU="850 В" nameUK="850 В"/>
+      <attribute_value id="291025" nameRU="360 В" nameUK="360 В"/>
+      <attribute_value id="297948" nameRU="60 В" nameUK=""/>
+      <attribute_value id="302042" nameRU="230 В" nameUK=""/>
+      <attribute_value id="308219" nameRU="600 В" nameUK=""/>
+    </attribute>
+    <attribute id="10489" nameRU="Номинальное выходное напряжение" type="singleselect" nameUK="Номінальна вихідна напруга">
+      <attribute_value id="93747" nameRU="100~120 В" nameUK="100~120 В"/>
+      <attribute_value id="93748" nameRU="220~240 В" nameUK="220~240 В"/>
+      <attribute_value id="93749" nameRU="380~400 В" nameUK="380~400 В"/>
+      <attribute_value id="281041" nameRU="80~130 В" nameUK="80~130 В"/>
+      <attribute_value id="288753" nameRU="220 В" nameUK="220 В"/>
+      <attribute_value id="288774" nameRU="220В-380В" nameUK="220В-380В"/>
+      <attribute_value id="291024" nameRU="180~280 В" nameUK=""/>
+      <attribute_value id="291979" nameRU="12 В" nameUK=""/>
+      <attribute_value id="292436" nameRU="200~240 В" nameUK=""/>
+      <attribute_value id="299769" nameRU="400~480 В" nameUK=""/>
+      <attribute_value id="300180" nameRU="230 В" nameUK=""/>
+      <attribute_value id="312875" nameRU="24 В" nameUK=""/>
+      <attribute_value id="361585" nameRU="28 В" nameUK=""/>
+    </attribute>
+    <attribute id="10490" nameRU="Форма выходного напряжения" type="singleselect" nameUK="Форма вихідної напруги">
+      <attribute_value id="93751" nameRU="Аппроксимированная синусоида" nameUK="Апроксимована синусоїда"/>
+      <attribute_value id="93752" nameRU="Чистая синусоида" nameUK="Чиста синусоїда"/>
+      <attribute_value id="349383" nameRU="Модифицированная синусоида" nameUK="Модифікована синусоїда"/>
+    </attribute>
+    <attribute id="10491" nameRU="Допустимая пиковая мощность" type="real" nameUK="Допустима пікова потужність" measureUnitRU="Вт" min="0" max="220000" measureUnitUK="Вт"/>
+    <attribute id="10492" nameRU="Ток холостого хода" type="real" nameUK="Струм холостого ходу" measureUnitRU="А" min="0" max="100" measureUnitUK="А"/>
+    <attribute id="10493" nameRU="Цвет светодиода" type="singleselect" nameUK="Колір світлодіода">
+      <attribute_value id="93800" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="93801" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="93802" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="93803" nameRU="Белый" nameUK="Білий"/>
+    </attribute>
+    <attribute id="10494" nameRU="Защита от короткого замыкания" type="bool" nameUK="Захист від короткого замикання"/>
+    <attribute id="10495" nameRU="Защита от разряда аккумуляторной батареи" type="bool" nameUK="Захист від розряду акумуляторної батареї"/>
+    <attribute id="10496" nameRU="Коэффициент преобразования" type="real" nameUK="Коефіцієнт перетворення"/>
+    <attribute id="10497" nameRU="Защита от переполюсовки" type="bool" nameUK="Захист від переполюсовки"/>
+    <attribute id="10684" nameRU="Количество фаз" type="singleselect" nameUK="Кількість фаз">
+      <attribute_value id="361899" nameRU="1 фаза (230 В)" nameUK="1 фаза (230 В)"/>
+      <attribute_value id="361900" nameRU="3 фази (400 В)" nameUK="3 фази (400 В)"/>
+    </attribute>
+    <attribute id="10727" nameRU="Номинальный ток" type="real" nameUK="Номінальний струм" measureUnitRU="А" min="0" max="800" measureUnitUK="А"/>
+    <attribute id="11171" nameRU="Другие функции и особенности" type="multiselect" nameUK="Інші функції і особливості">
+      <attribute_value id="247037" nameRU="Защита от перегрузки по максимальному току" nameUK="Захист від перевантаження по максимальному струму"/>
+      <attribute_value id="247038" nameRU="Защита от перенапряжения" nameUK="Захист від перенапруги"/>
+      <attribute_value id="247039" nameRU="Защита от пониженного напряжения" nameUK="Захист від зниженої напруги"/>
+      <attribute_value id="247040" nameRU="Защита от повреждения силового модуля" nameUK="Захист від пошкодження силового модуля"/>
+      <attribute_value id="247041" nameRU="Защита от потери фазы" nameUK="Захист від втрати фази"/>
+      <attribute_value id="247042" nameRU="Защита от заклинивания электродвигателя" nameUK="Захист від заклинювання електродвигуна"/>
+      <attribute_value id="247043" nameRU="Защита от превышения допустимой скорости" nameUK="Захист від перевищення допустимої швидкості"/>
+      <attribute_value id="247044" nameRU="Защита от отказа датчика скорости" nameUK="Захист від відмови датчика швидкості"/>
+      <attribute_value id="247045" nameRU="Защита от перегорания предохранителя в силовой цепи" nameUK="Захист від перегорання запобіжника в силовому ланцюзі"/>
+      <attribute_value id="247046" nameRU="Ограничение по току" nameUK="Обмеження по струму"/>
+      <attribute_value id="247047" nameRU="Ограничение перенапряжения" nameUK="Обмеження перенапруги"/>
+      <attribute_value id="247048" nameRU="Самодиагностика" nameUK="Самодіагностика"/>
+    </attribute>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="349391" nameRU="Подключение генератора" nameUK="Підключення генератора"/>
+    </attribute>
+    <attribute id="16718" nameRU="Перегрузочная способность" type="singleselect" nameUK="Перевантажувальна здатність">
+      <attribute_value id="190622" nameRU="120%" nameUK="120%"/>
+      <attribute_value id="190623" nameRU="150%" nameUK="150%"/>
+      <attribute_value id="190624" nameRU="180%" nameUK="180%"/>
+      <attribute_value id="190625" nameRU="200%" nameUK="200%"/>
+      <attribute_value id="222325" nameRU="300%" nameUK="300%"/>
+      <attribute_value id="268407" nameRU="160%" nameUK="160%"/>
+      <attribute_value id="268408" nameRU="110%" nameUK="110%"/>
+      <attribute_value id="292773" nameRU="400%" nameUK=""/>
+      <attribute_value id="292774" nameRU="350%" nameUK=""/>
+    </attribute>
+    <attribute id="18063" nameRU="Число фаз питания" type="singleselect" nameUK="Кількість фаз живлення">
+      <attribute_value id="243547" nameRU="1" nameUK="1"/>
+      <attribute_value id="243548" nameRU="3" nameUK="3"/>
+    </attribute>
+    <attribute id="19327" nameRU="Тип инвертора" type="singleselect" nameUK="Тип інвертора">
+      <attribute_value id="348204" nameRU="Гибридный (On-Grid + Off-Grid)" nameUK="Гібридний (On-Grid + Off-Grid)"/>
+      <attribute_value id="348205" nameRU="Сетевой (Grid-tie / On-Grid)" nameUK="Мережевий (Grid-tie / On-Grid)"/>
+      <attribute_value id="348206" nameRU="Автономный (Off-Grid)" nameUK="Автономний (Off-Grid)"/>
+      <attribute_value id="348207" nameRU="Микроинвертор" nameUK="Мікроінвертор"/>
+      <attribute_value id="348208" nameRU="Преобразователь напряжения (без АКБ)" nameUK="Перетворювач напруги (без АКБ)"/>
+    </attribute>
+    <attribute id="19331" nameRU="Напряжение АКБ (В)" type="multiselect" nameUK="Напруга АКБ (В)">
+      <attribute_value id="348221" nameRU="12 В" nameUK="12 В"/>
+      <attribute_value id="348222" nameRU="24 В" nameUK="24 В"/>
+      <attribute_value id="348223" nameRU="48 В (51,2 В)" nameUK="48 В (51,2 В)"/>
+      <attribute_value id="348224" nameRU="Высоковольтная АКБ (HV, 100-500 В)" nameUK="Високовольтна АКБ (HV, 100-500 В)"/>
+      <attribute_value id="348225" nameRU="Низковольтная LiFePO4 (40-60 В)" nameUK="Низьковольтна LiFePO4 (40-60 В)"/>
+      <attribute_value id="361901" nameRU=" Без АКБ" nameUK=" Без АКБ"/>
+    </attribute>
+    <attribute id="19333" nameRU="Параллельное соединение" type="singleselect" nameUK="Паралельне з'єднання">
+      <attribute_value id="348235" nameRU="Поддерживается" nameUK="Підтримується"/>
+      <attribute_value id="348236" nameRU="Не поддерживается" nameUK="Не підтримується"/>
+    </attribute>
+    <attribute id="19334" nameRU="Макс. входное напряжение PV (В)" type="real" nameUK="Макс. вхідна напруга PV (В)"/>
+    <attribute id="19335" nameRU="Ток заряда АКБ (А)" type="real" nameUK="Струм заряду АКБ (А)"/>
+    <attribute id="19376" nameRU="Поддерживаемый тип АКБ  " type="multiselect" nameUK="Підтримуваний тип АКБ">
+      <attribute_value id="348585" nameRU="LiFePO4" nameUK="LiFePO4"/>
+      <attribute_value id="348586" nameRU="Li-Ion (NMC)" nameUK="Li-Ion (NMC)"/>
+      <attribute_value id="348587" nameRU="AGM" nameUK="AGM"/>
+      <attribute_value id="348588" nameRU="GEL" nameUK="GEL"/>
+      <attribute_value id="348589" nameRU="Свинцово-кислотный" nameUK="Свинцево-кислотний"/>
+      <attribute_value id="348590" nameRU="Любой (с BMS коммуникацией)" nameUK="Будь-який (з BMS комунікацією)"/>
+    </attribute>
+    <attribute id="19377" nameRU="Количество MPPT   " type="singleselect" nameUK="Кількість MPPT">
+      <attribute_value id="348591" nameRU="1 MPPT" nameUK="1 MPPT"/>
+      <attribute_value id="348592" nameRU="2 MPPT" nameUK="2 MPPT"/>
+      <attribute_value id="348593" nameRU="3 MPPT" nameUK="3 MPPT"/>
+      <attribute_value id="348594" nameRU="Без MPPT" nameUK="Без MPPT"/>
+      <attribute_value id="361902" nameRU="3 и более MPPT" nameUK="3 і більше MPPT"/>
+    </attribute>
+    <attribute id="19517" nameRU="Макс. мощность солнечных панелей Вт" type="singleselect" nameUK="Макс. потужність сонячних панелей, Вт">
+      <attribute_value id="361716" nameRU="До 3000" nameUK="До 3000"/>
+      <attribute_value id="361717" nameRU="3000–6000" nameUK="3000–6000"/>
+      <attribute_value id="361718" nameRU="6001–10000" nameUK="6001–10000"/>
+      <attribute_value id="361719" nameRU="10001–16000" nameUK="10001–16000"/>
+      <attribute_value id="361720" nameRU="Более 16000 Вт" nameUK="Понад 16000 Вт"/>
+    </attribute>
+    <attribute id="19518" nameRU="Время переключения, мс" type="singleselect" nameUK="Час перемикання, мс">
+      <attribute_value id="361721" nameRU="До 10 мс" nameUK="До 10 мс"/>
+      <attribute_value id="361722" nameRU="10–20 мс" nameUK="10–20 мс"/>
+      <attribute_value id="361723" nameRU="Более 20 мс" nameUK="Понад 20 мс"/>
+    </attribute>
+    <attribute id="19519" nameRU="Протокол связи с АКБ" type="singleselect" nameUK="Протокол зв'язку з АКБ">
+      <attribute_value id="361724" nameRU="CAN" nameUK="CAN"/>
+      <attribute_value id="361725" nameRU="RS485" nameUK="RS485"/>
+      <attribute_value id="361726" nameRU="RS232" nameUK="RS232"/>
+      <attribute_value id="361727" nameRU="Без связи" nameUK="Без зв'язку"/>
+    </attribute>
+    <attribute id="19533" nameRU="Диапазон напряжения MPPT, В." type="free" nameUK="Діапазон напруги MPPT, В"/>
+    <attribute id="19534" nameRU="Максимальная мощность подключаемых солнечных панелей, Вт" type="real" nameUK="Максимальна потужність підключених сонячних панелей, Вт" measureUnitRU="Вт" min="0.0" max="30000.0" measureUnitUK="Вт"/>
+  </category>
+</categories>

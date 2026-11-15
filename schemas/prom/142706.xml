@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142706" nameRU="Электроды" nameUK="Електроди">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="3402" nameRU="Диаметр электрода" type="real" nameUK="Діаметр електрода" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="6976" nameRU="Минимальный сварочный ток" type="real" nameUK="Мінімальний зварювальний струм" measureUnitRU="А" min="0" max="300" measureUnitUK="А"/>
+    <attribute id="6977" nameRU="Максимальный сварочный ток" type="real" nameUK="Максимальний зварювальний струм" measureUnitRU="А" min="0" max="1000" measureUnitUK="А"/>
+    <attribute id="7645" nameRU="Длина электрода" type="real" nameUK="Довжина електрода" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="7646" nameRU="Вес упаковки" type="real" nameUK="Вага упаковки" measureUnitRU="кг" min="0" max="50" measureUnitUK="кг"/>
+    <attribute id="7647" nameRU="Тип электрода" type="singleselect" nameUK="Тип електрода">
+      <attribute_value id="64900" nameRU="Металлический" nameUK="Металевий"/>
+      <attribute_value id="64901" nameRU="Неметаллический" nameUK="Неметалевий"/>
+    </attribute>
+    <attribute id="7648" nameRU="Тип неметаллического электрода" type="singleselect" nameUK="Тип неметалевого електрода">
+      <attribute_value id="64902" nameRU="Угольный" nameUK="Вугільний"/>
+      <attribute_value id="64903" nameRU="Графитовый" nameUK="Графітовий"/>
+    </attribute>
+    <attribute id="7649" nameRU="Тип металлического электрода" type="singleselect" nameUK="Тип металевого електрода">
+      <attribute_value id="64905" nameRU="Плавящиеся" nameUK="Плавильні"/>
+      <attribute_value id="64906" nameRU="Неплавящиеся" nameUK="Неплавкі"/>
+    </attribute>
+    <attribute id="7650" nameRU="Тип металлического неплавящегося электрода" type="singleselect" nameUK="Тип металевого електроду, що не плавиться">
+      <attribute_value id="64909" nameRU="Вольфрамовый" nameUK="Вольфрамовий"/>
+      <attribute_value id="64910" nameRU="Торированный" nameUK="Торійований"/>
+      <attribute_value id="64912" nameRU="Лантанированный" nameUK="Лантанований"/>
+      <attribute_value id="64913" nameRU="Итрированный" nameUK="Ітрірованний"/>
+    </attribute>
+    <attribute id="7651" nameRU="Тип покрытого электрода по покрытию" type="singleselect" nameUK="Тип покритого електрода за покриттям">
+      <attribute_value id="64918" nameRU="С основным покрытием" nameUK="З основним покриттям"/>
+      <attribute_value id="64919" nameRU="С кислым покрытием" nameUK="З кислим покриттям"/>
+      <attribute_value id="64920" nameRU="С рутиловым покрытием" nameUK="З рутиловим покриттям"/>
+      <attribute_value id="64921" nameRU="С целлюлозным покрытием" nameUK="З целюлозним покриттям"/>
+      <attribute_value id="64922" nameRU="Со смешанным типом покрытия" nameUK="Зі змішаним типом покриття"/>
+      <attribute_value id="285945" nameRU="С рутил-целлюлозным покрытием" nameUK="З рутил-целюлозним покриттям"/>
+    </attribute>
+    <attribute id="7652" nameRU="Тип покрытого электрода по применению" type="singleselect" nameUK="Тип покритого електрода за застосуванням">
+      <attribute_value id="64930" nameRU="Для сварки высоколегированных сталей" nameUK="Для зварювання високолегованих сталей"/>
+      <attribute_value id="64931" nameRU="Для сварки легированных сталей" nameUK="Для зварювання легованих сталей"/>
+      <attribute_value id="64932" nameRU="Для сварки низколегированных и углеродистых конструкционных сталей" nameUK="Для зварювання низьколегованих і вуглецевих конструкційних сталей"/>
+      <attribute_value id="64933" nameRU="Для сварки теплоустойчивых, легированных сталей" nameUK="Для зварювання теплостійких, легованих сталей"/>
+      <attribute_value id="64934" nameRU="Для наплавки" nameUK="Для наплавлення"/>
+      <attribute_value id="220344" nameRU="Для сварки чугуна" nameUK="Для зварювання чавуну"/>
+    </attribute>
+    <attribute id="7653" nameRU="Тип покрытого электрода по положениям сварки в пространстве" type="singleselect" nameUK="Тип покритого електрода за положеннями зварювання в просторі">
+      <attribute_value id="64938" nameRU="Во всех пространственных положениях" nameUK="У всіх просторових положеннях"/>
+      <attribute_value id="64939" nameRU="Во всех пространственных положениях, за исключением вертикального сверху-вниз" nameUK="У всіх просторових положеннях, за винятком вертикального зверху-вниз"/>
+      <attribute_value id="64940" nameRU="Для положений нижнего, горизонтального на вертикальной плоскости и вертикального снизу вверх" nameUK="Для положень нижнього, горизонтального на вертикальній площині і вертикального знизу вгору"/>
+      <attribute_value id="64941" nameRU="Для нижнего положения" nameUK="Для нижнього положення"/>
+    </attribute>
+    <attribute id="18659" nameRU="Толщина электрода" type="real" nameUK="Товщина електрода" measureUnitRU="мм" min="0" max="10" measureUnitUK="мм"/>
+  </category>
+</categories>

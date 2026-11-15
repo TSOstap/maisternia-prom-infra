@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1250311" nameRU="Пилы для обрезки ветвей" nameUK="Пили для обрізки гілок">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="6958" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+      <attribute_value id="11634" nameRU="Сеть 12В" nameUK="Мережа 12В"/>
+      <attribute_value id="53227" nameRU="Сеть 110В" nameUK="Мережа 110В"/>
+      <attribute_value id="106692" nameRU="Бензиновый двигатель" nameUK="Бензиновий двигун"/>
+      <attribute_value id="122325" nameRU="Сеть 24В" nameUK="Мережа 24В"/>
+    </attribute>
+    <attribute id="80" nameRU="Длина шины" type="real" nameUK="Довжина шини" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="81" nameRU="Шаг цепи" type="singleselect" nameUK="Крок ланцюга">
+      <attribute_value id="6950" nameRU="0.325&quot;" nameUK="0.325&quot;"/>
+      <attribute_value id="6951" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+      <attribute_value id="6952" nameRU="0.404&quot;" nameUK="0.404&quot;"/>
+      <attribute_value id="172654" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="172656" nameRU="3/8&quot; Picco" nameUK="3/8&quot; Picco"/>
+      <attribute_value id="350355" nameRU="1/8" nameUK="1/8"/>
+      <attribute_value id="350356" nameRU="3/4" nameUK="3/4"/>
+      <attribute_value id="350357" nameRU="0.05" nameUK="0.05"/>
+      <attribute_value id="350358" nameRU="0.3" nameUK="0.3"/>
+    </attribute>
+    <attribute id="82" nameRU="Объем масляного бака" type="real" nameUK="Об'єм масляного бака" measureUnitRU="мл" min="0" max="200" measureUnitUK="мл"/>
+    <attribute id="97" nameRU="Скорость вращения цепи" type="real" nameUK="Швидкість обертання ланцюга" measureUnitRU="м/сек" min="0" max="100" measureUnitUK="м/сек"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="60" measureUnitUK="куб. см"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="681" nameRU="Длина полотна" type="real" nameUK="Довжина полотна" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="682" nameRU="Ширина полотна" type="real" nameUK="Ширина полотна" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="173773" nameRU="Насадка пильная" nameUK="Насадка пиляльна"/>
+      <attribute_value id="175169" nameRU="Ручная пила" nameUK="Ручна пила"/>
+      <attribute_value id="175170" nameRU="Сетевая пила" nameUK="Мережева пила"/>
+      <attribute_value id="175171" nameRU="Аккумуляторная пила" nameUK="Акумуляторна пила"/>
+      <attribute_value id="175172" nameRU="Бензиновая пила" nameUK="Бензинова пила"/>
+    </attribute>
+    <attribute id="1024" nameRU="Тип двигателя" type="singleselect" nameUK="Тип двигуна">
+      <attribute_value id="338834" nameRU="Щеточный" nameUK="Щітковий"/>
+      <attribute_value id="338835" nameRU="Бесщеточный" nameUK="Безщітковий"/>
+    </attribute>
+    <attribute id="1266" nameRU="Класс" type="singleselect" nameUK="Клас">
+      <attribute_value id="204573" nameRU="Профессиональный" nameUK="Професійний"/>
+      <attribute_value id="349378" nameRU="Домашние" nameUK="Домашні"/>
+    </attribute>
+    <attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="10" measureUnitUK="л"/>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="1000" measureUnitUK="В"/>
+    <attribute id="5428" nameRU="Длина кабеля" type="real" nameUK="Довжина кабелю" measureUnitRU="см" min="0" max="500" measureUnitUK="см"/>
+    <attribute id="6692" nameRU="Длина хода" type="real" nameUK="Довжина ходу" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="12061" nameRU="Дополнительный источник питания" type="multiselect" nameUK="Додаткове джерело живлення">
+      <attribute_value id="117151" nameRU="Сеть 12В" nameUK="Мережа 12В"/>
+      <attribute_value id="117152" nameRU="Сеть 110В" nameUK="Мережа 110В"/>
+      <attribute_value id="117153" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="117155" nameRU="Сеть 380В" nameUK="Мережа 380В"/>
+      <attribute_value id="117160" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="122327" nameRU="Сеть 24В" nameUK="Мережа 24В"/>
+    </attribute>
+    <attribute id="15784" nameRU="Расположение зубьев" type="singleselect" nameUK="Розташування зубів">
+      <attribute_value id="172633" nameRU="Одностороннее" nameUK="Одностороннє"/>
+      <attribute_value id="172634" nameRU="Двустороннее" nameUK="Двостороння"/>
+    </attribute>
+    <attribute id="15785" nameRU="Шаг зубьев" type="real" nameUK="Крок зубів" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="15786" nameRU="Количество звеньев цепи" type="integer" nameUK="Кількість ланок ланцюга" measureUnitRU="шт" min="0" max="56" measureUnitUK="шт."/>
+    <attribute id="15960" nameRU="Мощность двигателя, л.с." type="real" nameUK="Потужність двигуна, л. с."/>
+    <attribute id="15961" nameRU="Мощность двигателя, Вт" type="real" nameUK="Потужність двигуна, Вт"/>
+    <attribute id="15991" nameRU="Глубина пропила" type="real" nameUK="Глибина пропилу" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="15992" nameRU="Скорость резания" type="real" nameUK="Швидкість різання" measureUnitRU="м/сек" min="0" max="10" measureUnitUK="м/сек"/>
+    <attribute id="15993" nameRU="Наличие телескопической штанги" type="bool" nameUK="Наявність телескопічної штанги"/>
+    <attribute id="15994" nameRU="Длина телескопической штанги, max" type="real" nameUK="Довжина телескопічної штанги, max" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="17137" nameRU="Емкость аккумуляторных батарей" type="integer" nameUK="Ємність акумуляторних батарей" measureUnitRU="А·ч" min="0" max="8" measureUnitUK="А. г"/>
+    <attribute id="17520" nameRU="Регулировка угла наклона режущего полотна" type="bool" nameUK="Регулювання кута нахилу ріжучого полотна"/>
+    <attribute id="17521" nameRU="Количество положений режущего полотна" type="singleselect" nameUK="Кількість положень ріжучого полотна">
+      <attribute_value id="209428" nameRU="2" nameUK="2"/>
+      <attribute_value id="209429" nameRU="3" nameUK="3"/>
+      <attribute_value id="209430" nameRU="4" nameUK="4"/>
+      <attribute_value id="209431" nameRU="5" nameUK="5"/>
+    </attribute>
+    <attribute id="18113" nameRU="Длина телескопической штанги, min" type="real" nameUK="Довжина телескопічної штанги, min" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+  </category>
+</categories>

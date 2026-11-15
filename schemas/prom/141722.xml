@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141722" nameRU="Аккумуляторные отвертки" nameUK="Акумуляторні викрутки">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="2" measureUnitUK="кг"/>
+    <attribute id="6" nameRU="Тип патрона" type="singleselect" nameUK="Тип патрона">
+      <attribute_value id="5" nameRU="Быстрозажимной" nameUK="Швидкозатискний"/>
+      <attribute_value id="7" nameRU="Шестигранник" nameUK="Шестигранник"/>
+    </attribute>
+    <attribute id="8" nameRU="Реверс" type="bool" nameUK="Реверс"/>
+    <attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+    <attribute id="10" nameRU="Ограничение пускового тока" type="bool" nameUK="Обмеження пускового струму"/>
+    <attribute id="11" nameRU="Подсветка рабочей зоны" type="bool" nameUK="Підсвічування робочої зони"/>
+    <attribute id="24" nameRU="Блокировка кнопки включения" type="bool" nameUK="Блокування кнопки включення"/>
+    <attribute id="25" nameRU="Блокировка шпинделя" type="bool" nameUK="Блокування шпинделя"/>
+    <attribute id="30" nameRU="Количество скоростей работы" type="singleselect" nameUK="Кількість швидкостей роботи">
+      <attribute_value id="6911" nameRU="1" nameUK="1"/>
+      <attribute_value id="6912" nameRU="2" nameUK="2"/>
+      <attribute_value id="6913" nameRU="3" nameUK="3"/>
+      <attribute_value id="6914" nameRU="4" nameUK="4"/>
+    </attribute>
+    <attribute id="31" nameRU="Режим инструмента" type="singleselect" nameUK="Режим інструменту">
+      <attribute_value id="6916" nameRU="безударный" nameUK="безударний"/>
+      <attribute_value id="6917" nameRU="ударный" nameUK="ударний"/>
+    </attribute>
+    <attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+      <attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+      <attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+      <attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+    </attribute>
+    <attribute id="63" nameRU="Дополнительный аккумулятор" type="bool" nameUK="Додатковий акумулятор"/>
+    <attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="5" measureUnitUK="А. г"/>
+    <attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="36" measureUnitUK="В"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+    <attribute id="271" nameRU="Количество насадок" type="integer" nameUK="Кількість насадок"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+      <attribute_value id="331841" nameRU="Футляр" nameUK="Футляр"/>
+    </attribute>
+    <attribute id="2935" nameRU="Время зарядки аккумулятора" type="real" nameUK="Час зарядки акумулятора" measureUnitRU="час" min="0" max="20" measureUnitUK="годин"/>
+    <attribute id="6484" nameRU="Материал насадки" type="singleselect" nameUK="Матеріал насадки">
+      <attribute_value id="44682" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="350545" nameRU="Металл" nameUK="Метал"/>
+    </attribute>
+    <attribute id="8196" nameRU="Максимальный крутящий момент" type="real" nameUK="Максимальний крутний момент" measureUnitRU="H*m" min="0" max="10" measureUnitUK="H*m"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10456" nameRU="Тип зарядного устройства" type="singleselect" nameUK="Тип зарядного пристрою">
+      <attribute_value id="93605" nameRU="Импульсные" nameUK="Імпульсні"/>
+      <attribute_value id="95467" nameRU="Обычное" nameUK="Звичайне"/>
+    </attribute>
+  </category>
+</categories>

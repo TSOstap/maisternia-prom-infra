@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200511" nameRU="Пневматические гайковерты" nameUK="Пневматичні гайкокрути">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="100" measureUnitUK="кг"/>
+    <attribute id="6" nameRU="Тип патрона" type="singleselect" nameUK="Тип патрона">
+      <attribute_value id="7" nameRU="Шестигранник" nameUK="Шестигранник"/>
+      <attribute_value id="8" nameRU="Квадрат 1&quot;" nameUK="Квадрат 1&quot;"/>
+      <attribute_value id="9" nameRU="Квадрат 1/2&quot;" nameUK="Квадрат 1/2&quot;"/>
+      <attribute_value id="10" nameRU="Квадрат 3/4&quot;" nameUK="Квадрат 3/4&quot;"/>
+      <attribute_value id="6959" nameRU="Квадрат 1 1/4&quot;" nameUK="Квадрат 1 1/4&quot;"/>
+      <attribute_value id="6980" nameRU="Квадрат 1/4&quot;" nameUK="Квадрат 1/4&quot;"/>
+      <attribute_value id="6982" nameRU="Квадрат 2&quot;" nameUK="Квадрат 2&quot;"/>
+      <attribute_value id="6983" nameRU="Квадрат 3/8&quot;" nameUK="Квадрат 3/8&quot;"/>
+      <attribute_value id="291608" nameRU="Квадрат 1 1/2&quot;" nameUK="Квадрат 1 1/2&quot;"/>
+    </attribute>
+    <attribute id="8" nameRU="Реверс" type="bool" nameUK="Реверс"/>
+    <attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+    <attribute id="22" nameRU="Кейс в комплекте" type="bool" nameUK="Кейс в комплекті"/>
+    <attribute id="24" nameRU="Блокировка кнопки включения" type="bool" nameUK="Блокування кнопки включення"/>
+    <attribute id="33" nameRU="Дополнительная рукоятка" type="bool" nameUK="Додаткова рукоятка"/>
+    <attribute id="64" nameRU="Ударный режим" type="bool" nameUK="Ударний режим"/>
+    <attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="15000" measureUnitUK="об/хв"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="12" measureUnitUK="бар"/>
+    <attribute id="106" nameRU="Расход воздуха" type="real" nameUK="Витрата повітря" measureUnitRU="литр/мин" min="0" max="5000" measureUnitUK="літр/хв"/>
+    <attribute id="107" nameRU="Диаметр входного штуцера" type="singleselect" nameUK="Діаметр вхідного штуцера">
+      <attribute_value id="7023" nameRU="1&quot;" nameUK="1&quot;"/>
+      <attribute_value id="7024" nameRU="2&quot;" nameUK="2&quot;"/>
+      <attribute_value id="7025" nameRU="1/2&quot;" nameUK="1/2&quot;"/>
+      <attribute_value id="7026" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="7027" nameRU="1/8&quot;" nameUK="1/8&quot;"/>
+      <attribute_value id="7028" nameRU="3/4&quot;" nameUK="3/4&quot;"/>
+      <attribute_value id="7029" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+    </attribute>
+    <attribute id="108" nameRU="Внутренний диаметр шланга" type="real" nameUK="Внутрішній діаметр шланга" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="109" nameRU="Переходной штуцер" type="bool" nameUK="Перехідний штуцер"/>
+    <attribute id="110" nameRU="Набор насадок" type="bool" nameUK="Набір насадок"/>
+    <attribute id="127" nameRU="Тип пневмогайковерта" type="singleselect" nameUK="Тип пневмогайковерта">
+      <attribute_value id="7051" nameRU="Прямой" nameUK="Прямий"/>
+      <attribute_value id="7052" nameRU="Угловой (пневмотрещетка)" nameUK="Кутовий (пневмотрещітка)"/>
+      <attribute_value id="301963" nameRU="Угловой редукторный" nameUK="Кутовий редукторний"/>
+      <attribute_value id="302012" nameRU="Угловой ударный" nameUK="Угловий ударний"/>
+      <attribute_value id="306341" nameRU="Пистолетный" nameUK="Пістолетний"/>
+    </attribute>
+    <attribute id="8196" nameRU="Максимальный крутящий момент" type="real" nameUK="Максимальний крутний момент" measureUnitRU="H*m" min="0" max=" 68800 " measureUnitUK="H*m"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

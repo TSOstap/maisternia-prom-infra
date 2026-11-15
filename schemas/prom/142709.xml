@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142709" nameRU="Сварочная проволока" nameUK="Зварювальний дріт">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="514" nameRU="Диаметр проволоки" type="real" nameUK="Діаметр дроту" measureUnitRU="мм" min="0" max="20" measureUnitUK="мм"/>
+    <attribute id="4045" nameRU="Вес катушки с проволокой" type="real" nameUK="Вага котушки з дротом" measureUnitRU="кг" min="0" max="5000" measureUnitUK="кг"/>
+    <attribute id="7715" nameRU="Тип сварочной проволоки" type="singleselect" nameUK="Тип зварювального дроту">
+      <attribute_value id="65312" nameRU="Сплошного сечения" nameUK="Суцільного перерізу"/>
+      <attribute_value id="65313" nameRU="Порошковая проволока" nameUK="Порошковий дріт"/>
+      <attribute_value id="65314" nameRU="Активированная проволока" nameUK="Активований дріт"/>
+    </attribute>
+    <attribute id="7722" nameRU="Тип порошковой проволоки по составу наполнителя" type="singleselect" nameUK="Тип порошкового дроту за складом наповнювача">
+      <attribute_value id="65315" nameRU="Рутил-органические" nameUK="Рутил-органічні"/>
+      <attribute_value id="65316" nameRU="Карбонатно-флюоритные" nameUK="Карбонатно-флюоритні"/>
+      <attribute_value id="65317" nameRU="Флюоритные" nameUK="Флюоритні"/>
+      <attribute_value id="65318" nameRU="Рутиловые" nameUK="Рутилові"/>
+      <attribute_value id="65319" nameRU="Рутил-флюоритные" nameUK="Рутил-флюоритні"/>
+    </attribute>
+    <attribute id="7725" nameRU="Тип проволоки по содержанию углерода и легирующих элементов" type="singleselect" nameUK="Тип дроту за змістом вуглецю і легуючих елементів">
+      <attribute_value id="65320" nameRU="Низкоуглеродистая" nameUK="Низьковуглецевий"/>
+      <attribute_value id="65321" nameRU="Легированная" nameUK="Легована"/>
+      <attribute_value id="65322" nameRU="Высоколегированная" nameUK="Високолегована"/>
+    </attribute>
+    <attribute id="7726" nameRU="Вид сварочной проволоки" type="singleselect" nameUK="Вид зварювального дроту">
+      <attribute_value id="65323" nameRU="Нержавеющая" nameUK="Нержавіюча"/>
+      <attribute_value id="65324" nameRU="Газосварочная" nameUK="Газозварювальних"/>
+      <attribute_value id="65325" nameRU="Алюминиевая" nameUK="Алюмінієва"/>
+      <attribute_value id="65326" nameRU="Омедненная" nameUK="Обміднений"/>
+      <attribute_value id="65327" nameRU="Неомедненная" nameUK="Неомедненного"/>
+      <attribute_value id="136461" nameRU="Полированная" nameUK="Полірована"/>
+    </attribute>
+    <attribute id="7730" nameRU="Тип порошковой проволоки" type="singleselect" nameUK="Тип порошкового дроту">
+      <attribute_value id="65328" nameRU="Самозащитные проволоки" nameUK="Самозахисні дроти"/>
+      <attribute_value id="65329" nameRU="Для проведения сварки без применения защитной газовой среды" nameUK="Для проведення зварювання без застосування захисного газового середовища"/>
+      <attribute_value id="65330" nameRU="Для сварочных работ в среде углекислого газа" nameUK="Для зварювальних робіт в середовищі вуглекислого газу"/>
+    </attribute>
+    <attribute id="7731" nameRU="Тип сварочной проволоки по применению" type="singleselect" nameUK="Тип зварювального дроту за застосуванням">
+      <attribute_value id="65331" nameRU="Для механизированной сварки MIG/MAG" nameUK="Для механізованого зварювання MIG/MAG"/>
+      <attribute_value id="65332" nameRU="Для сварки под флюсом SAW" nameUK="Для зварювання під флюсом SAW"/>
+      <attribute_value id="65333" nameRU="Для наплавки" nameUK="Для наплавлення"/>
+      <attribute_value id="65334" nameRU="Для аргонодуговой сварки (в виде присадочной проволоки)" nameUK="Для аргонодугового зварювання (у вигляді присадного дроту)"/>
+    </attribute>
+  </category>
+</categories>

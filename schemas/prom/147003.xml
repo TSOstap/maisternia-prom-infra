@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="147003" nameRU="Поломоечные машины" nameUK="Машини для миття підлоги">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="2000" measureUnitUK="кг"/>
+    <attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+      <attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+      <attribute_value id="113213" nameRU="GEL" nameUK="GEL"/>
+      <attribute_value id="179273" nameRU="LiFePO4" nameUK="LiFePO4"/>
+    </attribute>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="426" nameRU="Номинальная мощность" type="real" nameUK="Номінальна потужність" measureUnitRU="Вт" min="0" max="3000" measureUnitUK="Вт"/>
+    <attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="800" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" measureUnitUK="мм"/>
+    <attribute id="1920" nameRU="Максимальная рабочая ширина" type="real" nameUK="Максимальна робоча ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="1980" nameRU="Тип питания" type="multiselect" nameUK="Тип живлення">
+      <attribute_value id="11692" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="11693" nameRU="Сеть 220 В" nameUK="Мережа 220 В"/>
+      <attribute_value id="11694" nameRU="Сеть 380 В" nameUK="Мережа 380 В"/>
+      <attribute_value id="12002" nameRU="Сеть 115 В" nameUK="Мережа 115 В"/>
+      <attribute_value id="12624" nameRU="Сеть 24 В" nameUK="Мережа 24 В"/>
+    </attribute>
+    <attribute id="2945" nameRU="Производительность по площади" type="real" nameUK="Продуктивність по площі" measureUnitRU="кв. м/час" min="0" max="9000" measureUnitUK="кв.м/год"/>
+    <attribute id="2994" nameRU="Сиденье для оператора" type="bool" nameUK="Сидіння для оператора"/>
+    <attribute id="3263" nameRU="Бак для моющего раствора" type="real" nameUK="Бак для миючого розчину" measureUnitRU="л" min="0" max="1000" measureUnitUK="л"/>
+    <attribute id="3266" nameRU="Бак для отработанного раствора" type="real" nameUK="Бак для відпрацьованого розчину" measureUnitRU="л" min="0" max="2000" measureUnitUK="л"/>
+    <attribute id="3267" nameRU="Количество щеток" type="integer" nameUK="Кількість щіток" measureUnitRU="шт" min="1" max="20" measureUnitUK="шт."/>
+    <attribute id="3270" nameRU="Давление щеток на поверхность" type="real" nameUK="Тиск щіток на поверхню" measureUnitRU="г/см2" min="0" max="1000" measureUnitUK="г/см2"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+    </attribute>
+    <attribute id="17137" nameRU="Емкость аккумуляторных батарей" type="integer" nameUK="Ємність акумуляторних батарей" measureUnitRU="А·ч" min="0" max="350" measureUnitUK="А. г"/>
+  </category>
+</categories>

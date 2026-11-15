@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201605" nameRU="Шпатели" nameUK="Шпателі">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="500" measureUnitUK="г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7635" nameRU="сталь" nameUK="сталь"/>
+      <attribute_value id="7636" nameRU="алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="7641" nameRU="стеклопластик" nameUK="склопластик"/>
+      <attribute_value id="7765" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="300888" nameRU="Резина/Пластик" nameUK="Гума/Пластик"/>
+    </attribute>
+    <attribute id="390" nameRU="Длина рукоятки" type="real" nameUK="Довжина рукоятки" measureUnitRU="мм" min="0" max="300" measureUnitUK="мм"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+      <attribute_value id="84968" nameRU="Пластиковый блистер" nameUK="Пластиковий блістер"/>
+      <attribute_value id="329020" nameRU="Без упаковки" nameUK="Без упаковки"/>
+    </attribute>
+    <attribute id="435" nameRU="Длина лезвия" type="real" nameUK="Довжина леза" measureUnitRU="мм" min="0" max="800" measureUnitUK="мм"/>
+    <attribute id="436" nameRU="Ширина лезвия" type="real" nameUK="Ширина леза" measureUnitRU="мм" min="0" max="600" measureUnitUK="мм"/>
+    <attribute id="439" nameRU="Материал рабочей части" type="singleselect" nameUK="Матеріал робочої частини">
+      <attribute_value id="7791" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="7792" nameRU="Пластмасса" nameUK="Пластмаса"/>
+      <attribute_value id="7793" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="7794" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="8263" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="8268" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="286337" nameRU="Вольфрам" nameUK=""/>
+    </attribute>
+    <attribute id="678" nameRU="Тип шпателя" type="singleselect" nameUK="Тип шпателя">
+      <attribute_value id="8264" nameRU="Малярный шпатель" nameUK="Малярський шпатель"/>
+      <attribute_value id="8265" nameRU="Угловой шпатель" nameUK="Кутовий шпатель"/>
+      <attribute_value id="8266" nameRU="Фасадный шпатель" nameUK="Фасадний шпатель"/>
+      <attribute_value id="8267" nameRU="Шпатель-скребок" nameUK="Шпатель-скребок"/>
+      <attribute_value id="273051" nameRU="Для паркетного клея" nameUK="Для паркетного клею"/>
+      <attribute_value id="285161" nameRU="Зубчатый шпатель " nameUK="Зубчастий шпатель"/>
+    </attribute>
+    <attribute id="3474" nameRU="Количество в упаковке" type="integer" nameUK="Кількість в упаковці" measureUnitRU="шт" min="1" max="5" measureUnitUK="шт."/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="305985" nameRU="Телескопический" nameUK="Телескопічний"/>
+      <attribute_value id="305986" nameRU="Насадки" nameUK="Насадки"/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+    <attribute id="18849" nameRU="Количество лезвий в комплекте" type="real" nameUK="Кількість лез у комплекті"/>
+    <attribute id="19018" nameRU="Ширина зубцов" type="real" nameUK="Ширина зубців" measureUnitRU="мм" min="0.0" max="20.0" measureUnitUK="мм"/>
+  </category>
+</categories>

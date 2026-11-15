@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="141726" nameRU="Клеевые электрические пистолеты" nameUK="Клейові електричні пістолети">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="600" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="2" measureUnitUK="кг"/>
+    <attribute id="7" nameRU="Питание" type="singleselect" nameUK="Живлення">
+      <attribute_value id="13" nameRU="Сеть 220В" nameUK="Мережа 220В"/>
+      <attribute_value id="14" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="8807" nameRU="Батарейки" nameUK="Батарейки"/>
+    </attribute>
+    <attribute id="49" nameRU="Диаметр стержня" type="singleselect" nameUK="Діаметр стрижня">
+      <attribute_value id="6931" nameRU="7 мм" nameUK="7 мм"/>
+      <attribute_value id="6932" nameRU="11 мм" nameUK="11 мм"/>
+      <attribute_value id="6933" nameRU="12 мм" nameUK="12 мм"/>
+      <attribute_value id="270633" nameRU="8 мм" nameUK="8 мм"/>
+      <attribute_value id="272996" nameRU="11.2 мм" nameUK="11.2 мм"/>
+      <attribute_value id="273835" nameRU="7.2 мм" nameUK="7.2 мм"/>
+    </attribute>
+    <attribute id="50" nameRU="Электронная регулировка температуры" type="bool" nameUK="Електронне регулювання температури"/>
+    <attribute id="51" nameRU="Защита от капель клея" type="bool" nameUK="Захист від крапель клею"/>
+    <attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+      <attribute_value id="6942" nameRU="Ni-Cd" nameUK="Ni-Cd"/>
+      <attribute_value id="6943" nameRU="Ni-MH" nameUK="Ni-MH"/>
+      <attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+    </attribute>
+    <attribute id="63" nameRU="Дополнительный аккумулятор" type="bool" nameUK="Додатковий акумулятор"/>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="350" measureUnitUK="град."/>
+    <attribute id="98" nameRU="Емкость аккумулятора" type="real" nameUK="Ємність акумулятору" measureUnitRU="А·ч" min="0" max="5" measureUnitUK="А. г"/>
+    <attribute id="99" nameRU="Напряжение аккумулятора" type="real" nameUK="Напруга акумулятору" measureUnitRU="В" min="0" max="36" measureUnitUK="В"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

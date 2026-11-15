@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="144007" nameRU="Оборудование для сварки и пайки пластиковых труб" nameUK="Обладнання для зварювання та паяння пластикових труб">
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="1000" measureUnitUK="град."/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="426" nameRU="Номинальная мощность" type="real" nameUK="Номінальна потужність" measureUnitRU="Вт" min="0" max="50000" measureUnitUK="Вт"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="2053" nameRU="Напряжение сети" type="multiselect" nameUK="Напруга мережі">
+      <attribute_value id="11945" nameRU="220~240 В" nameUK="220~240 В"/>
+      <attribute_value id="11946" nameRU="380~400 В" nameUK="380~400 В"/>
+      <attribute_value id="35999" nameRU="100~120 В" nameUK="100~120 В"/>
+    </attribute>
+    <attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="0" max="200" measureUnitUK="град."/>
+    <attribute id="4625" nameRU="Время разогрева" type="real" nameUK="Час розігріву" measureUnitRU="мин" min="0" max="15" measureUnitUK="хв"/>
+    <attribute id="5161" nameRU="Минимальная температура окружающей среды" type="real" nameUK="Мінімальна температура навколишнього середовища" measureUnitRU="град." min="-100" max="50" measureUnitUK="град."/>
+    <attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0.0" max="100.0" measureUnitUK="град."/>
+    <attribute id="5840" nameRU="Максимальный общий вес" type="real" nameUK="Максимальна загальна вага" measureUnitRU="кг" min="0" max="90000" measureUnitUK="кг"/>
+    <attribute id="5987" nameRU="Диапазон рабочих температур" type="real" nameUK="Діапазон робочих температур" measureUnitRU="град." min="0" max="300" measureUnitUK="град."/>
+    <attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+    <attribute id="7639" nameRU="Длина сварочного кабеля" type="real" nameUK="Довжина зварювального кабелю" measureUnitRU="м" min="0" max="10" measureUnitUK="м"/>
+    <attribute id="7784" nameRU="Минимальный диаметр трубы под сварку" type="real" nameUK="Мінімальний діаметр труби під зварювання" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="7785" nameRU="Максимальный диаметр трубы под сварку" type="real" nameUK="Максимальний діаметр труби під зварювання" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="7786" nameRU="Защита от перегрузки" type="bool" nameUK="Захист від перевантаження"/>
+    <attribute id="7794" nameRU="Тип сварки пластиковых труб" type="multiselect" nameUK="Тип зварювання пластикових труб">
+      <attribute_value id="65549" nameRU="Стыковая" nameUK="Стикова"/>
+      <attribute_value id="65550" nameRU="Раструбная" nameUK="Розтрубна"/>
+      <attribute_value id="65551" nameRU="Электромуфтовая" nameUK="Електромуфтова"/>
+    </attribute>
+    <attribute id="7839" nameRU="Автоматическое протоколирование" type="bool" nameUK="Автоматичне протоколювання"/>
+    <attribute id="7840" nameRU="Максимальное количество протоколов" type="real" nameUK="Максимальна кількість протоколів" measureUnitRU="шт" min="0" max="5000" measureUnitUK="шт."/>
+    <attribute id="7841" nameRU="Позиционер" type="bool" nameUK="Позиціонер"/>
+    <attribute id="7842" nameRU="Нагреватель с тефлоновым покрытием" type="bool" nameUK="Нагрівач з тефлоновим покриттям"/>
+    <attribute id="7843" nameRU="Транспортный ящик для сварочной машины и комплектующих" type="bool" nameUK="Транспортний ящик для зварювальної машини та комплектуючих"/>
+    <attribute id="7844" nameRU="Максимальное давление, создаваемое машиной" type="real" nameUK="Максимальний тиск, що створюється машиною" measureUnitRU="бар" min="0" max="500" measureUnitUK="бар"/>
+    <attribute id="7845" nameRU="Минимальное давление, создаваемое машиной" type="real" nameUK="Мінімальний тиск, створюваний машиною" measureUnitRU="бар" min="0" max="200" measureUnitUK="бар"/>
+    <attribute id="7846" nameRU="Длина сетевого кабеля" type="real" nameUK="Довжина мережевого кабелю" measureUnitRU="м" min="0" max="50" measureUnitUK="м"/>
+    <attribute id="7847" nameRU="Ввод данных" type="multiselect" nameUK="Введення даних">
+      <attribute_value id="65794" nameRU="Считывающий карандаш" nameUK="Зчитувальний олівець"/>
+      <attribute_value id="65795" nameRU="Сканер" nameUK="Сканер"/>
+      <attribute_value id="65796" nameRU="Вручную" nameUK="Вручну"/>
+      <attribute_value id="65797" nameRU="Транспондер" nameUK="Транспондер"/>
+    </attribute>
+    <attribute id="7848" nameRU="Система контроля сварочного процесса" type="multiselect" nameUK="Система контролю зварювального процесу">
+      <attribute_value id="65798" nameRU="Давление" nameUK="Тиск"/>
+      <attribute_value id="65799" nameRU="Продолжительность процесса" nameUK="Тривалість процесу"/>
+      <attribute_value id="65800" nameRU="Температура окружающего воздуха" nameUK="Температура навколишнього повітря"/>
+      <attribute_value id="65801" nameRU="Контроль состояния внутренней памяти" nameUK="Контроль стану внутрішньої пам'яті"/>
+      <attribute_value id="65802" nameRU="Температура аппарата" nameUK="Температура апарату"/>
+      <attribute_value id="65803" nameRU="Температура нагревательного элемента" nameUK="Температура нагрівального елемента"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="16584" nameRU="Тип нагрева" type="singleselect" nameUK="Тип нагріву">
+      <attribute_value id="293043" nameRU="Периодическое" nameUK="Періодичне"/>
+    </attribute>
+  </category>
+</categories>

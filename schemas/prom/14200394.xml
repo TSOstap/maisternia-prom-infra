@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200394" nameRU="Мультитулы" nameUK="Мультитули">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="10000" measureUnitUK="г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="266267" nameRU="Койот" nameUK="Койот"/>
+      <attribute_value id="266375" nameRU="Серебристий" nameUK="Срібляста"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="16229" nameRU="Длина в сложенном состоянии" type="real" nameUK="Довжина у складеному стані" measureUnitRU="см" min="0" max="150" measureUnitUK="см"/>
+    <attribute id="17898" nameRU="Форм-фактор мультитула" type="multiselect" nameUK="Форм-фактор мультитула">
+      <attribute_value id="234661" nameRU="Нож" nameUK="Ніж"/>
+      <attribute_value id="234662" nameRU="Пассатижи" nameUK="Пасатижі"/>
+      <attribute_value id="234663" nameRU="Ручка" nameUK="Ручка"/>
+      <attribute_value id="234664" nameRU="Фонарь" nameUK="Ліхтар"/>
+      <attribute_value id="234665" nameRU="Молоток" nameUK="Молоток"/>
+      <attribute_value id="234666" nameRU="Топор" nameUK="Сокира"/>
+      <attribute_value id="234667" nameRU="Карта" nameUK="Карта"/>
+      <attribute_value id="234668" nameRU="Гаечный ключ" nameUK="Гайковий ключ"/>
+      <attribute_value id="234669" nameRU="Разводной ключ" nameUK="Розвідний ключ"/>
+      <attribute_value id="234670" nameRU="Брелок" nameUK="Брелок"/>
+      <attribute_value id="234671" nameRU="Карабин" nameUK="Карабін"/>
+      <attribute_value id="234672" nameRU="Браслет" nameUK="Браслет"/>
+      <attribute_value id="234673" nameRU="Отвертка" nameUK="Викрутка"/>
+      <attribute_value id="234674" nameRU="Ключи в держателе" nameUK="Ключі у тримачі"/>
+      <attribute_value id="279560" nameRU="Открывалка для бутылок" nameUK="Відкривачка для пляшок"/>
+    </attribute>
+    <attribute id="17899" nameRU="Конфигурация" type="multiselect" nameUK="Конфігурація">
+      <attribute_value id="234675" nameRU="Пассатижи" nameUK="Пасатижі"/>
+      <attribute_value id="234676" nameRU="Секатор" nameUK="Секатор"/>
+      <attribute_value id="234677" nameRU="Кусачки" nameUK="Кусачки"/>
+      <attribute_value id="234678" nameRU="Щипцы для снятия изоляции" nameUK="Щипці для зняття ізоляції"/>
+      <attribute_value id="234679" nameRU="Обжимные клещи" nameUK="Обтискні кліщі"/>
+      <attribute_value id="234680" nameRU="Нож" nameUK="Ніж"/>
+      <attribute_value id="234681" nameRU="Отвертка" nameUK="Викрутка"/>
+      <attribute_value id="234682" nameRU="Гаечный ключ" nameUK="Гайковий ключ"/>
+      <attribute_value id="234683" nameRU="Шестигранный ключ" nameUK="Шестигранний ключ"/>
+      <attribute_value id="234684" nameRU="Отверточная бита" nameUK="Викруткові біти"/>
+      <attribute_value id="234685" nameRU="Линейка" nameUK="Лінійка"/>
+      <attribute_value id="234686" nameRU="Шило" nameUK="Шило"/>
+      <attribute_value id="234687" nameRU="Штопор" nameUK="Штопор"/>
+      <attribute_value id="234688" nameRU="Консервный нож" nameUK="Консервний ніж"/>
+      <attribute_value id="234689" nameRU="Открывалка для бутылок" nameUK="Відкривачка для пляшок"/>
+      <attribute_value id="234690" nameRU="Грузовой крюк" nameUK="Вантажний гак"/>
+      <attribute_value id="234691" nameRU="Ножницы" nameUK="Ножиці"/>
+      <attribute_value id="234692" nameRU="Пилочка для ногтей" nameUK="Пилка для нігтів"/>
+      <attribute_value id="234693" nameRU="Напильник" nameUK="Напилок"/>
+      <attribute_value id="234694" nameRU="Пила по дереву" nameUK="Пила по дереву"/>
+      <attribute_value id="234695" nameRU="Пила по металлу" nameUK="Пила по металу"/>
+      <attribute_value id="234696" nameRU="Буравчик" nameUK="Буравчик"/>
+      <attribute_value id="234697" nameRU="Гвоздодер" nameUK="Обценьки"/>
+      <attribute_value id="234698" nameRU="Стамеска" nameUK="Стамеска"/>
+      <attribute_value id="234699" nameRU="Пинцет" nameUK="Пінцет"/>
+      <attribute_value id="234700" nameRU="Зубочистка" nameUK="Зубочистка"/>
+      <attribute_value id="234701" nameRU="Булавка" nameUK="Булавка"/>
+      <attribute_value id="234702" nameRU="Увеличительное стекло" nameUK="Збільшувальне скло"/>
+      <attribute_value id="234703" nameRU="Шариковая ручка" nameUK="Кулькова ручка"/>
+      <attribute_value id="234704" nameRU="Фонарик" nameUK="Ліхтарик"/>
+      <attribute_value id="234705" nameRU="Компас" nameUK="Компас"/>
+      <attribute_value id="234706" nameRU="Клипса" nameUK="Кліпса"/>
+      <attribute_value id="234707" nameRU="Карабин" nameUK="Карабін"/>
+      <attribute_value id="310042" nameRU="Стропорез" nameUK="Стропоріз"/>
+      <attribute_value id="315112" nameRU="Стеклобой" nameUK="Склобій"/>
+      <attribute_value id="315113" nameRU="Штангенциркуль" nameUK="Штангенциркуль"/>
+      <attribute_value id="315114" nameRU="Держатель телефона" nameUK="Тримач телефона"/>
+      <attribute_value id="319394" nameRU="Ложка" nameUK="Ложка"/>
+      <attribute_value id="319395" nameRU="Вилка" nameUK="Виделка"/>
+    </attribute>
+    <attribute id="17900" nameRU="Количество инструментов" type="integer" nameUK="Кількість інструментів" measureUnitRU="шт" min="1" max="100" measureUnitUK="шт."/>
+  </category>
+</categories>

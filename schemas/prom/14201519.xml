@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201519" nameRU="Фрезы" nameUK="Фрези">
+    <attribute id="122" nameRU="Диаметр хвостовика" type="real" nameUK="Діаметр хвостовика" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="82135" nameRU="Набор" nameUK="Набір"/>
+      <attribute_value id="166805" nameRU="Фреза" nameUK="Фреза"/>
+      <attribute_value id="166806" nameRU="Фрезерная головка" nameUK="Фрезерна голівка"/>
+      <attribute_value id="166807" nameRU="Сменная пластина" nameUK="Змінна пластина"/>
+      <attribute_value id="166808" nameRU="Корпус" nameUK="Корпус"/>
+      <attribute_value id="311274" nameRU="Резьбофреза" nameUK="Різьбофреза"/>
+    </attribute>
+    <attribute id="1237" nameRU="Конструкция" type="singleselect" nameUK="Конструкція">
+      <attribute_value id="41932" nameRU="Цельная" nameUK="Цілісна"/>
+      <attribute_value id="166834" nameRU="Сварная" nameUK="Зварна"/>
+      <attribute_value id="166835" nameRU="Напайная" nameUK="Напайна"/>
+      <attribute_value id="166836" nameRU="Сборная" nameUK="Збірна"/>
+    </attribute>
+    <attribute id="7618" nameRU="Длина рабочей части" type="real" nameUK="Довжина робочої частини" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="12194" nameRU="Наличие подшипника" type="bool" nameUK="Наличие подшипника"/>
+    <attribute id="14109" nameRU="Угол заточки" type="real" nameUK="Кут заточування" measureUnitRU="град." min="0.0" max="100.0" measureUnitUK="град."/>
+    <attribute id="15368" nameRU="Обработка материала" type="multiselect" nameUK="Обробка матеріалу">
+      <attribute_value id="166810" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="166811" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="166812" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="166813" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="166814" nameRU="Закаленная сталь" nameUK="Загартована сталь"/>
+      <attribute_value id="166815" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="166816" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="166817" nameRU="Графит" nameUK="Графіт"/>
+      <attribute_value id="166847" nameRU="Камень" nameUK="Камінь"/>
+      <attribute_value id="166848" nameRU="Бетон" nameUK="Бетон"/>
+      <attribute_value id="166851" nameRU="Плитка" nameUK="Плитка"/>
+      <attribute_value id="166852" nameRU="Гранит" nameUK="Граніт"/>
+      <attribute_value id="166853" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="166854" nameRU="Кирпич" nameUK="Цегла"/>
+      <attribute_value id="166855" nameRU="Абразив" nameUK="Абразив"/>
+      <attribute_value id="168098" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="173942" nameRU="Гипсокартон" nameUK="Гіпсокартон"/>
+      <attribute_value id="173944" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="173956" nameRU="Фанера" nameUK="Фанера"/>
+      <attribute_value id="235937" nameRU="МДФ" nameUK="МДФ"/>
+      <attribute_value id="235941" nameRU="ЛДСП" nameUK="ЛДСП"/>
+      <attribute_value id="237158" nameRU="Воск" nameUK="Віск"/>
+      <attribute_value id="237159" nameRU="Магний" nameUK="Магній"/>
+      <attribute_value id="247333" nameRU="ПВХ" nameUK="ПВХ"/>
+      <attribute_value id="268116" nameRU="ДСП" nameUK="ДСП"/>
+      <attribute_value id="268117" nameRU="HPL(компакт пластик)" nameUK="HPL(компакт пластик)"/>
+      <attribute_value id="284463" nameRU="Alucobond" nameUK=""/>
+      <attribute_value id="303621" nameRU="Жаропрочные и титановые сплавы" nameUK="Жароміцні та титанові сплави"/>
+    </attribute>
+    <attribute id="15369" nameRU="Материал режущей части" type="multiselect" nameUK="Матеріал ріжучої частини">
+      <attribute_value id="166837" nameRU="Быстрорежущая сталь" nameUK="Швидкорізальна сталь"/>
+      <attribute_value id="166838" nameRU="Твердый сплав" nameUK="Твердий сплав"/>
+      <attribute_value id="166839" nameRU="Минералокерамика" nameUK="Мінералокераміка"/>
+      <attribute_value id="166840" nameRU="Металлокерамика" nameUK="Металокераміка"/>
+      <attribute_value id="166841" nameRU="Алмаз" nameUK="Алмаз"/>
+      <attribute_value id="166842" nameRU="Массив кардной проволоки" nameUK="Масив кардного дроту"/>
+      <attribute_value id="166866" nameRU="Вольфрам" nameUK="Вольфрам"/>
+    </attribute>
+    <attribute id="15477" nameRU="Количество сегментов" type="integer" nameUK="Кількість сегментів"/>
+    <attribute id="17994" nameRU="Радиус" type="real" nameUK="Радіус" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="18168" nameRU="Диаметр рабочий" type="real" nameUK="Діаметр робочий" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="18169" nameRU="Длина общая" type="real" nameUK="Довжина загальна" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="18212" nameRU="Количество режущих граней" type="integer" nameUK="Кількість ріжучих граней"/>
+  </category>
+</categories>

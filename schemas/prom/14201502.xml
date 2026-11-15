@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201502" nameRU="Ножовочные полотна" nameUK="Ножувальні полотна">
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="4245" nameRU="Толщина" type="real" nameUK="Товщина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="7235" nameRU="Марка стали" type="free" nameUK="Марка стали"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="15782" nameRU="Назначение полотна" type="multiselect" nameUK="Призначення полотна">
+      <attribute_value id="174019" nameRU="Ножовка" nameUK="Ножівка"/>
+      <attribute_value id="174020" nameRU="Электроножовка" nameUK="Електроножівка"/>
+      <attribute_value id="174021" nameRU="Лучковая пила" nameUK="Лучкова пила"/>
+      <attribute_value id="174022" nameRU="Садовая пила" nameUK="Садова пила"/>
+      <attribute_value id="174023" nameRU="Садовая аккумуляторная пила" nameUK="Садова акумуляторна пила"/>
+      <attribute_value id="174024" nameRU="Сабельная пила" nameUK="Шабельна пила"/>
+      <attribute_value id="174025" nameRU="Пила типа аллигатор" nameUK="Пила типу алігатор"/>
+      <attribute_value id="174026" nameRU="Пила для пеноматериалов" nameUK="Пила для пеноматеріалов"/>
+      <attribute_value id="297456" nameRU="Ленточная пила" nameUK="Стрічкова пилка"/>
+      <attribute_value id="310942" nameRU="Пилорама" nameUK="Пилорама"/>
+    </attribute>
+    <attribute id="15783" nameRU="Применение полотна" type="multiselect" nameUK="Застосування полотна">
+      <attribute_value id="172630" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="172631" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="174027" nameRU="Гипсокартон" nameUK="Гіпсокартон"/>
+      <attribute_value id="174028" nameRU="Мягкий пластик" nameUK="М'який пластик"/>
+      <attribute_value id="174029" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="174030" nameRU="Металлический профиль" nameUK="Металевий профіль"/>
+      <attribute_value id="174031" nameRU="Цветной металл" nameUK="Кольоровий метал"/>
+      <attribute_value id="174032" nameRU="Ламинат" nameUK="Ламінат"/>
+      <attribute_value id="174033" nameRU="Плиточный клей" nameUK="Плитковий клей"/>
+      <attribute_value id="174034" nameRU="Штукатурные смеси" nameUK="Штукатурні суміші"/>
+      <attribute_value id="174035" nameRU="Плитка" nameUK="Плитка"/>
+      <attribute_value id="174036" nameRU="Керамическая плитка" nameUK="Керамічна плитка"/>
+      <attribute_value id="174037" nameRU="Пенобетон" nameUK="Пінобетон"/>
+      <attribute_value id="174038" nameRU="Газобетон" nameUK="Газобетон"/>
+      <attribute_value id="174039" nameRU="Бетон" nameUK="Бетон"/>
+      <attribute_value id="174040" nameRU="Железобетон" nameUK="Залізобетон"/>
+      <attribute_value id="174041" nameRU="Фанера" nameUK="Фанера"/>
+      <attribute_value id="174042" nameRU="Камень" nameUK="Камінь"/>
+      <attribute_value id="174043" nameRU="Керамогранит" nameUK="Керамограніт"/>
+      <attribute_value id="174044" nameRU="Стекловолокно" nameUK="Скловолокно"/>
+      <attribute_value id="174045" nameRU="Кирпич" nameUK="Цегла"/>
+      <attribute_value id="174046" nameRU="Пеноматериалы" nameUK="Піноматеріали"/>
+      <attribute_value id="174047" nameRU="ДСП" nameUK="ДСП"/>
+      <attribute_value id="174048" nameRU="МДФ" nameUK="МДФ"/>
+      <attribute_value id="174116" nameRU="Пенополистирол" nameUK="Пінополістирол"/>
+      <attribute_value id="174117" nameRU="Экструдированный пенополистирол" nameUK="Екструдований пінополістирол"/>
+      <attribute_value id="174118" nameRU="Минеральная вата" nameUK="Мінеральна вата"/>
+      <attribute_value id="174119" nameRU="Каменная вата" nameUK="Кам'яна вата"/>
+      <attribute_value id="174120" nameRU="Пеностекло" nameUK="Піноскло"/>
+      <attribute_value id="174121" nameRU="Эковата" nameUK="Ековата"/>
+    </attribute>
+    <attribute id="15784" nameRU="Расположение зубьев" type="singleselect" nameUK="Розташування зубів">
+      <attribute_value id="172633" nameRU="Одностороннее" nameUK="Одностороннє"/>
+      <attribute_value id="172634" nameRU="Двустороннее" nameUK="Двостороння"/>
+    </attribute>
+    <attribute id="15785" nameRU="Шаг зубьев" type="real" nameUK="Крок зубів" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="19274" nameRU="Тип и исполнение полотна" type="multiselect" nameUK="Тип та виконання полотна">
+      <attribute_value id="347073" nameRU="Биметаллическое" nameUK="Біметалеве"/>
+      <attribute_value id="347074" nameRU="Flex-Back" nameUK="Flex-Back"/>
+      <attribute_value id="347075" nameRU="Hard-Back" nameUK="Hard-Back"/>
+      <attribute_value id="347076" nameRU="Незакаленное" nameUK="Незагартоване"/>
+      <attribute_value id="347077" nameRU="Твердосплавное (TCT)" nameUK="Твердосплавне (TCT)"/>
+    </attribute>
+    <attribute id="19275" nameRU="Модификация полотна" type="multiselect" nameUK="Модифікація полотна">
+      <attribute_value id="347078" nameRU="Spectra" nameUK=""/>
+      <attribute_value id="347079" nameRU="Secura" nameUK=""/>
+      <attribute_value id="347080" nameRU="Marathon" nameUK=""/>
+      <attribute_value id="347081" nameRU="Proflex" nameUK=""/>
+      <attribute_value id="347082" nameRU="Unicut Kraft" nameUK=""/>
+      <attribute_value id="347083" nameRU="Duratec" nameUK=""/>
+      <attribute_value id="347084" nameRU="3851 Sandflex Cobra" nameUK=""/>
+      <attribute_value id="347085" nameRU="3854 Sandflex Cobra PHX" nameUK=""/>
+      <attribute_value id="347086" nameRU="3854 Sandflex King Cobra PHG" nameUK=""/>
+      <attribute_value id="347087" nameRU="3854 Sandflex King Cobra PQ" nameUK=""/>
+      <attribute_value id="347088" nameRU="3853 TOP Fabrikator" nameUK=""/>
+      <attribute_value id="347089" nameRU="3857 Sandflex Easy Cut" nameUK=""/>
+      <attribute_value id="347090" nameRU="TAJFUN OPTI CUT" nameUK=""/>
+      <attribute_value id="347091" nameRU="TAJFUN PROFIL CUT" nameUK=""/>
+      <attribute_value id="347092" nameRU="TAJFUN BEST CUT" nameUK=""/>
+      <attribute_value id="347093" nameRU="GROM" nameUK=""/>
+      <attribute_value id="347094" nameRU="SZTORM" nameUK=""/>
+      <attribute_value id="347095" nameRU="WICHER" nameUK=""/>
+      <attribute_value id="347096" nameRU="Aurum" nameUK=""/>
+      <attribute_value id="347097" nameRU="Delta" nameUK=""/>
+    </attribute>
+  </category>
+</categories>

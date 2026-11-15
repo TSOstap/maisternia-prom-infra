@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200522" nameRU="Монтажные пистолеты" nameUK="Монтажні пістолети">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="103" nameRU="Диаметр сопла" type="real" nameUK="Діаметр сопла" measureUnitRU="мм" min="0" max="10" measureUnitUK="мм"/>
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="12" measureUnitUK="бар"/>
+    <attribute id="106" nameRU="Расход воздуха" type="real" nameUK="Витрата повітря" measureUnitRU="литр/мин" min="0" max="1000" measureUnitUK="літр/хв"/>
+    <attribute id="107" nameRU="Диаметр входного штуцера" type="singleselect" nameUK="Діаметр вхідного штуцера">
+      <attribute_value id="7023" nameRU="1&quot;" nameUK="1&quot;"/>
+      <attribute_value id="7024" nameRU="2&quot;" nameUK="2&quot;"/>
+      <attribute_value id="7025" nameRU="1/2&quot;" nameUK="1/2&quot;"/>
+      <attribute_value id="7026" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="7027" nameRU="1/8&quot;" nameUK="1/8&quot;"/>
+      <attribute_value id="7028" nameRU="3/4&quot;" nameUK="3/4&quot;"/>
+      <attribute_value id="7029" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+    </attribute>
+    <attribute id="108" nameRU="Внутренний диаметр шланга" type="real" nameUK="Внутрішній діаметр шланга" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="109" nameRU="Переходной штуцер" type="bool" nameUK="Перехідний штуцер"/>
+    <attribute id="110" nameRU="Набор насадок" type="bool" nameUK="Набір насадок"/>
+    <attribute id="123" nameRU="Длина инструмента" type="real" nameUK="Довжина інструменту" measureUnitRU="мм" min="0" max="600" measureUnitUK="мм"/>
+    <attribute id="135" nameRU="Емкость контейнера" type="integer" nameUK="Ємність контейнера" measureUnitRU="мл" min="0" max="600" measureUnitUK="мл"/>
+    <attribute id="159" nameRU="Регулировка давления воздуха" type="bool" nameUK="Регулювання тиску повітря"/>
+    <attribute id="160" nameRU="Регулировка подачи распыляемой смеси" type="bool" nameUK="Регулювання подачі розпилюваної суміші"/>
+    <attribute id="166" nameRU="Длина наконечника" type="real" nameUK="Довжина накінечника" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+      <attribute_value id="67488" nameRU="Металлический кейс" nameUK="Металевий кейс"/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="350831" nameRU="Для монтажной пены" nameUK="Для монтажної піни"/>
+      <attribute_value id="350832" nameRU="Для герметика" nameUK="Для герметика"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

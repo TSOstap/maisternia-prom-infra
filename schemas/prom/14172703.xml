@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14172703" nameRU="Отрезные станки, пилы" nameUK="Відрізні верстати, пилки">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="7000" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="700" measureUnitUK="кг"/>
+    <attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+    <attribute id="10" nameRU="Ограничение пускового тока" type="bool" nameUK="Обмеження пускового струму"/>
+    <attribute id="12" nameRU="Поддержка постоянного количества оборотов под нагрузкой" type="bool" nameUK="Підтримка постійного числа обертів під навантаженням"/>
+    <attribute id="24" nameRU="Блокировка кнопки включения" type="bool" nameUK="Блокування кнопки включення"/>
+    <attribute id="25" nameRU="Блокировка шпинделя" type="bool" nameUK="Блокування шпинделя"/>
+    <attribute id="56" nameRU="Максимальная глубина пропила" type="real" nameUK="Максимальна глибина пропілу" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="58" nameRU="Максимальный диаметр диска" type="real" nameUK="Максимальний діаметр диска" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="78" nameRU="Максимальная ширина пропила" type="real" nameUK="Максимальна ширина пропилу" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="79" nameRU="Диаметр посадочного отверстия" type="real" nameUK="Діаметр посадкового отвору" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="50000" measureUnitUK="об/хв"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="60" measureUnitUK="міс"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="617" nameRU="Ширина стола" type="real" nameUK="Ширина столу" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="108252" nameRU="Электрический" nameUK="Електричний"/>
+      <attribute_value id="143450" nameRU="Ручной" nameUK="Ручний"/>
+    </attribute>
+    <attribute id="1266" nameRU="Класс" type="singleselect" nameUK="Клас">
+      <attribute_value id="204573" nameRU="Профессиональный" nameUK="Професійний"/>
+      <attribute_value id="349378" nameRU="Домашние" nameUK="Домашні"/>
+    </attribute>
+    <attribute id="1858" nameRU="Длина стола" type="real" nameUK="Довжина столу" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="380" measureUnitUK="В"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10373" nameRU="Режущий механизм" type="singleselect" nameUK="Ріжучий механізм">
+      <attribute_value id="91698" nameRU="Ножевой" nameUK="Ножовий"/>
+      <attribute_value id="345666" nameRU="Дисковая пила" nameUK="Дискова пила"/>
+      <attribute_value id="347726" nameRU="Алмазный диск" nameUK="Алмазний диск"/>
+    </attribute>
+    <attribute id="12096" nameRU="Выдвижной технологический стол" type="bool" nameUK="Висувний технологічний стіл"/>
+    <attribute id="12968" nameRU="Пульт управления" type="singleselect" nameUK="Пульт управління">
+      <attribute_value id="170429" nameRU="Да" nameUK="Так"/>
+      <attribute_value id="170430" nameRU="Нет" nameUK="Немає"/>
+    </attribute>
+    <attribute id="12992" nameRU="Функция охлаждения" type="bool" nameUK="Функція охолодження"/>
+    <attribute id="14191" nameRU="Дополнительный сервис" type="multiselect" nameUK="Додатковий сервіс">
+      <attribute_value id="144186" nameRU="Установка" nameUK="Установка"/>
+      <attribute_value id="144187" nameRU="Сервисное обслуживание" nameUK="Сервісне обслуговування"/>
+      <attribute_value id="157787" nameRU="Обучение" nameUK="Навчання"/>
+    </attribute>
+    <attribute id="15983" nameRU="Длина пропила" type="real" nameUK="Довжина пропилу" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="16205" nameRU="Максимальный диаметр арматуры" type="real" nameUK="Максимальний діаметр арматури" measureUnitRU="мм" min="0" max="150" measureUnitUK="мм"/>
+    <attribute id="16916" nameRU="Угол наклона диска" type="integer" nameUK="Кут нахилу диска" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+    <attribute id="18151" nameRU="Количество оборотов" type="real" nameUK="Кількість обертів" measureUnitRU="об/мин" min="0" max="14000" measureUnitUK="об/хв"/>
+  </category>
+</categories>

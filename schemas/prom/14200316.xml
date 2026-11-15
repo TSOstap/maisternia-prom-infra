@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200316" nameRU="Струбцины и зажимы" nameUK="Струбцини і затискачі">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="25" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="113063" nameRU="Зажим" nameUK="Затискач"/>
+      <attribute_value id="128247" nameRU="Прищепка" nameUK="Прищіпка"/>
+      <attribute_value id="146703" nameRU="Комплектующее" nameUK="Комплектуюче"/>
+      <attribute_value id="237709" nameRU="G-образная" nameUK="G-подібна"/>
+      <attribute_value id="237710" nameRU="F-образная" nameUK="F-подібна"/>
+      <attribute_value id="237711" nameRU="T-образная" nameUK="T-подібна"/>
+      <attribute_value id="237712" nameRU="U-образная" nameUK="U-подібна"/>
+      <attribute_value id="237713" nameRU="Угловая" nameUK="Кутова"/>
+      <attribute_value id="237714" nameRU="Трубная" nameUK="Трубна"/>
+      <attribute_value id="281270" nameRU="Автоматическая" nameUK="Автоматична"/>
+    </attribute>
+    <attribute id="5021" nameRU="Механизм" type="singleselect" nameUK="Механізм">
+      <attribute_value id="31853" nameRU="Автомат" nameUK="Автомат"/>
+      <attribute_value id="237715" nameRU="Рычажный" nameUK="Важільний"/>
+      <attribute_value id="237716" nameRU="Винтовой" nameUK="Гвинтовий"/>
+      <attribute_value id="237717" nameRU="Пружинный" nameUK="Пружинний"/>
+      <attribute_value id="237718" nameRU="Магнитный" nameUK="Магнітний"/>
+      <attribute_value id="237719" nameRU="Помповый" nameUK="Помповий"/>
+      <attribute_value id="237720" nameRU="Ременной" nameUK="Пасовий"/>
+      <attribute_value id="237721" nameRU="Вакуумный" nameUK="Вакуумний"/>
+    </attribute>
+    <attribute id="7878" nameRU="Зажимное усилие" type="real" nameUK="Затискне зусилля" measureUnitRU="Н" min="0" max="100000" measureUnitUK="Н"/>
+    <attribute id="7879" nameRU="Ширина зажима" type="real" nameUK="Ширина затиску" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="7880" nameRU="Выступ" type="real" nameUK="Виступ" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="17937" nameRU="Материал струбцины" type="multiselect" nameUK="Матеріал струбцини">
+      <attribute_value id="237722" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="237723" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="237724" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="237725" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="237726" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="237727" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="299373" nameRU="Нейлон" nameUK="Нейлон"/>
+    </attribute>
+    <attribute id="17938" nameRU="Наличие манипулятора" type="bool" nameUK="Наявність маніпулятора"/>
+    <attribute id="17939" nameRU="Защита от проскальзывания" type="bool" nameUK="Захист від прослизання"/>
+    <attribute id="17940" nameRU="Наличие петли для &quot;массы&quot;" type="bool" nameUK="Наявність петлі для &quot;маси&quot;"/>
+    <attribute id="17941" nameRU="Наличие &quot;разгрузки&quot; для кабеля" type="bool" nameUK="Наявність &quot;розвантаження&quot; для кабелю"/>
+  </category>
+</categories>

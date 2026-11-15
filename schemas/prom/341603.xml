@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="341603" nameRU="Автомобильные очистители" nameUK="Автомобільні очищувачі">
+    <attribute id="128" nameRU="Объем" type="real" nameUK="Об`єм" measureUnitRU="мл" min="0" max="25000" measureUnitUK="мл"/>
+    <attribute id="4326" nameRU="Тип аромата" type="multiselect" nameUK="Тип аромату">
+      <attribute_value id="27744" nameRU="Фруктовые" nameUK="Фруктові"/>
+      <attribute_value id="27747" nameRU="Цитрусовые" nameUK="Цитрусові"/>
+      <attribute_value id="126182" nameRU="Аромат кожи" nameUK="Аромат шкіри"/>
+      <attribute_value id="269366" nameRU="Гранат" nameUK="Гранат"/>
+      <attribute_value id="269367" nameRU="Миндаль" nameUK="Мигдаль"/>
+      <attribute_value id="269368" nameRU="Лаванда" nameUK="Лаванда"/>
+      <attribute_value id="269370" nameRU="Кокос" nameUK="Кокос"/>
+      <attribute_value id="270216" nameRU="Ваниль" nameUK="Ваніль"/>
+      <attribute_value id="270217" nameRU="Лимон" nameUK="Лимон"/>
+      <attribute_value id="270218" nameRU="Новая машина" nameUK="Нова машина"/>
+      <attribute_value id="270219" nameRU="Парфюм" nameUK="Парфум"/>
+      <attribute_value id="270220" nameRU="Свежесть" nameUK="Свіжість"/>
+      <attribute_value id="271464" nameRU="Апельсин" nameUK="Апельсин"/>
+      <attribute_value id="271543" nameRU="Ананас" nameUK="Ананас"/>
+      <attribute_value id="271547" nameRU="Эвкалипт" nameUK="Евкаліпт"/>
+      <attribute_value id="271549" nameRU="Огурец" nameUK="Огірок"/>
+      <attribute_value id="274836" nameRU="Без аромата" nameUK="Без аромату"/>
+      <attribute_value id="288782" nameRU="Вишня" nameUK="Вишня"/>
+      <attribute_value id="288783" nameRU="Клубника" nameUK="Полуниця"/>
+      <attribute_value id="288784" nameRU="Океан" nameUK="Океан"/>
+      <attribute_value id="288785" nameRU="Виноград" nameUK="Виноград"/>
+      <attribute_value id="295831" nameRU="Янтарный" nameUK="Бурштиновий"/>
+      <attribute_value id="300973" nameRU="Яблоко" nameUK="Яблуко"/>
+      <attribute_value id="301067" nameRU="Жевательная резинка" nameUK="Жувальна гумка"/>
+      <attribute_value id="301171" nameRU="Тропический" nameUK="Тропічний"/>
+      <attribute_value id="303510" nameRU="Манго" nameUK="Манго"/>
+      <attribute_value id="305775" nameRU="Арбуз" nameUK="Кавун"/>
+      <attribute_value id="310161" nameRU="Роза" nameUK="Троянда"/>
+      <attribute_value id="312585" nameRU="Алое" nameUK="Алое"/>
+      <attribute_value id="313076" nameRU="Орхидея" nameUK="Орхідея"/>
+      <attribute_value id="314068" nameRU="Ореховый" nameUK="Горіховий"/>
+      <attribute_value id="314073" nameRU="Конфета" nameUK="Цукерка"/>
+      <attribute_value id="314143" nameRU="Мята" nameUK="М'ята"/>
+      <attribute_value id="314200" nameRU="Шоколад" nameUK="Шоколад"/>
+      <attribute_value id="321710" nameRU="Карамель" nameUK="Карамель"/>
+      <attribute_value id="322033" nameRU="Зеленый горошек" nameUK="Зелений горошок"/>
+      <attribute_value id="349398" nameRU="Акватический " nameUK=""/>
+      <attribute_value id="349399" nameRU="Алкогольно-коктейльный" nameUK=""/>
+      <attribute_value id="349401" nameRU="Белый чай" nameUK=""/>
+      <attribute_value id="349402" nameRU="Виски" nameUK=""/>
+      <attribute_value id="349403" nameRU="Вишневые" nameUK=""/>
+      <attribute_value id="349405" nameRU="Воздушный " nameUK=""/>
+      <attribute_value id="349406" nameRU="Желтоцветочный" nameUK=""/>
+      <attribute_value id="349407" nameRU="Землистый" nameUK=""/>
+      <attribute_value id="349408" nameRU="Ирисивый" nameUK=""/>
+      <attribute_value id="349409" nameRU="Какао" nameUK=""/>
+      <attribute_value id="349410" nameRU="Карамельный" nameUK=""/>
+      <attribute_value id="349411" nameRU="Кедровый" nameUK=""/>
+      <attribute_value id="349412" nameRU="Кофейный" nameUK=""/>
+      <attribute_value id="349413" nameRU="Лавандовый" nameUK=""/>
+      <attribute_value id="349414" nameRU="Ландыш" nameUK=""/>
+      <attribute_value id="349415" nameRU="Лесной" nameUK=""/>
+      <attribute_value id="349416" nameRU="Медовый" nameUK=""/>
+      <attribute_value id="349417" nameRU="Молочно-пудровые" nameUK=""/>
+      <attribute_value id="349418" nameRU="Молочный" nameUK=""/>
+      <attribute_value id="349419" nameRU="Мускусный" nameUK=""/>
+      <attribute_value id="349420" nameRU="Мягкий" nameUK=""/>
+      <attribute_value id="349421" nameRU="Мятные" nameUK=""/>
+      <attribute_value id="349422" nameRU="Озоновый" nameUK=""/>
+      <attribute_value id="349423" nameRU="Океанический" nameUK=""/>
+      <attribute_value id="349424" nameRU="Ориентальный" nameUK=""/>
+      <attribute_value id="349425" nameRU="Острый" nameUK=""/>
+      <attribute_value id="349426" nameRU="Повседневно-необычный" nameUK=""/>
+      <attribute_value id="349427" nameRU="Ром" nameUK=""/>
+      <attribute_value id="349428" nameRU="Свежий" nameUK=""/>
+      <attribute_value id="349429" nameRU="Свежий (цитрусовый)" nameUK=""/>
+      <attribute_value id="349430" nameRU="Серая амбра" nameUK=""/>
+      <attribute_value id="349431" nameRU="Сирень" nameUK=""/>
+      <attribute_value id="349432" nameRU="Сладкий" nameUK=""/>
+      <attribute_value id="349433" nameRU="Смолистый" nameUK=""/>
+      <attribute_value id="349434" nameRU="Солодовый" nameUK=""/>
+      <attribute_value id="349435" nameRU="Теплый" nameUK=""/>
+      <attribute_value id="349436" nameRU="Тмин" nameUK=""/>
+      <attribute_value id="349437" nameRU="Травянистый" nameUK=""/>
+      <attribute_value id="349438" nameRU="Уд" nameUK=""/>
+      <attribute_value id="349439" nameRU="Хвойный" nameUK=""/>
+      <attribute_value id="349440" nameRU="Цветочно-зеленый" nameUK=""/>
+      <attribute_value id="349441" nameRU="Чайно-кондитерский" nameUK=""/>
+      <attribute_value id="349442" nameRU="Шокирующий" nameUK=""/>
+      <attribute_value id="349443" nameRU="Шоколадный" nameUK=""/>
+      <attribute_value id="362267" nameRU="Ароматические" nameUK=""/>
+      <attribute_value id="362268" nameRU="Акватические" nameUK=""/>
+      <attribute_value id="362269" nameRU="Восточные" nameUK=""/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10382" nameRU="Срок годности" type="real" nameUK="Термін придатності" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="18319" nameRU="Артикул производителя" type="free" nameUK="Артикул виробника"/>
+  </category>
+</categories>

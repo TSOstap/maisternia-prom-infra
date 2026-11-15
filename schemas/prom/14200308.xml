@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200308" nameRU="Ручные пилы, ножовки" nameUK="Ручні пили, ножівки">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="3" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7635" nameRU="сталь" nameUK="сталь"/>
+      <attribute_value id="7636" nameRU="алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7637" nameRU="свинец" nameUK="свинець"/>
+      <attribute_value id="7638" nameRU="медь" nameUK="мідь"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="7641" nameRU="стеклопластик" nameUK="склопластик"/>
+      <attribute_value id="7765" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="64738" nameRU="металл" nameUK="метал"/>
+      <attribute_value id="300888" nameRU="Резина/Пластик" nameUK="Гума/Пластик"/>
+    </attribute>
+    <attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+    <attribute id="412" nameRU="Назначение пилы (ножовки)" type="singleselect" nameUK="Призначення пилки (ножівки)">
+      <attribute_value id="7776" nameRU="по дереву" nameUK="по дереву"/>
+      <attribute_value id="7777" nameRU="по металлу" nameUK="по металу"/>
+      <attribute_value id="65782" nameRU="по гипсокартону" nameUK="по гіпсокартону"/>
+      <attribute_value id="65783" nameRU="по бетону" nameUK="по бетону"/>
+      <attribute_value id="65784" nameRU="по кафельной плитке" nameUK="по кахельній плитці"/>
+      <attribute_value id="273794" nameRU="по Пенобетону" nameUK="з Пінобетону"/>
+      <attribute_value id="281011" nameRU="по пластику" nameUK="по пластику"/>
+    </attribute>
+    <attribute id="413" nameRU="Количество зубьев на дюйм" type="integer" nameUK="Кількість зубів на дюйм" measureUnitRU="шт" min="0" max="30" measureUnitUK="шт."/>
+    <attribute id="414" nameRU="Длина режущего полотна" type="real" nameUK="Довжина ріжучого полотна" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="415" nameRU="Толщина режущего полотна" type="real" nameUK="Товщина ріжучого полотна" measureUnitRU="мм" min="0" max="5" measureUnitUK="мм"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="7837" nameRU="Тип ручной пилы" type="singleselect" nameUK="Тип ручної пилки">
+      <attribute_value id="65785" nameRU="ножовка" nameUK="ножівка"/>
+      <attribute_value id="65786" nameRU="лучковая" nameUK="лучкова"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

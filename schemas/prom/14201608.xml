@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14201608" nameRU="Швонарезчики, бензорезы, электрорезы" nameUK="Швонарізчики, бензорізи, електроріз">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="Вт" min="0" max="10000" measureUnitUK="Вт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="400" measureUnitUK="кг"/>
+    <attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+    <attribute id="12" nameRU="Поддержка постоянного количества оборотов под нагрузкой" type="bool" nameUK="Підтримка постійного числа обертів під навантаженням"/>
+    <attribute id="56" nameRU="Максимальная глубина пропила" type="real" nameUK="Максимальна глибина пропілу" measureUnitRU="мм" min="0" max="450" measureUnitUK="мм"/>
+    <attribute id="58" nameRU="Максимальный диаметр диска" type="real" nameUK="Максимальний діаметр диска" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="79" nameRU="Диаметр посадочного отверстия" type="real" nameUK="Діаметр посадкового отвору" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="80" nameRU="Длина шины" type="real" nameUK="Довжина шини" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="81" nameRU="Шаг цепи" type="singleselect" nameUK="Крок ланцюга">
+      <attribute_value id="6950" nameRU="0.325&quot;" nameUK="0.325&quot;"/>
+      <attribute_value id="6951" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+      <attribute_value id="6952" nameRU="0.404&quot;" nameUK="0.404&quot;"/>
+      <attribute_value id="172654" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="172656" nameRU="3/8&quot; Picco" nameUK="3/8&quot; Picco"/>
+      <attribute_value id="350355" nameRU="1/8" nameUK="1/8"/>
+      <attribute_value id="350356" nameRU="3/4" nameUK="3/4"/>
+      <attribute_value id="350357" nameRU="0.05" nameUK="0.05"/>
+      <attribute_value id="350358" nameRU="0.3" nameUK="0.3"/>
+    </attribute>
+    <attribute id="87" nameRU="Максимальное количество оборотов" type="real" nameUK="Максимальна кількість обертів" measureUnitRU="об/мин" min="0" max="15000" measureUnitUK="об/хв"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="116" nameRU="Количество цилиндров" type="singleselect" nameUK="Кількість циліндрів">
+      <attribute_value id="7047" nameRU="1" nameUK="1"/>
+      <attribute_value id="7048" nameRU="2" nameUK="2"/>
+    </attribute>
+    <attribute id="343" nameRU="Объем двигателя" type="real" nameUK="Об'єм двигуна" measureUnitRU="куб. см" min="0" max="500" measureUnitUK="куб. см"/>
+    <attribute id="344" nameRU="Мощность двигателя" type="real" nameUK="Потужність двигуна" measureUnitRU="л. с." min="0" max="21" measureUnitUK="к. с."/>
+    <attribute id="349" nameRU="Емкость топливного бака" type="real" nameUK="Ємність паливного бака" measureUnitRU="мл" min="0" max="7000" measureUnitUK="мл"/>
+    <attribute id="351" nameRU="Расход топлива" type="real" nameUK="Витрата палива" measureUnitRU="л/ч" min="0" max="10" measureUnitUK="л/год"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="360" nameRU="Праймер" type="bool" nameUK="Праймер"/>
+    <attribute id="361" nameRU="Легкий запуск" type="bool" nameUK="Легкий запуск"/>
+    <attribute id="491" nameRU="Максимальная глубина реза" type="real" nameUK="Максимальна глибина різу" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="492" nameRU="Максимальная длина реза" type="real" nameUK="Максимальна довжина різу" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="622" nameRU="Объем масла" type="real" nameUK="Об'єм масла" measureUnitRU="л" min="0" max="5" measureUnitUK="л"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="178128" nameRU="Швонарезчик" nameUK="Швонарізчик"/>
+      <attribute_value id="178129" nameRU="Бензорез/электрорез дисковый" nameUK="Бензоріз/електроріз дисковий"/>
+      <attribute_value id="178130" nameRU="Бензорез/электрорез цепной" nameUK="Бензоріз/електроріз ланцюговий"/>
+    </attribute>
+    <attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+      <attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+      <attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+    </attribute>
+    <attribute id="2068" nameRU="Объем топливного бака" type="real" nameUK="Об'єм паливного бака" measureUnitRU="л" min="0" max="50" measureUnitUK="л"/>
+    <attribute id="5958" nameRU="Объем бака для воды" type="real" nameUK="Об'єм бака для води" measureUnitRU="л" min="0" max="100" measureUnitUK="л"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10077" nameRU="Тип привода" type="singleselect" nameUK="Тип приводу">
+      <attribute_value id="85057" nameRU="Электродвигатель (от сети)" nameUK="Електродвигун (від мережі)"/>
+      <attribute_value id="85058" nameRU="Бензиновый двигатель" nameUK="Бензиновий двигун"/>
+      <attribute_value id="85059" nameRU="Дизельный двигатель" nameUK="Дизельний двигун"/>
+    </attribute>
+    <attribute id="12599" nameRU="Тип охлаждения" type="singleselect" nameUK="Тип охолодження">
+      <attribute_value id="126539" nameRU="Водяной" nameUK="Водяний"/>
+      <attribute_value id="289167" nameRU="Воздушный" nameUK="Повітряний"/>
+    </attribute>
+    <attribute id="12646" nameRU="Тип запуска" type="singleselect" nameUK="Тип запуску">
+      <attribute_value id="174964" nameRU="Ручной" nameUK="Ручний"/>
+    </attribute>
+    <attribute id="15046" nameRU="Антивибрационная система" type="bool" nameUK="Антивібраційна система"/>
+    <attribute id="15787" nameRU="Толщина звена" type="real" nameUK="Товщина ланки" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+  </category>
+</categories>

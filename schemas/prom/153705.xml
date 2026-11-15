@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="153705" nameRU="Оптические нивелиры" nameUK="Оптичні нівеліри">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5" measureUnitUK="кг"/>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="1000" measureUnitUK="град."/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="700" measureUnitUK="мм"/>
+    <attribute id="726" nameRU="Среднеквадратическая погрешность на 1км двойного хода" type="real" nameUK="Середньоквадратична похибка на 1 км подвійного ходу" measureUnitRU="мм" min="0" max="5" measureUnitUK="мм"/>
+    <attribute id="727" nameRU="Минимальное фокусное расстояние" type="real" nameUK="Мінімальна фокусна відстань" measureUnitRU="м" min="0" max="1" measureUnitUK="м"/>
+    <attribute id="728" nameRU="Тип компенсатора" type="singleselect" nameUK="Тип компенсатора">
+      <attribute_value id="8793" nameRU="Магнитный" nameUK="Магнітний"/>
+      <attribute_value id="8799" nameRU="Воздушный" nameUK="Повітряний"/>
+      <attribute_value id="43245" nameRU="Жидкостный" nameUK="Рідинний"/>
+      <attribute_value id="307288" nameRU="Электронный" nameUK="Електронний"/>
+    </attribute>
+    <attribute id="729" nameRU="Оптическое изображение" type="singleselect" nameUK="Оптичне зображення">
+      <attribute_value id="8797" nameRU="Прямое" nameUK="Пряме"/>
+      <attribute_value id="8800" nameRU="Вертикальное" nameUK="Вертикальне"/>
+    </attribute>
+    <attribute id="730" nameRU="Оптическое увеличение" type="real" nameUK="Оптичне збільшення" measureUnitRU="х" min="0" max="40" measureUnitUK="х"/>
+    <attribute id="731" nameRU="Диаметр объектива" type="real" nameUK="Діаметр об'єктиву" measureUnitRU="мм" min="0" max="70" measureUnitUK="мм"/>
+    <attribute id="732" nameRU="Рабочий диапазон" type="real" nameUK="Робочий діапазон" measureUnitRU="м" min="0" max="500" measureUnitUK="м"/>
+    <attribute id="733" nameRU="Дискретность горизонтального круга" type="real" nameUK="Дискретність горизонтального круга" measureUnitRU="град." min="0" max="3" measureUnitUK="град."/>
+    <attribute id="734" nameRU="Поле зрения" type="free" nameUK="Поле зору"/>
+    <attribute id="735" nameRU="Штатив" type="bool" nameUK="Штатив"/>
+    <attribute id="736" nameRU="Зеркало круглого уровня" type="bool" nameUK="Дзеркало круглого рівня"/>
+    <attribute id="737" nameRU="Встроенный горизонтальный круг" type="bool" nameUK="Вбудований горизонтальний круг"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="-50.0" max="0.0" measureUnitUK="град."/>
+    <attribute id="5950" nameRU="Диапазон работы компенсатора" type="real" nameUK="Діапазон роботи компенсатора" measureUnitRU="град." min="-5.0" max="30.0" measureUnitUK="град."/>
+    <attribute id="6300" nameRU="Защита оборудования от воды и пыли IP" type="singleselect" nameUK="Захист обладнання від води і пилу IP">
+      <attribute_value id="43506" nameRU="IP54" nameUK="IP54"/>
+      <attribute_value id="43507" nameRU="IP55" nameUK="IP55"/>
+      <attribute_value id="43517" nameRU="IP65" nameUK="IP65"/>
+      <attribute_value id="307785" nameRU="IPX6" nameUK=""/>
+    </attribute>
+    <attribute id="6516" nameRU="Наличие Bluetooth" type="bool" nameUK="Наявність Bluetooth"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+      <attribute_value id="231714" nameRU="Неликвид" nameUK="Неліквід"/>
+    </attribute>
+    <attribute id="16242" nameRU="Поверка" type="bool" nameUK="Повірка"/>
+    <attribute id="18867" nameRU="Тип лазерного нивелира" type="singleselect" nameUK="Тип лазерного нівеліру">
+      <attribute_value id="307284" nameRU="Построитель плоскостей" nameUK="Побудовник площин"/>
+      <attribute_value id="307285" nameRU="Ротационный лазер" nameUK="Ротаційний лазер"/>
+      <attribute_value id="307286" nameRU="Точечный лазер" nameUK="Точковий лазер"/>
+      <attribute_value id="307287" nameRU="Прибор вертикального проектирования" nameUK="Прилад вертикального проектування"/>
+    </attribute>
+    <attribute id="18868" nameRU="Количество лазерных плоскостей" type="real" nameUK="Кількість лазерних площин"/>
+    <attribute id="18869" nameRU="Цвет лазера" type="multiselect" nameUK="Колір лазера">
+      <attribute_value id="307299" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="307300" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="307301" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="307302" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+    </attribute>
+    <attribute id="18872" nameRU="Рейка" type="bool" nameUK="Рейка"/>
+  </category>
+</categories>

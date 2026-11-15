@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="341203" nameRU="Автомобильный воск" nameUK="Автомобільний віск">
+    <attribute id="128" nameRU="Объем" type="real" nameUK="Об`єм" measureUnitRU="мл" min="0" max="30000" measureUnitUK="мл"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="201344" nameRU="Холодный воск" nameUK="Холодний віск"/>
+      <attribute_value id="201345" nameRU="Горячий воск" nameUK="Гарячий віск"/>
+      <attribute_value id="270270" nameRU="Жидкий полимерный воск" nameUK="Рідкий полімерний віск"/>
+      <attribute_value id="270557" nameRU="Спрей-воск" nameUK="Спрей-віск"/>
+      <attribute_value id="270558" nameRU="Керамическое покрытие" nameUK="Керамічне покриття"/>
+      <attribute_value id="270559" nameRU="Детейлер" nameUK="Детейлер"/>
+      <attribute_value id="270560" nameRU="Силант" nameUK="Силант"/>
+      <attribute_value id="299251" nameRU="Кварцевое покрытие" nameUK="Кварцове покриття"/>
+      <attribute_value id="313989" nameRU="Натуральный" nameUK="Натуральний"/>
+    </attribute>
+    <attribute id="3020" nameRU="Тип поверхности" type="multiselect" nameUK="Тип поверхні">
+      <attribute_value id="351011" nameRU="Светлая" nameUK="Світла"/>
+      <attribute_value id="351012" nameRU="Темная" nameUK="Темна"/>
+    </attribute>
+    <attribute id="4495" nameRU="Тип воска" type="singleselect" nameUK="Тип воску">
+      <attribute_value id="28496" nameRU="Холодный" nameUK="Холодний"/>
+      <attribute_value id="28497" nameRU="Теплый" nameUK="Теплий"/>
+      <attribute_value id="28498" nameRU="Горячий" nameUK="Гарячий"/>
+      <attribute_value id="28499" nameRU="Пленочный" nameUK="Плівкова"/>
+      <attribute_value id="28501" nameRU="Водорастворимый" nameUK="Водорозчинний"/>
+      <attribute_value id="62068" nameRU="Мягкий" nameUK="М'який"/>
+      <attribute_value id="62072" nameRU="Твердый" nameUK="Твердий"/>
+      <attribute_value id="62074" nameRU="Сверхтвердый" nameUK="Надтвердий"/>
+      <attribute_value id="270466" nameRU="Спрей-воск" nameUK="Спрей-віск"/>
+      <attribute_value id="299591" nameRU="Жидкое стекло" nameUK="Рідке скло"/>
+      <attribute_value id="304286" nameRU="Синтетический" nameUK="Синтетичний"/>
+      <attribute_value id="304287" nameRU="Полусинтетический" nameUK="Напівсинтетичний"/>
+      <attribute_value id="314172" nameRU="Жидкий воск" nameUK="Рідкий віск"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="18319" nameRU="Артикул производителя" type="free" nameUK="Артикул виробника"/>
+    <attribute id="19496" nameRU="Вес (г)" type="real" nameUK="Вага (г)" measureUnitRU="г" min="0" max="5000" measureUnitUK="г"/>
+  </category>
+</categories>

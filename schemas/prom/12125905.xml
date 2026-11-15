@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="12125905" nameRU="Автомобильные пылесосы и воздуходувы" nameUK="Автомобільні пилососи та повітродуви">
+    <attribute id="271" nameRU="Количество насадок" type="integer" nameUK="Кількість насадок"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="100" measureUnitUK="дБ"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="86242" nameRU="Воздуходув-пылесос" nameUK="Воздуходув-пилосос"/>
+      <attribute_value id="156081" nameRU="Пылесос" nameUK="Пилосос"/>
+    </attribute>
+    <attribute id="1242" nameRU="Тип насадки" type="singleselect" nameUK="Тип насадки">
+      <attribute_value id="313189" nameRU="Для мягкой мебели" nameUK="Для м'яких меблів"/>
+      <attribute_value id="313190" nameRU="Для труднодоступных мест" nameUK="Для важкодоступних місць"/>
+      <attribute_value id="313192" nameRU="Для уборки шерсти питомцев" nameUK="Для збирання вовни вихованців"/>
+      <attribute_value id="313193" nameRU="Основная" nameUK="Основна"/>
+      <attribute_value id="313194" nameRU="Пол-ковер" nameUK="Підлога-килим"/>
+      <attribute_value id="313196" nameRU="Щетка для приборной панели" nameUK="Щітка для панелі приладів"/>
+    </attribute>
+    <attribute id="1346" nameRU="Объем пылесборника" type="real" nameUK="Об'єм пилозбірника" measureUnitRU="л" min="0" max="10" measureUnitUK="л"/>
+    <attribute id="1365" nameRU="Регулировка мощности всасывания" type="bool" nameUK="Регулювання потужності всмоктування"/>
+    <attribute id="1688" nameRU="Время работы от аккумулятора" type="real" nameUK="Час роботи від акумулятора" measureUnitRU="мин" min="0" max="180" measureUnitUK="хв"/>
+    <attribute id="1689" nameRU="Тип уборки" type="multiselect" nameUK="Тип прибирання">
+      <attribute_value id="10625" nameRU="Сухая " nameUK="Суха "/>
+      <attribute_value id="10626" nameRU="Влажная" nameUK="Волога"/>
+      <attribute_value id="10627" nameRU="Паром" nameUK="Парою"/>
+    </attribute>
+    <attribute id="1980" nameRU="Тип питания" type="multiselect" nameUK="Тип живлення">
+      <attribute_value id="11692" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="282311" nameRU="Прикуриватель в машине" nameUK="Прикурювач в машині"/>
+    </attribute>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="24" measureUnitUK="В"/>
+    <attribute id="4737" nameRU="Мощность" type="real" nameUK="Потужність" measureUnitRU="Вт" min="0" max="150" measureUnitUK="Вт"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11566" nameRU="Индикатор заряда батареи" type="bool" nameUK="Індикатор заряду батареї"/>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="320519" nameRU="С фонариком" nameUK="З ліхтариком"/>
+    </attribute>
+    <attribute id="18319" nameRU="Артикул производителя" type="free" nameUK="Артикул виробника"/>
+  </category>
+</categories>

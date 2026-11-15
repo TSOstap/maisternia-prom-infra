@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="63023" nameRU="Роботы-пылесосы" nameUK="Роботи-пилососи">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="20" measureUnitUK="кг"/>
+    <attribute id="62" nameRU="Тип аккумулятора" type="singleselect" nameUK="Тип акумулятора">
+      <attribute_value id="6944" nameRU="Li-Ion" nameUK="Li-Ion"/>
+      <attribute_value id="10614" nameRU="Li-Pol" nameUK="Li-Pol"/>
+      <attribute_value id="113213" nameRU="GEL" nameUK="GEL"/>
+    </attribute>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="24" measureUnitUK="міс"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="100" measureUnitUK="дБ"/>
+    <attribute id="1322" nameRU="Время зарядки" type="real" nameUK="Час зарядки" measureUnitRU="час" min="0" max="3" measureUnitUK="годин"/>
+    <attribute id="1335" nameRU="Мощность всасывания" type="integer" nameUK="Потужність всмоктування" measureUnitRU="Па·c" min="0" max="13000" measureUnitUK="Па·c"/>
+    <attribute id="1346" nameRU="Объем пылесборника" type="real" nameUK="Об'єм пилозбірника" measureUnitRU="л" min="0" max="3" measureUnitUK="л"/>
+    <attribute id="1689" nameRU="Тип уборки" type="multiselect" nameUK="Тип прибирання">
+      <attribute_value id="10625" nameRU="Сухая " nameUK="Суха "/>
+      <attribute_value id="10626" nameRU="Влажная" nameUK="Волога"/>
+    </attribute>
+    <attribute id="2947" nameRU="Объем контейнера для мусора" type="real" nameUK="Об'єм контейнера для сміття" measureUnitRU="мл" min="0" max="2000" measureUnitUK="мл"/>
+    <attribute id="3090" nameRU="Управление" type="singleselect" nameUK="Управління">
+      <attribute_value id="265770" nameRU="Приложение на Android" nameUK="Додаток на Android"/>
+      <attribute_value id="265771" nameRU="Приложение на iOS" nameUK="Додаток на iOS"/>
+      <attribute_value id="266417" nameRU="Bluetooth" nameUK="Bluetooth"/>
+      <attribute_value id="276778" nameRU="Мобильное приложение/Wi-Fi" nameUK="Мобільний додаток/Wi-Fi"/>
+    </attribute>
+    <attribute id="3267" nameRU="Количество щеток" type="integer" nameUK="Кількість щіток" measureUnitRU="шт" min="1" max="6" measureUnitUK="шт."/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="234476" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5692" nameRU="Покрытие" type="singleselect" nameUK="Покриття">
+      <attribute_value id="146846" nameRU="Ламинат" nameUK="Ламінат"/>
+    </attribute>
+    <attribute id="18700" nameRU="Радиус уборки" type="real" nameUK="Радіус прибирання" measureUnitRU="м" min="0" max="120" measureUnitUK="м"/>
+    <attribute id="19242" nameRU="Тип навигации" type="singleselect" nameUK="Тип навігації">
+      <attribute_value id="346313" nameRU="LiDAR (лазерная)" nameUK="LiDAR (лазерна)"/>
+      <attribute_value id="346314" nameRU="Камера (vSLAM)" nameUK="Камера (vSLAM)"/>
+      <attribute_value id="346315" nameRU="Гироскоп" nameUK="Гіроскоп"/>
+      <attribute_value id="346316" nameRU="Smart Navi" nameUK="Smart Navi"/>
+      <attribute_value id="346317" nameRU="Хаотическая" nameUK="Хаотична"/>
+    </attribute>
+    <attribute id="19243" nameRU="Время работы на одном заряде" type="real" nameUK="Час роботи на одному заряді" measureUnitRU="мин" min="0.0" max="180.0" measureUnitUK="хв"/>
+  </category>
+</categories>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142612" nameRU="Ручные труборезы, ножницы для труб" nameUK="Ручні труборізи, ножиці для труб">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+      <attribute_value id="67488" nameRU="Металлический кейс" nameUK="Металевий кейс"/>
+    </attribute>
+    <attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+      <attribute_value id="72351" nameRU="Роликовый труборез" nameUK="Роликовий труборіз"/>
+      <attribute_value id="72352" nameRU="Цепной труборез" nameUK="Ланцюговий труборіз"/>
+      <attribute_value id="72358" nameRU="Ножницы-труборез" nameUK="Ножиці-труборіз"/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="9163" nameRU="Максимальная толщина стенки трубы" type="real" nameUK="Максимальна товщина стінки труби" measureUnitRU="мм" min="0" max="20" measureUnitUK="мм"/>
+    <attribute id="9164" nameRU="Минимальный диаметр трубы" type="real" nameUK="Мінімальний діаметр труби" measureUnitRU="мм" min="0" max="100" measureUnitUK="мм"/>
+    <attribute id="9165" nameRU="Максимальный диаметр трубы" type="real" nameUK="Максимальний діаметр труби" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="9195" nameRU="Применение трубореза для резки:" type="multiselect" nameUK="Застосування труборіза для різання:">
+      <attribute_value id="72381" nameRU="пластиковых труб" nameUK="пластикових труб"/>
+      <attribute_value id="72382" nameRU="медных труб" nameUK="мідних труб"/>
+      <attribute_value id="72383" nameRU="стальных труб" nameUK="сталевих труб"/>
+      <attribute_value id="72384" nameRU="чугунных труб" nameUK="чавунних труб"/>
+      <attribute_value id="72385" nameRU="керамических труб" nameUK="керамічних труб"/>
+      <attribute_value id="72386" nameRU="асбоцементных труб" nameUK="азбоцементних труб"/>
+      <attribute_value id="72387" nameRU="латунных труб" nameUK="латунних труб"/>
+      <attribute_value id="72388" nameRU="металлопластиковых труб" nameUK="металопластикових труб"/>
+      <attribute_value id="72389" nameRU="титановых труб" nameUK="титанових труб"/>
+      <attribute_value id="72390" nameRU="алюминиевых труб" nameUK="алюмінієвих труб"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

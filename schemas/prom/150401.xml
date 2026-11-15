@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="150401" nameRU="Уличное освещение" nameUK="Вуличне освітлення">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="20000" measureUnitUK="г"/>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="1000" measureUnitUK="град."/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="см" min="0" max="500000" measureUnitUK="см"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="см" min="0" max="50000" measureUnitUK="см"/>
+    <attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+      <attribute_value id="7068" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="7069" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="7070" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="7071" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="7072" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="7075" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="7076" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="7077" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7078" nameRU="Антрацит" nameUK="Антрацит"/>
+      <attribute_value id="7079" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="7080" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="7081" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="7082" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="7083" nameRU="Медный" nameUK="Мідний"/>
+      <attribute_value id="7084" nameRU="Слоновая кость" nameUK="Слонова кістка"/>
+      <attribute_value id="7086" nameRU="Кремовый" nameUK="Кремовий"/>
+      <attribute_value id="7087" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="7088" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="7089" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="7090" nameRU="Малиновый" nameUK="Малиновий"/>
+      <attribute_value id="7091" nameRU="Сиреневый" nameUK="Бузковий"/>
+      <attribute_value id="7092" nameRU="Персиковый" nameUK="Персиковий"/>
+      <attribute_value id="7093" nameRU="Серебряный" nameUK="Срібний"/>
+      <attribute_value id="43982" nameRU="Светло-серый" nameUK="Світло-сірий"/>
+      <attribute_value id="44231" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="83208" nameRU="Прозрачный" nameUK="Прозорий"/>
+      <attribute_value id="102939" nameRU="Металлик" nameUK="Металік"/>
+      <attribute_value id="102940" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="102941" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="102942" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="123604" nameRU="Темное дерево" nameUK="Темне дерево"/>
+      <attribute_value id="123605" nameRU="Светлое дерево" nameUK="Світле дерево"/>
+      <attribute_value id="123606" nameRU="Титан" nameUK="Титан"/>
+      <attribute_value id="148963" nameRU="Золотой" nameUK="Золотий"/>
+      <attribute_value id="272084" nameRU="Золотой призматический" nameUK="Золотий призматичний"/>
+    </attribute>
+    <attribute id="188" nameRU="Материал корпуса" type="multiselect" nameUK="Матеріал корпусу">
+      <attribute_value id="7132" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7133" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="7134" nameRU="Стекло" nameUK="Скло"/>
+      <attribute_value id="7616" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="7867" nameRU="Металл" nameUK="Метал"/>
+      <attribute_value id="19913" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="37990" nameRU="Стеклокерамика" nameUK="Склокераміка"/>
+      <attribute_value id="67251" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="75484" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="75487" nameRU="Стекловолокно" nameUK="Скловолокно"/>
+      <attribute_value id="75488" nameRU="Композитный материал" nameUK="Композитний матеріал"/>
+      <attribute_value id="75489" nameRU="Поликарбонат" nameUK="Полікарбонат"/>
+      <attribute_value id="116041" nameRU="Эмалированная сталь" nameUK="Емальована сталь"/>
+      <attribute_value id="117276" nameRU="Оргстекло" nameUK="Оргскло"/>
+      <attribute_value id="118910" nameRU="Дюралюминий" nameUK="Дюралюміній"/>
+      <attribute_value id="126965" nameRU="Алюминиевый сплав" nameUK="Алюмінієвий сплав"/>
+      <attribute_value id="127179" nameRU="Оцинкованное железо" nameUK="Оцинковане залізо"/>
+      <attribute_value id="179371" nameRU="ABS-пластик" nameUK="ABS-пластик"/>
+      <attribute_value id="179375" nameRU="Силикон" nameUK="Силікон"/>
+      <attribute_value id="251914" nameRU="Полистоун" nameUK="Полістоун"/>
+      <attribute_value id="308885" nameRU="Термостекло" nameUK="Термоскло"/>
+      <attribute_value id="349299" nameRU="Алюминий + керамика" nameUK=""/>
+      <attribute_value id="349300" nameRU="Алюминий + титан" nameUK=""/>
+      <attribute_value id="349444" nameRU="Металл + Кожа" nameUK=""/>
+    </attribute>
+    <attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="см" min="0" max="800" measureUnitUK="см"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="см" min="0" max="30000" measureUnitUK="см"/>
+    <attribute id="1980" nameRU="Тип питания" type="multiselect" nameUK="Тип живлення">
+      <attribute_value id="11692" nameRU="Аккумулятор" nameUK="Акумулятор"/>
+      <attribute_value id="21680" nameRU="Батарейки" nameUK="Батарейки"/>
+      <attribute_value id="95189" nameRU="Сеть" nameUK="Мережа"/>
+      <attribute_value id="135002" nameRU="Солнечная батарея" nameUK="Сонячна батарея"/>
+      <attribute_value id="268919" nameRU="Блок питания " nameUK="Блок живлення"/>
+    </attribute>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="20000" measureUnitUK="В"/>
+    <attribute id="2672" nameRU="Материал решетки" type="multiselect" nameUK="Матеріал решітки">
+      <attribute_value id="16571" nameRU="Эмалированная сталь" nameUK="Емальована сталь"/>
+      <attribute_value id="16572" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="16573" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="38893" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="38894" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="135006" nameRU="Металл" nameUK="Метал"/>
+    </attribute>
+    <attribute id="3474" nameRU="Количество в упаковке" type="integer" nameUK="Кількість в упаковці" measureUnitRU="шт" min="0" max="50" measureUnitUK="шт."/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="-65" max="0" measureUnitUK="град."/>
+    <attribute id="4496" nameRU="Стиль исполнения" type="singleselect" nameUK="Стиль виконання">
+      <attribute_value id="28504" nameRU="Античный" nameUK="Античний"/>
+      <attribute_value id="28506" nameRU="Арт-деко" nameUK="Арт-деко"/>
+      <attribute_value id="28508" nameRU="Барокко" nameUK="Бароко"/>
+      <attribute_value id="28512" nameRU="Кантри" nameUK="Кантрі"/>
+      <attribute_value id="28513" nameRU="Китайский" nameUK="Китайський"/>
+      <attribute_value id="28519" nameRU="Модерн" nameUK="Модерн"/>
+      <attribute_value id="28520" nameRU="Рококо" nameUK="Рококо"/>
+      <attribute_value id="28522" nameRU="Скандинавский" nameUK="Скандинавський"/>
+      <attribute_value id="28527" nameRU="Прованс" nameUK="Прованс"/>
+      <attribute_value id="60469" nameRU="Ренессанс" nameUK="Ренесанс"/>
+      <attribute_value id="60592" nameRU="Неоклассицизм" nameUK="Неокласицизм"/>
+      <attribute_value id="94998" nameRU="Флористика" nameUK="Флористика"/>
+      <attribute_value id="95001" nameRU="Хай-тек" nameUK="Хай-тек"/>
+      <attribute_value id="244797" nameRU="Классический" nameUK="Класичний"/>
+      <attribute_value id="273907" nameRU="Лофт/индустриальный стиль" nameUK="Лофт/індустріальний стиль"/>
+      <attribute_value id="296058" nameRU="Лофт" nameUK=""/>
+      <attribute_value id="296059" nameRU="Современный" nameUK="Сучасний"/>
+    </attribute>
+    <attribute id="4504" nameRU="Количество ламп" type="integer" nameUK="Кількість ламп" measureUnitRU="шт" min="0" max="20" measureUnitUK="шт."/>
+    <attribute id="4737" nameRU="Мощность" type="real" nameUK="Потужність" measureUnitRU="Вт" min="0" max="20000" measureUnitUK="Вт"/>
+    <attribute id="5490" nameRU="Срок службы" type="real" nameUK="Термін служби" measureUnitRU="лет" min="0" max="60" measureUnitUK="років"/>
+    <attribute id="5697" nameRU="Способ монтажа" type="singleselect" nameUK="Спосіб монтажу">
+      <attribute_value id="134529" nameRU="Встраиваемый" nameUK="Вбудовуваний"/>
+      <attribute_value id="134530" nameRU="Подвесной" nameUK="Підвісний"/>
+      <attribute_value id="134531" nameRU="Накладной" nameUK="Накладний"/>
+      <attribute_value id="134532" nameRU="На шинопровод" nameUK="На шинопровід"/>
+      <attribute_value id="135007" nameRU="На консоль" nameUK="На консоль"/>
+      <attribute_value id="135013" nameRU="На опору" nameUK="На опору"/>
+      <attribute_value id="135018" nameRU="Вкапываемый" nameUK="Вкопуваний"/>
+      <attribute_value id="135019" nameRU="В грунт" nameUK="В грунт"/>
+      <attribute_value id="135026" nameRU="На лиру" nameUK="На ліру"/>
+      <attribute_value id="280065" nameRU="Напольный" nameUK="Підлоговий"/>
+    </attribute>
+    <attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+    <attribute id="9394" nameRU="Цвет свечения" type="singleselect" nameUK="Колір світіння">
+      <attribute_value id="74586" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="74587" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="74588" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="74589" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="74590" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="74591" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="74592" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="74593" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="74594" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="127503" nameRU="RGB (разноцветный)" nameUK="RGB (різнокольоровий)"/>
+      <attribute_value id="127504" nameRU="Ультрафиолетовый" nameUK="Ультрафіолетовий"/>
+      <attribute_value id="127505" nameRU="Инфракрасный" nameUK="Інфрачервоний"/>
+      <attribute_value id="140197" nameRU="Нейтральный" nameUK="Нейтральний"/>
+      <attribute_value id="140198" nameRU="Холодный белый" nameUK="Холодний білий"/>
+      <attribute_value id="140199" nameRU="Теплый белый" nameUK="Теплий білий"/>
+      <attribute_value id="266394" nameRU="Холодный" nameUK="Холодний"/>
+      <attribute_value id="266395" nameRU="Теплый" nameUK="Теплий"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10657" nameRU="Коэффициент мощности" type="real" nameUK="Коефіцієнт потужності"/>
+    <attribute id="11377" nameRU="Световой поток" type="real" nameUK="Світловий потік" measureUnitRU="лм" min="0" max="1000000" measureUnitUK="лм"/>
+    <attribute id="11735" nameRU="Количество светодиодов" type="integer" nameUK="Кількість світлодіодів" measureUnitRU="шт" min="0" max="5000" measureUnitUK="шт."/>
+    <attribute id="11749" nameRU="Цоколь" type="singleselect" nameUK="Цоколь">
+      <attribute_value id="126727" nameRU="E14" nameUK="E14"/>
+      <attribute_value id="126728" nameRU="E27" nameUK="E27"/>
+      <attribute_value id="126729" nameRU="G4" nameUK="G4"/>
+      <attribute_value id="126730" nameRU="GY6.35" nameUK="GY6.35"/>
+      <attribute_value id="126731" nameRU="GU5.3" nameUK="GU5.3"/>
+      <attribute_value id="126732" nameRU="GU4" nameUK="GU4"/>
+      <attribute_value id="126733" nameRU="MR11" nameUK="MR11"/>
+      <attribute_value id="126734" nameRU="MR16" nameUK="MR16"/>
+      <attribute_value id="126735" nameRU="R7S" nameUK="R7S"/>
+      <attribute_value id="126736" nameRU="B15d" nameUK="B15d"/>
+      <attribute_value id="126737" nameRU="GU10" nameUK="GU10"/>
+      <attribute_value id="126738" nameRU="GZ10" nameUK="GZ10"/>
+      <attribute_value id="126739" nameRU="R7s" nameUK="R7s"/>
+      <attribute_value id="126740" nameRU="2G7" nameUK="2G7"/>
+      <attribute_value id="126741" nameRU="E40" nameUK="E40"/>
+      <attribute_value id="126742" nameRU="G12" nameUK="G12"/>
+      <attribute_value id="126743" nameRU="G13" nameUK="G13"/>
+      <attribute_value id="126744" nameRU="G9" nameUK="G9"/>
+      <attribute_value id="126745" nameRU="GR10q" nameUK="GR10q"/>
+      <attribute_value id="126746" nameRU="GZ6.35" nameUK="GZ6.35"/>
+      <attribute_value id="126747" nameRU="GX7.9" nameUK="GX7.9"/>
+      <attribute_value id="126748" nameRU="GX6.35" nameUK="GX6.35"/>
+      <attribute_value id="126749" nameRU="S14s" nameUK="S14s"/>
+      <attribute_value id="126750" nameRU="GX53" nameUK="GX53"/>
+      <attribute_value id="126751" nameRU="GX40" nameUK="GX40"/>
+      <attribute_value id="126752" nameRU="Gx24q-4" nameUK="Gx24q-4"/>
+      <attribute_value id="140172" nameRU="2GX13" nameUK="2GX13"/>
+      <attribute_value id="140173" nameRU="2G10" nameUK="2G10"/>
+      <attribute_value id="140174" nameRU="2G11" nameUK="2G11"/>
+      <attribute_value id="140175" nameRU="G23" nameUK="G23"/>
+      <attribute_value id="140176" nameRU="G24q-3" nameUK="G24q-3"/>
+      <attribute_value id="140177" nameRU="G24q-2" nameUK="G24q-2"/>
+      <attribute_value id="140178" nameRU="G24q-1" nameUK="G24q-1"/>
+      <attribute_value id="140179" nameRU="G24d-3" nameUK="G24d-3"/>
+      <attribute_value id="140180" nameRU="G24d-2" nameUK="G24d-2"/>
+      <attribute_value id="140181" nameRU="G24d-1" nameUK="G24d-1"/>
+      <attribute_value id="140182" nameRU="GX24q-3" nameUK="GX24q-3"/>
+      <attribute_value id="140183" nameRU="GX24q-2" nameUK="GX24q-2"/>
+      <attribute_value id="140184" nameRU="GX24q-1" nameUK="GX24q-1"/>
+      <attribute_value id="140185" nameRU="GX24d-3" nameUK="GX24d-3"/>
+      <attribute_value id="140186" nameRU="GX24d-2" nameUK="GX24d-2"/>
+      <attribute_value id="140187" nameRU="GX24d-1" nameUK="GX24d-1"/>
+      <attribute_value id="140188" nameRU="G5" nameUK="G5"/>
+      <attribute_value id="140587" nameRU="RX7s" nameUK="RX7s"/>
+      <attribute_value id="140588" nameRU="RX7s-24" nameUK="RX7s-24"/>
+      <attribute_value id="140589" nameRU="Fc2" nameUK="Fc2"/>
+      <attribute_value id="147903" nameRU="G8.5" nameUK="G8.5"/>
+      <attribute_value id="156285" nameRU="PGZ12" nameUK="PGZ12"/>
+      <attribute_value id="156286" nameRU="GX22" nameUK="GX22"/>
+      <attribute_value id="156287" nameRU="X830R" nameUK="X830R"/>
+      <attribute_value id="156288" nameRU="X528" nameUK="X528"/>
+      <attribute_value id="156289" nameRU="PX12-1" nameUK="PX12-1"/>
+      <attribute_value id="156290" nameRU="PG12-1" nameUK="PG12-1"/>
+      <attribute_value id="156291" nameRU="GX8.5" nameUK="GX8.5"/>
+      <attribute_value id="156292" nameRU="GX10" nameUK="GX10"/>
+      <attribute_value id="156293" nameRU="PGZX18" nameUK="PGZX18"/>
+      <attribute_value id="156294" nameRU="PGZ18" nameUK="PGZ18"/>
+      <attribute_value id="156295" nameRU="PGJ5" nameUK="PGJ5"/>
+      <attribute_value id="156296" nameRU="PG12-2" nameUK="PG12-2"/>
+      <attribute_value id="156298" nameRU="PGX12-2" nameUK="PGX12-2"/>
+      <attribute_value id="156299" nameRU="GU6.5" nameUK="GU6.5"/>
+      <attribute_value id="156300" nameRU="BY22d" nameUK="BY22d"/>
+      <attribute_value id="156301" nameRU="R18s" nameUK="R18s"/>
+      <attribute_value id="156302" nameRU="G10q" nameUK="G10q"/>
+      <attribute_value id="156303" nameRU="GX24q-5" nameUK="GX24q-5"/>
+      <attribute_value id="156304" nameRU="GR14q-1" nameUK="GR14q-1"/>
+      <attribute_value id="156305" nameRU="G53" nameUK="G53"/>
+      <attribute_value id="165678" nameRU="G22" nameUK="G22"/>
+      <attribute_value id="165679" nameRU="K12s-36" nameUK="K12s-36"/>
+      <attribute_value id="165692" nameRU="B22d" nameUK="B22d"/>
+      <attribute_value id="174606" nameRU="GY4" nameUK="GY4"/>
+      <attribute_value id="176187" nameRU="GX12-1" nameUK="GX12-1"/>
+      <attribute_value id="292291" nameRU="LED module" nameUK="LED module"/>
+      <attribute_value id="350760" nameRU="9005" nameUK=""/>
+      <attribute_value id="350761" nameRU="9005 / 9006 / H10 / 9012" nameUK=""/>
+      <attribute_value id="350762" nameRU="9005 / 9006 / H7 / H4 / H11" nameUK=""/>
+      <attribute_value id="350763" nameRU="9006" nameUK=""/>
+      <attribute_value id="350764" nameRU="9006 / H7 / H4" nameUK=""/>
+      <attribute_value id="350765" nameRU="9007" nameUK=""/>
+      <attribute_value id="350766" nameRU="B10d" nameUK=""/>
+      <attribute_value id="350767" nameRU="BA15d" nameUK=""/>
+      <attribute_value id="350768" nameRU="BA19s" nameUK=""/>
+      <attribute_value id="350769" nameRU="BA20d" nameUK=""/>
+      <attribute_value id="350770" nameRU="BA20s" nameUK=""/>
+      <attribute_value id="350771" nameRU="BA7s" nameUK=""/>
+      <attribute_value id="350772" nameRU="BA9s" nameUK=""/>
+      <attribute_value id="350773" nameRU="BAU15s" nameUK=""/>
+      <attribute_value id="350774" nameRU="BAW15d" nameUK=""/>
+      <attribute_value id="350775" nameRU="BAW15s" nameUK=""/>
+      <attribute_value id="350776" nameRU="BAW9s" nameUK=""/>
+      <attribute_value id="350777" nameRU="BAX10s" nameUK=""/>
+      <attribute_value id="350778" nameRU="BAX8.3s" nameUK=""/>
+      <attribute_value id="350779" nameRU="BAX8.5d" nameUK=""/>
+      <attribute_value id="350780" nameRU="BAX8.5d/2" nameUK=""/>
+      <attribute_value id="350781" nameRU="BAX9s" nameUK=""/>
+      <attribute_value id="350782" nameRU="BAX REF9" nameUK=""/>
+      <attribute_value id="350783" nameRU="BAY15d" nameUK=""/>
+      <attribute_value id="350784" nameRU="BAY15s" nameUK=""/>
+      <attribute_value id="350785" nameRU="BAY9s" nameUK=""/>
+      <attribute_value id="350786" nameRU="BAZ15d" nameUK=""/>
+      <attribute_value id="350787" nameRU="BX8.4d" nameUK=""/>
+      <attribute_value id="350788" nameRU="BX8.5d" nameUK=""/>
+      <attribute_value id="350789" nameRU="H9 / H11" nameUK=""/>
+      <attribute_value id="350790" nameRU="HB1/9004" nameUK=""/>
+      <attribute_value id="350791" nameRU="P20d" nameUK=""/>
+      <attribute_value id="350792" nameRU="P20d/A" nameUK=""/>
+      <attribute_value id="350793" nameRU="P20d/P22d" nameUK=""/>
+      <attribute_value id="350794" nameRU="P20s" nameUK=""/>
+      <attribute_value id="350795" nameRU="P22d" nameUK=""/>
+      <attribute_value id="350796" nameRU="P26.4t" nameUK=""/>
+      <attribute_value id="350797" nameRU="P26.5t" nameUK=""/>
+      <attribute_value id="350798" nameRU="P26d" nameUK=""/>
+      <attribute_value id="350799" nameRU="P26s" nameUK=""/>
+      <attribute_value id="350800" nameRU="P29t" nameUK=""/>
+      <attribute_value id="350801" nameRU="P32d-1" nameUK=""/>
+      <attribute_value id="350802" nameRU="P32d-2" nameUK=""/>
+      <attribute_value id="350803" nameRU="P32d-3" nameUK=""/>
+      <attribute_value id="350804" nameRU="P32d-4" nameUK=""/>
+      <attribute_value id="350805" nameRU="P32d-5" nameUK=""/>
+      <attribute_value id="350806" nameRU="P32d-6" nameUK=""/>
+    </attribute>
+    <attribute id="11752" nameRU="Взрывозащищенный корпус" type="bool" nameUK="Вибухозахищений корпус"/>
+    <attribute id="11994" nameRU="Датчик движения" type="bool" nameUK="Датчик руху"/>
+    <attribute id="12640" nameRU="Тип лампы" type="singleselect" nameUK="Тип лампи">
+      <attribute_value id="126707" nameRU="Накаливания" nameUK="Розжарювання"/>
+      <attribute_value id="126708" nameRU="Электролюминесцентная" nameUK="Електролюмінесцентна"/>
+      <attribute_value id="126710" nameRU="Галогенная" nameUK="Галогенна"/>
+      <attribute_value id="126711" nameRU="Газоразрядная" nameUK="Газорозрядна"/>
+      <attribute_value id="126712" nameRU="Сигнальная" nameUK="Сигнальна"/>
+      <attribute_value id="126713" nameRU="Ультрафиолетовая" nameUK="Ультрафіолетова"/>
+      <attribute_value id="126714" nameRU="Бактерицидная" nameUK="Бактерицидна"/>
+      <attribute_value id="126715" nameRU="Металлогалогенная" nameUK="Металогалогенні"/>
+      <attribute_value id="126716" nameRU="Ртутная" nameUK="Ртутна"/>
+      <attribute_value id="126717" nameRU="Индукционная" nameUK="Індукційна"/>
+      <attribute_value id="126718" nameRU="Натриевая" nameUK="Натрієва"/>
+      <attribute_value id="126719" nameRU="Неоновая" nameUK="Неонова"/>
+      <attribute_value id="126720" nameRU="Инфракрасная" nameUK="Інфрачервона"/>
+      <attribute_value id="127377" nameRU="Строб-лампа" nameUK="Строб-лампа"/>
+      <attribute_value id="137102" nameRU="Светодиодная" nameUK="Світлодіодна"/>
+      <attribute_value id="244816" nameRU="Энергосберегающая" nameUK="Енергозберігаюча"/>
+    </attribute>
+    <attribute id="12664" nameRU="Тип освещения" type="singleselect" nameUK="Тип освітлення">
+      <attribute_value id="134507" nameRU="Светильник" nameUK="Світильник"/>
+      <attribute_value id="134508" nameRU="Прожектор" nameUK="Прожектор"/>
+      <attribute_value id="134509" nameRU="Фонарь" nameUK="Ліхтар"/>
+      <attribute_value id="277773" nameRU="Консольный светильник" nameUK="Консольний світильник"/>
+    </attribute>
+    <attribute id="13156" nameRU="Индекс цветопередачи, не менее" type="real" nameUK="Індекс передачі кольору, не менше"/>
+    <attribute id="13157" nameRU="Пылевлагозащищенная крышка" type="bool" nameUK="Пиловологозахищена кришка"/>
+    <attribute id="13158" nameRU="Угол излучения света" type="real" nameUK="Кут випромінювання світла" measureUnitRU="град." min="0" max="360" measureUnitUK="град."/>
+    <attribute id="13163" nameRU="Применение освещения" type="multiselect" nameUK="Застосування освітлення">
+      <attribute_value id="134697" nameRU="Для наружного освещения зданий" nameUK="Для зовнішнього освітлення будівель"/>
+      <attribute_value id="134701" nameRU="Для освещения ландшафтов" nameUK="Для освітлення ландшафтів"/>
+      <attribute_value id="134703" nameRU="Для освещения теплиц" nameUK="Для освітлення теплиць"/>
+      <attribute_value id="134705" nameRU="Для освещения парковок" nameUK="Для освітлення парковок"/>
+      <attribute_value id="134706" nameRU="Для освещения улиц, парков" nameUK="Для освітлення вулиць, парків"/>
+      <attribute_value id="134708" nameRU="Для ЖКХ" nameUK="Для ЖКГ"/>
+      <attribute_value id="134709" nameRU="Для освещения бань и саун" nameUK="Для освітлення лазень і саун"/>
+      <attribute_value id="134710" nameRU="Для наружного освещения бассейнов" nameUK="Для зовнішнього освітлення басейнів"/>
+      <attribute_value id="177593" nameRU="Для освещения рекламных конструкций" nameUK="Для освітлення рекламних конструкцій"/>
+      <attribute_value id="178312" nameRU="Для наружного освещения фонтанов" nameUK="Для зовнішнього освітлення фонтанів"/>
+      <attribute_value id="204453" nameRU="Для подводного освещения бассейнов" nameUK="Для підводного освітлення басейнів"/>
+      <attribute_value id="299307" nameRU="Для освещения лестниц" nameUK="Для освітлення сходів"/>
+      <attribute_value id="299308" nameRU="Для освещения террас и балконов" nameUK="Для освітлення терас та балконів"/>
+      <attribute_value id="299309" nameRU="Для освещения входных дверей и ворот" nameUK="Для освітлення вхідних дверей та воріт"/>
+      <attribute_value id="299310" nameRU="Для освещения крыльца" nameUK="Для освітлення ганку"/>
+      <attribute_value id="299311" nameRU="Для освещения навесов и беседок" nameUK="Для освітлення навісів та альтанок"/>
+      <attribute_value id="299312" nameRU="Для освещения садовых дорожек" nameUK="Для освітлення садових доріжок"/>
+      <attribute_value id="299313" nameRU="Для подсветки деревьев и растений" nameUK="Для підсвічування дерев та рослин"/>
+      <attribute_value id="299314" nameRU="Для создания акцентов на различных архитектурных деталях" nameUK="Для створення акцентів на різноманітних архітектурних деталях"/>
+      <attribute_value id="299315" nameRU="Для освещения скульптур" nameUK="Для освітлення скульптур"/>
+      <attribute_value id="299316" nameRU="Для освещения элементов ландшафтного дизайна" nameUK="Для освітлення елементів ландшафтного дизайну"/>
+    </attribute>
+    <attribute id="13164" nameRU="Способ освещения" type="singleselect" nameUK="Спосіб освітлення">
+      <attribute_value id="134990" nameRU="Заливающее освещение" nameUK="Заливаюче освітлення"/>
+      <attribute_value id="134991" nameRU="Скрытая подсветка" nameUK="Приховане підсвічування"/>
+      <attribute_value id="134992" nameRU="Локальное освещение" nameUK="Локальне освітлення"/>
+      <attribute_value id="134993" nameRU="Контурное освещение" nameUK="Контурне освітлення"/>
+      <attribute_value id="134994" nameRU="Динамичное освещение" nameUK="Динамічне освітлення"/>
+      <attribute_value id="134995" nameRU="Медиафасады" nameUK="Медіафасади"/>
+    </attribute>
+    <attribute id="13166" nameRU="Защитная решетка" type="bool" nameUK="Захисна решітка"/>
+    <attribute id="13170" nameRU="Тип освещения по мобильности" type="singleselect" nameUK="Тип освітлення за мобільністю">
+      <attribute_value id="134812" nameRU="Стационарное" nameUK="Стаціонарне"/>
+      <attribute_value id="134813" nameRU="Переносное" nameUK="Переносне"/>
+    </attribute>
+    <attribute id="13175" nameRU="Цветовая гамма" type="multiselect" nameUK="Колірна гамма">
+      <attribute_value id="134854" nameRU="RGB" nameUK="RGB"/>
+      <attribute_value id="134855" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="134856" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="134857" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="134858" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="134859" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="134860" nameRU="Инфракрасный" nameUK="Інфрачервоний"/>
+      <attribute_value id="134861" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="134862" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="134863" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="134864" nameRU="Ультрафиолетовый" nameUK="Ультрафіолетовий"/>
+      <attribute_value id="134865" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="134866" nameRU="Алый" nameUK="Червоний"/>
+      <attribute_value id="134867" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="134868" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="134869" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="134870" nameRU="Индиго" nameUK="Індиго"/>
+      <attribute_value id="134871" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="134872" nameRU="Лимонный" nameUK="Лимонний"/>
+      <attribute_value id="134873" nameRU="Малиновый" nameUK="Малиновий"/>
+      <attribute_value id="134874" nameRU="Теплый белый" nameUK="Теплий білий"/>
+      <attribute_value id="134875" nameRU="Холодный белый" nameUK="Холодний білий"/>
+      <attribute_value id="134876" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="134879" nameRU="Нейтральный" nameUK="Нейтральний"/>
+    </attribute>
+    <attribute id="13204" nameRU="Лампочка в комплекте" type="bool" nameUK="Лампочка в комплекті"/>
+    <attribute id="15359" nameRU="Цветовая температура" type="singleselect" nameUK="Колірна температура">
+      <attribute_value id="166583" nameRU="3000K" nameUK="3000K"/>
+      <attribute_value id="166584" nameRU="4300K" nameUK="4300K"/>
+      <attribute_value id="166585" nameRU="5000K" nameUK="5000K"/>
+      <attribute_value id="166586" nameRU="6000K" nameUK="6000K"/>
+      <attribute_value id="166587" nameRU="8000K" nameUK="8000K"/>
+      <attribute_value id="166588" nameRU="10000K" nameUK="10000K"/>
+      <attribute_value id="166589" nameRU="12000K" nameUK="12000K"/>
+      <attribute_value id="184842" nameRU="3500K" nameUK="3500K"/>
+      <attribute_value id="202607" nameRU="3900K" nameUK="3900K"/>
+      <attribute_value id="252396" nameRU="4800K" nameUK="4800K"/>
+      <attribute_value id="253264" nameRU=" 5500K" nameUK="5500K"/>
+      <attribute_value id="253265" nameRU="4500K" nameUK="4500K"/>
+      <attribute_value id="253735" nameRU="6200K" nameUK="6200K"/>
+      <attribute_value id="268570" nameRU="2700К" nameUK="2700К"/>
+      <attribute_value id="270212" nameRU="3700К" nameUK="3700К"/>
+      <attribute_value id="270213" nameRU="5500K" nameUK="5500K"/>
+      <attribute_value id="271424" nameRU="6500K" nameUK="6500K"/>
+      <attribute_value id="276011" nameRU="4000К" nameUK="4000К"/>
+      <attribute_value id="276045" nameRU="4100K" nameUK="4100K"/>
+      <attribute_value id="276669" nameRU="6400К" nameUK="6400К"/>
+      <attribute_value id="278682" nameRU="4200К" nameUK="4200К"/>
+      <attribute_value id="278918" nameRU="7000K" nameUK="7000K"/>
+      <attribute_value id="311370" nameRU="3100К" nameUK=""/>
+    </attribute>
+    <attribute id="17238" nameRU="Источник света" type="singleselect" nameUK="Джерело світла">
+      <attribute_value id="203154" nameRU="Диоды" nameUK="Діоди"/>
+      <attribute_value id="203155" nameRU="Галогенная лампа" nameUK="Галогенна лампа"/>
+      <attribute_value id="277831" nameRU="Светодиодная матрица SMD" nameUK="Світлодіодна матриця SMD"/>
+      <attribute_value id="277839" nameRU="Светодиодная лента SMD" nameUK="Світлодіодна стрічка SMD"/>
+      <attribute_value id="277868" nameRU="Светодиодная матрица COB" nameUK="Світлодіодна матриця COB"/>
+      <attribute_value id="292151" nameRU="LED module" nameUK="LED module"/>
+    </attribute>
+    <attribute id="18081" nameRU="Тип светодиодов" type="multiselect" nameUK="Тип світлодіодів">
+      <attribute_value id="283157" nameRU="COB" nameUK=""/>
+      <attribute_value id="286040" nameRU="SMD" nameUK=""/>
+    </attribute>
+    <attribute id="18087" nameRU="Диаметр крепления" type="real" nameUK="Діаметр кріплення" measureUnitRU="мм" min="0" max="300" measureUnitUK="мм"/>
+    <attribute id="18517" nameRU="Цвет плафона" type="multiselect" nameUK="Колір плафона">
+      <attribute_value id="275199" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="275211" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="276255" nameRU="Прозрачный" nameUK="Прозорий"/>
+      <attribute_value id="295354" nameRU="Белый матовый" nameUK="Білий матовий"/>
+    </attribute>
+    <attribute id="18521" nameRU="Форма плафона" type="multiselect" nameUK="Форма плафона">
+      <attribute_value id="275008" nameRU="Квадратная" nameUK="Квадратна"/>
+      <attribute_value id="278507" nameRU="Свеча" nameUK="Свічка"/>
+      <attribute_value id="278508" nameRU="Чашка" nameUK="Чашка"/>
+      <attribute_value id="278509" nameRU="Цветок" nameUK="Квітка"/>
+      <attribute_value id="278510" nameRU="Горшок" nameUK="Горщик"/>
+      <attribute_value id="283191" nameRU="Цилиндр" nameUK="Циліндр"/>
+      <attribute_value id="284917" nameRU="Шар" nameUK="Куля"/>
+      <attribute_value id="293012" nameRU="Круглая" nameUK="Кругла"/>
+      <attribute_value id="293028" nameRU="Конус" nameUK="Конус"/>
+      <attribute_value id="294010" nameRU="Прямоугольная" nameUK="Прямокутна"/>
+      <attribute_value id="294821" nameRU="Овальная" nameUK="Овальна"/>
+      <attribute_value id="295242" nameRU="Полусфера" nameUK="Півсфера"/>
+      <attribute_value id="296916" nameRU="Треугольная" nameUK="Трикутна"/>
+      <attribute_value id="296918" nameRU="Пирамида" nameUK="Піраміда"/>
+      <attribute_value id="296943" nameRU="Куб" nameUK="Куб"/>
+      <attribute_value id="302692" nameRU="Ромб" nameUK="Ромб"/>
+    </attribute>
+    <attribute id="18551" nameRU="Светоотдача" type="real" nameUK="Світловіддача" measureUnitRU="лм/Вт" min="0" max="140" measureUnitUK="лм/Вт"/>
+    <attribute id="18555" nameRU="Рабочее напряжение (В)" type="multiselect" nameUK="Робоча напруга (В)">
+      <attribute_value id="277802" nameRU="175-265" nameUK="175-265"/>
+      <attribute_value id="277803" nameRU="170-260" nameUK="170-260"/>
+      <attribute_value id="277804" nameRU="85-265" nameUK="85-265"/>
+      <attribute_value id="277808" nameRU="170-240" nameUK="170-240"/>
+      <attribute_value id="278679" nameRU="110-240" nameUK="110-240"/>
+      <attribute_value id="278874" nameRU="185-230" nameUK="185-230"/>
+      <attribute_value id="279173" nameRU="220-240" nameUK="220-240"/>
+      <attribute_value id="285751" nameRU="185-265" nameUK="185-265"/>
+      <attribute_value id="288507" nameRU="165-265" nameUK="165-265"/>
+      <attribute_value id="289038" nameRU="180-265" nameUK="180-265"/>
+      <attribute_value id="289767" nameRU="170-265" nameUK="170-265"/>
+      <attribute_value id="299828" nameRU="175-250" nameUK=""/>
+      <attribute_value id="299936" nameRU="100-265" nameUK=""/>
+      <attribute_value id="303524" nameRU="12-48" nameUK=""/>
+      <attribute_value id="303665" nameRU="6-15" nameUK=""/>
+      <attribute_value id="308889" nameRU=" 100-240" nameUK=" 100-240"/>
+    </attribute>
+    <attribute id="18557" nameRU="Материал рассеивателя" type="multiselect" nameUK="Матеріал розсіювача">
+      <attribute_value id="277834" nameRU="Поликарбонат" nameUK="Полікарбонат"/>
+      <attribute_value id="277835" nameRU="Поликарбонат линзованный" nameUK="Полікарбонат лінзованной"/>
+      <attribute_value id="277836" nameRU="Поликарбонат ударопрочный" nameUK="Полікарбонат ударостійкий"/>
+      <attribute_value id="277838" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="277840" nameRU="Стеклянная труба" nameUK="Скляна труба"/>
+      <attribute_value id="277841" nameRU="Закаленное стекло" nameUK="Загартоване скло"/>
+      <attribute_value id="277842" nameRU="Отражатель" nameUK="Відбивач"/>
+      <attribute_value id="277843" nameRU="Линзованное стекло" nameUK=" Лінзоване скло"/>
+    </attribute>
+  </category>
+</categories>

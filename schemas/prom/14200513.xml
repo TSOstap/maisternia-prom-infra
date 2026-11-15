@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200513" nameRU="Пневматические отбойные молотки" nameUK="Пневматичні відбійні молотки">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="75" measureUnitUK="кг"/>
+    <attribute id="9" nameRU="Регулировка количества оборотов" type="bool" nameUK="Регулювання кількості обертів"/>
+    <attribute id="12" nameRU="Поддержка постоянного количества оборотов под нагрузкой" type="bool" nameUK="Підтримка постійного числа обертів під навантаженням"/>
+    <attribute id="38" nameRU="Система гашения вибрации" type="bool" nameUK="Система погашення вібрації"/>
+    <attribute id="91" nameRU="Максимальная сила удара" type="real" nameUK="Максимальна сила удару" measureUnitRU="Дж." min="0" max="100" measureUnitUK="Дж."/>
+    <attribute id="92" nameRU="Максимальное количество ударов" type="real" nameUK="Максимальна кількість ударів" measureUnitRU="уд/мин" min="0" max="6000" measureUnitUK="уд/хв"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="105" nameRU="Рабочее давление" type="real" nameUK="Робочий тиск" measureUnitRU="бар" min="0" max="12" measureUnitUK="бар"/>
+    <attribute id="106" nameRU="Расход воздуха" type="real" nameUK="Витрата повітря" measureUnitRU="литр/мин" min="0" max="3000" measureUnitUK="літр/хв"/>
+    <attribute id="107" nameRU="Диаметр входного штуцера" type="singleselect" nameUK="Діаметр вхідного штуцера">
+      <attribute_value id="7023" nameRU="1&quot;" nameUK="1&quot;"/>
+      <attribute_value id="7024" nameRU="2&quot;" nameUK="2&quot;"/>
+      <attribute_value id="7025" nameRU="1/2&quot;" nameUK="1/2&quot;"/>
+      <attribute_value id="7026" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="7027" nameRU="1/8&quot;" nameUK="1/8&quot;"/>
+      <attribute_value id="7028" nameRU="3/4&quot;" nameUK="3/4&quot;"/>
+      <attribute_value id="7029" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+    </attribute>
+    <attribute id="108" nameRU="Внутренний диаметр шланга" type="real" nameUK="Внутрішній діаметр шланга" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="109" nameRU="Переходной штуцер" type="bool" nameUK="Перехідний штуцер"/>
+    <attribute id="110" nameRU="Набор насадок" type="bool" nameUK="Набір насадок"/>
+    <attribute id="112" nameRU="Тип хвостовика" type="singleselect" nameUK="Тип хвостовика">
+      <attribute_value id="7041" nameRU="Шестигранный" nameUK="Шестигранний"/>
+      <attribute_value id="7043" nameRU="Цилиндрический" nameUK="Циліндричний"/>
+      <attribute_value id="7044" nameRU="SDS" nameUK="SDS"/>
+    </attribute>
+    <attribute id="122" nameRU="Диаметр хвостовика" type="real" nameUK="Діаметр хвостовика" measureUnitRU="мм" min="0" max="40" measureUnitUK="мм"/>
+    <attribute id="123" nameRU="Длина инструмента" type="real" nameUK="Довжина інструменту" measureUnitRU="м" min="0" max="2" measureUnitUK="м"/>
+    <attribute id="124" nameRU="Возможность подключения воды" type="bool" nameUK="Можливість підключення води"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

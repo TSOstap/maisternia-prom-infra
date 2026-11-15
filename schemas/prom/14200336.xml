@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200336" nameRU="Ручные заклепочники" nameUK="Ручні заклепники">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="123" nameRU="Длина инструмента" type="real" nameUK="Довжина інструменту" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="64738" nameRU="металл" nameUK="метал"/>
+    </attribute>
+    <attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+    <attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+      <attribute_value id="70684" nameRU="Заклепочник для резьбовых заклепок" nameUK="Закльопник для різьбових клепок"/>
+      <attribute_value id="70685" nameRU="Заклепочник для вытяжных заклепок" nameUK="Закльопник для витяжних клепок"/>
+    </attribute>
+    <attribute id="7751" nameRU="Размеры вытяжных заклепок" type="multiselect" nameUK="Розміри витяжних заклепок">
+      <attribute_value id="65421" nameRU="2.4 мм" nameUK="2.4 мм"/>
+      <attribute_value id="65422" nameRU="3.2 мм" nameUK="3.2 мм"/>
+      <attribute_value id="65423" nameRU="4.0 мм" nameUK="4.0 мм"/>
+      <attribute_value id="65424" nameRU="4.8 мм" nameUK="4.8 мм"/>
+      <attribute_value id="65425" nameRU="6.4 мм" nameUK="6.4 мм"/>
+      <attribute_value id="273041" nameRU="6.0 мм" nameUK="6.0 мм"/>
+    </attribute>
+    <attribute id="8756" nameRU="Размеры резьбовых заклепок" type="multiselect" nameUK="Розміри різьбових заклепок">
+      <attribute_value id="70672" nameRU="M3" nameUK="M3"/>
+      <attribute_value id="70673" nameRU="M4" nameUK="M4"/>
+      <attribute_value id="70674" nameRU="M5" nameUK="M5"/>
+      <attribute_value id="70675" nameRU="M6" nameUK="M6"/>
+      <attribute_value id="70676" nameRU="M7" nameUK="M7"/>
+      <attribute_value id="70677" nameRU="M8" nameUK="M8"/>
+      <attribute_value id="70678" nameRU="M9" nameUK="M9"/>
+      <attribute_value id="70679" nameRU="M10" nameUK="M10"/>
+      <attribute_value id="70680" nameRU="M11" nameUK="M11"/>
+      <attribute_value id="70681" nameRU="M12" nameUK="M12"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="17906" nameRU="Тип головы" type="singleselect" nameUK="Тип голови">
+      <attribute_value id="235175" nameRU="Поворотная" nameUK="Поворотна"/>
+      <attribute_value id="235176" nameRU="Неповоротная" nameUK="Неповоротна"/>
+    </attribute>
+    <attribute id="17907" nameRU="Поворот головы" type="singleselect" nameUK="Поворот голови">
+      <attribute_value id="235178" nameRU="90°" nameUK="90°"/>
+      <attribute_value id="235179" nameRU="180°" nameUK="180°"/>
+      <attribute_value id="235180" nameRU="90°-180°" nameUK="90°-180°"/>
+      <attribute_value id="235181" nameRU="360°" nameUK="360°"/>
+    </attribute>
+  </category>
+</categories>

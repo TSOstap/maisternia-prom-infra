@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14400803" nameRU="Паяльники" nameUK="Паяльники">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="50" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="271" nameRU="Количество насадок" type="integer" nameUK="Кількість насадок"/>
+    <attribute id="362" nameRU="Тип нагревательного элемента" type="singleselect" nameUK="Тип нагрівального елементу">
+      <attribute_value id="21543" nameRU="Керамический" nameUK="Керамічний"/>
+      <attribute_value id="350703" nameRU="Нихромовый" nameUK="Ніхромовий"/>
+    </attribute>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="1559" nameRU="Упаковка" type="singleselect" nameUK="Упаковка">
+      <attribute_value id="70886" nameRU="Кейс" nameUK="Кейс"/>
+      <attribute_value id="123566" nameRU="Пенал" nameUK="Пенал"/>
+    </attribute>
+    <attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+    <attribute id="4737" nameRU="Мощность" type="real" nameUK="Потужність" measureUnitRU="Вт" min="0" max="30000" measureUnitUK="Вт"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="6212" nameRU="Напряжение питания" type="multiselect" nameUK="Напруга живлення">
+      <attribute_value id="42681" nameRU="220 В" nameUK="220 В"/>
+      <attribute_value id="42682" nameRU="380 В" nameUK="380 В"/>
+      <attribute_value id="125714" nameRU="12 В" nameUK="12 В"/>
+      <attribute_value id="125715" nameRU="24 В" nameUK="24 В"/>
+      <attribute_value id="200654" nameRU="48 В" nameUK="48 В"/>
+      <attribute_value id="200655" nameRU="36 В" nameUK="36 В"/>
+      <attribute_value id="230735" nameRU="60 В" nameUK="60 В"/>
+      <attribute_value id="252525" nameRU="85В" nameUK="85В"/>
+      <attribute_value id="253501" nameRU="42В" nameUK="42В"/>
+      <attribute_value id="274923" nameRU="5В" nameUK="5В"/>
+      <attribute_value id="274924" nameRU="6В" nameUK="6В"/>
+      <attribute_value id="278480" nameRU="8 В" nameUK="8 В"/>
+      <attribute_value id="278481" nameRU="9 В" nameUK="9 В"/>
+      <attribute_value id="278482" nameRU="32 В" nameUK="32 В"/>
+      <attribute_value id="278483" nameRU="30 В" nameUK="30 В"/>
+      <attribute_value id="278484" nameRU="18 В" nameUK="18 В"/>
+      <attribute_value id="278485" nameRU="10 В" nameUK="10 В"/>
+      <attribute_value id="280574" nameRU="16 В" nameUK="16 В"/>
+      <attribute_value id="285790" nameRU="110 В" nameUK="110 В"/>
+      <attribute_value id="298863" nameRU="18-32В" nameUK="18-32В"/>
+      <attribute_value id="307401" nameRU="28 В" nameUK="28 В"/>
+      <attribute_value id="321807" nameRU="1,2 В" nameUK="1,2 В"/>
+      <attribute_value id="330039" nameRU="56 В" nameUK=""/>
+      <attribute_value id="330040" nameRU="65 В" nameUK=""/>
+      <attribute_value id="330041" nameRU="80 В" nameUK=""/>
+    </attribute>
+    <attribute id="7547" nameRU="Максимальная температура жала" type="real" nameUK="Максимальна температура жала" measureUnitRU="град." min="0" max="1000" measureUnitUK="град."/>
+    <attribute id="7548" nameRU="Минимальная температура жала" type="real" nameUK="Мінімальна температура жала" measureUnitRU="град." min="0" max="500" measureUnitUK="град."/>
+    <attribute id="7549" nameRU="Сопротивление" type="real" nameUK="Опір" measureUnitRU="МОм" min="0" max="5000" measureUnitUK="МОм"/>
+    <attribute id="7550" nameRU="Индикатор питания" type="bool" nameUK="Індикатор живлення"/>
+    <attribute id="7551" nameRU="Съемное жало" type="bool" nameUK="Знімне жало"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="16584" nameRU="Тип нагрева" type="singleselect" nameUK="Тип нагріву">
+      <attribute_value id="293043" nameRU="Периодическое" nameUK="Періодичне"/>
+      <attribute_value id="350700" nameRU="Постоянный" nameUK="Постійний"/>
+    </attribute>
+    <attribute id="19457" nameRU="Вид паяльника" type="singleselect" nameUK="Вид паяльника">
+      <attribute_value id="350704" nameRU="Импульсный" nameUK="Імпульсний"/>
+      <attribute_value id="350705" nameRU="Контактный" nameUK="Контанктий"/>
+    </attribute>
+  </category>
+</categories>

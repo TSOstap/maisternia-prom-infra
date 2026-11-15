@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142212" nameRU="Пылеулавливатели, аспирационные установки" nameUK="Пиловловлювачі, аспіраційні установки">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="кВт" min="0" max="1000" measureUnitUK="кВт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5000" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="359" nameRU="Уровень шума" type="real" nameUK="Рівень шуму" measureUnitRU="дБ" min="0" max="150" measureUnitUK="дБ"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="1363" nameRU="Разрежение" type="real" nameUK="Розрідження" measureUnitRU="мбар" min="0" max="10000" measureUnitUK="мбар"/>
+    <attribute id="2053" nameRU="Напряжение сети" type="multiselect" nameUK="Напруга мережі">
+      <attribute_value id="11945" nameRU="220~240 В" nameUK="220~240 В"/>
+      <attribute_value id="11946" nameRU="380~400 В" nameUK="380~400 В"/>
+      <attribute_value id="35999" nameRU="100~120 В" nameUK="100~120 В"/>
+    </attribute>
+    <attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+    <attribute id="4093" nameRU="Минимальный размер улавливаемых частиц" type="real" nameUK="Мінімальний розмір уловлюваних частинок" measureUnitRU="мкм" min="0" max="1000" measureUnitUK="мкм"/>
+    <attribute id="5073" nameRU="Производительность" type="real" nameUK="Продуктивність" measureUnitRU="куб. м/час" min="0" max="100000" measureUnitUK="куб.м/год"/>
+    <attribute id="5161" nameRU="Минимальная температура окружающей среды" type="real" nameUK="Мінімальна температура навколишнього середовища" measureUnitRU="град." min="-100" max="10" measureUnitUK="град."/>
+    <attribute id="5162" nameRU="Максимальная температура окружающей среды" type="real" nameUK="Максимальна температура навколишнього середовища" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+    <attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+    <attribute id="9415" nameRU="Количество входных отверстий" type="integer" nameUK="Кількість вхідних отворів" measureUnitRU="шт" min="0" max="20" measureUnitUK="шт."/>
+    <attribute id="9416" nameRU="Степень очистки воздуха" type="real" nameUK="Ступінь очищення повітря" measureUnitRU="%" min="0" max="100" measureUnitUK="%"/>
+    <attribute id="9417" nameRU="Количество пылесборных мешков" type="integer" nameUK="Кількість пилозбірних мішків" measureUnitRU="шт" min="0" max="20" measureUnitUK="шт."/>
+    <attribute id="9418" nameRU="Общий объем пылесборных мешков" type="real" nameUK="Загальний об`єм пилоуловлювальних мішків" measureUnitRU="куб. м" min="0" max="50" measureUnitUK="куб. м"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="14191" nameRU="Дополнительный сервис" type="multiselect" nameUK="Додатковий сервіс">
+      <attribute_value id="144186" nameRU="Установка" nameUK="Установка"/>
+      <attribute_value id="144187" nameRU="Сервисное обслуживание" nameUK="Сервісне обслуговування"/>
+    </attribute>
+    <attribute id="15704" nameRU="Диаметр шланга" type="real" nameUK="Діаметр шланга" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+  </category>
+</categories>

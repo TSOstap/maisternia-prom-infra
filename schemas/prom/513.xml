@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="513" nameRU="Электрические удлинители" nameUK="Електричні подовжувачі">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="154" nameRU="Цвет корпуса" type="singleselect" nameUK="Колір корпусу">
+      <attribute_value id="7068" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="7069" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="7070" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="7071" nameRU="Зеленый" nameUK="Зелений"/>
+      <attribute_value id="7072" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="7073" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="7074" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="7075" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="7076" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="7077" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="7078" nameRU="Антрацит" nameUK="Антрацит"/>
+      <attribute_value id="7079" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="7080" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="7081" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="7082" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="7083" nameRU="Медный" nameUK="Мідний"/>
+      <attribute_value id="7084" nameRU="Слоновая кость" nameUK="Слонова кістка"/>
+      <attribute_value id="7085" nameRU="Фисташковый" nameUK="Фісташковий"/>
+      <attribute_value id="7086" nameRU="Кремовый" nameUK="Кремовий"/>
+      <attribute_value id="7087" nameRU="Оливковый" nameUK="Оливковий"/>
+      <attribute_value id="7088" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="7089" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="7090" nameRU="Малиновый" nameUK="Малиновий"/>
+      <attribute_value id="7091" nameRU="Сиреневый" nameUK="Бузковий"/>
+      <attribute_value id="7092" nameRU="Персиковый" nameUK="Персиковий"/>
+      <attribute_value id="7093" nameRU="Серебряный" nameUK="Срібний"/>
+      <attribute_value id="7094" nameRU="Другой" nameUK="Інший"/>
+      <attribute_value id="43982" nameRU="Светло-серый" nameUK="Світло-сірий"/>
+      <attribute_value id="44231" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="83208" nameRU="Прозрачный" nameUK="Прозорий"/>
+    </attribute>
+    <attribute id="1244" nameRU="Длина шнура" type="real" nameUK="Довжина шнура" measureUnitRU="м" min="0" max="200" measureUnitUK="м"/>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="2000" measureUnitUK="В"/>
+    <attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+    <attribute id="4186" nameRU="Защитная крышка" type="bool" nameUK="Захисна кришка"/>
+    <attribute id="5416" nameRU="Количество жил" type="integer" nameUK="Кількість жил"/>
+    <attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+    <attribute id="8336" nameRU="Минимальное сечение провода" type="real" nameUK="Мінімальний перетин дроту" measureUnitRU="кв. мм" min="0" max="5" measureUnitUK="кв. мм"/>
+    <attribute id="8337" nameRU="Максимальное сечение провода" type="real" nameUK="Максимальний перетин дроту" measureUnitRU="кв. мм" min="0" max="5" measureUnitUK="кв. мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="10494" nameRU="Защита от короткого замыкания" type="bool" nameUK="Захист від короткого замикання"/>
+    <attribute id="10632" nameRU="Количество выходных розеток" type="real" nameUK="Кількість вихідних розеток" measureUnitRU="шт" min="1" max="15" measureUnitUK="шт."/>
+    <attribute id="10727" nameRU="Номинальный ток" type="real" nameUK="Номінальний струм" measureUnitRU="А" min="0" max="800" measureUnitUK="А"/>
+    <attribute id="10844" nameRU="Выключатель" type="bool" nameUK="Вимикач"/>
+    <attribute id="10845" nameRU="Заземление" type="bool" nameUK="Заземлення"/>
+    <attribute id="10846" nameRU="Мощность нагрузки" type="real" nameUK="Потужність навантаження" measureUnitRU="Вт" min="0" max="100000" measureUnitUK="Вт"/>
+    <attribute id="10848" nameRU="Сечение жил" type="real" nameUK="Перетин жил" measureUnitRU="кв.мм" min="0" max="50" measureUnitUK="кв.мм"/>
+    <attribute id="10851" nameRU="Выносная розетка" type="bool" nameUK="Зовнішня розетка"/>
+    <attribute id="10852" nameRU="Способ намотки кабеля удлинителя" type="singleselect" nameUK="Спосіб намотування кабелю подовжувача">
+      <attribute_value id="97714" nameRU="Автоматическая" nameUK="Автоматична"/>
+      <attribute_value id="97715" nameRU="Ручная" nameUK="Ручна"/>
+    </attribute>
+    <attribute id="10853" nameRU="Тип удлинителя" type="singleselect" nameUK="Тип подовжувача">
+      <attribute_value id="101927" nameRU="Удлинитель" nameUK="Подовжувач"/>
+      <attribute_value id="101928" nameRU="Сетевой фильтр" nameUK="Мережевий фільтр"/>
+      <attribute_value id="101929" nameRU="Сетевой фильтр-удлинитель" nameUK="Мережевий фільтр-подовжувач"/>
+      <attribute_value id="121357" nameRU="Удлинитель на катушке" nameUK="Подовжувач на котушці"/>
+      <attribute_value id="215770" nameRU="Разветвитель" nameUK="Розгалужувач"/>
+      <attribute_value id="215771" nameRU="Колодка для удлинителя" nameUK="Колодка для подовжувача"/>
+      <attribute_value id="284074" nameRU="Переноска светодиодная" nameUK=""/>
+      <attribute_value id="341245" nameRU="Сетевой переходник" nameUK="Мережевий перехідник"/>
+    </attribute>
+    <attribute id="10854" nameRU="Намотка на рамку" type="bool" nameUK="Намотування на рамку"/>
+    <attribute id="10855" nameRU="Сетевой разъем" type="bool" nameUK="Мережевий роз'єм"/>
+    <attribute id="10856" nameRU="Входная вилка" type="singleselect" nameUK="Вхідна вилка">
+      <attribute_value id="97736" nameRU="ЕURO" nameUK="Євро"/>
+      <attribute_value id="97737" nameRU="IEC" nameUK="IEC"/>
+    </attribute>
+    <attribute id="10857" nameRU="Выходная розетка" type="singleselect" nameUK="Вихідна розетка">
+      <attribute_value id="97746" nameRU="Евро" nameUK="Євро"/>
+      <attribute_value id="97747" nameRU="IEC" nameUK="IEC"/>
+      <attribute_value id="341246" nameRU="Тип G" nameUK="Тип G"/>
+    </attribute>
+    <attribute id="12656" nameRU="Длина провода" type="real" nameUK="Довжина дроту" measureUnitRU="м" min="0" max="50" measureUnitUK="м"/>
+    <attribute id="18207" nameRU="Защитные шторки" type="bool" nameUK="Захисні шторки"/>
+  </category>
+</categories>

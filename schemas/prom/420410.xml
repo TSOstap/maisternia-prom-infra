@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="420410" nameRU="Технические щетки, корщетки" nameUK="Технічні щітки, корщітки">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="1000" measureUnitUK="г"/>
+    <attribute id="70" nameRU="Диаметр щетки" type="real" nameUK="Діаметр щітки" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="71" nameRU="Длина щетки" type="real" nameUK="Довжина щітки" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="64738" nameRU="металл" nameUK="метал"/>
+    </attribute>
+    <attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+      <attribute_value id="66556" nameRU="щетка сметка" nameUK="щітка сметка"/>
+      <attribute_value id="66557" nameRU="корщетка ручная" nameUK="корщетка ручна"/>
+      <attribute_value id="66558" nameRU="корщетка (оснастка для инструмента)" nameUK="корщетка (оснастка для інструменту)"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

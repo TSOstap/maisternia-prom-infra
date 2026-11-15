@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14191107" nameRU="Стабилизаторы напряжения" nameUK="Стабілізатори напруги">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="650" measureUnitUK="кг"/>
+    <attribute id="89" nameRU="Максимальная рабочая температура" type="real" nameUK="Максимальна робоча температура" measureUnitRU="град." min="0" max="100" measureUnitUK="град."/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="186" nameRU="Защита от перегрузок" type="bool" nameUK="Захист від перевантажень"/>
+    <attribute id="426" nameRU="Номинальная мощность" type="real" nameUK="Номінальна потужність" measureUnitRU="кВт" min="0" max="500" measureUnitUK="кВт"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="5000" measureUnitUK="мм"/>
+    <attribute id="746" nameRU="Индикация режима работы" type="bool" nameUK="Індикація режиму роботи"/>
+    <attribute id="756" nameRU="Защита от перепадов напряжения" type="bool" nameUK="Захист від перепадів напруги"/>
+    <attribute id="2564" nameRU="Частота тока" type="integer" nameUK="Частота струму" measureUnitRU="Гц" min="0" max="500" measureUnitUK="Гц"/>
+    <attribute id="3949" nameRU="Минимальная рабочая температура" type="real" nameUK="Мінімальна робоча температура" measureUnitRU="град." min="-40" max="1" measureUnitUK="град."/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+    </attribute>
+    <attribute id="6038" nameRU="Точность измерения +/-" type="real" nameUK="Точність вимірювання +/-" measureUnitRU="%" min="0" max="20" measureUnitUK="%"/>
+    <attribute id="6831" nameRU="Степень защиты IP" type="integer" nameUK="Ступінь захисту IP"/>
+    <attribute id="7442" nameRU="Выходное напряжение" type="real" nameUK="Вихідна напруга" measureUnitRU="В" min="0" max="500" measureUnitUK="В"/>
+    <attribute id="7499" nameRU="Выходной ток, не более" type="real" nameUK="Вихідний струм, не більше" measureUnitRU="А" min="0" max="500" measureUnitUK="А"/>
+    <attribute id="7577" nameRU="Максимальная температура хранения" type="real" nameUK="Максимальна температура зберігання" measureUnitRU="град." min="0" max="200" measureUnitUK="град."/>
+    <attribute id="7578" nameRU="Минимальная температура хранения" type="real" nameUK="Мінімальна температура зберігання" measureUnitRU="град." min="-50" max="0" measureUnitUK="град."/>
+    <attribute id="10272" nameRU="Тип монтажа" type="singleselect" nameUK="Тип монтажу">
+      <attribute_value id="95446" nameRU="Напольный" nameUK="Підлоговий"/>
+      <attribute_value id="112763" nameRU="Настенный" nameUK="Настінний"/>
+      <attribute_value id="275015" nameRU="Напольный/Навесной" nameUK="Підлоговий/Навісний"/>
+    </attribute>
+    <attribute id="10451" nameRU="КПД, не менее" type="real" nameUK="ККД, не менше" measureUnitRU="%" min="1" max="100" measureUnitUK="%"/>
+    <attribute id="10494" nameRU="Защита от короткого замыкания" type="bool" nameUK="Захист від короткого замикання"/>
+    <attribute id="10648" nameRU="Минимальное входное напряжение" type="real" nameUK="Мінімальна вхідна напруга" measureUnitRU="В" min="0" max="500" measureUnitUK="В"/>
+    <attribute id="10649" nameRU="Максимальное входное напряжение" type="real" nameUK="Максимальна вхідна напруга" measureUnitRU="В" min="0" max="700" measureUnitUK="В"/>
+    <attribute id="10675" nameRU="Дополнительные устройства" type="integer" nameUK="Додаткові пристрої" measureUnitRU="шт" min="0" max="5" measureUnitUK="шт."/>
+    <attribute id="10677" nameRU="Минимальное время стабилизации" type="real" nameUK="Мінімальний час стабілізації" measureUnitRU="мс" min="0" max="40" measureUnitUK="мс"/>
+    <attribute id="10678" nameRU="Максимальное время стабилизации" type="real" nameUK="Максимальний час стабілізації" measureUnitRU="мс" min="20" max="100" measureUnitUK="мс"/>
+    <attribute id="10680" nameRU="Тип стабилизатора" type="singleselect" nameUK="Тип стабілізатора">
+      <attribute_value id="95786" nameRU="Электромеханический" nameUK="Електромеханічний"/>
+      <attribute_value id="95787" nameRU="Релейный" nameUK="Релейний"/>
+      <attribute_value id="116133" nameRU="Симисторный" nameUK="Симісторний"/>
+      <attribute_value id="272485" nameRU="Инверторный" nameUK="Інверторний"/>
+      <attribute_value id="279298" nameRU="Тиристорный" nameUK="Тиристорний"/>
+      <attribute_value id="282474" nameRU="Гибрид" nameUK="Гібрид"/>
+    </attribute>
+    <attribute id="10681" nameRU="Микропроцессорное управление" type="bool" nameUK="Мікропроцесорне управління"/>
+    <attribute id="10683" nameRU="Тип индикации" type="singleselect" nameUK="Тип індикації">
+      <attribute_value id="95825" nameRU="Жидкокристаллическая" nameUK="Рідкокристалічна"/>
+      <attribute_value id="95826" nameRU="Вакуумно-люминесцентная" nameUK="Вакуумно-люмінесцентна"/>
+      <attribute_value id="95827" nameRU="Светодиодная" nameUK="Світлодіодна"/>
+      <attribute_value id="95828" nameRU="Газоразрядная" nameUK="Газорозрядна"/>
+    </attribute>
+    <attribute id="10684" nameRU="Количество фаз" type="singleselect" nameUK="Кількість фаз">
+      <attribute_value id="361925" nameRU="1.0" nameUK=""/>
+      <attribute_value id="361926" nameRU="2.0" nameUK=""/>
+      <attribute_value id="361927" nameRU="3.0" nameUK=""/>
+    </attribute>
+    <attribute id="12267" nameRU="Полная мощность" type="real" nameUK="Повна потужність" measureUnitRU="кВА" min="0" max="500" measureUnitUK="кВА"/>
+    <attribute id="12599" nameRU="Тип охлаждения" type="singleselect" nameUK="Тип охолодження">
+      <attribute_value id="361810" nameRU="Естественное" nameUK="Природне"/>
+      <attribute_value id="361811" nameRU="Принудительное (вентилятор)" nameUK="Примусове (вентилятор)"/>
+    </attribute>
+    <attribute id="18476" nameRU="Защита от помех" type="bool" nameUK="Захист від перешкод"/>
+    <attribute id="19346" nameRU="Назначение / Применение" type="multiselect" nameUK="Призначення / Застосування">
+      <attribute_value id="348295" nameRU="Для дома / квартиры (общее)" nameUK="Для дому / квартири (загальне)"/>
+      <attribute_value id="348296" nameRU="Для котла (газового / твердотопливного)" nameUK="Для котла (газового / твердопаливного)"/>
+      <attribute_value id="348297" nameRU="Для холодильника" nameUK="Для холодильника"/>
+      <attribute_value id="348298" nameRU="Для насосов и водоснабжения" nameUK="Для насосів і водопостачання"/>
+      <attribute_value id="348299" nameRU="Для инверторов и солнечных систем" nameUK="Для інверторів і сонячних систем"/>
+      <attribute_value id="348300" nameRU="Для офисной техники и ПК" nameUK="Для офісної техніки та ПК"/>
+      <attribute_value id="348301" nameRU="Для производства / промышленное" nameUK="Для виробництва / промислове"/>
+      <attribute_value id="361928" nameRU="Для котла" nameUK="Для котла"/>
+      <attribute_value id="361929" nameRU="Резервное питание для котла" nameUK="Резервне живлення для котла"/>
+    </attribute>
+    <attribute id="19347" nameRU="Количество ступеней стабилизации" type="singleselect" nameUK="Кількість ступенів стабілізації">
+      <attribute_value id="348302" nameRU="Бесступенчатый (инверторный)" nameUK="Безступінчастий (інверторний)"/>
+      <attribute_value id="348303" nameRU="7 ступеней" nameUK="7 ступенів"/>
+      <attribute_value id="348304" nameRU="9 ступеней" nameUK="9 ступенів"/>
+      <attribute_value id="348305" nameRU="12 ступеней" nameUK="12 ступенів"/>
+      <attribute_value id="348306" nameRU="16 ступеней" nameUK="16 ступенів"/>
+      <attribute_value id="348307" nameRU="36 ступеней" nameUK="36 ступенів"/>
+    </attribute>
+    <attribute id="19348" nameRU="Задержка включения" type="singleselect" nameUK="Затримка включення">
+      <attribute_value id="348308" nameRU="Есть задержка включения" nameUK="Є затримка включення"/>
+      <attribute_value id="348309" nameRU="Без задержки включения" nameUK="Без затримки включення"/>
+    </attribute>
+    <attribute id="19349" nameRU="Байпас (обходной режим)" type="singleselect" nameUK="Байпас (обхідний режим)">
+      <attribute_value id="348310" nameRU="Есть байпас" nameUK=""/>
+      <attribute_value id="348311" nameRU="Без байпаса" nameUK=""/>
+    </attribute>
+    <attribute id="19366" nameRU="Пригодность для холодных помещений" type="singleselect" nameUK="Придатність для холодних приміщень">
+      <attribute_value id="348549" nameRU="Стандартный (от 0°C)" nameUK="Стандартний (від 0°C)"/>
+      <attribute_value id="348550" nameRU="Морозостойкий (от -20°C и ниже)" nameUK="Морозостійкий (від -20°C і нижче)"/>
+    </attribute>
+    <attribute id="19530" nameRU="Диапазон входного напряжения" type="singleselect" nameUK="Діапазон вхідної напруги">
+      <attribute_value id="361804" nameRU="90–350 В" nameUK="90–350 В"/>
+      <attribute_value id="361805" nameRU="110–330 В" nameUK="110–330 В"/>
+      <attribute_value id="361806" nameRU="120–280 В" nameUK="120–280 В"/>
+      <attribute_value id="361807" nameRU="135–275 В" nameUK="135–275 В"/>
+      <attribute_value id="361808" nameRU="140–260 В" nameUK="140–260 В"/>
+      <attribute_value id="361809" nameRU="160–260 В" nameUK="160–260 В"/>
+    </attribute>
+    <attribute id="19531" nameRU="Виды защиты" type="singleselect" nameUK="Види захисту">
+      <attribute_value id="361812" nameRU="От перегрузки" nameUK="Від перевантаження"/>
+      <attribute_value id="361813" nameRU="От короткого замыкания" nameUK="Від короткого замикання"/>
+      <attribute_value id="361814" nameRU="От высокого / низкого напряжения" nameUK="Від високої / низької напруги"/>
+      <attribute_value id="361815" nameRU="От перегрева" nameUK="Від перегріву"/>
+      <attribute_value id="361816" nameRU="От импульсных помех" nameUK="Від імпульсних перешкод"/>
+    </attribute>
+    <attribute id="19532" nameRU="Уровень шума, дБ" type="singleselect" nameUK="Рівень шуму, дБ">
+      <attribute_value id="361817" nameRU="Бесшумный (до 25 дБ)" nameUK="Безшумний (до 25 дБ)"/>
+      <attribute_value id="361818" nameRU="25–40 дБ" nameUK="25–40 дБ"/>
+      <attribute_value id="361819" nameRU="Более 40 дБ" nameUK="Понад 40 дБ"/>
+    </attribute>
+  </category>
+</categories>

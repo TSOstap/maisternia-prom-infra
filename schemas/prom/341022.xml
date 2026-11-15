@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="341022" nameRU="Моторные масла" nameUK="Моторні мастила">
+    <attribute id="1026" nameRU="Тактность двигателя" type="singleselect" nameUK="Тактность двигуна">
+      <attribute_value id="9288" nameRU="Четырёхтактный" nameUK="Чотиритактний"/>
+      <attribute_value id="9289" nameRU="Двухтактный" nameUK="Двотактний"/>
+    </attribute>
+    <attribute id="5599" nameRU="Вид масла" type="singleselect" nameUK="Вид масла">
+      <attribute_value id="136567" nameRU="Синтетическое" nameUK="Синтетичне"/>
+      <attribute_value id="136568" nameRU="Минеральное" nameUK="Мінеральне"/>
+      <attribute_value id="136569" nameRU="Полусинтетическое" nameUK="Напівсинтетичне"/>
+      <attribute_value id="136844" nameRU="Гидрокрекинговое" nameUK="Гідрокрекінгове"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="13481" nameRU="Для типа двигателей" type="singleselect" nameUK="Для типу двигунів">
+      <attribute_value id="136573" nameRU="Бензиновый" nameUK="Бензиновий"/>
+      <attribute_value id="136574" nameRU="Дизельный" nameUK="Дизельний"/>
+      <attribute_value id="136575" nameRU="Турбодизельный" nameUK="Турбодизельний"/>
+      <attribute_value id="147386" nameRU="Все типы" nameUK="Всі типи"/>
+      <attribute_value id="242360" nameRU="Газовый " nameUK="Газовий "/>
+      <attribute_value id="273812" nameRU="Бензиновый / Гибридный" nameUK="Бензиновий / Гібридний"/>
+      <attribute_value id="276042" nameRU="Бензиновый с ГБО" nameUK="Бензиновий з ГБО"/>
+      <attribute_value id="290085" nameRU="Бензиновый / Дизельный" nameUK="Бензиновий / Дизельний"/>
+    </attribute>
+    <attribute id="13482" nameRU="Применение по типу" type="singleselect" nameUK="Застосування за типом">
+      <attribute_value id="136579" nameRU="Легковые автомобили" nameUK="Легкові автомобілі"/>
+      <attribute_value id="136580" nameRU="Грузовые автомобили" nameUK="Вантажні автомобілі"/>
+      <attribute_value id="136581" nameRU="Мотоциклы" nameUK="Мотоцикли"/>
+      <attribute_value id="137027" nameRU="Другие" nameUK="Інші"/>
+      <attribute_value id="147385" nameRU="Сельхозтехника" nameUK="Сільгосптехніка"/>
+      <attribute_value id="262707" nameRU="Суда" nameUK="Суду"/>
+      <attribute_value id="262710" nameRU="Лодки" nameUK="Човни"/>
+      <attribute_value id="262711" nameRU="универсальное" nameUK="універсальне"/>
+      <attribute_value id="270468" nameRU="Спецтехника" nameUK="Спецтехніка"/>
+      <attribute_value id="291015" nameRU="Бензопилы" nameUK="Бензопили"/>
+      <attribute_value id="361780" nameRU="Генераторы" nameUK="Генератори"/>
+      <attribute_value id="361781" nameRU="Газонокосилки" nameUK="Газонокосарки"/>
+      <attribute_value id="361782" nameRU="Мотоблоки" nameUK="Мотоблоки"/>
+      <attribute_value id="361783" nameRU="Мотопомпы" nameUK="Мотопомпи"/>
+      <attribute_value id="361784" nameRU="Культиваторы" nameUK="Культиватори"/>
+      <attribute_value id="361785" nameRU="Снегоуборочная техника" nameUK="Снігоприбиральна техніка"/>
+    </attribute>
+    <attribute id="13483" nameRU="Вязкость масла по SAE" type="singleselect" nameUK="В'язкість масла по SAE">
+      <attribute_value id="136584" nameRU="0W-20" nameUK="0W-20"/>
+      <attribute_value id="136585" nameRU="0W-30" nameUK="0W-30"/>
+      <attribute_value id="136586" nameRU="0W-40" nameUK="0W-40"/>
+      <attribute_value id="136587" nameRU="5W-20" nameUK="5W-20"/>
+      <attribute_value id="136588" nameRU="5W-30" nameUK="5W-30"/>
+      <attribute_value id="136589" nameRU="5W-40" nameUK="5W-40"/>
+      <attribute_value id="136590" nameRU="5W-50" nameUK="5W-50"/>
+      <attribute_value id="136591" nameRU="10W-30" nameUK="10W-30"/>
+      <attribute_value id="136592" nameRU="10W-40" nameUK="10W-40"/>
+      <attribute_value id="136593" nameRU="10W-50" nameUK="10W-50"/>
+      <attribute_value id="136594" nameRU="10W-60" nameUK="10W-60"/>
+      <attribute_value id="136595" nameRU="15W-40" nameUK="15W-40"/>
+      <attribute_value id="136596" nameRU="15W-50" nameUK="15W-50"/>
+      <attribute_value id="136597" nameRU="20W-50" nameUK="20W-50"/>
+      <attribute_value id="136598" nameRU="75W-80" nameUK="75W-80"/>
+      <attribute_value id="136599" nameRU="75W-85" nameUK="75W-85"/>
+      <attribute_value id="136600" nameRU="75W-90" nameUK="75W-90"/>
+      <attribute_value id="136601" nameRU="75W-140" nameUK="75W-140"/>
+      <attribute_value id="136602" nameRU="75W" nameUK="75W"/>
+      <attribute_value id="136603" nameRU="80W" nameUK="80W"/>
+      <attribute_value id="136604" nameRU="80W-85" nameUK="80W-85"/>
+      <attribute_value id="136605" nameRU="80W-90" nameUK="80W-90"/>
+      <attribute_value id="136606" nameRU="85W-90" nameUK="85W-90"/>
+      <attribute_value id="136607" nameRU="85W-140" nameUK="85W-140"/>
+      <attribute_value id="164237" nameRU="0W-10" nameUK="0W-10"/>
+      <attribute_value id="168087" nameRU="80W-140" nameUK="80W-140"/>
+      <attribute_value id="170865" nameRU="0W-50" nameUK="0W-50"/>
+      <attribute_value id="201693" nameRU="5W-60" nameUK="5W-60"/>
+      <attribute_value id="273237" nameRU="0W-16" nameUK="0W-16"/>
+      <attribute_value id="285257" nameRU="20W-20" nameUK=""/>
+      <attribute_value id="290956" nameRU="15W-60" nameUK=""/>
+      <attribute_value id="294503" nameRU="20W-40" nameUK=""/>
+      <attribute_value id="297701" nameRU="0W-12" nameUK=""/>
+      <attribute_value id="297702" nameRU="0W-8" nameUK=""/>
+      <attribute_value id="301834" nameRU="30" nameUK=""/>
+      <attribute_value id="301967" nameRU="50" nameUK=""/>
+      <attribute_value id="303921" nameRU="140" nameUK=""/>
+      <attribute_value id="304445" nameRU="20" nameUK=""/>
+      <attribute_value id="304742" nameRU="10W" nameUK=""/>
+      <attribute_value id="349701" nameRU="90W" nameUK="90W"/>
+      <attribute_value id="349702" nameRU="ATF" nameUK="ATF"/>
+      <attribute_value id="349703" nameRU="ATF 6" nameUK="ATF 6"/>
+      <attribute_value id="349704" nameRU="ATF 8" nameUK="ATF 8"/>
+      <attribute_value id="349706" nameRU="ATF IID" nameUK="ATF IID"/>
+      <attribute_value id="349707" nameRU="ATF III G" nameUK="ATF III G"/>
+      <attribute_value id="349708" nameRU="ATF III H" nameUK="ATF III H"/>
+      <attribute_value id="349709" nameRU="ATF Multi-Vehicle" nameUK="ATF Multi-Vehicle"/>
+      <attribute_value id="349710" nameRU="ATF U" nameUK="ATF U"/>
+      <attribute_value id="349711" nameRU="ATF VI" nameUK="ATF VI"/>
+      <attribute_value id="349712" nameRU="CVT" nameUK="CVT"/>
+      <attribute_value id="349713" nameRU="DCT" nameUK="DCT"/>
+      <attribute_value id="349714" nameRU="DCTF" nameUK="DCTF"/>
+      <attribute_value id="349715" nameRU="Dexron IIE" nameUK="Dexron IIE"/>
+      <attribute_value id="349716" nameRU="Dexron IIIG" nameUK="Dexron IIIG"/>
+      <attribute_value id="349717" nameRU="Dexron VI" nameUK="Dexron VI"/>
+      <attribute_value id="349718" nameRU="L-EGD" nameUK="L-EGD"/>
+      <attribute_value id="349719" nameRU="LT71141" nameUK="LT71141"/>
+      <attribute_value id="349720" nameRU="SAE 20" nameUK="SAE 20"/>
+      <attribute_value id="349721" nameRU="SAE 30" nameUK="SAE 30"/>
+      <attribute_value id="349722" nameRU="SAE40" nameUK="SAE40"/>
+      <attribute_value id="349723" nameRU="SAE 50" nameUK="SAE 50"/>
+      <attribute_value id="349725" nameRU="134" nameUK="134"/>
+    </attribute>
+    <attribute id="13493" nameRU="Объем жидкости" type="real" nameUK="Об'єм рідини" measureUnitRU="л" min="0" max="300" measureUnitUK="л"/>
+    <attribute id="13503" nameRU="Энергосберегающее масло" type="bool" nameUK="Енергозберігаюче масло"/>
+    <attribute id="17800" nameRU="Стандарт API" type="singleselect" nameUK="Стандарт API">
+      <attribute_value id="228922" nameRU="SM" nameUK="SM"/>
+      <attribute_value id="228923" nameRU="SL" nameUK="SL"/>
+      <attribute_value id="228924" nameRU="SJ" nameUK="SJ"/>
+      <attribute_value id="228925" nameRU="SH" nameUK="SH"/>
+      <attribute_value id="228926" nameRU="SF" nameUK="SF"/>
+      <attribute_value id="228927" nameRU="SN" nameUK="SN"/>
+      <attribute_value id="228928" nameRU="CJ-4" nameUK="CJ-4"/>
+      <attribute_value id="228929" nameRU="CI-4" nameUK="CI-4"/>
+      <attribute_value id="228930" nameRU="CH-4" nameUK="CH-4"/>
+      <attribute_value id="228931" nameRU="CG-4" nameUK="CG-4"/>
+      <attribute_value id="228932" nameRU="CF-4" nameUK="CF-4"/>
+      <attribute_value id="228933" nameRU="CF-2" nameUK="CF-2"/>
+      <attribute_value id="228934" nameRU="CF" nameUK="CF"/>
+      <attribute_value id="228935" nameRU="CE" nameUK="CE"/>
+      <attribute_value id="228936" nameRU="CD" nameUK="CD"/>
+      <attribute_value id="228937" nameRU="CC" nameUK="CC"/>
+      <attribute_value id="228938" nameRU="CB" nameUK="CB"/>
+      <attribute_value id="228939" nameRU="CA" nameUK="CA"/>
+      <attribute_value id="230823" nameRU="TA" nameUK="TA"/>
+      <attribute_value id="230824" nameRU="TB" nameUK="TB"/>
+      <attribute_value id="230825" nameRU="TC" nameUK="TC"/>
+      <attribute_value id="230826" nameRU="TD" nameUK="TD"/>
+      <attribute_value id="239620" nameRU="SG" nameUK="SG"/>
+      <attribute_value id="240080" nameRU="CF-3" nameUK="CF-3"/>
+      <attribute_value id="251235" nameRU="GL-1" nameUK="GL-1"/>
+      <attribute_value id="252146" nameRU="SN/CF" nameUK="SN/CF"/>
+      <attribute_value id="252147" nameRU="SL/CF" nameUK="SL/CF"/>
+      <attribute_value id="252148" nameRU="SH/CF" nameUK="SH/CF"/>
+      <attribute_value id="252149" nameRU="SJ/CD" nameUK="SJ/CD"/>
+      <attribute_value id="252150" nameRU="SM/CF" nameUK="SM/CF"/>
+      <attribute_value id="252151" nameRU="CF-4/CF" nameUK="CF-4/CF"/>
+      <attribute_value id="252152" nameRU="SL/CI-4" nameUK="SL/CI-4"/>
+      <attribute_value id="252153" nameRU="CH-4/SL" nameUK="CH-4/SL"/>
+      <attribute_value id="252154" nameRU="CJ-4/SN" nameUK="CJ-4/SN"/>
+      <attribute_value id="268915" nameRU="SN PLUS" nameUK="SN PLUS"/>
+      <attribute_value id="268916" nameRU="SP" nameUK="SP"/>
+      <attribute_value id="270038" nameRU="CI-4/SL" nameUK="CI-4/SL"/>
+      <attribute_value id="273104" nameRU="SG/CD" nameUK="SG/CD"/>
+      <attribute_value id="274557" nameRU="CF-4/SG" nameUK="CF-4/SG"/>
+      <attribute_value id="274743" nameRU="SG/SJ" nameUK="SG/SJ"/>
+      <attribute_value id="275979" nameRU="CK-4/CJ-4" nameUK="CK-4/CJ-4"/>
+      <attribute_value id="283040" nameRU="SJ/CF" nameUK=""/>
+      <attribute_value id="290962" nameRU="SP/RC" nameUK=""/>
+      <attribute_value id="293071" nameRU="CK-4/SN" nameUK=""/>
+      <attribute_value id="293087" nameRU="CK-4" nameUK=""/>
+      <attribute_value id="296188" nameRU="CD/CF" nameUK=""/>
+      <attribute_value id="296189" nameRU="CD/SF" nameUK=""/>
+      <attribute_value id="303003" nameRU="CG-4/SF" nameUK=""/>
+      <attribute_value id="303004" nameRU="SF/CC" nameUK=""/>
+      <attribute_value id="303269" nameRU="SC/CC" nameUK=""/>
+      <attribute_value id="303270" nameRU="SG/CF" nameUK=""/>
+      <attribute_value id="303271" nameRU="CG-4/SJ" nameUK=""/>
+      <attribute_value id="303741" nameRU="CH-4/SJ" nameUK=""/>
+      <attribute_value id="304181" nameRU="SN/CH-4" nameUK=""/>
+      <attribute_value id="304443" nameRU="SD/CB" nameUK=""/>
+      <attribute_value id="304605" nameRU="SN PLUS/SP" nameUK=""/>
+      <attribute_value id="304740" nameRU="SM/SL" nameUK=""/>
+      <attribute_value id="304827" nameRU="CG-4/SG" nameUK=""/>
+      <attribute_value id="304999" nameRU="SP/SN" nameUK="SP/SN"/>
+      <attribute_value id="305523" nameRU="SN/SM" nameUK=""/>
+      <attribute_value id="305548" nameRU="SL/SM" nameUK="SL/SM"/>
+      <attribute_value id="305586" nameRU="SD/CС" nameUK=""/>
+      <attribute_value id="306434" nameRU="CI-4/SJ" nameUK=""/>
+      <attribute_value id="306435" nameRU="SL/CF-4" nameUK=""/>
+      <attribute_value id="307195" nameRU="RC" nameUK=""/>
+      <attribute_value id="321459" nameRU="TNCC+" nameUK=""/>
+      <attribute_value id="333174" nameRU="CH-4/SN" nameUK=""/>
+      <attribute_value id="345297" nameRU="SQ-RC" nameUK=""/>
+    </attribute>
+    <attribute id="18003" nameRU="Стандарт ACEA" type="multiselect" nameUK="Стандарт ACEA">
+      <attribute_value id="240081" nameRU="A1/B1" nameUK="A1/B1"/>
+      <attribute_value id="240082" nameRU="A3/B3" nameUK="A3/B3"/>
+      <attribute_value id="240083" nameRU="A3/B4" nameUK="A3/B4"/>
+      <attribute_value id="240084" nameRU="A5/B5" nameUK="A5/B5"/>
+      <attribute_value id="240085" nameRU="C1" nameUK="C1"/>
+      <attribute_value id="240086" nameRU="C2" nameUK="C2"/>
+      <attribute_value id="240087" nameRU="C3" nameUK="C3"/>
+      <attribute_value id="240088" nameRU="C4" nameUK="C4"/>
+      <attribute_value id="240089" nameRU="E4" nameUK="E4"/>
+      <attribute_value id="240090" nameRU="E6" nameUK="E6"/>
+      <attribute_value id="240091" nameRU="E7" nameUK="E7"/>
+      <attribute_value id="240092" nameRU="E9" nameUK="E9"/>
+      <attribute_value id="252155" nameRU="C3-08" nameUK="C3-08"/>
+      <attribute_value id="252156" nameRU="C4-08" nameUK="C4-08"/>
+      <attribute_value id="252157" nameRU="A3-04" nameUK="A3-04"/>
+      <attribute_value id="252158" nameRU="B4-04" nameUK="B4-04"/>
+      <attribute_value id="252159" nameRU="dexos2" nameUK="dexos2"/>
+      <attribute_value id="252467" nameRU="B4-08" nameUK="B4-08"/>
+      <attribute_value id="252779" nameRU="В3-04" nameUK="В3-04"/>
+      <attribute_value id="253168" nameRU="A3-08" nameUK="A3-08"/>
+      <attribute_value id="270037" nameRU="C5" nameUK="C5"/>
+      <attribute_value id="274556" nameRU="E2" nameUK="E2"/>
+      <attribute_value id="283071" nameRU="A3-98" nameUK=""/>
+      <attribute_value id="283072" nameRU="B3-98" nameUK=""/>
+      <attribute_value id="290964" nameRU="dexos1" nameUK=""/>
+      <attribute_value id="292490" nameRU="C6" nameUK=""/>
+      <attribute_value id="296187" nameRU="A2/B2" nameUK=""/>
+      <attribute_value id="301859" nameRU="A7/B7" nameUK=""/>
+      <attribute_value id="303002" nameRU="E3" nameUK=""/>
+      <attribute_value id="304424" nameRU="C3-16" nameUK=""/>
+      <attribute_value id="304510" nameRU="C2-16" nameUK=""/>
+      <attribute_value id="304604" nameRU="C5/C6" nameUK=""/>
+      <attribute_value id="304717" nameRU="E5" nameUK="E5"/>
+      <attribute_value id="304771" nameRU="E11" nameUK=""/>
+      <attribute_value id="304824" nameRU="E2-96 Issue 5" nameUK=""/>
+      <attribute_value id="304825" nameRU="E7-08" nameUK=""/>
+      <attribute_value id="304828" nameRU="E4-08" nameUK=""/>
+      <attribute_value id="307968" nameRU="E8" nameUK=""/>
+      <attribute_value id="349742" nameRU="A1" nameUK="A1"/>
+      <attribute_value id="349743" nameRU="A1-12" nameUK="A1-12"/>
+      <attribute_value id="349744" nameRU="A1/B1-04" nameUK="A1/B1-04"/>
+      <attribute_value id="349745" nameRU="A1/B1-12" nameUK="A1/B1-12"/>
+      <attribute_value id="349746" nameRU="A1/B1-16" nameUK="A1/B1-16"/>
+      <attribute_value id="349747" nameRU="349746" nameUK=""/>
+      <attribute_value id="349748" nameRU="A2" nameUK="A2"/>
+      <attribute_value id="349749" nameRU="A2-02" nameUK="A2-02"/>
+    </attribute>
+    <attribute id="18009" nameRU="Код запчасти" type="free" nameUK="Код запчастини"/>
+    <attribute id="18461" nameRU="Стандарт ILSAC" type="multiselect" nameUK="Стандарт ILSAC">
+      <attribute_value id="270986" nameRU="GF-6" nameUK="GF-6"/>
+      <attribute_value id="273189" nameRU="GF-5" nameUK="GF-5"/>
+      <attribute_value id="273799" nameRU="GF-4" nameUK="GF-4"/>
+      <attribute_value id="290786" nameRU="GF-3" nameUK=""/>
+      <attribute_value id="292423" nameRU="GF-6A" nameUK=""/>
+      <attribute_value id="292425" nameRU="GF-6B" nameUK=""/>
+      <attribute_value id="301820" nameRU="GF-2" nameUK="GF-2"/>
+      <attribute_value id="345301" nameRU="GF-7A" nameUK=""/>
+    </attribute>
+    <attribute id="18578" nameRU="Допуск Mercedes Benz" type="multiselect" nameUK="Допуск Mercedes Benz">
+      <attribute_value id="279824" nameRU="MB 229.1" nameUK="MB 229.1"/>
+      <attribute_value id="279825" nameRU="MB 229.3" nameUK="MB 229.3"/>
+      <attribute_value id="279826" nameRU="MB 229.5" nameUK="MB 229.5"/>
+      <attribute_value id="279827" nameRU="MB 229.31" nameUK="MB 229.31"/>
+      <attribute_value id="279828" nameRU="MB 229.51" nameUK="MB 229.51"/>
+      <attribute_value id="279829" nameRU="MB 229.52" nameUK="MB 229.52"/>
+      <attribute_value id="279830" nameRU="MB 226.5" nameUK="226.5 MB"/>
+      <attribute_value id="279831" nameRU="MB 226.51" nameUK="MB 226.51"/>
+      <attribute_value id="279832" nameRU="MB 229.6" nameUK="MB 229.6"/>
+      <attribute_value id="279833" nameRU="MB 229.71" nameUK="MB 229.71"/>
+      <attribute_value id="279834" nameRU="MB 228.1" nameUK="MB 228.1"/>
+      <attribute_value id="279835" nameRU="MB 228.3" nameUK="MB 228.3"/>
+      <attribute_value id="279836" nameRU="MB 228.5" nameUK="MB 228.5"/>
+      <attribute_value id="279837" nameRU="MB 228.31" nameUK="MB 228.31"/>
+      <attribute_value id="279838" nameRU="MB 228.51" nameUK="MB 228.51"/>
+      <attribute_value id="279839" nameRU="MB 228.61" nameUK="MB 228.61"/>
+      <attribute_value id="292491" nameRU="MB 229.72" nameUK=""/>
+      <attribute_value id="293080" nameRU="MB 228.52" nameUK=""/>
+      <attribute_value id="302495" nameRU="Approval 228.50" nameUK=""/>
+      <attribute_value id="303742" nameRU="MB 226.9" nameUK=""/>
+      <attribute_value id="304826" nameRU="MB 227.1" nameUK=""/>
+      <attribute_value id="345292" nameRU="MB 226.52" nameUK=""/>
+    </attribute>
+    <attribute id="18580" nameRU="Допуск Volkswagen" type="multiselect" nameUK="Допуск Volkswagen">
+      <attribute_value id="279891" nameRU="VW 500 00" nameUK="VW 500 00"/>
+      <attribute_value id="279892" nameRU="VW 501 01" nameUK="VW 501 01"/>
+      <attribute_value id="279893" nameRU="VW 502 00" nameUK="VW 502 00"/>
+      <attribute_value id="279894" nameRU="VW 503 00" nameUK="VW 503 00"/>
+      <attribute_value id="279895" nameRU="VW 503 01" nameUK="VW 503 01"/>
+      <attribute_value id="279896" nameRU="VW 505 00" nameUK="VW 505 00"/>
+      <attribute_value id="279897" nameRU="VW 505 01" nameUK="VW 505 01"/>
+      <attribute_value id="279898" nameRU="VW 506 00" nameUK="VW 506 00"/>
+      <attribute_value id="279899" nameRU="VW 506 01" nameUK="VW 506 01"/>
+      <attribute_value id="279900" nameRU="VW 504 00" nameUK="VW 504 00"/>
+      <attribute_value id="279901" nameRU="VW 507 00" nameUK="VW 507 00"/>
+      <attribute_value id="279902" nameRU="VW 508 00" nameUK="VW 508 00"/>
+      <attribute_value id="279903" nameRU="VW 509 00" nameUK="VW 509 00"/>
+      <attribute_value id="301825" nameRU="VW 511 00" nameUK=""/>
+      <attribute_value id="302682" nameRU="VW 501 00" nameUK=""/>
+      <attribute_value id="306441" nameRU="VW 505 04" nameUK=""/>
+    </attribute>
+    <attribute id="18610" nameRU="Допуск Peugeot, Citroen" type="multiselect" nameUK="Допуск Peugeot, Citroen">
+      <attribute_value id="282903" nameRU="PSA B71 2290" nameUK="PSA B71 2290"/>
+      <attribute_value id="282904" nameRU="PSA B71 2294" nameUK="PSA B71 2294"/>
+      <attribute_value id="282905" nameRU="PSA B71 2295" nameUK="PSA B71 2295"/>
+      <attribute_value id="282906" nameRU="PSA B71 2296" nameUK="PSA B71 2296"/>
+      <attribute_value id="282907" nameRU="PSA B71 2300" nameUK="PSA B71 2300"/>
+      <attribute_value id="282908" nameRU="PSA B71 2312" nameUK="PSA B71 2312"/>
+      <attribute_value id="292426" nameRU="B 71 2010" nameUK="B 71 2010"/>
+      <attribute_value id="304409" nameRU="PSA B71 2297" nameUK="PSA B71 2297"/>
+      <attribute_value id="304509" nameRU="B71 2290-17" nameUK="B71 2290-17"/>
+    </attribute>
+    <attribute id="18611" nameRU="Допуск General Motors" type="singleselect" nameUK="Допуск General Motors">
+      <attribute_value id="283047" nameRU="LL-A-025/LL-B-025" nameUK="LL-A-025/LL-B-025"/>
+      <attribute_value id="293069" nameRU="dexos 2" nameUK="Dexos 2"/>
+      <attribute_value id="296062" nameRU="MS-6395" nameUK="MS-6395"/>
+      <attribute_value id="301739" nameRU="LL A-025" nameUK="LL A-025"/>
+      <attribute_value id="301740" nameRU="LL B-025" nameUK="LL B-025"/>
+      <attribute_value id="301855" nameRU="Dexos1 Gen 2" nameUK="Dexos1 Gen 2"/>
+      <attribute_value id="301881" nameRU="Dexos1 Gen 3" nameUK="Dexos1 Gen 3"/>
+      <attribute_value id="304606" nameRU="Dexos D" nameUK="Dexos D"/>
+      <attribute_value id="305251" nameRU="GM 6094 M" nameUK="GM 6094 M"/>
+    </attribute>
+    <attribute id="18613" nameRU="Допуск Renault" type="singleselect" nameUK="Допуск Renault">
+      <attribute_value id="283074" nameRU="RN17" nameUK="RN17"/>
+      <attribute_value id="283501" nameRU="RN0700" nameUK="RN0700"/>
+      <attribute_value id="283502" nameRU="RN0710" nameUK="RN0710"/>
+      <attribute_value id="283503" nameRU="RN0720" nameUK="RN0720"/>
+      <attribute_value id="284772" nameRU="RLD-2" nameUK="RLD-2"/>
+      <attribute_value id="292424" nameRU="RN 17 FE" nameUK="RN 17 FE"/>
+      <attribute_value id="293077" nameRU="RVI RLD-4" nameUK="RVI RLD-4"/>
+      <attribute_value id="293078" nameRU="VI RLD-3" nameUK="VI RLD-3"/>
+      <attribute_value id="300222" nameRU="RN0700/RN0710" nameUK="RN0700/RN0710"/>
+      <attribute_value id="302832" nameRU="RLD-3" nameUK="RLD-3"/>
+      <attribute_value id="345383" nameRU="RN17/RN0700/RN0710" nameUK="RN17/RN0700/RN0710"/>
+    </attribute>
+    <attribute id="18655" nameRU="Допуск BMW" type="multiselect" nameUK="Допуск BMW">
+      <attribute_value id="291011" nameRU="LL-04" nameUK="LL-04"/>
+      <attribute_value id="291028" nameRU="LL-01" nameUK="LL-01"/>
+      <attribute_value id="291161" nameRU="LL-12 FE" nameUK="LL-12 FE"/>
+      <attribute_value id="292494" nameRU="LL-17 FE+" nameUK="LL-17 FE+"/>
+      <attribute_value id="301640" nameRU="LL-98" nameUK="LL-98"/>
+      <attribute_value id="331723" nameRU="LL-19 FE" nameUK=""/>
+      <attribute_value id="345299" nameRU="LL-14 FE+" nameUK="LL-14 FE+"/>
+    </attribute>
+    <attribute id="18656" nameRU="Допуск Volvo" type="multiselect" nameUK="Допуск Volvo">
+      <attribute_value id="291101" nameRU="VCC RBS0-2AE" nameUK="VCC RBS0-2AE"/>
+      <attribute_value id="292495" nameRU="VCC 95200377" nameUK="VCC 95200377"/>
+      <attribute_value id="293076" nameRU="VDS-4.5" nameUK="VDS-4.5"/>
+      <attribute_value id="299716" nameRU="VDS-3" nameUK="VDS-3"/>
+      <attribute_value id="299717" nameRU="VDS-2" nameUK="VDS-2"/>
+      <attribute_value id="302834" nameRU="VDS-4" nameUK="VDS-4"/>
+    </attribute>
+    <attribute id="18657" nameRU="Допуск Ford" type="multiselect" nameUK="Допуск Ford">
+      <attribute_value id="291102" nameRU="WSS M2C 913D" nameUK="WSS M2C 913D"/>
+      <attribute_value id="291113" nameRU="WSS M2C 948B" nameUK="WSS M2C 948B"/>
+      <attribute_value id="291163" nameRU="M2C 947-A" nameUK="M2C 947-A"/>
+      <attribute_value id="292407" nameRU="WSS-M2C946-A" nameUK="WSS-M2C946-A"/>
+      <attribute_value id="292408" nameRU="WSS-M2C917-A" nameUK="WSS-M2C917-A"/>
+      <attribute_value id="292410" nameRU="WSS-M2C934-B" nameUK="WSS-M2C934-B"/>
+      <attribute_value id="292411" nameRU="WSS-M2C934-А" nameUK="WSS-M2C934-А"/>
+      <attribute_value id="292418" nameRU="WSS-M2C925-A" nameUK="WSS-M2C925-A"/>
+      <attribute_value id="292420" nameRU="WSS-M2C925-B" nameUK="WSS-M2C925-B"/>
+      <attribute_value id="292421" nameRU="WSS-M2C950-A" nameUK="WSS-M2C950-A"/>
+      <attribute_value id="292492" nameRU="WSS-M2C947-B1" nameUK="WSS-M2C947-B1"/>
+      <attribute_value id="292493" nameRU="WSS-M2C962-A1" nameUK="WSS-M2C962-A1"/>
+      <attribute_value id="301796" nameRU="WSS-M2C930-A" nameUK="WSS-M2C930-A"/>
+      <attribute_value id="301797" nameRU="WSS-M2C945-A" nameUK="WSS-M2C945-A"/>
+      <attribute_value id="301798" nameRU="WSS-M2C945-B1" nameUK="WSS-M2C945-B1"/>
+      <attribute_value id="301799" nameRU="WSS-M2C960-A1" nameUK="WSS-M2C960-A1"/>
+      <attribute_value id="301821" nameRU="WSS-M2C913-B" nameUK="WSS-M2C913-B"/>
+      <attribute_value id="301822" nameRU="WSS-M2C913-A" nameUK="WSS-M2C913-A"/>
+      <attribute_value id="301823" nameRU="WSS-M2C912-A1" nameUK="WSS-M2C912-A1"/>
+      <attribute_value id="301879" nameRU="WSS-M2C946-B1" nameUK="WSS-M2C946-B1"/>
+      <attribute_value id="301880" nameRU="WSS-M2C961-A1" nameUK="WSS-M2C961-A1"/>
+      <attribute_value id="301968" nameRU="WSS-M2C937-A" nameUK="WSS-M2C937-A"/>
+      <attribute_value id="302437" nameRU="WSS-M2C947-A" nameUK="WSS-M2C947-A"/>
+      <attribute_value id="302542" nameRU="WSS-M2C956-A1" nameUK="WSS-M2C956-A1"/>
+      <attribute_value id="302835" nameRU="WSS-M2C171-F1" nameUK="WSS-M2C171-F1"/>
+      <attribute_value id="303006" nameRU="M2C 159 b/c" nameUK="M2C 159 b/c"/>
+      <attribute_value id="303916" nameRU="WSS-M2C213-A1" nameUK="WSS-M2C213-A1"/>
+      <attribute_value id="303919" nameRU="WSS-M2C913-C" nameUK="WSS-M2C913-C"/>
+      <attribute_value id="303920" nameRU="WSS-M2C913-D" nameUK="WSS-M2C913-D"/>
+      <attribute_value id="304607" nameRU="WSS-M2C952-A1" nameUK="WSS-M2C952-A1"/>
+      <attribute_value id="304829" nameRU="M2C-159A" nameUK="M2C-159A"/>
+      <attribute_value id="306898" nameRU="WSS-M2C929-A" nameUK="WSS-M2C929-A"/>
+      <attribute_value id="313002" nameRU="WSS-M2C171-D" nameUK="WSS-M2C171-D"/>
+      <attribute_value id="345300" nameRU="WSS-M2C954-A1" nameUK=""/>
+      <attribute_value id="345315" nameRU="WSS M2C 937-A" nameUK=""/>
+    </attribute>
+    <attribute id="18690" nameRU="Допуск Jaguar Land Rover" type="multiselect" nameUK="Допуск Jaguar Land Rover">
+      <attribute_value id="292412" nameRU="ST JLR.03.5005" nameUK="ST JLR.03.5005"/>
+      <attribute_value id="292414" nameRU="ST JLR.03.5004" nameUK="ST JLR.03.5004"/>
+      <attribute_value id="292415" nameRU="ST JLR.03.5007" nameUK="ST JLR.03.5007"/>
+      <attribute_value id="292416" nameRU="ST JLR.03.5006" nameUK="ST JLR.03.5006"/>
+      <attribute_value id="292417" nameRU="ST JLR.03.5122" nameUK="ST JLR.03.5122"/>
+      <attribute_value id="292489" nameRU="ST JLR.03.5003" nameUK="ST JLR.03.5003"/>
+    </attribute>
+    <attribute id="18691" nameRU="Допуск Porsche" type="multiselect" nameUK="Допуск Porsche">
+      <attribute_value id="292422" nameRU="C20" nameUK=""/>
+      <attribute_value id="292487" nameRU="A40" nameUK=""/>
+      <attribute_value id="292488" nameRU="C30" nameUK=""/>
+      <attribute_value id="301826" nameRU="C40" nameUK="C40"/>
+    </attribute>
+    <attribute id="18692" nameRU="Допуск Opel Vauxhall" type="multiselect" nameUK="Допуск Opel Vauxhall">
+      <attribute_value id="292427" nameRU="OV0401547" nameUK="OV0401547"/>
+      <attribute_value id="304408" nameRU="OV 040 1547-D30" nameUK="OV 040 1547-D30"/>
+      <attribute_value id="304566" nameRU="OV 040 1547-G30" nameUK="OV 040 1547-G30"/>
+      <attribute_value id="304608" nameRU="OV 040 1547-A20" nameUK="OV 040 1547-A20"/>
+      <attribute_value id="363262" nameRU="OV 040 1547-D40" nameUK="OV 040 1547-D40"/>
+    </attribute>
+    <attribute id="18702" nameRU="Допуски CAT" type="multiselect" nameUK="Допуски CAT">
+      <attribute_value id="293072" nameRU="ECF-3" nameUK="ECF-3"/>
+      <attribute_value id="302836" nameRU="ECF-1A" nameUK="ECF-1A"/>
+      <attribute_value id="304719" nameRU="ECF-2" nameUK="ECF-2"/>
+    </attribute>
+    <attribute id="18703" nameRU="Допуск MACK" type="multiselect" nameUK="Допуск MACK">
+      <attribute_value id="293073" nameRU="EOS-4.5" nameUK=""/>
+      <attribute_value id="299722" nameRU="EO-M" nameUK="EO-M"/>
+      <attribute_value id="299723" nameRU="EO-M Plus" nameUK="EO-M Plus"/>
+      <attribute_value id="299724" nameRU="EO-N" nameUK="EO-N"/>
+      <attribute_value id="302833" nameRU="EO-O PREMIUM PLUS" nameUK=""/>
+      <attribute_value id="303918" nameRU="ECF-2" nameUK=""/>
+      <attribute_value id="304773" nameRU="EO-O 4.5" nameUK=""/>
+    </attribute>
+    <attribute id="18704" nameRU="Допуск CUMMINS" type="multiselect" nameUK="Допуск CUMMINS">
+      <attribute_value id="293074" nameRU="CES 20086" nameUK=""/>
+      <attribute_value id="293088" nameRU="CES 20081" nameUK=""/>
+      <attribute_value id="299718" nameRU="CES 20077" nameUK="CES 20077"/>
+      <attribute_value id="299719" nameRU="CES 20076" nameUK="CES 20076"/>
+      <attribute_value id="299720" nameRU="CES 20072" nameUK="CES 20072"/>
+      <attribute_value id="299721" nameRU="CES 20071" nameUK="CES 20071"/>
+      <attribute_value id="303915" nameRU="CES 20081-86" nameUK=""/>
+      <attribute_value id="303917" nameRU="CES 20077-78" nameUK=""/>
+    </attribute>
+    <attribute id="18705" nameRU="Допуск MAN" type="multiselect" nameUK="Допуск MAN">
+      <attribute_value id="293075" nameRU="M3775" nameUK=""/>
+      <attribute_value id="293089" nameRU="M3677" nameUK=""/>
+      <attribute_value id="293090" nameRU="M3271-1" nameUK=""/>
+      <attribute_value id="293091" nameRU="M3477" nameUK=""/>
+      <attribute_value id="299715" nameRU="M 3275-1" nameUK="M 3275-1"/>
+      <attribute_value id="302494" nameRU="M 3277-CRT" nameUK=""/>
+      <attribute_value id="302830" nameRU="М271" nameUK=""/>
+      <attribute_value id="302831" nameRU="M3575" nameUK=""/>
+      <attribute_value id="303743" nameRU="M3275" nameUK=""/>
+    </attribute>
+    <attribute id="18780" nameRU="Допуск Fiat" type="multiselect" nameUK="Допуск Fiat">
+      <attribute_value id="298304" nameRU="Fiat 9.55535-S1" nameUK="Fiat 9.55535-S1"/>
+      <attribute_value id="298305" nameRU="Fiat 9.55535-S3" nameUK="Fiat 9.55535-S3"/>
+      <attribute_value id="298306" nameRU="Fiat 9.55535-G1" nameUK="Fiat 9.55535-G1"/>
+      <attribute_value id="298307" nameRU="Fiat 9.55535-DSX" nameUK="Fiat 9.55535-DSX"/>
+      <attribute_value id="298308" nameRU="Fiat 9.55535-DM1" nameUK="Fiat 9.55535-DM1"/>
+      <attribute_value id="298309" nameRU="Fiat 9.55535-GSX" nameUK="Fiat 9.55535-GSX"/>
+      <attribute_value id="298310" nameRU="Fiat 9.55535-CR1" nameUK="Fiat 9.55535-CR1"/>
+      <attribute_value id="298311" nameRU="Fiat 9.55535-GS1" nameUK="Fiat 9.55535-GS1"/>
+      <attribute_value id="298312" nameRU="Fiat 9.55535-DS1" nameUK="Fiat 9.55535-DS1"/>
+      <attribute_value id="298313" nameRU="Fiat 9.55535-M2" nameUK="Fiat 9.55535-M2"/>
+      <attribute_value id="298314" nameRU="Fiat 9.55535-Z2" nameUK="Fiat 9.55535-Z2"/>
+      <attribute_value id="298315" nameRU="Fiat 9.55535-N2" nameUK="Fiat 9.55535-N2"/>
+      <attribute_value id="298316" nameRU="Fiat 9.55535-H2" nameUK="Fiat 9.55535-H2"/>
+      <attribute_value id="298317" nameRU="Fiat 9.55535-H3" nameUK="Fiat 9.55535-H3"/>
+      <attribute_value id="298318" nameRU="Fiat 9.55535-D2" nameUK="Fiat 9.55535-D2"/>
+      <attribute_value id="298319" nameRU="Fiat 9.55535-G2" nameUK="Fiat 9.55535-G2"/>
+      <attribute_value id="301862" nameRU="Fiat 9.55535-S4" nameUK="Fiat 9.55535-S4"/>
+      <attribute_value id="304348" nameRU="FIAT 9.55535.S2" nameUK="FIAT 9.55535.S2"/>
+      <attribute_value id="304442" nameRU="FIAT 9.55535-GH2" nameUK="FIAT 9.55535-GH2"/>
+      <attribute_value id="313702" nameRU="Fiat 9.55535-S2" nameUK="Fiat 9.55535-S2"/>
+    </attribute>
+    <attribute id="18781" nameRU="Стандарт JASO" type="multiselect" nameUK="Стандарт JASO">
+      <attribute_value id="298350" nameRU="MA" nameUK=""/>
+      <attribute_value id="298351" nameRU="MA2" nameUK=""/>
+      <attribute_value id="298352" nameRU="FD" nameUK=""/>
+      <attribute_value id="298353" nameRU="FC" nameUK=""/>
+      <attribute_value id="302837" nameRU="DH-2" nameUK=""/>
+      <attribute_value id="303005" nameRU="FB" nameUK=""/>
+      <attribute_value id="304718" nameRU="DH-1" nameUK=""/>
+      <attribute_value id="305524" nameRU="MB" nameUK=""/>
+    </attribute>
+    <attribute id="18782" nameRU="Стандарт ISO" type="multiselect" nameUK="Стандарт ISO">
+      <attribute_value id="298354" nameRU="ISO-L-EGD" nameUK=""/>
+      <attribute_value id="298355" nameRU="ISO-L-EGB" nameUK=""/>
+      <attribute_value id="298356" nameRU="ISO-EGC" nameUK=""/>
+    </attribute>
+    <attribute id="18811" nameRU="Допуск Chrysler, Dodge, Jeep" type="multiselect" nameUK="Допуск Chrysler, Dodge, Jeep">
+      <attribute_value id="301762" nameRU="MS-10725" nameUK="MS-10725"/>
+      <attribute_value id="301763" nameRU="MS-10850" nameUK="MS-10850"/>
+      <attribute_value id="301764" nameRU="MS-1089" nameUK="MS-1089"/>
+      <attribute_value id="301765" nameRU="MS-11106" nameUK="MS-11106"/>
+      <attribute_value id="301766" nameRU="MS-11116" nameUK="MS-11116"/>
+      <attribute_value id="301767" nameRU="MS-12145" nameUK="MS-12145"/>
+      <attribute_value id="301768" nameRU="MS-12991" nameUK="MS-12991"/>
+      <attribute_value id="301769" nameRU="MS-13340" nameUK="MS-13340"/>
+      <attribute_value id="301770" nameRU="MS-6395" nameUK="MS-6395"/>
+      <attribute_value id="305252" nameRU="MS-10902" nameUK="MS-10902"/>
+    </attribute>
+    <attribute id="18829" nameRU="Допуск Iveco" type="multiselect" nameUK="Допуск Iveco">
+      <attribute_value id="304410" nameRU="Iveco 18-1811 SC1" nameUK="Iveco 18-1811 SC1"/>
+    </attribute>
+    <attribute id="18831" nameRU="Допуск DAF" type="multiselect" nameUK="Допуск DAF">
+      <attribute_value id="304772" nameRU="PSQL 2.1E" nameUK="PSQL 2.1E"/>
+    </attribute>
+    <attribute id="18950" nameRU="Кросс-номери" type="free" nameUK="Кросс-номери"/>
+    <attribute id="19250" nameRU="Серия продукта" type="singleselect" nameUK="Серія продукту">
+      <attribute_value id="346351" nameRU="Edge" nameUK="Edge"/>
+      <attribute_value id="346352" nameRU="Magnatec" nameUK="Magnatec"/>
+      <attribute_value id="346353" nameRU="Helix" nameUK="Helix"/>
+      <attribute_value id="346354" nameRU="Mobil 1" nameUK="Mobil 1"/>
+      <attribute_value id="346355" nameRU="Top Tec" nameUK="Top Tec"/>
+      <attribute_value id="346356" nameRU="Genesis" nameUK="Genesis"/>
+      <attribute_value id="346357" nameRU="GTX" nameUK="GTX"/>
+      <attribute_value id="346358" nameRU="Super" nameUK="Super"/>
+      <attribute_value id="346359" nameRU="Leichtlauf" nameUK="Leichtlauf"/>
+      <attribute_value id="346360" nameRU="Rimula" nameUK="Rimula"/>
+      <attribute_value id="346361" nameRU="Special Tec" nameUK="Special Tec"/>
+      <attribute_value id="346362" nameRU="Armortech" nameUK="Armortech"/>
+      <attribute_value id="361907" nameRU="New Generation" nameUK="New Generation"/>
+      <attribute_value id="361935" nameRU="Engine" nameUK="Engine"/>
+      <attribute_value id="361936" nameRU="Optimal Synth" nameUK="Optimal Synth"/>
+    </attribute>
+    <attribute id="19418" nameRU="Категория техники" type="multiselect" nameUK="Категорія техніки">
+      <attribute_value id="349726" nameRU="Аккумуляторные пилы" nameUK=""/>
+      <attribute_value id="349727" nameRU="Бензопилы" nameUK="Бензопили"/>
+      <attribute_value id="349728" nameRU="Велосипеды" nameUK=""/>
+      <attribute_value id="349729" nameRU="Газонокосилки" nameUK="Газонокосарки"/>
+      <attribute_value id="349730" nameRU="Гоночные и спортивные" nameUK=""/>
+      <attribute_value id="349731" nameRU="Грузовые" nameUK=""/>
+      <attribute_value id="349732" nameRU="Картинги" nameUK=""/>
+      <attribute_value id="349733" nameRU="Квадроциклы" nameUK=""/>
+      <attribute_value id="349734" nameRU="Легковые" nameUK=""/>
+      <attribute_value id="349735" nameRU="Мото" nameUK=""/>
+      <attribute_value id="349736" nameRU="Сельхозтехника" nameUK=""/>
+      <attribute_value id="349737" nameRU="Снегоходы" nameUK=""/>
+      <attribute_value id="349738" nameRU="Спецтехника" nameUK=""/>
+      <attribute_value id="349739" nameRU="Суда и моторные лодки" nameUK=""/>
+      <attribute_value id="349740" nameRU="Универсальная" nameUK=""/>
+      <attribute_value id="349741" nameRU="Электропилы" nameUK=""/>
+      <attribute_value id="361949" nameRU="Генераторы" nameUK="Генератори"/>
+      <attribute_value id="361950" nameRU="Мотоблоки" nameUK=""/>
+      <attribute_value id="361951" nameRU="Мотопомпы" nameUK="Мотопомпи"/>
+      <attribute_value id="361952" nameRU="Культиваторы" nameUK="Культиватори"/>
+      <attribute_value id="361953" nameRU="Снегоуборочная техника" nameUK="Снігоприбиральна техніка"/>
+    </attribute>
+  </category>
+</categories>

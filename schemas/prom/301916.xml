@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="301916" nameRU="Средства защиты от падений и лазы" nameUK="Засоби захисту від падінь та лази">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="151106" nameRU="Пояс/Привязь" nameUK="Пояс/Прив'язь"/>
+      <attribute_value id="151107" nameRU="Сетка страховочная" nameUK="Страхувальна сітка"/>
+      <attribute_value id="151108" nameRU="Система защиты от падений" nameUK="Система захисту від падінь"/>
+      <attribute_value id="151111" nameRU="Лазы" nameUK="Лази"/>
+    </attribute>
+  </category>
+</categories>

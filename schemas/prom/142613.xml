@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="142613" nameRU="Ленточнопильные станки по металлу и комплектующие к ним" nameUK="Стрічкопильні верстати по металу та комплектуючі до них">
+    <attribute id="4" nameRU="Потребляемая мощность" type="real" nameUK="Споживана потужність" measureUnitRU="кВт" min="0" max="1000" measureUnitUK="кВт"/>
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" measureUnitUK="кг"/>
+    <attribute id="46" nameRU="Тип управления" type="singleselect" nameUK="Тип управління">
+      <attribute_value id="72509" nameRU="Автоматическое" nameUK="Автоматичне"/>
+      <attribute_value id="176891" nameRU="Полуавтоматическое" nameUK="Напівавтоматичне"/>
+      <attribute_value id="176893" nameRU="Гравитационное" nameUK="Гравітаційне"/>
+    </attribute>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" measureUnitUK="мм"/>
+    <attribute id="176" nameRU="Количество скоростей" type="real" nameUK="Кількість швидкостей" measureUnitRU="шт" measureUnitUK="шт."/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" measureUnitUK="мм"/>
+    <attribute id="617" nameRU="Ширина стола" type="real" nameUK="Ширина столу" measureUnitRU="мм" measureUnitUK="мм"/>
+    <attribute id="1493" nameRU="Частота" type="real" nameUK="Частота" measureUnitRU="GHz" min="0" max="300" measureUnitUK="GHz"/>
+    <attribute id="1858" nameRU="Длина стола" type="real" nameUK="Довжина столу" measureUnitRU="мм" measureUnitUK="мм"/>
+    <attribute id="1906" nameRU="Потребляемый ток" type="real" nameUK="Споживаний струм" measureUnitRU="А" min="0" max="100" measureUnitUK="А"/>
+    <attribute id="2474" nameRU="Напряжение" type="real" nameUK="Напруга" measureUnitRU="В" min="0" max="2000" measureUnitUK="В"/>
+    <attribute id="2479" nameRU="ЧПУ" type="bool" nameUK="ЧПУ"/>
+    <attribute id="2523" nameRU="Тип системы ЧПУ станка" type="multiselect" nameUK="Тип системи ЧПУ верстата">
+      <attribute_value id="14583" nameRU="позиционная" nameUK="позиційна"/>
+      <attribute_value id="14584" nameRU="контурная" nameUK="контурна"/>
+      <attribute_value id="14585" nameRU="универсальная" nameUK="універсальна"/>
+      <attribute_value id="14586" nameRU="замкнутая" nameUK="замкнута"/>
+      <attribute_value id="14587" nameRU="разомкнутая" nameUK="розімкнена"/>
+      <attribute_value id="14588" nameRU="с абсолютным отсчетом" nameUK="з абсолютним відліком"/>
+      <attribute_value id="14589" nameRU="с относительным отсчетом" nameUK="з відносним відліком"/>
+      <attribute_value id="14590" nameRU="одно-координатная" nameUK="одно-координатна"/>
+      <attribute_value id="14591" nameRU="двух-координатная" nameUK="двох-координатна"/>
+      <attribute_value id="14592" nameRU="трех-координатная" nameUK="трьох-координатна"/>
+      <attribute_value id="14593" nameRU="четырех-координатная" nameUK="чотирьох-координатна"/>
+      <attribute_value id="14594" nameRU="пяти-координатная" nameUK="п'яти-координатна"/>
+    </attribute>
+    <attribute id="2537" nameRU="Длина ленточной пилы" type="real" nameUK="Довжина стрічкової пили" measureUnitRU="мм" measureUnitUK="мм"/>
+    <attribute id="2538" nameRU="Ширина ленточной пилы" type="real" nameUK="Ширина стрічкової пили" measureUnitRU="мм" measureUnitUK="мм"/>
+    <attribute id="2539" nameRU="Толщина ленточной пилы" type="real" nameUK="Товщина стрічкової пилки" measureUnitRU="мм" measureUnitUK="мм"/>
+    <attribute id="2541" nameRU="Диаметр пильных шкивов" type="real" nameUK="Діаметр пильних шківів" measureUnitRU="мм" measureUnitUK="мм"/>
+    <attribute id="2552" nameRU="Расстояние от пола до стола подачи" type="real" nameUK="Відстань від підлоги до столу подачі" measureUnitRU="мм" measureUnitUK="мм"/>
+    <attribute id="2913" nameRU="Емкость бака" type="real" nameUK="Ємність бака" measureUnitRU="л" min="0" max="1000" measureUnitUK="л"/>
+    <attribute id="3350" nameRU="Скорость движения ленты" type="multiselect" nameUK="Швидкість руху стрічки">
+      <attribute_value id="22557" nameRU="10 м/мин" nameUK="10 м/хв"/>
+      <attribute_value id="22558" nameRU="15 м/мин" nameUK="15 м/хв"/>
+      <attribute_value id="22559" nameRU="20 м/мин" nameUK="20 м/хв"/>
+      <attribute_value id="22560" nameRU="25 м/мин" nameUK="25 м/хв"/>
+      <attribute_value id="22561" nameRU="30 м/мин" nameUK="30 м/хв"/>
+      <attribute_value id="22562" nameRU="35 м/мин" nameUK="35 м/хв"/>
+      <attribute_value id="22563" nameRU="40 м/мин" nameUK="40 м/хв"/>
+      <attribute_value id="22564" nameRU="45 м/мин" nameUK="45 м/хв"/>
+      <attribute_value id="22565" nameRU="50 м/мин" nameUK="50 м/хв"/>
+      <attribute_value id="22566" nameRU="55 м/мин" nameUK="55 м/хв"/>
+      <attribute_value id="22567" nameRU="60 м/мин" nameUK="60 м/хв"/>
+      <attribute_value id="22568" nameRU="65 м/мин" nameUK="65 м/хв"/>
+      <attribute_value id="22569" nameRU="70 м/мин" nameUK="70 м/хв"/>
+      <attribute_value id="22570" nameRU="75 м/мин" nameUK="75 м/хв"/>
+      <attribute_value id="22571" nameRU="80 м/мин" nameUK="80 м/хв"/>
+      <attribute_value id="22572" nameRU="85 м/мин" nameUK="85 м/хв"/>
+      <attribute_value id="22573" nameRU="90 м/мин" nameUK="90 м/хв"/>
+      <attribute_value id="22574" nameRU="95 м/мин" nameUK="95 м/хв"/>
+      <attribute_value id="22575" nameRU="100 м/мин" nameUK="100 м/хв"/>
+      <attribute_value id="22576" nameRU="10 - 100 м/мин" nameUK="10 - 100 м/хв"/>
+      <attribute_value id="191685" nameRU="105 м/с" nameUK="105 м/с"/>
+      <attribute_value id="191686" nameRU="110 м/с" nameUK="110 м/с"/>
+      <attribute_value id="191687" nameRU="115 м/с" nameUK="115 м/с"/>
+      <attribute_value id="191688" nameRU="120 м/с" nameUK="120 м/с"/>
+      <attribute_value id="191689" nameRU="125 м/с" nameUK="125 м/с"/>
+      <attribute_value id="191690" nameRU="130 м/с" nameUK="130 м/с"/>
+      <attribute_value id="191691" nameRU="135 м/с" nameUK="135 м/с"/>
+      <attribute_value id="191692" nameRU="140 м/с" nameUK="140 м/с"/>
+      <attribute_value id="191693" nameRU="145 м/с" nameUK="145 м/с"/>
+      <attribute_value id="191694" nameRU="150 м/с" nameUK="150 м/с"/>
+      <attribute_value id="191695" nameRU="155 м/с" nameUK="155 м/с"/>
+      <attribute_value id="191696" nameRU="160 м/с" nameUK="160 м/с"/>
+      <attribute_value id="191697" nameRU="165 м/с" nameUK="165 м/с"/>
+      <attribute_value id="191698" nameRU="170 м/с" nameUK="170 м/с"/>
+      <attribute_value id="191699" nameRU="175 м/с" nameUK="175 м/с"/>
+      <attribute_value id="191700" nameRU="180 м/с" nameUK="180 м/с"/>
+      <attribute_value id="191701" nameRU="185 м/с" nameUK="185 м/с"/>
+      <attribute_value id="191702" nameRU="190 м/с" nameUK="190 м/с"/>
+      <attribute_value id="191703" nameRU="200 м/с" nameUK="200 м/с"/>
+      <attribute_value id="191704" nameRU="205 м/с" nameUK="205 м/с"/>
+      <attribute_value id="191705" nameRU="210 м/с" nameUK="210 м/с"/>
+      <attribute_value id="191706" nameRU="215 м/с" nameUK="215 м/с"/>
+      <attribute_value id="191707" nameRU="220 м/с" nameUK="220 м/с"/>
+      <attribute_value id="191708" nameRU="225 м/с" nameUK="225 м/с"/>
+      <attribute_value id="289307" nameRU="25-90 м/мин" nameUK="25-90 м/хв"/>
+    </attribute>
+    <attribute id="3351" nameRU="Угол наклона тисков" type="integer" nameUK="Кут нахилу лещат" measureUnitRU="град." measureUnitUK="град."/>
+    <attribute id="3352" nameRU="Зона обработки при 90°" type="free" nameUK="Зона обробки при 90°"/>
+    <attribute id="3353" nameRU="Зона обработки при 45°" type="free" nameUK="Зона обробки при 45°"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="14191" nameRU="Дополнительный сервис" type="multiselect" nameUK="Додатковий сервіс">
+      <attribute_value id="144186" nameRU="Установка" nameUK="Установка"/>
+      <attribute_value id="144187" nameRU="Сервисное обслуживание" nameUK="Сервісне обслуговування"/>
+      <attribute_value id="157787" nameRU="Обучение" nameUK="Навчання"/>
+    </attribute>
+    <attribute id="15504" nameRU="Тип станка" type="singleselect" nameUK="Тип верстата">
+      <attribute_value id="173221" nameRU="Двухколонный" nameUK="Двоколонний"/>
+      <attribute_value id="176910" nameRU="Одноколонный" nameUK="Одноколонний"/>
+    </attribute>
+    <attribute id="16055" nameRU="Угол пиления" type="real" nameUK="Кут пиляння" measureUnitRU="град." min="0" max="180" measureUnitUK="град."/>
+  </category>
+</categories>

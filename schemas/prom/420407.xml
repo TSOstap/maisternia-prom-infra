@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="420407" nameRU="Шлифовальные шкурки, ленты" nameUK="Шліфувальні шкірки, стрічки">
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="463" nameRU="Диаметр" type="real" nameUK="Діаметр" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="100000" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="33399" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="138554" nameRU="Цирконий" nameUK="Цирконій"/>
+      <attribute_value id="150871" nameRU="Кварц" nameUK="Кварц"/>
+      <attribute_value id="168885" nameRU="Электрокорунд" nameUK="Електрокорунд"/>
+      <attribute_value id="168893" nameRU="Карбид кремния" nameUK="Карбід кремнію"/>
+      <attribute_value id="168894" nameRU="Корунд" nameUK="Корунд"/>
+      <attribute_value id="168895" nameRU="Гранат" nameUK="Гранат"/>
+      <attribute_value id="168896" nameRU="Алмаз" nameUK="Алмаз"/>
+      <attribute_value id="168897" nameRU="Эльбор" nameUK="Ельбор"/>
+      <attribute_value id="274144" nameRU="Алюминия оксид" nameUK="Алюмінію оксид"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="168922" nameRU="Шлифовальная сетка" nameUK="Шліфувальна сітка"/>
+      <attribute_value id="168923" nameRU="Шлифовальная бумага" nameUK="Шліфувальний папір"/>
+      <attribute_value id="168924" nameRU="Шлифовальный прямоугольный лист" nameUK="Шліфувальний прямокутний аркуш"/>
+      <attribute_value id="168925" nameRU="Шлифовальный квадратный лист" nameUK="Шліфувальний квадратний аркуш"/>
+      <attribute_value id="168926" nameRU="Шлифовальный круглый лист" nameUK="Шліфувальний круглий лист"/>
+      <attribute_value id="168928" nameRU="Шлифовальный треугольный лист" nameUK="Шліфувальний трикутний лист"/>
+      <attribute_value id="168929" nameRU="Шлифовальная лента" nameUK="Шліфувальна стрічка"/>
+      <attribute_value id="168930" nameRU="Шлифовальная гильза" nameUK="Шліфувальна гільза"/>
+      <attribute_value id="168931" nameRU="Шлифовальная губка" nameUK="Шліфувальна губка"/>
+      <attribute_value id="168934" nameRU="Шлифовальный материал" nameUK="Шліфувальний матеріал"/>
+      <attribute_value id="299860" nameRU="Шлифовальный блок" nameUK="Шліфувальний блок"/>
+      <attribute_value id="305384" nameRU="Губка" nameUK="Губка"/>
+      <attribute_value id="314036" nameRU="Шлифовальная полоса" nameUK="Шліфувальна смуга"/>
+    </attribute>
+    <attribute id="1559" nameRU="Упаковка" type="singleselect" nameUK="Упаковка">
+      <attribute_value id="45477" nameRU="Пачка" nameUK="Пачка"/>
+      <attribute_value id="123569" nameRU="Без упаковки" nameUK="Без упаковки"/>
+      <attribute_value id="127924" nameRU="Рулон" nameUK="Рулон"/>
+    </attribute>
+    <attribute id="2399" nameRU="Влагоустойчивость" type="bool" nameUK="Вологостійкість"/>
+    <attribute id="3254" nameRU="Область применения" type="multiselect" nameUK="Область застосування">
+      <attribute_value id="168866" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="168868" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="168869" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="168870" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="168871" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="168872" nameRU="Бронза" nameUK="Бронза"/>
+      <attribute_value id="168873" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="168874" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="168875" nameRU="Закаленная сталь" nameUK="Загартована сталь"/>
+      <attribute_value id="168876" nameRU="Графит" nameUK="Графіт"/>
+      <attribute_value id="168877" nameRU="Камень" nameUK="Камінь"/>
+      <attribute_value id="168878" nameRU="Бетон" nameUK="Бетон"/>
+      <attribute_value id="168879" nameRU="Плитка" nameUK="Плитка"/>
+      <attribute_value id="168880" nameRU="Гранит" nameUK="Граніт"/>
+      <attribute_value id="168881" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="168882" nameRU="Кирпич" nameUK="Цегла"/>
+      <attribute_value id="168883" nameRU="Абразив" nameUK="Абразив"/>
+      <attribute_value id="168884" nameRU="Гипс" nameUK="Гіпс"/>
+      <attribute_value id="168944" nameRU="Стекло" nameUK="Скло"/>
+      <attribute_value id="168945" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="179736" nameRU="Лак" nameUK="Лак"/>
+      <attribute_value id="179737" nameRU="Краска" nameUK="Фарба"/>
+      <attribute_value id="179738" nameRU="Шпаклевка" nameUK="Шпаклівка"/>
+      <attribute_value id="179739" nameRU="Грунтовка" nameUK="Грунтовка"/>
+      <attribute_value id="288900" nameRU="Металл" nameUK="Метал"/>
+    </attribute>
+    <attribute id="3474" nameRU="Количество в упаковке" type="integer" nameUK="Кількість в упаковці"/>
+    <attribute id="14042" nameRU="Зернистость" type="real" nameUK="Зернистість"/>
+    <attribute id="15523" nameRU="Тип связки" type="singleselect" nameUK="Тип зв'язки">
+      <attribute_value id="168947" nameRU="Фенолоформальдегидная смола" nameUK="Фенолоформальдегідна смола"/>
+      <attribute_value id="168948" nameRU="Карбамидоформальдегидная смола" nameUK="Карбамідоформальдегідна смола"/>
+      <attribute_value id="168949" nameRU="Эпоксидная смола" nameUK="Епоксидна смола"/>
+      <attribute_value id="168950" nameRU="Синтетическая смола" nameUK="Синтетична смола"/>
+      <attribute_value id="168951" nameRU="Клей" nameUK="Клей"/>
+      <attribute_value id="347188" nameRU="Смола-смола" nameUK=""/>
+    </attribute>
+    <attribute id="15531" nameRU="Единица измерения" type="singleselect" nameUK="Одиниця виміру">
+      <attribute_value id="168920" nameRU="Погонный метр" nameUK="Погонний метр"/>
+      <attribute_value id="168921" nameRU="Штука" nameUK="Штука"/>
+    </attribute>
+    <attribute id="15532" nameRU="Тип основы" type="singleselect" nameUK="Тип основи">
+      <attribute_value id="168935" nameRU="Ткань" nameUK="Тканина"/>
+      <attribute_value id="168936" nameRU="Бумага" nameUK="Папір"/>
+      <attribute_value id="168937" nameRU="Ткань склеенная с бумагой" nameUK="Тканина склеєна з папером"/>
+      <attribute_value id="168938" nameRU="Вспененный полиуретан" nameUK="Спінений поліуретан"/>
+      <attribute_value id="168939" nameRU="Фибра" nameUK="Фібра"/>
+      <attribute_value id="168940" nameRU="Стекловолокно" nameUK="Скловолокно"/>
+      <attribute_value id="168941" nameRU="Полиэстер" nameUK="Поліестер"/>
+      <attribute_value id="168942" nameRU="Безосновная" nameUK="Безосновна"/>
+      <attribute_value id="279375" nameRU="Полиэфирная сетка" nameUK="Поліефірна сітка"/>
+      <attribute_value id="321336" nameRU="Пленка" nameUK="Плівка"/>
+      <attribute_value id="347187" nameRU="Бумага на поролоне" nameUK="Папір на поролоні"/>
+    </attribute>
+    <attribute id="15535" nameRU="Тип насыпки" type="singleselect" nameUK="Тип насипання">
+      <attribute_value id="168952" nameRU="Открытая" nameUK="Відкрита"/>
+      <attribute_value id="168953" nameRU="Полуоткрытая" nameUK="Напіввідкрита"/>
+      <attribute_value id="168954" nameRU="Закрытая" nameUK="Закрита"/>
+      <attribute_value id="314189" nameRU="Трехмерная" nameUK="Тривимірна"/>
+    </attribute>
+    <attribute id="17593" nameRU="Градация" type="singleselect" nameUK="Градація">
+      <attribute_value id="213912" nameRU="Р40" nameUK="Р40"/>
+      <attribute_value id="213913" nameRU="P60" nameUK="Р60"/>
+      <attribute_value id="213914" nameRU="P80" nameUK="P80"/>
+      <attribute_value id="213915" nameRU="P100" nameUK="P100"/>
+      <attribute_value id="213916" nameRU="P120" nameUK="P120"/>
+      <attribute_value id="213917" nameRU="P150" nameUK="P150"/>
+      <attribute_value id="213918" nameRU="P180" nameUK="P180"/>
+      <attribute_value id="213919" nameRU="P220" nameUK="P220"/>
+      <attribute_value id="213920" nameRU="P240" nameUK="P240"/>
+      <attribute_value id="213921" nameRU="P280" nameUK="P280"/>
+      <attribute_value id="213922" nameRU="P320" nameUK="P320"/>
+      <attribute_value id="213923" nameRU="P360" nameUK="P360"/>
+      <attribute_value id="213924" nameRU="P400" nameUK="P400"/>
+      <attribute_value id="213925" nameRU="P500" nameUK="P500"/>
+      <attribute_value id="213926" nameRU="P600" nameUK="P600"/>
+      <attribute_value id="213927" nameRU="P800" nameUK="P800"/>
+      <attribute_value id="213928" nameRU="P1000" nameUK="P1000"/>
+      <attribute_value id="213929" nameRU="P1500" nameUK="P1500"/>
+      <attribute_value id="213930" nameRU="P2000" nameUK="P2000"/>
+      <attribute_value id="213931" nameRU="P2500" nameUK="P2500"/>
+      <attribute_value id="213932" nameRU="P3000" nameUK="P3000"/>
+      <attribute_value id="213933" nameRU="P4000" nameUK="P4000"/>
+      <attribute_value id="279694" nameRU="Р36" nameUK="Р36"/>
+      <attribute_value id="279697" nameRU="Р200" nameUK="Р200"/>
+      <attribute_value id="279730" nameRU="Р1200" nameUK="Р1200"/>
+      <attribute_value id="299974" nameRU="P5000" nameUK=""/>
+      <attribute_value id="347619" nameRU="P7000" nameUK=""/>
+    </attribute>
+  </category>
+</categories>

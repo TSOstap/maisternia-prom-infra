@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200355" nameRU="Съемники изоляции" nameUK="Знімачі ізоляції">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="5" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="500" measureUnitUK="мм"/>
+    <attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="68662" nameRU="для снятия изоляции с проводов" nameUK="для зняття ізоляції з проводів"/>
+      <attribute_value id="68663" nameRU="для снятия изоляции и оболочки силовых кабелей" nameUK="для зняття ізоляції й оболонки силових кабелів"/>
+      <attribute_value id="68664" nameRU="для разделки кабеля из сшитого полиэтилена" nameUK="для оброблення кабелю із зшитого поліетилену"/>
+      <attribute_value id="94140" nameRU="Универсальный" nameUK="Універсальний"/>
+    </attribute>
+    <attribute id="8336" nameRU="Минимальное сечение провода" type="real" nameUK="Мінімальний перетин дроту" measureUnitRU="кв. мм" measureUnitUK="кв. мм"/>
+    <attribute id="8337" nameRU="Максимальное сечение провода" type="real" nameUK="Максимальний перетин дроту" measureUnitRU="кв. мм" measureUnitUK="кв. мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+  </category>
+</categories>

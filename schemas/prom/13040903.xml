@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13040903" nameRU="Штативы для измерительного оборудования" nameUK="Штативи для вимірювального обладнання">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="10" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="425" nameRU="Тип упаковки" type="singleselect" nameUK="Тип упаковки">
+      <attribute_value id="7783" nameRU="Пластиковый кейс" nameUK="Пластиковий кейс"/>
+      <attribute_value id="7784" nameRU="Сумка-чехол" nameUK="Сумка-чохол"/>
+      <attribute_value id="7785" nameRU="Бумажная коробка" nameUK="Паперова коробка"/>
+    </attribute>
+    <attribute id="544" nameRU="Длина в сложенном виде" type="real" nameUK="Довжина у складеному вигляді" measureUnitRU="мм" min="0" max="1500" measureUnitUK="мм"/>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8057" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="8059" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="8698" nameRU="Дерево" nameUK="Дерево"/>
+      <attribute_value id="284105" nameRU="Дерево-фибергласс" nameUK="Дерево-фіберглас"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="1237" nameRU="Конструкция" type="singleselect" nameUK="Конструкція">
+      <attribute_value id="42614" nameRU="Монопод" nameUK="Монопод"/>
+      <attribute_value id="42615" nameRU="Бипод" nameUK="Біпод"/>
+      <attribute_value id="42616" nameRU="Трипод" nameUK="Трипод"/>
+    </attribute>
+    <attribute id="1969" nameRU="Плечевой ремень" type="bool" nameUK="Плечовий ремінь"/>
+    <attribute id="3254" nameRU="Область применения" type="multiselect" nameUK="Область застосування">
+      <attribute_value id="42730" nameRU="для нивелиров" nameUK="для нівелірів"/>
+      <attribute_value id="42731" nameRU="для тахеометров" nameUK="для тахеометрів"/>
+      <attribute_value id="42732" nameRU="для теодолитов" nameUK="для теодолітів"/>
+      <attribute_value id="307866" nameRU="Для лазерных приборов" nameUK="Для лазерних приладів"/>
+    </attribute>
+    <attribute id="6193" nameRU="Резьба штатива" type="singleselect" nameUK="Різьба штатива">
+      <attribute_value id="42573" nameRU="1&quot;" nameUK="1&quot;"/>
+      <attribute_value id="42574" nameRU="2&quot;" nameUK="2&quot;"/>
+      <attribute_value id="42575" nameRU="1/2&quot;" nameUK="1/2&quot;"/>
+      <attribute_value id="42576" nameRU="1/4&quot;" nameUK="1/4&quot;"/>
+      <attribute_value id="42577" nameRU="1/8&quot;" nameUK="1/8&quot;"/>
+      <attribute_value id="42578" nameRU="3/4&quot;" nameUK="3/4&quot;"/>
+      <attribute_value id="42579" nameRU="3/8&quot;" nameUK="3/8&quot;"/>
+      <attribute_value id="42580" nameRU="5/8&quot;" nameUK="5/8&quot;"/>
+    </attribute>
+    <attribute id="6208" nameRU="Максимальная рабочая высота" type="real" nameUK="Максимальна робоча висота" measureUnitRU="мм" min="0" max="10000" measureUnitUK="мм"/>
+    <attribute id="6209" nameRU="Минимальная рабочая высота" type="real" nameUK="Мінімальна робоча висота" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+      <attribute_value id="231714" nameRU="Неликвид" nameUK="Неліквід"/>
+    </attribute>
+    <attribute id="10019" nameRU="Тип зажима" type="singleselect" nameUK="Тип затискача">
+      <attribute_value id="204091" nameRU="Винт" nameUK="Гвинт"/>
+      <attribute_value id="204092" nameRU="Клипса" nameUK="Кліпса"/>
+      <attribute_value id="204093" nameRU="Эксцентриковый" nameUK="Ексцентриковий"/>
+      <attribute_value id="204094" nameRU="Винт/Клипса" nameUK="Гвинт/Кліпса"/>
+      <attribute_value id="307340" nameRU="Кнопки" nameUK=""/>
+    </attribute>
+    <attribute id="10153" nameRU="Диаметр головки" type="real" nameUK="Діаметр головки" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="11840" nameRU="Тип головки" type="singleselect" nameUK="Тип головки">
+      <attribute_value id="284101" nameRU="Плоская" nameUK="Плоска"/>
+      <attribute_value id="284102" nameRU="Сферическая" nameUK="Сферична"/>
+    </attribute>
+    <attribute id="18873" nameRU="Подъемный механизм штатива" type="bool" nameUK="Підйомний механізм штатива"/>
+  </category>
+</categories>

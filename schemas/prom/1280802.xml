@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="1280802" nameRU="Культиваторы навесные" nameUK="Навісні культиватори">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="8000" measureUnitUK="кг"/>
+    <attribute id="1192" nameRU="Скорость движения (транспортная)" type="real" nameUK="Швидкість руху (транспортна)" measureUnitRU="км/ч" min="0" max="50" measureUnitUK="км/год"/>
+    <attribute id="4167" nameRU="Ширина захвата" type="real" nameUK="Ширина захвату" measureUnitRU="м" min="0" max="30" measureUnitUK="м"/>
+    <attribute id="5073" nameRU="Производительность" type="real" nameUK="Продуктивність" measureUnitRU="га/час" min="0" max="20" measureUnitUK="га/год"/>
+    <attribute id="5527" nameRU="Назначение" type="singleselect" nameUK="Призначення">
+      <attribute_value id="94140" nameRU="Универсальный" nameUK="Універсальний"/>
+      <attribute_value id="188101" nameRU="Чизельные" nameUK="Чизельні"/>
+      <attribute_value id="188102" nameRU="Паровые" nameUK="Парові"/>
+      <attribute_value id="188103" nameRU="Пропашные" nameUK="Просапні"/>
+      <attribute_value id="188104" nameRU="Предпосевной" nameUK="Передпосівного"/>
+    </attribute>
+    <attribute id="14059" nameRU="Группа" type="singleselect" nameUK="Група">
+      <attribute_value id="164741" nameRU="Тяжелые" nameUK="Важкі"/>
+      <attribute_value id="164742" nameRU="Средние" nameUK="Середні"/>
+      <attribute_value id="164743" nameRU="Легкие" nameUK="Легкі"/>
+    </attribute>
+    <attribute id="14588" nameRU="Максимальная глубина обработки" type="real" nameUK="Максимальна глибина обробки" measureUnitRU="см" min="0" max="100" measureUnitUK="см"/>
+    <attribute id="15331" nameRU="Мощность трактора" type="real" nameUK="Потужність трактора" measureUnitRU="л. с." min="0" max="500" measureUnitUK="к. с."/>
+    <attribute id="16604" nameRU="Агрегатирование" type="singleselect" nameUK="Агрегатування">
+      <attribute_value id="188238" nameRU="Прицепные" nameUK="Причіпні"/>
+      <attribute_value id="188239" nameRU="Навесные" nameUK="Навісні"/>
+    </attribute>
+    <attribute id="16605" nameRU="Рабочая скорость" type="real" nameUK="Робоча швидкість" measureUnitRU="км/ч" min="0" max="50" measureUnitUK="км/год"/>
+    <attribute id="17821" nameRU="Максимальная ширина междурядья" type="real" nameUK="Максимальна ширина міжряддя" measureUnitRU="мм" min="0" max="800" measureUnitUK="мм"/>
+    <attribute id="17822" nameRU="Минимальная ширина междурядья" type="real" nameUK="Мінімальна ширина міжряддя" measureUnitRU="мм" min="0" max="800" measureUnitUK="мм"/>
+  </category>
+</categories>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="13240602" nameRU="Туристические плиты и горелки" nameUK="Туристичні плити та пальники ">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="кг" min="0" max="400" measureUnitUK="кг"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="128" nameRU="Объем" type="real" nameUK="Об`єм" measureUnitRU="л" min="0" max="100" measureUnitUK="л"/>
+    <attribute id="147" nameRU="Высота" type="real" nameUK="Висота" measureUnitRU="мм" min="0" max="2000" measureUnitUK="мм"/>
+    <attribute id="148" nameRU="Ширина" type="real" nameUK="Ширина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="426" nameRU="Номинальная мощность" type="real" nameUK="Номінальна потужність" measureUnitRU="Вт" min="0" max="10000" measureUnitUK="Вт"/>
+    <attribute id="538" nameRU="Длина" type="real" nameUK="Довжина" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="1318" nameRU="Оптимально для количества человек" type="integer" nameUK="Оптимально для кількості осіб"/>
+    <attribute id="1326" nameRU="Диаметр устанавливаемой емкости" type="real" nameUK="Діаметр встановлюваної ємності" measureUnitRU="мм" min="0" max="1000" measureUnitUK="мм"/>
+    <attribute id="1497" nameRU="Время закипания 1л воды" type="real" nameUK="Час закипання 1л води" measureUnitRU="мин" min="0" max="10" measureUnitUK="хв"/>
+    <attribute id="2458" nameRU="Тип оборудования" type="singleselect" nameUK="Тип обладнання">
+      <attribute_value id="40343" nameRU="Горелка" nameUK="Пальник"/>
+      <attribute_value id="40344" nameRU="Плита" nameUK="Плита"/>
+      <attribute_value id="281031" nameRU="Горелка мультитопливная" nameUK="Мультипаливний пальник"/>
+      <attribute_value id="283142" nameRU="Система" nameUK=""/>
+    </attribute>
+    <attribute id="3707" nameRU="Инструкция по эксплуатации" type="bool" nameUK="Інструкція по експлуатації"/>
+    <attribute id="3749" nameRU="Расход газового топлива" type="real" nameUK="Витратуа газового палива" measureUnitRU="г/час" min="0" max="2000" measureUnitUK="г/год"/>
+    <attribute id="3955" nameRU="Пьезорозжиг" type="bool" nameUK="П'єзорозпалювання"/>
+    <attribute id="3957" nameRU="Материал газовой горелки" type="singleselect" nameUK="Матеріал газового пальника">
+      <attribute_value id="25899" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+      <attribute_value id="25900" nameRU="Алюминий" nameUK="Алюміній"/>
+      <attribute_value id="25901" nameRU="Медь" nameUK="Мідь"/>
+      <attribute_value id="25902" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="165857" nameRU="Чугун" nameUK="Чавун"/>
+      <attribute_value id="273266" nameRU="Титан" nameUK="Титан"/>
+      <attribute_value id="295187" nameRU="Керамика" nameUK="Кераміка"/>
+      <attribute_value id="330978" nameRU="Латунь" nameUK="Латунь"/>
+      <attribute_value id="338867" nameRU="Комбинированный" nameUK="Комбінований"/>
+    </attribute>
+    <attribute id="3958" nameRU="Тип баллона" type="singleselect" nameUK="Тип балона">
+      <attribute_value id="25905" nameRU="Резьбовой" nameUK="Різьбовий"/>
+      <attribute_value id="25906" nameRU="Клапанный" nameUK="Клапанний"/>
+      <attribute_value id="25907" nameRU="Цанговый" nameUK="Цанговий"/>
+    </attribute>
+    <attribute id="3959" nameRU="Время непрерывной работы" type="real" nameUK="Час безперервної роботи" measureUnitRU="час" min="0" max="30" measureUnitUK="годин"/>
+    <attribute id="3962" nameRU="Ветрозащита" type="bool" nameUK="Вітрозахист"/>
+    <attribute id="3963" nameRU="Газовый баллон" type="bool" nameUK="Газовий балон"/>
+    <attribute id="3964" nameRU="Плита" type="bool" nameUK="Плита"/>
+    <attribute id="3966" nameRU="Кейс для транспортировки" type="bool" nameUK="Кейс для транспортування"/>
+    <attribute id="4176" nameRU="Расход жидкого топлива" type="real" nameUK="Витрата рідкого палива" measureUnitRU="л/ч" min="0" max="100" measureUnitUK="л/год"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="266375" nameRU="Серебристий" nameUK="Срібляста"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="5949" nameRU="Типы топлива" type="multiselect" nameUK="Типи палива">
+      <attribute_value id="40461" nameRU="Бензин" nameUK="Бензин"/>
+      <attribute_value id="40462" nameRU="Керосин" nameUK="Гас"/>
+      <attribute_value id="40463" nameRU="Газ" nameUK="Газ"/>
+      <attribute_value id="40464" nameRU="Дизель" nameUK="Дизель"/>
+      <attribute_value id="226796" nameRU="Спирт" nameUK="Спирт"/>
+      <attribute_value id="290019" nameRU="Твердое топливо" nameUK="Тверде паливо"/>
+      <attribute_value id="290655" nameRU="Щепа" nameUK="Тріска"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="11642" nameRU="Соединение баллона" type="singleselect" nameUK="З'єднання балона">
+      <attribute_value id="113316" nameRU="Резьбовое" nameUK="Різьбове"/>
+      <attribute_value id="113317" nameRU="Цанговое" nameUK="Цангові"/>
+      <attribute_value id="113318" nameRU="Защелка" nameUK="Клямка"/>
+      <attribute_value id="113319" nameRU="Бесклапанное" nameUK="Бесклапанне"/>
+    </attribute>
+    <attribute id="13494" nameRU="Тип газа" type="singleselect" nameUK="Тип газу">
+      <attribute_value id="180002" nameRU="Пропан/Бутан" nameUK="Пропан/Бутан"/>
+      <attribute_value id="180003" nameRU="Изобутан" nameUK="Ізобутан"/>
+    </attribute>
+    <attribute id="19451" nameRU="Количество конфорок" type="real" nameUK="Кількість конфорок"/>
+  </category>
+</categories>
