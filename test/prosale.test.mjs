@@ -138,3 +138,25 @@ test("04.11: «Тарифи ProSale» — лише «за замовлення»
   assert.equal((await applyProsaleTariffs({ sheets, readBook, stamp: "x", set })).state, "NOTHING");
   assert.equal((await applyProsaleTariffs({ sheets, readBook, stamp: "x", set: { "4305": "Турбо" } })).state, "BLOCKED", "категорія «за перехід» — не ставиться");
 });
+
+test("15.11: нові категорії каталогу дописуються в «Тарифи ProSale» (add) із тарифом; «за перехід» / невідома — BLOCKED; повтор — NOTHING", async () => {
+  const { prosaleTariffPlan, applyProsaleTariffs } = await import("../src/pipeline/prosale-columns.mjs");
+  const { PROSALE_SHEET_HEADER, withProsale } = await import("../src/core/prosale.mjs");
+  let sheet = [PROSALE_SHEET_HEADER.slice(), ["410402", "Електрогенератори", "за замовлення", "5.52%", 144, "Економ", "6.21%", "9.61%", "13.23%"]];
+  const set = { "410402": "Звичайний", "14171602": "Звичайний" };
+  const p = prosaleTariffPlan(sheet, { set, add: { "14171602": 1, "410402": 7 } });
+  assert.deepEqual(p.added, ["14171602"], "наявна категорія не дублюється");
+  assert.deepEqual(p.missing, []);
+  assert.deepEqual(p.values[1].slice(0, 6), ["14171602", RATES.categories["14171602"].name, "за замовлення", `${RATES.categories["14171602"].order}%`, 1, "Звичайний"]);
+  assert.deepEqual(withProsale(DEFAULT_PRICING, [PROSALE_SHEET_HEADER.slice(), ...p.values]).prosaleCategories, set);
+  assert.deepEqual(prosaleTariffPlan(sheet, { set: {}, add: { "4305": 3 } }).missing, ["4305"], "«за перехід» не дописується");
+  const sheets = {
+    async updateRanges(list) { for (const u of list) u.values.forEach((row, i) => { sheet[u.row - 1 + i] = row.slice(); }); },
+    async appendRows() {},
+  };
+  const readBook = async () => ({ "Тарифи ProSale": sheet.map((r) => r.slice()) });
+  const r = await applyProsaleTariffs({ sheets, readBook, stamp: "2026-11-15", set, add: { "14171602": 1 } });
+  assert.equal(r.state, "PROSALE_TARIFFS_SET"); assert.equal(r.added, 1); assert.equal(sheet.length, 3);
+  assert.equal((await applyProsaleTariffs({ sheets, readBook, stamp: "x", set, add: { "14171602": 1 } })).state, "NOTHING");
+  assert.equal((await applyProsaleTariffs({ sheets, readBook, stamp: "x", set: {}, add: { "999999999": 1 } })).state, "BLOCKED");
+});

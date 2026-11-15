@@ -259,7 +259,7 @@ try {
     // Рішення власника 04.11: «Тарифи ProSale» — лише «за замовлення» + тарифи за планом (--plan={"set":{"<ID>":"Турбо"}}).
     if (!arg("plan")) fail("prosale-tariffs: ", new Error("потрібен --plan=<файл із set>"));
     const p = JSON.parse(fs.readFileSync(arg("plan"), "utf8"));
-    report.result = await underMaintenanceLease(() => applyProsaleTariffs({ sheets, readBook, stamp, set: p.set || {}, orderOnly: p.orderOnly !== false }));
+    report.result = await underMaintenanceLease(() => applyProsaleTariffs({ sheets, readBook, stamp, set: p.set || {}, orderOnly: p.orderOnly !== false, add: p.add || {} }));
   } else if (mode === "warnings-archive") {
     // Рішення власника 04.11: опрацьовані попередження → «Попередження — архів» (порціями по 40), «Що змінилось» для відкритих.
     const session = await new WriteGateway({ sheets, read: readBook, store: w2Store }).open({ writer: "sync" });
