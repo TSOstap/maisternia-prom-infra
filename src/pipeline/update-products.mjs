@@ -16,7 +16,7 @@
  *  відбитком) передаються НАЯВНОМУ intake окремою сесією (updateProductsRun). Підсумковий звіт — report (п. 1–10 доручення). */
 import { parseSupplierText } from "../core/supplier-feed.mjs";
 import { extractFullOffers } from "../core/sheet-sync.mjs";
-import { scanFeed, completeness, watchFingerprint } from "../core/intake.mjs";
+import { scanFeed, completeness, watchFingerprint, INTAKE_RULES } from "../core/intake.mjs";
 import { snapshotFromXml, proveComplete, CONFIRMED_SNAPSHOT_KEY, feedScopeOf } from "../core/supplier-presence.mjs";
 /** ENG-28a: знімок фіду з фільтром охоплення підтверджується окремо — він не може бути базою для «видалений у постачальника». */
 export const CONFIRMED_FILTERED_SNAPSHOT_KEY = "state/supplier-snapshot/confirmed-filtered.json";
@@ -59,7 +59,7 @@ export async function updateProducts({ sheets, readBook, xml, source = "", fetch
     const fresh = snapshot.ids.filter((id) => !known.has(id));
     const scan = fresh.length ? scanFeed(xml, (id) => fresh.includes(id)) : { offers: new Map() };
     const ready = [], incomplete = [];
-    for (const id of fresh) { const miss = completeness(scan.offers.get(id) || {}); (miss.length ? incomplete : ready).push(id); }
+    for (const id of fresh) { const miss = completeness(scan.offers.get(id) || {}, { requireParams: INTAKE_RULES.requireParams }); (miss.length ? incomplete : ready).push(id); }
     // ENG-28b: стабільність — новинка була в ПОПЕРЕДНЬОМУ підтвердженому знімку з тим самим відбитком (не змінювалась між запусками);
     // кандидати для наявного intake (verifyReady перевіряє ще раз: час, відбиток, повноту). Решта — чекає наступного запуску.
     const since = previous ? previous.fetchedAt || previous.confirmedAt || "" : "";

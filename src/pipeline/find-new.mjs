@@ -15,7 +15,7 @@
  *  дозволяє: лише «Нові товари» й «Журнал»). */
 import { parseSupplierText } from "../core/supplier-feed.mjs";
 import { extractFullOffers, SHEET } from "../core/sheet-sync.mjs";
-import { scanFeed, completeness, watchFingerprint } from "../core/intake.mjs";
+import { scanFeed, completeness, watchFingerprint, INTAKE_RULES } from "../core/intake.mjs";
 import { snapshotFromXml, proveComplete, CONFIRMED_SNAPSHOT_KEY, feedScopeOf } from "../core/supplier-presence.mjs";
 import { ARCHIVE_SHEET } from "../core/archive.mjs";
 import { mtText } from "../core/text.mjs";
@@ -69,7 +69,7 @@ export async function findNewProducts({ sheets, readBook, xml, source = "", fetc
   }
   const scan = fresh.length ? scanFeed(xml, (id) => fresh.includes(id)) : { offers: new Map() };
   const ready = [], incomplete = [];
-  for (const id of fresh) (completeness(scan.offers.get(id) || {}).length ? incomplete : ready).push(id);
+  for (const id of fresh) (completeness(scan.offers.get(id) || {}, { requireParams: INTAKE_RULES.requireParams }).length ? incomplete : ready).push(id);
   const stableIn = (s, id) => Boolean(s?.fp?.[id]) && s.fp[id] === snapshot.fp?.[id];
   // ENG-29 (рішення власника 02.11): стабільність — від ПЕРШОГО виявлення без змін. Попередній знімок зберігає since[id] (коли товар
   // уперше побачено з цим самим відбитком); повторні натискання його не скидають. Береться найраніший із підтверджених моментів:

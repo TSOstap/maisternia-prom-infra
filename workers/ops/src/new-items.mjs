@@ -8,7 +8,7 @@
  *  Звідси в таблицю нічого не пишеться: стабільність, повноту, дублі, «Нові товари» й «Журнал» робить сама операція.
  *  Ліміти — щоб не витрачати безкоштовні хвилини GitHub Actions (приватний репозиторій: 2000 хв/міс). Чисті функції — тестуються в Node. */
 
-import { scanFeed, completeness } from "../../../src/core/intake.mjs";
+import { scanFeed, completeness, INTAKE_RULES } from "../../../src/core/intake.mjs";
 
 export const MIN = 60_000;
 export const WATCH = Object.freeze({
@@ -66,7 +66,7 @@ export async function fetchContentFeed(base, fetchImpl) {
 export function completedNow(text, ids) {
   const want = new Set(ids.map(String));
   const scan = scanFeed(text, (id) => want.has(id));
-  return [...want].filter((id) => scan.offers.has(id) && completeness(scan.offers.get(id)).length === 0);
+  return [...want].filter((id) => scan.offers.has(id) && completeness(scan.offers.get(id), { requireParams: INTAKE_RULES.requireParams }).length === 0);
 }
 
 /** Межі автозапусків (доба, інтервал, пауза після невдачі) → null (можна) | { result, message }. */

@@ -301,3 +301,10 @@ test("вимірювальний Worker: лише за ключем, лише а
   assert.equal((await post({ feedUrl: "https://evil.example/x", known: ["1"] })).status, 400);
   assert.equal((await m.fetch(new Request("https://x/other"), env)).status, 404);
 });
+
+test("15.11 рішення власника: товар без характеристик постачальника — повний (назва/артикул/ціна/фото лишаються обовʼязковими)", () => {
+  assert.equal(INTAKE_RULES.requireParams, false);
+  assert.deepEqual(completeness(raw({ params: [] }), { requireParams: INTAKE_RULES.requireParams }), []);
+  assert.deepEqual(completeness(raw({ params: [], pictures: [] }), { requireParams: INTAKE_RULES.requireParams }), ["фото"]);
+  assert.deepEqual(completeness(raw({ params: [], sku: "" }), { requireParams: INTAKE_RULES.requireParams }), ["артикул"]);
+});
