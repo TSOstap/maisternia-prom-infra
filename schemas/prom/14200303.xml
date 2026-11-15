@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="14200303" nameRU="Ручные резцы, стамески" nameUK="Ручні різці, стамески">
+    <attribute id="5" nameRU="Вес" type="real" nameUK="Вага" measureUnitRU="г" min="0" max="1000" measureUnitUK="г"/>
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7640" nameRU="пластмасса" nameUK="пластмаса"/>
+      <attribute_value id="64738" nameRU="металл" nameUK="метал"/>
+      <attribute_value id="300888" nameRU="Резина/Пластик" nameUK="Гума/Пластик"/>
+    </attribute>
+    <attribute id="392" nameRU="Прорезиненная рукоятка" type="bool" nameUK="Прогумована рукоятка"/>
+    <attribute id="461" nameRU="Тип инструмента" type="singleselect" nameUK="Тип інструменту">
+      <attribute_value id="66265" nameRU="стамеска" nameUK="стамеска"/>
+      <attribute_value id="66266" nameRU="резец ручной" nameUK="різець ручний"/>
+      <attribute_value id="239413" nameRU="Набор стамесок" nameUK="Набір стамесок"/>
+      <attribute_value id="239414" nameRU="Набор ручных резцов" nameUK="Набір ручних різців"/>
+      <attribute_value id="296197" nameRU="гидравлические резчики" nameUK=""/>
+    </attribute>
+    <attribute id="681" nameRU="Длина полотна" type="real" nameUK="Довжина полотна" measureUnitRU="мм" min="0" max="200" measureUnitUK="мм"/>
+    <attribute id="682" nameRU="Ширина полотна" type="real" nameUK="Ширина полотна" measureUnitRU="мм" min="0" max="50" measureUnitUK="мм"/>
+    <attribute id="7617" nameRU="Форма сечения рабочей части" type="singleselect" nameUK="Форма перерізу робочої частини">
+      <attribute_value id="64956" nameRU="скобчатая (П-образная)" nameUK="скобчаста (П-подібна)"/>
+      <attribute_value id="64957" nameRU="угловая (V-образная)" nameUK="кутова (V-подібна)"/>
+      <attribute_value id="64958" nameRU="радиусная (полукруглая)" nameUK="радіусна (напівкругла)"/>
+      <attribute_value id="64959" nameRU="плоская" nameUK="плоска"/>
+      <attribute_value id="64960" nameRU="клюкарза" nameUK="клюкарза"/>
+      <attribute_value id="64961" nameRU="изогнутая" nameUK="вигнута"/>
+    </attribute>
+    <attribute id="10006" nameRU="Состояние" type="singleselect" nameUK="Стан">
+      <attribute_value id="83769" nameRU="Новое" nameUK="Новий"/>
+      <attribute_value id="83770" nameRU="Б/У" nameUK="Вживаний"/>
+    </attribute>
+    <attribute id="14273" nameRU="Толщина металла" type="real" nameUK="Товщина металу" measureUnitRU="мм" min="0" max="10" measureUnitUK="мм"/>
+    <attribute id="19273" nameRU="Твердость по Роквеллу (HRC)" type="real" nameUK="Твердість за Роквеллом (HRC)"/>
+  </category>
+</categories>

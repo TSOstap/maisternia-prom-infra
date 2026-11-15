@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="10010203" nameRU="Промышленные масла" nameUK="Промислові оливи">
+    <attribute id="128" nameRU="Объем" type="real" nameUK="Об`єм" measureUnitRU="л" min="0" max="250" measureUnitUK="л"/>
+    <attribute id="1559" nameRU="Упаковка" type="singleselect" nameUK="Упаковка">
+      <attribute_value id="106276" nameRU="Бочка" nameUK="Бочка"/>
+      <attribute_value id="123100" nameRU="Канистра" nameUK="Каністра"/>
+      <attribute_value id="134533" nameRU="Ведро" nameUK="Відро"/>
+      <attribute_value id="137005" nameRU="Бутылка" nameUK="Пляшка"/>
+    </attribute>
+    <attribute id="5599" nameRU="Вид масла" type="singleselect" nameUK="Вид масла">
+      <attribute_value id="136567" nameRU="Синтетическое" nameUK="Синтетичне"/>
+      <attribute_value id="136568" nameRU="Минеральное" nameUK="Мінеральне"/>
+      <attribute_value id="136569" nameRU="Полусинтетическое" nameUK="Напівсинтетичне"/>
+    </attribute>
+    <attribute id="6491" nameRU="Плотность" type="real" nameUK="Щільність" measureUnitRU="г/см3" min="0" max="5" measureUnitUK="г/см3"/>
+    <attribute id="7646" nameRU="Вес упаковки" type="real" nameUK="Вага упаковки" measureUnitRU="кг" min="0" max="10000" measureUnitUK="кг"/>
+    <attribute id="9857" nameRU="Зольность" type="real" nameUK="Зольність" measureUnitRU="%" min="0" max="5" measureUnitUK="%"/>
+    <attribute id="13513" nameRU="Содержание серы" type="real" nameUK="Вміст сірки" measureUnitRU="%" min="0" max="5" measureUnitUK="%"/>
+    <attribute id="13541" nameRU="Тип масла" type="singleselect" nameUK="Тип олії">
+      <attribute_value id="136989" nameRU="Авиационное" nameUK="Авіаційне"/>
+      <attribute_value id="136990" nameRU="Индустриальное" nameUK="Індустріальне"/>
+      <attribute_value id="136991" nameRU="Вакуумное" nameUK="Вакуумне"/>
+      <attribute_value id="136992" nameRU="Гидравлическое" nameUK="Гідравлічне"/>
+      <attribute_value id="136993" nameRU="Компрессорное" nameUK="Компресорне"/>
+      <attribute_value id="136994" nameRU="Трансформаторное" nameUK="Трансформаторне"/>
+      <attribute_value id="136995" nameRU="Электроизоляционное" nameUK="Електроізоляційне"/>
+      <attribute_value id="136996" nameRU="Редукторное" nameUK="Редукторне"/>
+      <attribute_value id="136997" nameRU="Турбинное" nameUK="Турбінне"/>
+      <attribute_value id="136998" nameRU="Силиконовое" nameUK="Силіконове"/>
+      <attribute_value id="139238" nameRU="Масло-теплоноситель" nameUK="Масло-теплоносій"/>
+      <attribute_value id="148268" nameRU="Формовочное" nameUK="Формувальне"/>
+      <attribute_value id="148269" nameRU="Пневматическое" nameUK="Пневматична"/>
+      <attribute_value id="236532" nameRU="Трансмиссионно-гидравлическое" nameUK="Трансмісійно-гідравлічна"/>
+      <attribute_value id="262716" nameRU="Для газовых двигателей" nameUK="Для газових двигунів"/>
+      <attribute_value id="262718" nameRU="Для направляющих скольжения " nameUK="Для напрямних ковзання"/>
+    </attribute>
+    <attribute id="13542" nameRU="Кинематическая вязкость при 40 °С" type="real" nameUK="Кінематична в'язкість при 40 °С" measureUnitRU="мм2/с" min="0" max="2000" measureUnitUK="мм2/с"/>
+    <attribute id="13543" nameRU="Кинематическая вязкость при 100 °С" type="real" nameUK="Кінематична в'язкість при 100 °С" measureUnitRU="мм2/с" min="0" max="500" measureUnitUK="мм2/с"/>
+    <attribute id="13544" nameRU="Кинематическая вязкость при -40 °С" type="real" nameUK="Кінематична в'язкість при 40 °С" measureUnitRU="мм2/с" min="0" max="9000" measureUnitUK="мм2/с"/>
+    <attribute id="13545" nameRU="Массовая доля воды" type="real" nameUK="Масова частка води" measureUnitRU="%" min="0" max="2" measureUnitUK="%"/>
+    <attribute id="13546" nameRU="Массовая доля механических примесей" type="real" nameUK="Масова частка механічних домішок" measureUnitRU="%" min="0" max="5" measureUnitUK="%"/>
+    <attribute id="13547" nameRU="Температура застывания" type="real" nameUK="Температура застигання" measureUnitRU="град." min="-100" max="0" measureUnitUK="град."/>
+    <attribute id="13548" nameRU="Температура вспышки" type="real" nameUK="Температура спалаху" measureUnitRU="град." min="0" max="400" measureUnitUK="град."/>
+    <attribute id="15932" nameRU="Индекс вязкости" type="real" nameUK="Індекс в'язкості"/>
+  </category>
+</categories>

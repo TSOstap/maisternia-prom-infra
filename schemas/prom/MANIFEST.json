@@ -960,6 +960,17 @@
       "source": "attributes - 2026-11-14T205051.333.xml"
     },
     {
+      "id": "151408",
+      "nameUK": "Комплектуючі для швабри",
+      "nameRU": "Комплектующие для швабры",
+      "file": "151408.xml",
+      "sha256": "5a4e9dd2b0fbb1ce59e2d1e68adca76f9430acc0a6659400d13257870ac7e274",
+      "attributes": 16,
+      "excluded": 0,
+      "received": "2026-11-15",
+      "source": "attributes.xml"
+    },
+    {
       "id": "153705",
       "nameUK": "Оптичні нівеліри",
       "nameRU": "Оптические нивелиры",
@@ -1658,6 +1669,17 @@
       "source": "attributes - 2026-11-14T205301.251.xml"
     },
     {
+      "id": "10010203",
+      "nameUK": "Промислові оливи",
+      "nameRU": "Промышленные масла",
+      "file": "10010203.xml",
+      "sha256": "5058c81c87d52d8ffefbcfaaf99b95e2e5a175093da091431a773782a0d0b09f",
+      "attributes": 16,
+      "excluded": 0,
+      "received": "2026-11-15",
+      "source": "attributes (2).xml"
+    },
+    {
       "id": "12020302",
       "nameUK": "Генератори, альтернатори і комплектуючі",
       "nameRU": "Генераторы, альтернаторы и комплектующие",
@@ -1677,6 +1699,17 @@
       "excluded": 0,
       "received": "2026-11-14",
       "source": "attributes - 2026-11-14T204747.414.xml"
+    },
+    {
+      "id": "12110101",
+      "nameUK": "Шиномонтажні верстати",
+      "nameRU": "Шиномонтажные станки",
+      "file": "12110101.xml",
+      "sha256": "9ee0a231d56e771728a86a3a55309033390b35a59cb16f3e5753c6c9cd6cda2b",
+      "attributes": 15,
+      "excluded": 0,
+      "received": "2026-11-15",
+      "source": "attributes (3).xml"
     },
     {
       "id": "12110201",
@@ -1855,6 +1888,17 @@
       "source": "attributes - 2026-11-14T204926.570.xml"
     },
     {
+      "id": "13240108",
+      "nameUK": "Масляні обігрівачі",
+      "nameRU": "Масляные обогреватели",
+      "file": "13240108.xml",
+      "sha256": "c99a2ff5f6a6d10aa4ace5680254cbbe3463a99a94e3258b6f89fb2f8a0212b4",
+      "attributes": 45,
+      "excluded": 0,
+      "received": "2026-11-15",
+      "source": "attributes (5).xml"
+    },
+    {
       "id": "13240602",
       "nameUK": "Туристичні плити та пальники",
       "nameRU": "Туристические плиты и горелки",
@@ -1963,6 +2007,17 @@
       "excluded": 0,
       "received": "2026-11-14",
       "source": "attributes - 2026-11-14T205631.588.xml"
+    },
+    {
+      "id": "14200303",
+      "nameUK": "Ручні різці, стамески",
+      "nameRU": "Ручные резцы, стамески",
+      "file": "14200303.xml",
+      "sha256": "ee8507e3a4a6c84ea2a4a0d11062b7b802e42eb55a153c2308608f979fa307df",
+      "attributes": 11,
+      "excluded": 0,
+      "received": "2026-11-15",
+      "source": "attributes (4).xml"
     },
     {
       "id": "14200304",
@@ -2688,6 +2743,17 @@
       "excluded": 0,
       "received": "2026-11-15",
       "source": "attributes (50).xml"
+    },
+    {
+      "id": "14310306",
+      "nameUK": "Комбіновані деревообробні верстати",
+      "nameRU": "Комбинированные деревообрабатывающие станки",
+      "file": "14310306.xml",
+      "sha256": "b1109347d41c220c7def763d7de3c68338e0a116b1f28d0ce84ee1e65c469699",
+      "attributes": 37,
+      "excluded": 0,
+      "received": "2026-11-15",
+      "source": "attributes (1).xml"
     },
     {
       "id": "14310311",

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="151408" nameRU="Комплектующие для швабры" nameUK="Комплектуючі для швабри">
+    <attribute id="388" nameRU="Материал ручки" type="singleselect" nameUK="Матеріал ручки">
+      <attribute_value id="7634" nameRU="дерево" nameUK="дерево"/>
+      <attribute_value id="7636" nameRU="алюминий" nameUK="Алюміній"/>
+      <attribute_value id="64738" nameRU="металл" nameUK="метал"/>
+      <attribute_value id="69141" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="133535" nameRU="Нержавеющая сталь" nameUK="Нержавіюча сталь"/>
+    </attribute>
+    <attribute id="644" nameRU="Материал" type="singleselect" nameUK="Матеріал">
+      <attribute_value id="8697" nameRU="Сталь" nameUK="Сталь"/>
+      <attribute_value id="349961" nameRU="Гипс, пластик" nameUK="Гіпс, пластик"/>
+      <attribute_value id="349962" nameRU="Глина, пластик" nameUK="Глина, пластик"/>
+      <attribute_value id="349963" nameRU="Дерево, металл" nameUK="Дерево, метал"/>
+      <attribute_value id="350025" nameRU="Неопреновые" nameUK=""/>
+    </attribute>
+    <attribute id="714" nameRU="Тип" type="singleselect" nameUK="Тип">
+      <attribute_value id="107058" nameRU="Веревочная швабра" nameUK="Мотузкова швабра"/>
+      <attribute_value id="107059" nameRU="Ленточная швабра" nameUK="Стрічкова швабра"/>
+      <attribute_value id="107060" nameRU="Швабра с губкой-валиком" nameUK="Швабра з губкою-валиком"/>
+      <attribute_value id="107061" nameRU="Швабра с платформой" nameUK="Швабра з платформою"/>
+      <attribute_value id="107062" nameRU="Швабра-бабочка" nameUK="Швабра-метелик"/>
+      <attribute_value id="107063" nameRU="Насадка для швабры" nameUK="Насадка для швабри"/>
+      <attribute_value id="167346" nameRU="Рамочная швабра" nameUK="Рамкова швабра"/>
+      <attribute_value id="172593" nameRU="Держатель" nameUK="Тримач"/>
+      <attribute_value id="242591" nameRU="Ручка" nameUK="Ручка"/>
+      <attribute_value id="281542" nameRU="Мопы для швабр" nameUK="Мопи для швабр"/>
+      <attribute_value id="307246" nameRU="Швабра с плоским мопом" nameUK="Швабра з плоским мопом"/>
+    </attribute>
+    <attribute id="1764" nameRU="Тип ручки" type="singleselect" nameUK="Тип ручки">
+      <attribute_value id="10792" nameRU="телескопическая" nameUK="телескопічна"/>
+      <attribute_value id="10794" nameRU="цельная" nameUK="цілісна"/>
+      <attribute_value id="274479" nameRU="разборная" nameUK="розбірна"/>
+    </attribute>
+    <attribute id="3570" nameRU="Объем ведра" type="real" nameUK="Об`єм відра" measureUnitRU="л" min="0" max="20" measureUnitUK="л"/>
+    <attribute id="4846" nameRU="Цвет" type="singleselect" nameUK="Колір">
+      <attribute_value id="30786" nameRU="Красный" nameUK="Червоний"/>
+      <attribute_value id="30787" nameRU="Розовый" nameUK="Рожевий"/>
+      <attribute_value id="30790" nameRU="Оранжевый" nameUK="Помаранчевий"/>
+      <attribute_value id="30791" nameRU="Золотистый" nameUK="Золотистий"/>
+      <attribute_value id="30792" nameRU="Бежевый" nameUK="Бежевий"/>
+      <attribute_value id="30793" nameRU="Коричневый" nameUK="Коричневий"/>
+      <attribute_value id="30797" nameRU="Желтый" nameUK="Жовтий"/>
+      <attribute_value id="30801" nameRU="Зелёный" nameUK="Зелений"/>
+      <attribute_value id="30803" nameRU="Хаки" nameUK="Хакі"/>
+      <attribute_value id="30804" nameRU="Бирюзовый" nameUK="Бірюзовий"/>
+      <attribute_value id="30805" nameRU="Синий" nameUK="Синій"/>
+      <attribute_value id="30806" nameRU="Голубой" nameUK="Блакитний"/>
+      <attribute_value id="30808" nameRU="Фиолетовый" nameUK="Фіолетовий"/>
+      <attribute_value id="30810" nameRU="Черный" nameUK="Чорний"/>
+      <attribute_value id="30811" nameRU="Белый" nameUK="Білий"/>
+      <attribute_value id="30812" nameRU="Серый" nameUK="Сірий"/>
+      <attribute_value id="30816" nameRU="Бордовый" nameUK="Бордовий"/>
+      <attribute_value id="31057" nameRU="Разные цвета" nameUK="Різні кольори"/>
+      <attribute_value id="156388" nameRU="Салатовый" nameUK="Салатовий"/>
+      <attribute_value id="234476" nameRU="Серебристый" nameUK="Сріблястий"/>
+      <attribute_value id="265616" nameRU="Фуксия" nameUK="Фуксія"/>
+      <attribute_value id="268188" nameRU="Терракотовый" nameUK="Теракотовий"/>
+      <attribute_value id="347534" nameRU="Дуб кремона торро" nameUK=""/>
+      <attribute_value id="347536" nameRU="Ателье светлый" nameUK="Ательє світлий"/>
+    </attribute>
+    <attribute id="6484" nameRU="Материал насадки" type="singleselect" nameUK="Матеріал насадки">
+      <attribute_value id="44683" nameRU="Пластик" nameUK="Пластик"/>
+      <attribute_value id="107089" nameRU="Хлопок" nameUK="Бавовна"/>
+      <attribute_value id="107090" nameRU="Полипропилен" nameUK="Поліпропілен"/>
+      <attribute_value id="107091" nameRU="Вискоза" nameUK="Віскоза"/>
+      <attribute_value id="107092" nameRU="Микрофибра" nameUK="Мікрофібра"/>
+      <attribute_value id="283043" nameRU="Полиэстер" nameUK="Поліестер"/>
+      <attribute_value id="344454" nameRU="Поролон" nameUK="Поролон"/>
+      <attribute_value id="344455" nameRU="Резина" nameUK="Гума"/>
+      <attribute_value id="344456" nameRU="Силикон" nameUK="Силікон"/>
+      <attribute_value id="344457" nameRU="Целлюлоза" nameUK="Целюлоза"/>
+      <attribute_value id="347773" nameRU="Акрил" nameUK="Акрил"/>
+    </attribute>
+    <attribute id="9906" nameRU="Длина насадки" type="real" nameUK="Довжина насадки" measureUnitRU="см" min="0" max="150" measureUnitUK="см"/>
+    <attribute id="10167" nameRU="Длина ручки" type="real" nameUK="Довжина ручки" measureUnitRU="см" min="0" max="10000" measureUnitUK="см"/>
+    <attribute id="10444" nameRU="Основное назначение" type="multiselect" nameUK="Основне призначення">
+      <attribute_value id="107042" nameRU="Универсальное" nameUK="Універсальне"/>
+      <attribute_value id="107069" nameRU="Для пола" nameUK="Для підлоги"/>
+      <attribute_value id="107070" nameRU="Для окон" nameUK="Для вікон"/>
+      <attribute_value id="107071" nameRU="Для стен" nameUK="Для стін"/>
+    </attribute>
+    <attribute id="11268" nameRU="Комплектация ведром" type="singleselect" nameUK="Комплектація відром">
+      <attribute_value id="107064" nameRU="Есть (с отжимом)" nameUK="Є (з віджимом)"/>
+      <attribute_value id="107065" nameRU="Есть (без отжима)" nameUK="Є (без віджимання)"/>
+      <attribute_value id="107066" nameRU="Нет" nameUK="Немає"/>
+    </attribute>
+    <attribute id="11269" nameRU="Наличие механизма отжима" type="singleselect" nameUK="Наявність механізму віджиму">
+      <attribute_value id="107067" nameRU="Есть" nameUK="Є"/>
+      <attribute_value id="107068" nameRU="Нет" nameUK="Немає"/>
+    </attribute>
+    <attribute id="11270" nameRU="Ширина насадки" type="real" nameUK="Ширина насадки" measureUnitRU="см" min="0" max="150" measureUnitUK="см"/>
+    <attribute id="11272" nameRU="Высота насадки" type="real" nameUK="Висота насадки" measureUnitRU="см" min="0" max="50" measureUnitUK="см"/>
+    <attribute id="11273" nameRU="Диаметр насадки" type="real" nameUK="Діаметр насадки" measureUnitRU="см" min="0" max="50" measureUnitUK="см"/>
+    <attribute id="11867" nameRU="Особенности" type="multiselect" nameUK="Особливості">
+      <attribute_value id="344443" nameRU="С отжимом" nameUK="З віджимом"/>
+      <attribute_value id="344444" nameRU="С распылителем" nameUK="З розпилювачем"/>
+      <attribute_value id="344445" nameRU="С телескопической ручкой" nameUK="З ручкою-телескоп"/>
+      <attribute_value id="344446" nameRU="С платформой" nameUK="З платформою"/>
+      <attribute_value id="344447" nameRU="С плоским мопом" nameUK="З плоским мопом"/>
+      <attribute_value id="344448" nameRU="С губкой-валиком" nameUK="З губкою-валиком"/>
+      <attribute_value id="344449" nameRU="Швабра-бабочка" nameUK="Швабра-метелик"/>
+      <attribute_value id="344450" nameRU="Рамочная швабра" nameUK="Рамкова швабра"/>
+      <attribute_value id="344451" nameRU="Верёвочная швабра" nameUK="Мотузкова швабра"/>
+      <attribute_value id="344452" nameRU="Ленточная швабра" nameUK="Стрічкова швабра"/>
+      <attribute_value id="349867" nameRU="С магнитом" nameUK="З магнітом"/>
+    </attribute>
+  </category>
+</categories>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<categories>
+<category id="12110101" nameRU="Шиномонтажные станки" nameUK="Шиномонтажні верстати">
+    <attribute id="100" nameRU="Гарантийный срок" type="integer" nameUK="Гарантійний термін" measureUnitRU="мес" min="0" max="120" measureUnitUK="міс"/>
+    <attribute id="2581" nameRU="Давление воздуха" type="real" nameUK="Тиск повітря" measureUnitRU="атм" measureUnitUK="атм"/>
+    <attribute id="6212" nameRU="Напряжение питания" type="multiselect" nameUK="Напруга живлення">
+      <attribute_value id="42681" nameRU="220 В" nameUK="220 В"/>
+      <attribute_value id="42682" nameRU="380 В" nameUK="380 В"/>
+      <attribute_value id="125714" nameRU="12 В" nameUK="12 В"/>
+      <attribute_value id="125715" nameRU="24 В" nameUK="24 В"/>
+    </attribute>
+    <attribute id="6912" nameRU="Назначение оборудования" type="singleselect" nameUK="Призначення обладнання">
+      <attribute_value id="52205" nameRU="для легковых автомобилей" nameUK="для легкових автомобілів"/>
+      <attribute_value id="52206" nameRU="для грузовых автомобилей" nameUK="для вантажних автомобілів"/>
+      <attribute_value id="52207" nameRU="для мотоциклов" nameUK="для мотоциклів"/>
+      <attribute_value id="52208" nameRU="для низкопрофильной резины" nameUK="для низькопрофільної гуми"/>
+      <attribute_value id="52209" nameRU="универсальное" nameUK="універсальне"/>
+    </attribute>
+    <attribute id="11410" nameRU="Допустимый диаметр колеса" type="real" nameUK="Допустимий діаметр колеса" measureUnitRU="дюйм" min="0" max="65" measureUnitUK="дюйм"/>
+    <attribute id="15625" nameRU="Класс станка" type="singleselect" nameUK="Клас верстата">
+      <attribute_value id="170094" nameRU="Ручной" nameUK="Ручний"/>
+      <attribute_value id="170095" nameRU="Полуавтомат" nameUK="Напівавтомат"/>
+      <attribute_value id="170096" nameRU="Автомат" nameUK="Автомат"/>
+    </attribute>
+    <attribute id="15626" nameRU="Усилие отрыва резины от борта диска" type="real" nameUK="Зусилля відриву гуми від борту диска" measureUnitRU="кг" min="0" max="5000" measureUnitUK="кг"/>
+    <attribute id="15627" nameRU="Количество скоростей вращения зажимного стола" type="singleselect" nameUK="Кількість швидкостей обертання затискного столу">
+      <attribute_value id="170097" nameRU="1" nameUK="1"/>
+      <attribute_value id="170098" nameRU="2" nameUK="2"/>
+      <attribute_value id="170099" nameRU="3" nameUK="3"/>
+    </attribute>
+    <attribute id="15628" nameRU="Блок подготовки воздуха" type="bool" nameUK="Блок підготовки повітря"/>
+    <attribute id="15629" nameRU="Взрывная накачка бескамерных шин" type="bool" nameUK="Вибухове накачування безкамерних шин"/>
+    <attribute id="15630" nameRU="Устройство накачки шин" type="bool" nameUK="Пристрій накачування шин"/>
+    <attribute id="15631" nameRU="Пластиковые защитные накладки" type="bool" nameUK="Пластикові захисні накладки"/>
+    <attribute id="15632" nameRU="Монтировка" type="bool" nameUK="Монтування"/>
+    <attribute id="15633" nameRU="Роликовая подставка под колесо" type="bool" nameUK="Роликова підставка під колесо"/>
+    <attribute id="15634" nameRU="Возможность установки пневмолифта" type="bool" nameUK="Можливість встановлення пневмоліфта"/>
+  </category>
+</categories>
