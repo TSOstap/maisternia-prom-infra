@@ -9,7 +9,7 @@
  *  наступне «Оновити товари»). */
 import { keyedUpdate, OP, ITEM } from "./safe-write/keyed-update.mjs";
 import { mtText } from "../core/text.mjs";
-import { PRICE_RULE_COLUMNS, EXTRA_COLUMN, EXTRA_MIN, DEFAULT_PRICING, cellNumber } from "../core/pricing.mjs";
+import { PRICE_RULE_COLUMNS, EXTRA_COLUMN, EXTRA_MIN, DEFAULT_PRICING, cellNumber, OWNER_PRICE_COLUMN } from "../core/pricing.mjs";
 
 export const OWNER_EDITS_WRITER = "owner-edits";
 /** Дозволені аркуші / ключі / колонки. */
@@ -17,7 +17,9 @@ export const OWNER_EDIT_TARGETS = Object.freeze({
   // «Попередження постачальника» в каталозі — позначка: система її сама не знімає (markCell); знімає власник, коли розглянув попередження.
   "Основний каталог": Object.freeze({ key: "Offer ID", columns: Object.freeze(["Назва UA", "Назва RU", "Опис UA", "Опис RU", "Характеристики JSON", "Фото JSON", "Виробник", "Попередження постачальника", "Запити UA", "Запити RU", "Група ID", "Група UA", "Група RU", "Категорія Prom ID", "Категорія Prom URL",
     // Рішення власника 14.11 (ціни за конкурентами): ручна ціна, ціна постачальника на момент її встановлення, надбавка (src/core/pricing.mjs).
-    ...PRICE_RULE_COLUMNS]) }),
+    ...PRICE_RULE_COLUMNS,
+    // Рішення власника 15.11: «Ціна власника» від імені власника — знімається сама, коли ціна у фіді постачальника зміниться (prices-only).
+    OWNER_PRICE_COLUMN]) }),
   // «Залишити наше» система не виконує (дія лише «Прийняти значення постачальника») — тому «Стан дії» позначає розгляд власником.
   "Попередження постачальника": Object.freeze({ key: "Ключ", columns: Object.freeze(["Дія власника", "Стан дії"]) }),
   // 04.11: наші пошукові запити для новинок до затвердження (у черзі запис робить SEO власним — синхронізація його не перезаписує).
@@ -51,6 +53,7 @@ export function planProblems(edits) {
     if (e.column === "Характеристики JSON" || e.column === "Фото JSON") { try { if (!Array.isArray(JSON.parse(e.set))) throw 0; } catch { p.push(`#${i}: «${e.column}» — не JSON-масив`); } }
     // 14.11: ціна / надбавка — лише порожньо (зняти) або число в межах правила (решту меж перевіряє pricing.priceRule під час розрахунку;
     // ручна ціна без «Ціна вручну: при ціні постачальника» не діє). Після правок цих колонок — одразу «Ціни» (перерахунок і фід).
+    if (e.column === OWNER_PRICE_COLUMN && e.set !== "") { const n = cellNumber(e.set); if (n === null || Number.isNaN(n) || !(n > 0)) p.push(`#${i}: «${e.column}» — не додатне число`); }
     if (PRICE_RULE_COLUMNS.includes(e.column) && e.set !== "") {
       const n = cellNumber(e.set);
       if (n === null || Number.isNaN(n)) p.push(`#${i}: «${e.column}» — не число`);

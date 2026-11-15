@@ -119,3 +119,14 @@ test("15.11: власник змінив «Ціну власника» між ч
   w.readBook = orig;
   assert.equal(rowOf(w, a)[OWNP], String(pa + 900), "нова правка власника не стерта");
 });
+
+test("15.11: owner-edits може записати «Ціну власника» від імені власника — лише додатне число або порожньо (зняти)", async () => {
+  const { planProblems, OWNER_EDIT_TARGETS } = await import("../src/pipeline/owner-edits.mjs");
+  assert.ok(OWNER_EDIT_TARGETS["Основний каталог"].columns.includes(OWNP));
+  const e = (set, expect = "") => [{ sheet: MAIN, key: "1", column: OWNP, expect, set, source: "рішення власника 15.11 (тест)" }];
+  assert.deepEqual(planProblems(e("9699")), []);
+  assert.deepEqual(planProblems(e("9 699,50")), []);
+  assert.deepEqual(planProblems(e("", "9699")), [], "зняти ціну власника");
+  assert.match(planProblems(e("дорого")).join(" "), /не додатне число/);
+  assert.match(planProblems(e("0")).join(" "), /не додатне число/);
+});
