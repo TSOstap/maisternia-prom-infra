@@ -74,6 +74,8 @@ export async function updatePrices({ readBook, xml, stamp, now, config, controls
     // Рішення власника 14.11: постачальник оновив наявність — «Наявність власника» очищується (з очікуваним значенням: правка власника
     // між читанням і записом — рядок не пишеться).
     if (pl.clearOwner) { expect[OWNER_AVAILABILITY_COLUMN] = pl.clearOwner.before; set[OWNER_AVAILABILITY_COLUMN] = ""; }
+    // Рішення власника 15.11: ціна у фіді постачальника змінилась (або дорівнює «Ціні власника») — «Ціна власника» очищується.
+    if (pl.clearOwnerPrice) { expect["Ціна власника"] = pl.clearOwnerPrice.before; set["Ціна власника"] = ""; }
     return { key: pl.id, identity: { "ID постачальника": mtText(row["ID постачальника"]) }, expect, set };
   });
   // Контрольний план ДО першого запису: події з ID і докази (відбитки «було» / «стало» змінених клітинок).

@@ -13,6 +13,18 @@ import { mtText } from "./text.mjs";
 import { LIVE_COLUMNS, MATCH, planRows, readSheet, changeEntries } from "./sync-plan.mjs";
 import { PRESENCE, PRESENCE_COLUMN } from "./supplier-presence.mjs";
 import { OWNER_AVAILABILITY_COLUMN, effectiveAvailability } from "./owner-availability.mjs";
+import { OWNER_PRICE_COLUMN, ownerCost } from "./pricing.mjs";
+
+/** Рішення власника 15.11: «Ціна власника» діє, поки ціна у фіді постачальника не зміниться (або не стане такою самою, як у
+ *  клітинці власника). Тоді клітинка очищується, і ціна рахується вже з фіду. → { before } (очистити) або null. */
+export function ownerPriceCaughtUp(row, offer) {
+  const own = ownerCost(row);
+  if (own == null || !offer || !Number.isFinite(offer.price)) return null;
+  const prev = Number(mtText(row?.["Ціна постачальника"]).replace(",", "."));
+  const changed = Number.isFinite(prev) && prev > 0 && Math.abs(offer.price - prev) > 0.001;
+  const same = Math.abs(offer.price - own) < 0.005;
+  return changed || same ? { before: mtText(row[OWNER_PRICE_COLUMN]) } : null;
+}
 
 export const MAIN_TITLE = "Основний каталог";
 const STAMP_COL = LIVE_COLUMNS.indexOf("Оновлено");
@@ -26,7 +38,10 @@ export function planPrices({ values, offers, stamp, pricing, removed = new Set()
   const main = readSheet(values, MAIN_TITLE);
   const offerOf = offers instanceof Map ? (sid) => offers.get(sid) : (sid) => offers[sid];
   const skipped = { removed: 0, gone: 0, missing: 0, mismatch: {} };
-  const plan = planRows(main.rows, offers, stamp, pricing).map((p, i) => {
+  // «Ціна власника», яку постачальник уже наздогнав, у цьому запуску не діє: ціна — з фіду, клітинка очищується (лише для зіставлених).
+  const ownerPriceClear = main.rows.map((row) => ownerPriceCaughtUp(row, offerOf(mtText(row["ID постачальника"]))));
+  const rowsForPlan = main.rows.map((row, i) => (ownerPriceClear[i] ? { ...row, [OWNER_PRICE_COLUMN]: "" } : row));
+  const plan = planRows(rowsForPlan, offers, stamp, pricing).map((p, i) => {
     const keep = (why) => ({ ...p, next: p.before.slice(), skip: why });
     if (removed.has(p.id)) { skipped.removed++; return keep(PRICES_SKIP.REMOVED); }
     if (mtText(main.rows[i][PRESENCE_COLUMN]).trim() === PRESENCE.GONE) { skipped.gone++; return keep(PRICES_SKIP.GONE); }
@@ -38,9 +53,11 @@ export function planPrices({ values, offers, stamp, pricing, removed = new Set()
     const clearOwner = owner.clear ? { before: mtText(main.rows[i][OWNER_AVAILABILITY_COLUMN]) } : null;
     // «Оновлено» — лише разом зі справжньою зміною.
     const real = p.before.some((v, j) => j !== STAMP_COL && mtText(v) !== mtText(p.next[j]));
-    return { ...(real ? p : { ...p, next: p.before.slice() }), ownerRule: owner.rule, clearOwner };
+    return { ...(real ? p : { ...p, next: p.before.slice() }), ownerRule: owner.rule, clearOwner, clearOwnerPrice: ownerPriceClear[i] };
   });
-  const changed = plan.map((p, i) => (p.clearOwner || p.before.some((v, j) => mtText(v) !== mtText(p.next[j])) ? i : -1)).filter((i) => i >= 0);
+  // Пропущені рядки (видалені / зниклі / незіставлені) «Ціну власника» не втрачають — їх ціни цей запуск не рахує.
+  for (const p of plan) if (p.skip) p.clearOwnerPrice = null;
+  const changed = plan.map((p, i) => (p.clearOwner || p.clearOwnerPrice || p.before.some((v, j) => mtText(v) !== mtText(p.next[j])) ? i : -1)).filter((i) => i >= 0);
   const diff = (k) => { const j = LIVE_COLUMNS.indexOf(k); return plan.filter((p) => mtText(p.before[j]) !== mtText(p.next[j])).length; };
   const becameAvailable = plan.filter((p) => p.before[4] !== "+" && p.next[4] === "+").length;
   const becameUnavailable = plan.filter((p) => p.before[4] === "+" && p.next[4] !== "+").length;
@@ -50,6 +67,8 @@ export function planPrices({ values, offers, stamp, pricing, removed = new Set()
     becameAvailable, becameUnavailable, quantityChanged: diff("Кількість постачальника"), skipped,
     // «Наявність власника»: діє (наявність власника замість постачальника) / очищується (постачальник оновив наявність).
     ownerAvailability: { active: plan.filter((p) => p.ownerRule === "owner").length, cleared: plan.filter((p) => p.clearOwner).length },
+    // «Ціна власника»: діє (замість ціни з фіду) / знято (ціна у фіді постачальника змінилась або стала такою самою).
+    ownerPrice: { active: plan.filter((p, i) => !p.skip && !p.clearOwnerPrice && ownerCost(main.rows[i]) != null).length, cleared: plan.filter((p) => p.clearOwnerPrice).length },
   };
   const limit = Math.max(anomaly.maxNewlyMissing, Math.ceil(main.rows.length * anomaly.maxNewlyMissingRatio));
   const mass = becameUnavailable > limit ? `«немає в наявності» стало б ${becameUnavailable} товарів (поріг ${limit})` : becameAvailable > limit ? `«в наявності» стало б ${becameAvailable} товарів (поріг ${limit})` : "";
@@ -57,5 +76,6 @@ export function planPrices({ values, offers, stamp, pricing, removed = new Set()
   // Події «Журналу» — як у mtUpdate: лише змінені колонки F:K (без «ПОМИЛКА»: незіставлені рядки ця операція не чіпає).
   const journal = changeEntries(stamp, MAIN_TITLE, changed.map((i) => plan[i]));
   for (const i of changed) if (plan[i].clearOwner) journal.push([stamp, MAIN_TITLE, plan[i].id, OWNER_AVAILABILITY_COLUMN, plan[i].clearOwner.before, "", plan[i].match]);
+  for (const i of changed) if (plan[i].clearOwnerPrice) journal.push([stamp, MAIN_TITLE, plan[i].id, OWNER_PRICE_COLUMN, plan[i].clearOwnerPrice.before, "", plan[i].match]);
   return { header: main.header, rows: main.rows, plan, changed, journal, stats };
 }

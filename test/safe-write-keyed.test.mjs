@@ -24,7 +24,9 @@ test("контракт власності: усі колонки описані;
   const s = contract.sheets.get(T);
   for (const k of MAIN_HEADERS) assert.ok(s.columns.has(k), "немає в контракті: " + k);
   for (const k of SEO_FIELDS) { assert.deepEqual(s.columns.get(k).writers, ["sync"], k); assert.equal(s.columns.get(k).gate, "field-state", k); }
-  for (const k of ["SEO заголовок UA", "SEO опис RU", "SEO рішення", "Продаж рішення", "Ціна власника"]) assert.deepEqual(s.columns.get(k).writers, [], k);
+  for (const k of ["SEO заголовок UA", "SEO опис RU", "SEO рішення", "Продаж рішення"]) assert.deepEqual(s.columns.get(k).writers, [], k);
+  // Рішення власника 15.11: «Ціна власника» — так само, як «Наявність власника»: sync лише очищує клітинку, коли ціна у фіді змінилась.
+  assert.deepEqual(s.columns.get("Ціна власника").writers, ["sync"]); assert.equal(s.columns.get("Ціна власника").gate, "cmd-consume");
   // Рішення власника 14.11: «Наявність власника» — система (sync) лише СПОЖИВАЄ значення: очищує клітинку, коли постачальник оновив наявність.
   assert.deepEqual(s.columns.get("Наявність власника").writers, ["sync"]); assert.equal(s.columns.get("Наявність власника").gate, "cmd-consume");
   assert.ok(!writableColumns(contract, T, "sync").includes("Offer ID"));
@@ -63,7 +65,7 @@ test("E2: запис за ключем — лише цільові клітин�
 });
 
 test("E2: заборонені колонки (SEO / описи для інших записувачів, команди власника, ключ) — відмова ДО будь-якого запиту, таблиця без змін", async () => {
-  for (const [col, writer] of [["Назва UA", "catalog-controls"], ["Опис UA", "content-html"], ["Назва RU", "seo"], ["SEO рішення", "sync"], ["Offer ID", "sync"], ["Ціна власника", "sync"]]) {
+  for (const [col, writer] of [["Назва UA", "catalog-controls"], ["Опис UA", "content-html"], ["Назва RU", "seo"], ["SEO рішення", "sync"], ["Offer ID", "sync"], ["Ціна власника", "catalog-controls"]]) {
     const sh = new MemorySheets(book());
     const s0 = snap(sh);
     const e = await keyedUpdate(ctx(sh, { writer, changes: [{ key: "101", expect: { [col]: "x" }, set: { [col]: "y" } }] })).catch((x) => x);
@@ -72,6 +74,13 @@ test("E2: заборонені колонки (SEO / описи для інши�
     assert.equal(sh.log.length, 0, col + ": жодного запиту");
     assert.equal(snap(sh), s0);
   }
+});
+
+test("15.11: «Ціна власника» (cmd-consume) — sync лише очищує клітинку з тим самим значенням; записати нову ціну — відмова до запиту", async () => {
+  const sh = new MemorySheets(book());
+  const s0 = snap(sh);
+  const e = await keyedUpdate(ctx(sh, { writer: "sync", changes: [{ key: "101", expect: { "Ціна власника": "x" }, set: { "Ціна власника": "y" } }] })).catch((x) => x);
+  assert.equal(outcomeOf(e), OUTCOME.NOT_APPLIED); assert.equal(e.code, "CMD_CONSUME"); assert.equal(sh.log.length, 0); assert.equal(snap(sh), s0);
 });
 
 test("E2: одночасна зміна SEO власником між читанням і записом — правка власника зберігається", async () => {

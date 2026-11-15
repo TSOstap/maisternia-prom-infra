@@ -37,6 +37,8 @@ export function ownerSummary(op, report) {
     lines.push(`Ціни: постачальника ${n(st.supplierPriceChanged)}, продажу ${n(st.salePriceChanged)}; наявність: ${n(st.availabilityChanged)} (з'явились ${n(st.becameAvailable)}, зникли ${n(st.becameUnavailable)}); кількість: ${n(st.quantityChanged)}`);
     const oa = st.ownerAvailability || {};
     if (n(oa.active) || n(oa.cleared)) lines.push(`«Наявність власника»: діє ${n(oa.active)}${n(oa.cleared) ? `; знято ${n(oa.cleared)} (постачальник оновив наявність — далі його наявність)` : ""}`);
+    const op = st.ownerPrice || {};
+    if (n(op.active) || n(op.cleared)) lines.push(`«Ціна власника»: діє ${n(op.active)}${n(op.cleared) ? `; знято ${n(op.cleared)} (ціна у фіді постачальника змінилась — далі ціна з фіду)` : ""}`);
     const mism = Object.values(sk.mismatch || {}).reduce((a, b) => a + n(b), 0);
     if (mism) lines.push(`Не змінено ${mism}: у постачальника змінились назва / артикул тощо — спершу «Оновити товари»`);
     if (n(sk.missing)) lines.push(`Немає у фіді постачальника: ${n(sk.missing)} — їх перевіряє «Оновити товари»`);
