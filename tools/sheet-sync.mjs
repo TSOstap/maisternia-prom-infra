@@ -42,6 +42,7 @@ import { findNewProducts } from "../src/pipeline/find-new.mjs";
 import { updatePrices } from "../src/pipeline/prices-run.mjs";
 import { applyOwnerEdits } from "../src/pipeline/owner-edits.mjs";
 import { addProsaleColumns, applyProsaleTariffs } from "../src/pipeline/prosale-columns.mjs";
+import { unfreezeIds } from "../src/pipeline/unfreeze.mjs";
 import { addPriceRuleColumns } from "../src/pipeline/price-rule-columns.mjs";
 import { addWarningHighlight } from "../src/pipeline/row-highlight.mjs";
 import { addQueueHighlight } from "../src/pipeline/queue-highlight.mjs";
@@ -77,7 +78,7 @@ const mode = arg("mode", "sync");
 //   deferred  — ENG-29: розбір «Відкладених товарів» (рішення власника 03.11): у фіді — в «Основний каталог», немає — у «Видалені товари»;
 //               --plan-only — лише план.
 //   drop-deferred — ENG-29: прибрати порожню вкладку «Відкладені товари» (лише 0 рядків даних; --maintenance, оренда W2).
-const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer", "deferred", "drop-deferred", "prices", "owner-edits", "prosale-columns", "prosale-tariffs", "row-highlight", "queue-highlight", "warnings-archive", "sheet-style", "warnings-archive-fix", "group-add", "price-rule-columns"];
+const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer", "deferred", "drop-deferred", "prices", "owner-edits", "prosale-columns", "prosale-tariffs", "row-highlight", "queue-highlight", "warnings-archive", "sheet-style", "warnings-archive-fix", "group-add", "price-rule-columns", "unfreeze"];
 /** ENG-28c (М1): межа HTTP-запитів записувача на запуск. Типово 40 (GoogleSheetsWriter); «Оновити товари» / sync — 120: перший повний
  *  прохід пріоритету власника на 5 121 рядках потребує ≈ 45 запитів (з М2; без М2 — ≈ 69), темп записувача ≤ 50 запитів/хв (квота
  *  Google — 60 запитів запису / хв на користувача проєкту). Перед першим записом — оцінка (budgetCheck): більше за межу → нічого не пишемо. */
@@ -87,7 +88,7 @@ const WRITE_BUDGETS = Object.freeze({ update: 120, sync: 120, scenario: 120, ref
 // ENG-18 (Hermes ENG16-N2): КОЖЕН режим, що пише через API, — лише з допуском W2 (однохостовий координатор). merge / refresh —
 // обслуговування копії: додатково явний --maintenance і оренда W2 на весь час операції (виключення з усіма записувачами).
 // ENG-28a: structure / correction — разові кроки контрольованої міграції: теж лише з --maintenance і орендою W2 (виключення).
-const MAINTENANCE_MODES = ["merge", "refresh", "drop-deferred", "structure", "correction", "owner-edits", "prosale-columns", "prosale-tariffs", "row-highlight", "queue-highlight", "sheet-style", "warnings-archive-fix", "group-add", "price-rule-columns"];
+const MAINTENANCE_MODES = ["merge", "refresh", "drop-deferred", "structure", "correction", "owner-edits", "prosale-columns", "prosale-tariffs", "row-highlight", "queue-highlight", "sheet-style", "warnings-archive-fix", "group-add", "price-rule-columns", "unfreeze"];
 // archive — перенесення за дорученнями CC (moves) і завершення видалень за активними фідами (--feed-store).
 // controls — запуск Catalog Controls (CC R7 G3): тінь типово; --apply — застосування (лише активований CC, готовність, W2).
 // ENG-29: невідомий режим — відмова (раніше потрапляв у гілку sync). Усі режими CLI пишуть, тож перелік — WRITE_MODES.
@@ -274,6 +275,11 @@ try {
     } finally { await session.close?.().catch(() => {}); }
   } else if (mode === "warnings-archive-fix") {
     report.result = await underMaintenanceLease(() => clearShiftedArchiveRows({ sheets, readBook, stamp }));
+  } else if (mode === "unfreeze") {
+    // Рішення власника 15.11: розморозити — --plan={"ids":[...],"keep":[...],"reason":"…"}.
+    if (!arg("plan")) fail("unfreeze: ", new Error("потрібен --plan=<файл з ids>"));
+    const p = JSON.parse(fs.readFileSync(arg("plan"), "utf8"));
+    report.result = await underMaintenanceLease(() => unfreezeIds({ sheets, readBook, stamp, ids: p.ids || [], keep: p.keep || [], reason: p.reason || "" }));
   } else if (mode === "group-add") {
     if (!arg("plan")) fail("group-add: ", new Error("потрібен --plan={id, ua, ru, parent}"));
     const group = JSON.parse(fs.readFileSync(arg("plan"), "utf8"));

@@ -165,6 +165,8 @@ export const MODE_POLICIES = Object.freeze({
   // 04.11 (виправлення): очищення зсунутих копій в архіві попереджень (лише значення, без видалення рядків).
   "warnings-archive-fix": { "Попередження — архів": { ops: ["updateRanges"], columns: "*" }, "Журнал": { ops: ["appendRows"] } },
   // Рішення власника 04.11: нова підгрупа — лише дописування рядка в «Групи».
+  // Рішення власника 15.11: розморозити свідомо виключені товари — лише переписування «Заморожених ID» (без видалення рядків) і «Журнал».
+  unfreeze: { "Заморожені ID": { ops: ["updateRanges"], columns: "*" }, "Журнал": { ops: ["appendRows"] } },
   "group-add": { "Групи": { ops: ["appendRows"] }, "Журнал": { ops: ["appendRows"] } },
   "warnings-archive": { ...WARN_ARCHIVE, "Журнал": { ops: ["appendRows"] } },
   "row-highlight": { "Основний каталог": { ops: ["addRowHighlight"] }, "Журнал": { ops: ["appendRows"] } },
