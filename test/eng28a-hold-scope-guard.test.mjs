@@ -118,7 +118,10 @@ test("ENG-28a охорона: політика є для кожного режи
   for (const [m, pol] of Object.entries(WT.MODE_POLICIES)) for (const [title, p] of Object.entries(pol)) {
     const allowed = (m === "transfer" && title === SHEET.queue) || (m === "deferred" && title === SHEET.deferred) // ENG-29: рішення власника 02.11 / 03.11
       // Рішення власника 04.11: опрацьовані попередження переносяться в архів (за ключем зі знімком) — «Ціни», «Оновити товари», разовий розбір.
-      || (["prices", "update", "warnings-archive"].includes(m) && title === "Попередження постачальника");
+      || (["prices", "update", "warnings-archive"].includes(m) && title === "Попередження постачальника")
+      // Рішення власника 16.11 («порошок… не додавай, залиш його замороженим»; «перенісся в видалені товари які більше не попадуть в фід»):
+      // лише явний список ID — повна копія в «Видалені товари» до видалення, видалення з каталогу за ключем зі знімком (test/refreeze.test.mjs).
+      || (m === "refreeze" && title === SHEET.main);
     assert.equal((p.ops || []).includes("deleteRows") || p.deleteRows === true, allowed, `${m}/${title}: deleteRows`);
   }
   assert.deepEqual(Object.keys(WT.MODE_POLICIES.structure).sort(), [SHEET.journal, SHEET.queue, SHEET.passport].sort());

@@ -167,6 +167,9 @@ export const MODE_POLICIES = Object.freeze({
   // Рішення власника 04.11: нова підгрупа — лише дописування рядка в «Групи».
   // Рішення власника 15.11: розморозити свідомо виключені товари — лише переписування «Заморожених ID» (без видалення рядків) і «Журнал».
   unfreeze: { "Заморожені ID": { ops: ["updateRanges"], columns: "*" }, "Журнал": { ops: ["appendRows"] } },
+  // Рішення власника 16.11: товар з каталогу → «Видалені товари» + «Заморожені ID» — лише явний список ID; сесія «sync»: архів —
+  // дописування без дублів за ключем, каталог — видалення за ключем зі знімком усього рядка (src/pipeline/unfreeze.mjs refreezeIds).
+  refreeze: { "Основний каталог": { ops: ["deleteRows"], deleteRows: true }, "Видалені товари": { ops: ["appendRows"] }, "Заморожені ID": { ops: ["appendRows"] }, "Журнал": JOURNAL_KEYED },
   "group-add": { "Групи": { ops: ["appendRows"] }, "Журнал": { ops: ["appendRows"] } },
   "warnings-archive": { ...WARN_ARCHIVE, "Журнал": { ops: ["appendRows"] } },
   "row-highlight": { "Основний каталог": { ops: ["addRowHighlight"] }, "Журнал": { ops: ["appendRows"] } },

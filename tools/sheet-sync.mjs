@@ -42,7 +42,7 @@ import { findNewProducts } from "../src/pipeline/find-new.mjs";
 import { updatePrices } from "../src/pipeline/prices-run.mjs";
 import { applyOwnerEdits } from "../src/pipeline/owner-edits.mjs";
 import { addProsaleColumns, applyProsaleTariffs } from "../src/pipeline/prosale-columns.mjs";
-import { unfreezeIds } from "../src/pipeline/unfreeze.mjs";
+import { unfreezeIds, refreezeIds } from "../src/pipeline/unfreeze.mjs";
 import { addPriceRuleColumns } from "../src/pipeline/price-rule-columns.mjs";
 import { addWarningHighlight } from "../src/pipeline/row-highlight.mjs";
 import { addQueueHighlight } from "../src/pipeline/queue-highlight.mjs";
@@ -78,7 +78,7 @@ const mode = arg("mode", "sync");
 //   deferred  — ENG-29: розбір «Відкладених товарів» (рішення власника 03.11): у фіді — в «Основний каталог», немає — у «Видалені товари»;
 //               --plan-only — лише план.
 //   drop-deferred — ENG-29: прибрати порожню вкладку «Відкладені товари» (лише 0 рядків даних; --maintenance, оренда W2).
-const WRITE_MODES = ["sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer", "deferred", "drop-deferred", "prices", "owner-edits", "prosale-columns", "prosale-tariffs", "row-highlight", "queue-highlight", "warnings-archive", "sheet-style", "warnings-archive-fix", "group-add", "price-rule-columns", "unfreeze"];
+const WRITE_MODES = ["refreeze", "sync", "intake", "scenario", "scenario-mass", "controls", "archive", "merge", "refresh", "recover", "update", "structure", "correction", "qa", "find-new", "reconcile", "transfer", "deferred", "drop-deferred", "prices", "owner-edits", "prosale-columns", "prosale-tariffs", "row-highlight", "queue-highlight", "warnings-archive", "sheet-style", "warnings-archive-fix", "group-add", "price-rule-columns", "unfreeze"];
 /** ENG-28c (М1): межа HTTP-запитів записувача на запуск. Типово 40 (GoogleSheetsWriter); «Оновити товари» / sync — 120: перший повний
  *  прохід пріоритету власника на 5 121 рядках потребує ≈ 45 запитів (з М2; без М2 — ≈ 69), темп записувача ≤ 50 запитів/хв (квота
  *  Google — 60 запитів запису / хв на користувача проєкту). Перед першим записом — оцінка (budgetCheck): більше за межу → нічого не пишемо. */
@@ -280,6 +280,13 @@ try {
     if (!arg("plan")) fail("unfreeze: ", new Error("потрібен --plan=<файл з ids>"));
     const p = JSON.parse(fs.readFileSync(arg("plan"), "utf8"));
     report.result = await underMaintenanceLease(() => unfreezeIds({ sheets, readBook, stamp, ids: p.ids || [], keep: p.keep || [], reason: p.reason || "" }));
+  } else if (mode === "refreeze") {
+    // Рішення власника 16.11: товар з каталогу → «Видалені товари» + «Заморожені ID» — --plan={"ids":[...],"reason":"…"}; сесія «sync».
+    if (!arg("plan")) fail("refreeze: ", new Error("потрібен --plan=<файл з ids>"));
+    const p = JSON.parse(fs.readFileSync(arg("plan"), "utf8"));
+    const session = await new WriteGateway({ sheets, read: readBook, store: w2Store }).open({ writer: "sync" });
+    try { report.result = await refreezeIds({ session, sheets, readBook, stamp, ids: p.ids || [], reason: p.reason || "" }); }
+    finally { await session.close?.().catch(() => {}); }
   } else if (mode === "group-add") {
     if (!arg("plan")) fail("group-add: ", new Error("потрібен --plan={id, ua, ru, parent}"));
     const group = JSON.parse(fs.readFileSync(arg("plan"), "utf8"));
@@ -527,4 +534,4 @@ if (arg("summary")) {
   if ([...secrets].some((x) => lines.includes(x)) || /\d{10,}/.test(lines)) { process.stderr.write("ЗАХИСТ ВІД ВИТОКУ: summary не записано\n"); process.exit(3); }
   fs.appendFileSync(arg("summary"), lines);
 }
-process.exitCode = process.exitCode === 3 ? 3 : mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "TRANSFERRED", "MIGRATED", "CORRECTED", "NOTHING", "NO_CHANGES", "SYNCED", "REFRESHED", "INTAKE_DONE", "NOTHING_TO_WRITE", "SKIPPED", "SHADOW", "COMMITTED", "ARCHIVED", "RECOVERED", "QA_DONE", "PLANNED", "NOTHING_NEW", "WAITING_STABILITY", "NOTHING_COMPLETE", "RECONCILED", "JOURNAL_RECOVERED", "RUN_PLAN_ABANDONED", "DEFERRED_RESOLVED", "SHEET_REMOVED", "PRICES_UPDATED", "OWNER_EDITS_APPLIED", "PROSALE_COLUMNS_ADDED", "PROSALE_TARIFFS_SET", "UNFROZEN", "HIGHLIGHT_ADDED", "WARNINGS_ARCHIVED", "STYLED", "SHIFTED_CLEARED", "GROUP_ADDED"].includes(report.result?.state) ? 0 : 1;
+process.exitCode = process.exitCode === 3 ? 3 : mode === "scenario-mass" ? (report.result?.state === "ABORTED" ? 0 : 1) : ["MERGED", "TRANSFERRED", "MIGRATED", "CORRECTED", "NOTHING", "NO_CHANGES", "SYNCED", "REFRESHED", "INTAKE_DONE", "NOTHING_TO_WRITE", "SKIPPED", "SHADOW", "COMMITTED", "ARCHIVED", "RECOVERED", "QA_DONE", "PLANNED", "NOTHING_NEW", "WAITING_STABILITY", "NOTHING_COMPLETE", "RECONCILED", "JOURNAL_RECOVERED", "RUN_PLAN_ABANDONED", "DEFERRED_RESOLVED", "SHEET_REMOVED", "PRICES_UPDATED", "OWNER_EDITS_APPLIED", "PROSALE_COLUMNS_ADDED", "PROSALE_TARIFFS_SET", "UNFROZEN", "REFROZEN", "HIGHLIGHT_ADDED", "WARNINGS_ARCHIVED", "STYLED", "SHIFTED_CLEARED", "GROUP_ADDED"].includes(report.result?.state) ? 0 : 1;
