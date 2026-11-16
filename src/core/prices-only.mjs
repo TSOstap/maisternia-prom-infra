@@ -33,12 +33,13 @@ export function planPrices({ values, offers, stamp, pricing, removed = new Set()
   const hasDrop = main.header.map((h) => mtText(h).trim()).includes(DROP_COLUMN);
   const offerOf = offers instanceof Map ? (sid) => offers.get(sid) : (sid) => offers[sid];
   const skipped = { removed: 0, gone: 0, missing: 0, mismatch: {} };
+  const missingIds = []; // товари каталогу, яких немає у фіді постачальника — для пояснення власнику (перші 50)
   // Рішення власника 16.11 (№ 63): «Ціна власника» — постійна (не очищується); «Ціна вручну» — поки РРЦ та сама (якір пишуть «Ціни»).
   const plan = planRows(main.rows, offers, stamp, pricing).map((p, i) => {
     const keep = (why) => ({ ...p, next: p.before.slice(), skip: why });
     if (removed.has(p.id)) { skipped.removed++; return keep(PRICES_SKIP.REMOVED); }
     if (mtText(main.rows[i][PRESENCE_COLUMN]).trim() === PRESENCE.GONE) { skipped.gone++; return keep(PRICES_SKIP.GONE); }
-    if (p.match === MATCH.MISSING) { skipped.missing++; return keep(PRICES_SKIP.MISSING); }
+    if (p.match === MATCH.MISSING) { skipped.missing++; missingIds.push(p.id); return keep(PRICES_SKIP.MISSING); }
     if (p.match !== MATCH.OK) { skipped.mismatch[p.match] = (skipped.mismatch[p.match] || 0) + 1; return keep(PRICES_SKIP.MISMATCH); }
     // Рішення власника 14.11: «Наявність власника» (ту саму ефективну наявність уже порахував planRows); постачальник оновив наявність
     // (стала як у клітинці власника) — клітинку власника очистити.
@@ -69,7 +70,7 @@ export function planPrices({ values, offers, stamp, pricing, removed = new Set()
   const stats = {
     rows: main.rows.length, changedProducts: changed.length,
     supplierPriceChanged: diff("Ціна постачальника"), salePriceChanged: diff("Ціна кінцева"), availabilityChanged: diff("Наявність"),
-    becameAvailable, becameUnavailable, quantityChanged: diff("Кількість постачальника"), skipped,
+    becameAvailable, becameUnavailable, quantityChanged: diff("Кількість постачальника"), skipped, missingIds: missingIds.slice(0, 50),
     bigPriceChanges: big.length, bigPriceList: big.slice(0, 20), dropChanged: plan.filter((p) => p.drop).length,
     // «Наявність власника»: діє (наявність власника замість постачальника) / очищується (постачальник оновив наявність).
     ownerAvailability: { active: plan.filter((p) => p.ownerRule === "owner").length, cleared: plan.filter((p) => p.clearOwner).length },
