@@ -95,6 +95,8 @@ export function pendingActions(values) {
     const r = values[i] || [];
     if (mtText(r[ca]).trim() !== ACTION.ACCEPT || mtText(r[cs]).trim()) continue;
     const field = mtText(r[cf]);
+    // № 63: «РРЦ (діє «Ціна власника»)» — лише інформація власнику (система цю дію не виконує; ціну власник змінює в каталозі).
+    if (field.startsWith("РРЦ (діє")) continue;
     const m = /^(.*?): (.+)$/.exec(field); // «Характеристики JSON: матеріал» → поле + характеристика
     out.push({ key: mtText(r[ck]), offerId: mtText(r[co]), field: m && m[1] === "Характеристики JSON" ? m[1] : field, param: m && m[1] === "Характеристики JSON" ? m[2] : "" });
   }

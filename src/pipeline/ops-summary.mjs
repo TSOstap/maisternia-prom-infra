@@ -44,7 +44,10 @@ export function ownerSummary(op, report) {
     const oa = st.ownerAvailability || {};
     if (n(oa.active) || n(oa.cleared)) lines.push(`«Наявність власника»: діє ${n(oa.active)}${n(oa.cleared) ? `; знято ${n(oa.cleared)} (постачальник оновив наявність — далі його наявність)` : ""}`);
     const op = st.ownerPrice || {};
-    if (n(op.active) || n(op.cleared)) lines.push(`«Ціна власника»: діє ${n(op.active)}${n(op.cleared) ? `; знято ${n(op.cleared)} (ціна у фіді постачальника змінилась — далі ціна з фіду)` : ""}`);
+    // № 63: «Ціна власника» — постійна (попередження, коли постачальник змінив РРЦ); «Ціна вручну» — поки РРЦ та сама.
+    if (n(op.active) || n(op.rrpChanged)) lines.push(`«Ціна власника» (постійна): діє ${n(op.active)}${n(op.rrpChanged) ? `; постачальник змінив РРЦ у ${n(op.rrpChanged)} — аркуш «Попередження постачальника»: ${(op.rrpList || []).slice(0, 5).map((x) => `${x.id} (${x.from} → ${x.to})`).join(", ")}` : ""}`);
+    const mp = st.manualPrice || {};
+    if (n(mp.active) || n(mp.anchored) || n(mp.cleared)) lines.push(`«Ціна вручну» (поки РРЦ та сама): діє ${n(mp.active)}${n(mp.anchored) ? `; нових ${n(mp.anchored)} (записано РРЦ «при ціні постачальника»)` : ""}${n(mp.cleared) ? `; знято ${n(mp.cleared)} (постачальник змінив РРЦ)` : ""}`);
     const mism = Object.values(sk.mismatch || {}).reduce((a, b) => a + n(b), 0);
     if (mism) lines.push(`Не змінено ${mism}: у постачальника змінились назва / артикул тощо — спершу «Оновити товари»`);
     if (n(sk.missing)) lines.push(`Немає у фіді постачальника: ${n(sk.missing)} — їх перевіряє «Оновити товари»`);

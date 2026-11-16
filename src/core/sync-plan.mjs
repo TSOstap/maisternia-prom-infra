@@ -1,7 +1,7 @@
 /** Зіставлення рядка каталогу з offer постачальника і план операційних колонок F:M.
  *  Точні порти mtMatch / mtPlan / mtHeaders з Code.LIVE-CURRENT.gs. */
 import { mtKey, mtSku, mtText } from "./text.mjs";
-import { DEFAULT_PRICING, mtSameDiscount, ownerCost, rowPrices } from "./pricing.mjs";
+import { DEFAULT_PRICING, mtSameDiscount, rowPrices } from "./pricing.mjs";
 import { prosaleFor } from "./prosale.mjs";
 import { effectiveAvailability } from "./owner-availability.mjs";
 
@@ -61,14 +61,15 @@ export function planRows(rows, offers, stamp, pricing = DEFAULT_PRICING) {
     const before = LIVE_COLUMNS.map((k) => (row[k] == null ? "" : row[k]));
     const offer = lookup(mtText(row["ID постачальника"]));
     const match = matchOffer(row, offer);
-    let next = before.slice();
+    let next = before.slice(), rule = null;
     if (match === MATCH.OK) {
       // Рішення власника 14.11: «Наявність власника» — діє, поки постачальник не змінить свою наявність (src/core/owner-availability.mjs;
       // очищення клітинки — лише «Оновити ціни й наявність», src/core/prices-only.mjs).
       const available = effectiveAvailability(row, offer.available).available;
-      // Рішення власника 06.11: «Ціна власника» (ціна постачальника, яку власник знає раніше за фід) — замість ціни з фіду.
-      // Рішення власника 14.11: «Ціна вручну» (лише поки ціна постачальника та сама) / «Надбавка» (−1…+5) — rowPrices.
-      const p = rowPrices(row, ownerCost(row) ?? offer.price, available, pricing, prosaleFor(row, pricing));
+      // Рішення власника 16.11 (№ 63): «Ціна власника» (постійна) / «Ціна вручну» (поки РРЦ та сама) — як нова РРЦ, далі +5 / ProSale;
+      // РРЦ у таблиці — завжди постачальника (offer.price: Excel або фід); дроп Excel — захист «нижче дропу».
+      const p = rowPrices(row, offer.price, available, pricing, prosaleFor(row, pricing), Number.isFinite(offer.drop) ? offer.drop : null);
+      rule = p.rule;
       next = [offer.price, p.base, p.final, p.discount, p.availability, offer.quantity === "" ? before[5] : Number(offer.quantity), match, stamp];
       // Та сама знижка в іншому поданні (0.2 у %-клітинці = «20%») — не зміна.
       if (mtSameDiscount(before[3], next[3])) next[3] = before[3];
@@ -78,7 +79,10 @@ export function planRows(rows, offers, stamp, pricing = DEFAULT_PRICING) {
     } else {
       next[6] = match; next[7] = stamp;
     }
-    return { id, before, next, match };
+    const out = { id, before, next, match };
+    // № 63: правило ціни рядка — неперелічуване поле (форма результату planRows = LIVE mtPlan; читає src/core/prices-only.mjs).
+    Object.defineProperty(out, "rule", { value: rule, enumerable: false });
+    return out;
   });
 }
 

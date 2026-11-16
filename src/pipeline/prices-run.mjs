@@ -18,7 +18,8 @@ import { OP, ITEM } from "./safe-write/keyed-update.mjs";
 import { RUN_PLAN_KEY, PLAN, RECOVERY_DONE, EVENT_ID_COLUMN, openPlansGate, loadPlan, savePlan, withEventIds, evidenceCell, appendEvents, JOURNAL_SHEET } from "./run-plan.mjs";
 import { sheetDiscount, journalRow, syncControlsState, ccUnchanged } from "./sync-helpers.mjs";
 import { PROSALE_SHEET, withProsale } from "../core/prosale.mjs";
-import { PRICE_RULE_COLUMNS } from "../core/pricing.mjs";
+import { PRICE_RULE_COLUMNS, MANUAL_PRICE_COLUMN, MANUAL_ANCHOR_COLUMN } from "../core/pricing.mjs";
+import { recordWarnings } from "./supplier-warnings.mjs";
 import { OWNER_AVAILABILITY_COLUMN } from "../core/owner-availability.mjs";
 import { hybridOffers, horoshopFresh } from "../core/horoshop.mjs";
 
@@ -80,8 +81,10 @@ export async function updatePrices({ readBook, xml, stamp, now, config, controls
     // Рішення власника 14.11: постачальник оновив наявність — «Наявність власника» очищується (з очікуваним значенням: правка власника
     // між читанням і записом — рядок не пишеться).
     if (pl.clearOwner) { expect[OWNER_AVAILABILITY_COLUMN] = pl.clearOwner.before; set[OWNER_AVAILABILITY_COLUMN] = ""; }
-    // Рішення власника 15.11: ціна у фіді постачальника змінилась (або дорівнює «Ціні власника») — «Ціна власника» очищується.
-    if (pl.clearOwnerPrice) { expect["Ціна власника"] = pl.clearOwnerPrice.before; set["Ціна власника"] = ""; }
+    // Рішення власника 16.11 (№ 63): «Ціна вручну» — нова: записати якір (поточна РРЦ); РРЦ змінилась — очистити ціну й якір
+    // (з очікуваними значеннями: правка власника між читанням і записом — рядок не пишеться). «Ціна власника» не очищується.
+    if (pl.manual?.set != null) { expect[MANUAL_ANCHOR_COLUMN] = pl.manual.before[MANUAL_ANCHOR_COLUMN]; set[MANUAL_ANCHOR_COLUMN] = pl.manual.set; }
+    if (pl.manual?.clear) for (const k of [MANUAL_PRICE_COLUMN, MANUAL_ANCHOR_COLUMN]) { expect[k] = pl.manual.before[k]; set[k] = ""; }
     return { key: pl.id, identity: { "ID постачальника": mtText(row["ID постачальника"]) }, expect, set };
   });
   // Контрольний план ДО першого запису: події з ID і докази (відбитки «було» / «стало» змінених клітинок).
@@ -114,7 +117,19 @@ export async function updatePrices({ readBook, xml, stamp, now, config, controls
     journal = { ...journal, ok: jr.ok, outcome: jr.outcome, appended: jr.appended };
     if (jr.ok) await savePlan(store, RUN_PLAN_KEY, { ...runPlan, status: PLAN.DONE, events: doneEvents, productDoneAt: stamp, closedAt: stamp }, version);
   } catch (e) { journal = { ...journal, error: mtText(e?.message || e).slice(0, 200) }; }
-  const stats = { ...p.stats, written: written.size, notWritten: notWritten.length };
+  // № 63: «Ціна власника» діє, а постачальник змінив РРЦ — рядок в «Попередження постачальника» (лише записаних рядків; ключ — товар + нова
+  // РРЦ, тож повторний запуск не дублює). «Стан дії» заповнено — система цей рядок не «виконує»; «Залишити наше» — рядок піде в архів.
+  let ownerWarnings = null;
+  const rrpWarn = p.changed.filter((i) => p.plan[i].ownerRrp && written.has(p.plan[i].id)).map((i) => {
+    const pl = p.plan[i], row = p.rows[i], w = pl.ownerRrp;
+    return { key: `rrp-owner:${pl.id}:${w.to}`, at: stamp, offerId: pl.id, sku: mtText(row["Артикул постачальника"]), name: mtText(row["Назва UA"]) || mtText(row["Назва постачальника UA"]),
+      field: "РРЦ (діє «Ціна власника»)", before: String(w.from), after: String(w.to), custom: `Ціна власника: ${w.own}${w.applied ? "" : " (не діє — нижча за дроп)"}`, source: "Оновити ціни й наявність" };
+  });
+  if (rrpWarn.length) {
+    try { const wr = await recordWarnings({ session, warnings: rrpWarn, generation: runId }); ownerWarnings = { planned: rrpWarn.length, appended: Array.isArray(wr.appended) ? wr.appended.length : Number(wr.appended) || 0, outcome: wr.outcome }; }
+    catch (e) { ownerWarnings = { planned: rrpWarn.length, error: mtText(e?.message || e).slice(0, 200) }; }
+  }
+  const stats = { ...p.stats, written: written.size, notWritten: notWritten.length, ...(ownerWarnings ? { ownerWarnings } : {}) };
   if (!journal.ok) return { state: "JOURNAL_INCOMPLETE", reason: `ціни записано й перевірено, але «Журнал» запуску неповний (${journal.outcome || journal.error}) — наступний запуск допише відсутні події`, notWritten, journal, ...base, stats };
   return { state: notWritten.length ? "PARTIAL" : "PRICES_UPDATED", reason: notWritten.length ? `не записано ${notWritten.length} рядків (таблицю змінено під час запуску) — наступний запуск` : "", notWritten, journal, ...base, stats };
 }

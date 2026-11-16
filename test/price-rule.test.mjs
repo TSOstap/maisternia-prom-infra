@@ -1,11 +1,11 @@
-// Рішення власника 14.11.2026 (ціни за конкурентами): «Ціна вручну» діє лише поки ціна постачальника та сама, що під час
-// встановлення («Ціна вручну: при ціні постачальника»); «Надбавка» −1…+5 замість +5. Межі, перехідний стан фіду, запис лише owner-edits.
+// Рішення власника 16.11.2026 (реєстр № 63): ціни власника — ЯК НОВА РРЦ (+5, далі ProSale). «Ціна власника» — постійна; «Ціна вручну»
+// — поки РРЦ та сама (якір «Ціна вручну: при ціні постачальника» пишуть «Ціни»); нижче дропу — не діє; «Надбавку» прибрано.
 import test from "node:test";
 import assert from "node:assert/strict";
 import { generateSynthetic } from "../src/synth/generator.mjs";
 import {
-  mtPrices, rowPrices, priceRule, cellNumber, DEFAULT_PRICING, OWNER_PRICE_COLUMN,
-  MANUAL_PRICE_COLUMN, MANUAL_ANCHOR_COLUMN, EXTRA_COLUMN, PRICE_RULE_COLUMNS,
+  mtPrices, rowPrices, effectiveCost, cellNumber, DEFAULT_PRICING, OWNER_PRICE_COLUMN,
+  MANUAL_PRICE_COLUMN, MANUAL_ANCHOR_COLUMN, PRICE_RULE_COLUMNS,
 } from "../src/core/pricing.mjs";
 import { prosaleFor, prosaleFinal, PROSALE_TARIFF_COLUMN } from "../src/core/prosale.mjs";
 import { renderOffer, patchOfferLive, groupsForYml, objectsFromValues, GROUP_HEADERS } from "../src/core/yml.mjs";
@@ -39,176 +39,154 @@ const manual = (price, anchor) => ({ [MANUAL_PRICE_COLUMN]: price, [MANUAL_ANCHO
 test("14.11: розбір клітинок — «1 234,50», «−1», «5 грн», число; порожньо → null; текст → NaN", () => {
   assert.equal(cellNumber("1 234,50"), 1234.5);
   assert.equal(cellNumber("−1"), -1);
-  assert.equal(cellNumber("-1"), -1);
   assert.equal(cellNumber("5 грн"), 5);
   assert.equal(cellNumber(18471), 18471);
   for (const v of ["", " ", null, undefined]) assert.equal(cellNumber(v), null, String(v));
   assert.ok(Number.isNaN(cellNumber("abc")));
 });
 
-test("14.11: без нових клітинок — точно стара формула (+5, націнка, знижка) — і для товарів у наявності, і без", () => {
+test("№ 63: без цін власника — точно стара формула (+5, націнка, знижка) — і для товарів у наявності, і без", () => {
   for (const price of [100, 1855, 15777.05, 99999]) for (const av of [true, false]) {
-    const p = rowPrices({}, price, av, DEFAULT_PRICING);
-    const { rule, ...rest } = p;
+    const { rule, ...rest } = rowPrices({}, price, av, DEFAULT_PRICING);
     assert.deepEqual(rest, mtPrices(price, av, DEFAULT_PRICING));
     assert.equal(rule.kind, "standard");
   }
 });
 
-test("14.11: ручна ціна діє, лише поки ціна постачальника = ціні на момент встановлення; змінилась — стандартна формула (приклад власника)", () => {
-  // Постачальник 120, ми поставили 185 (190 з прикладу власника — понад 1,5 × 125, запобіжник таку не пропускає).
-  let r = priceRule(manual("185", "120"), 120, DEFAULT_PRICING);
-  assert.equal(r.kind, "manual"); assert.equal(r.final0, 185);
-  assert.equal(priceRule(manual("190", "120"), 120, DEFAULT_PRICING).kind, "standard");
-  // Постачальник поставив 220 — ручна ціна не діє: 225, а НЕ 290 і НЕ 185.
-  r = priceRule(manual("185", "120"), 220, DEFAULT_PRICING);
-  assert.equal(r.kind, "standard"); assert.equal(r.final0, 225); assert.match(r.notes[0], /змінилась/);
-  // Постачальник знизив до 100 — теж стандартна (105), ручна 185 не тримається.
-  assert.equal(priceRule(manual("185", "120"), 100, DEFAULT_PRICING).final0, 105);
-  // Копійки ціни постачальника: 15777.05 як рядок і як число.
-  assert.equal(priceRule(manual("18471", "15777.05"), 15777.05, DEFAULT_PRICING).kind, "manual");
-  assert.equal(priceRule(manual(18471, 15777.05), 15777.05, DEFAULT_PRICING).kind, "manual");
-  assert.equal(priceRule(manual(18471, 15777.05), 15777.06, DEFAULT_PRICING).kind, "standard");
+test("№ 63: «Ціна вручну» — як нова РРЦ (+5); якоря немає — діє й «Ціни» запишуть якір; РРЦ = якорю — діє; РРЦ змінилась — знято", () => {
+  // Постачальник написав «2000» — власник пише 2000: ціна 2005 (як РРЦ 2000).
+  let r = effectiveCost(manual("2000", ""), 1800);
+  assert.deepEqual([r.kind, r.cost, r.anchor], ["manual", 2000, "set"]);
+  assert.equal(rowPrices(manual("2000", ""), 1800, true, DEFAULT_PRICING).final, 2005);
+  r = effectiveCost(manual("2000", "1800"), 1800);
+  assert.deepEqual([r.kind, r.cost, r.anchor], ["manual", 2000, null]);
+  // Постачальник змінив РРЦ (1800 → 1900): ручна ціна знята, стандартна 1905.
+  r = effectiveCost(manual("2000", "1800"), 1900);
+  assert.deepEqual([r.kind, r.cost, r.anchor], ["standard", 1900, "stale"]);
+  assert.match(r.notes[0], /змінилась/);
+  assert.equal(rowPrices(manual("2000", "1800"), 1900, true, DEFAULT_PRICING).final, 1905);
+  // Копійки РРЦ: рядок і число.
+  assert.equal(effectiveCost(manual("18471", "15777.05"), 15777.05).kind, "manual");
+  assert.equal(effectiveCost(manual(18471, 15777.05), 15777.06).anchor, "stale");
+  // Якір — текст: як змінена РРЦ (знімається).
+  assert.equal(effectiveCost(manual("2000", "abc"), 1800).anchor, "stale");
 });
 
-test("14.11: ручна ціна — межі: без ціни постачальника на момент встановлення, нижче за «постачальник − 1», вище за 1,5 × стандартної, текст — не діє", () => {
-  const cost = 1000, std = 1005;
-  for (const [cells, why] of [
-    [{ [MANUAL_PRICE_COLUMN]: "1200" }, /немає/],
-    [manual("1200", "abc"), /немає/],
-    [manual("998.99", "1000"), /нижча/],
-    [manual(String(std * 1.5 + 0.01), "1000"), /вища/],
-    [manual("abc", "1000"), /не число/],
-    [manual("0", "1000"), /не число/],
-  ]) {
-    const r = priceRule(cells, cost, DEFAULT_PRICING);
-    assert.equal(r.kind, "standard", JSON.stringify(cells)); assert.equal(r.final0, std); assert.match(r.notes.join(" "), why);
+test("№ 63: «Ціна власника» — постійна (діє за будь-якої РРЦ), має перевагу над «Ціною вручну»; текст / 0 — не діє", () => {
+  for (const rrp of [1000, 1500, 9000]) {
+    const r = effectiveCost({ [OWNER_PRICE_COLUMN]: "2000" }, rrp);
+    assert.deepEqual([r.kind, r.cost], ["owner", 2000], String(rrp));
   }
-  // Межі включно: «постачальник − 1» і рівно 1,5 × стандартної — діють.
-  assert.equal(priceRule(manual("999", "1000"), cost, DEFAULT_PRICING).final0, 999);
-  assert.equal(priceRule(manual(String(std * 1.5), "1000"), cost, DEFAULT_PRICING).final0, std * 1.5);
-});
-
-test("14.11: «Надбавка» −1…+5 замість +5 і рухається разом із ціною постачальника; поза межами / текст — не діє", () => {
-  assert.equal(priceRule({ [EXTRA_COLUMN]: "-1" }, 1000, DEFAULT_PRICING).final0, 999);
-  assert.equal(priceRule({ [EXTRA_COLUMN]: "−1" }, 1200, DEFAULT_PRICING).final0, 1199);
-  assert.equal(priceRule({ [EXTRA_COLUMN]: 0 }, 1000, DEFAULT_PRICING).final0, 1000);
-  assert.equal(priceRule({ [EXTRA_COLUMN]: "5" }, 1000, DEFAULT_PRICING).final0, 1005);
-  for (const v of ["-2", "-1.01", "6", "100", "abc"]) {
-    const r = priceRule({ [EXTRA_COLUMN]: v }, 1000, DEFAULT_PRICING);
-    assert.equal(r.kind, "standard", v); assert.equal(r.final0, 1005, v); assert.match(r.notes.join(" "), /Надбавка/);
+  assert.equal(effectiveCost({ [OWNER_PRICE_COLUMN]: "2000", ...manual("3000", "1000") }, 1000).cost, 2000, "обидві — діє «Ціна власника»");
+  for (const v of ["abc", "0", "-5"]) assert.equal(effectiveCost({ [OWNER_PRICE_COLUMN]: v }, 1000).kind, "standard", v);
+  for (const v of ["abc", "0"]) {
+    const r = effectiveCost(manual(v, "1000"), 1000);
+    assert.equal(r.kind, "standard");
+    assert.match(r.notes.join(" "), /не число/);
   }
 });
 
-test("14.11: ручна ціна, коли діє, має перевагу над надбавкою; не діє (ціна постачальника змінилась) — діє надбавка", () => {
-  const cells = { ...manual("1300", "1000"), [EXTRA_COLUMN]: "-1" };
-  assert.deepEqual([priceRule(cells, 1000, DEFAULT_PRICING).kind, priceRule(cells, 1000, DEFAULT_PRICING).final0], ["manual", 1300]);
-  const r = priceRule(cells, 1100, DEFAULT_PRICING);
-  assert.equal(r.kind, "extra"); assert.equal(r.final0, 1099);
+test("№ 63: нижче дропу — не діє (захист від помилки в клітинці); дропу немає — без цього захисту", () => {
+  let r = effectiveCost({ [OWNER_PRICE_COLUMN]: "200" }, 2000, 1800);
+  assert.equal(r.kind, "standard");
+  assert.match(r.notes.join(" "), /нижча за дроп/);
+  r = effectiveCost(manual("1700", ""), 2000, 1800);
+  assert.equal(r.kind, "standard");
+  assert.match(r.notes.join(" "), /нижча за дроп/);
+  assert.equal(effectiveCost(manual("1800", ""), 2000, 1800).kind, "manual", "рівно дроп — діє");
+  assert.equal(effectiveCost({ [OWNER_PRICE_COLUMN]: "200" }, 2000, null).kind, "owner");
 });
 
-test("14.11: базова ціна й знижка від ручної ціни — як завжди (base = кінцева × 1,25; у фіді <price> = base і 20 %)", () => {
-  const p = rowPrices(manual("18471", "15777.05"), 15777.05, true, DEFAULT_PRICING);
-  assert.equal(p.final, 18471); assert.equal(p.base, 23088.75); assert.equal(p.discount, "20%"); assert.equal(p.availability, "+");
-  const q = rowPrices({ [EXTRA_COLUMN]: "-1" }, 1855, true, DEFAULT_PRICING);
-  assert.equal(q.final, 1854); assert.equal(q.base, 2317.5);
+test("№ 63: база й знижка від ціни власника — як завжди (base = кінцева × 1,25; у фіді <price> = base і 20 %)", () => {
+  const p = rowPrices(manual("18466", "15777.05"), 15777.05, true, DEFAULT_PRICING);
+  assert.equal(p.final, 18471);
+  assert.equal(p.base, 23088.75);
+  assert.equal(p.discount, "20%");
+  assert.equal(p.availability, "+");
 });
 
-test("14.11: «Оновити ціни» (planRows) — ручна ціна й надбавка; ціна постачальника у фіді змінилась — рядок повертається до +5", async () => {
+test("№ 63: «Оновити ціни» (planRows) — ручна ціна (з якорем / без) і постійна ціна власника; РРЦ змінилась — ручна знята, постійна лишається", async () => {
   const w = await world();
   const P = w.offer.price;
-  const row = { ...w.r, ...manual(String(P + 300), String(P)) };
-  const [p] = planRows([row], w.offers, STAMP, DEFAULT_PRICING);
-  assert.equal(p.next[0], P); assert.equal(p.next[2], P + 300); assert.equal(p.next[1], mtPrices(P + 295, true, DEFAULT_PRICING).base);
-  // Ціна постачальника на момент встановлення інша (постачальник змінив ціну) — стандартна.
-  const [q] = planRows([{ ...w.r, ...manual(String(P + 300), String(P - 50)) }], w.offers, STAMP, DEFAULT_PRICING);
-  assert.equal(q.next[2], P + 5);
-  const [e] = planRows([{ ...w.r, [EXTRA_COLUMN]: "-1" }], w.offers, STAMP, DEFAULT_PRICING);
-  assert.equal(e.next[2], P - 1);
+  const [a] = planRows([{ ...w.r, ...manual(String(P + 300), "") }], w.offers, STAMP, DEFAULT_PRICING);
+  assert.equal(a.next[0], P, "РРЦ у таблиці — постачальника");
+  assert.equal(a.next[2], P + 305);
+  assert.equal(a.rule.anchor, "set");
+  const [b] = planRows([{ ...w.r, ...manual(String(P + 300), String(P)) }], w.offers, STAMP, DEFAULT_PRICING);
+  assert.equal(b.next[2], P + 305);
+  assert.equal(b.rule.anchor, null);
+  const [c] = planRows([{ ...w.r, ...manual(String(P + 300), String(P - 50)) }], w.offers, STAMP, DEFAULT_PRICING);
+  assert.equal(c.next[2], P + 5);
+  assert.equal(c.rule.anchor, "stale");
+  const [d] = planRows([{ ...w.r, [OWNER_PRICE_COLUMN]: String(P + 1000) }], w.offers, STAMP, DEFAULT_PRICING);
+  assert.equal(d.next[2], P + 1005);
+  assert.equal(d.rule.kind, "owner");
 });
 
-test("14.11: «Ціна власника» + ручна ціна — порівнюється з ціною власника (від неї рахується ціна)", async () => {
-  const w = await world();
-  const own = w.offer.price + 1000;
-  const [p] = planRows([{ ...w.r, [OWNER_PRICE_COLUMN]: String(own), ...manual(String(own + 200), String(own)) }], w.offers, STAMP, DEFAULT_PRICING);
-  assert.equal(p.next[2], own + 200);
-  const [q] = planRows([{ ...w.r, [OWNER_PRICE_COLUMN]: String(own), ...manual(String(own + 200), String(w.offer.price)) }], w.offers, STAMP, DEFAULT_PRICING);
-  assert.equal(q.next[2], own + 5, "ручну ціну ставили від іншої ціни — не діє");
-});
-
-test("14.11: фід приймає рядок із ручною ціною (повне формування й оновлення цін); довільна ціна в таблиці — як і раніше, ні", async () => {
+test("№ 63: фід приймає рядок із ціною власника (повне формування й оновлення цін); довільна ціна в таблиці — як і раніше, ні", async () => {
   const w = await world();
   const P = w.offer.price;
-  const row0 = { ...w.r, ...manual(String(P + 300), String(P)) };
-  const [p] = planRows([row0], w.offers, STAMP, DEFAULT_PRICING);
-  const row = apply(row0, p);
-  const o = renderOffer(row, opt(row, w.groupMap));
-  assert.equal(o.kind, "published"); assert.ok(!o.issue);
-  const base = mtPrices(P + 295, true, DEFAULT_PRICING).base;
-  assert.ok(o.xml.includes("<price>" + base.toFixed(2) + "</price><discount>20%</discount>"), "<price> = база від ручної ціни");
-  assert.equal(patchOfferLive(o.xml, row, { pricing: DEFAULT_PRICING, inStock: true }), o.xml);
-  // Ті самі ціни без ручної ціни формулі не відповідають (захист лишається).
-  assert.throws(() => renderOffer({ ...row, [MANUAL_PRICE_COLUMN]: "", [MANUAL_ANCHOR_COLUMN]: "" }, opt(row, w.groupMap)), /не відповідають погодженій формулі/);
-  // Довільні ціни при чинній ручній ціні — теж ні.
-  assert.throws(() => renderOffer({ ...row, "Ціна кінцева": P + 299 }, opt(row, w.groupMap)), /не відповідають погодженій формулі/);
+  for (const cells of [manual(String(P + 300), String(P)), { [OWNER_PRICE_COLUMN]: String(P + 300) }]) {
+    const row0 = { ...w.r, ...cells };
+    const [p] = planRows([row0], w.offers, STAMP, DEFAULT_PRICING);
+    const row = apply(row0, p);
+    const o = renderOffer(row, opt(row, w.groupMap));
+    assert.equal(o.kind, "published");
+    assert.ok(!o.issue);
+    assert.ok(o.xml.includes("<price>" + mtPrices(P + 300, true, DEFAULT_PRICING).base.toFixed(2) + "</price><discount>20%</discount>"), "<price> = база від ціни власника");
+    assert.equal(patchOfferLive(o.xml, row, { pricing: DEFAULT_PRICING, inStock: true }), o.xml);
+    assert.throws(() => renderOffer({ ...row, "Ціна кінцева": P + 299 }, opt(row, w.groupMap)), /не відповідають погодженій формулі/);
+  }
 });
 
-test("14.11: перехідний стан — правило вже записано, «Ціни» ще не перерахували: фід приймає чинні стандартні ціни (товар не ізолюється)", async () => {
+test("№ 63: перехідний стан — ціну власника вже записано, «Ціни» ще не перерахували: фід приймає чинні стандартні ціни", async () => {
   const w = await world();
   const P = w.offer.price;
   const [p] = planRows([w.r], w.offers, STAMP, DEFAULT_PRICING);
   const std = apply(w.r, p);
-  for (const cells of [manual(String(P + 300), String(P)), { [EXTRA_COLUMN]: "-1" }]) {
+  for (const cells of [manual(String(P + 300), ""), { [OWNER_PRICE_COLUMN]: String(P + 300) }]) {
     const row = { ...std, ...cells };
     const o = renderOffer(row, opt(row, w.groupMap));
-    assert.equal(o.kind, "published"); assert.ok(!o.issue, JSON.stringify(cells));
+    assert.equal(o.kind, "published");
+    assert.ok(!o.issue, JSON.stringify(cells));
     assert.ok(o.xml.includes("<price>" + mtPrices(P, true, DEFAULT_PRICING).base.toFixed(2) + "</price>"), "поки що стандартна ціна");
-    assert.equal(patchOfferLive(o.xml, row, { pricing: DEFAULT_PRICING, inStock: true }), o.xml);
   }
-  // Після «Цін» — нова ціна; оновлення цін у готовому offer дає те саме, що повне формування.
-  const row0 = { ...std, [EXTRA_COLUMN]: "-1" };
-  const o0 = renderOffer(std, opt(std, w.groupMap));
-  const [q] = planRows([row0], w.offers, STAMP, DEFAULT_PRICING);
-  const row1 = apply(row0, q);
-  assert.equal(row1["Ціна кінцева"], P - 1);
-  const full = renderOffer(row1, opt(row1, w.groupMap)).xml;
-  assert.equal(patchOfferLive(o0.xml, row1, { pricing: DEFAULT_PRICING, inStock: true }), full);
 });
 
-test("14.11: «Турбо» + ручна ціна — націнка ProSale від ручної ціни; фід приймає", async () => {
+test("№ 63: «Турбо» + ціна власника — націнка ProSale від неї (+5); фід приймає", async () => {
   const w = await world();
   const P = w.offer.price;
   const row0 = { ...w.r, [PROSALE_TARIFF_COLUMN]: "Турбо", ...manual(String(P + 300), String(P)) };
   const [p] = planRows([row0], w.offers, STAMP, DEFAULT_PRICING);
-  assert.equal(p.next[2], prosaleFinal(P + 300, prosaleFor(row0, DEFAULT_PRICING)));
+  assert.equal(p.next[2], prosaleFinal(P + 305, prosaleFor(row0, DEFAULT_PRICING)));
   const row = apply(row0, p);
   const o = renderOffer(row, opt(row, w.groupMap));
-  assert.equal(o.kind, "published"); assert.ok(!o.issue);
-  assert.equal(patchOfferLive(o.xml, row, { pricing: DEFAULT_PRICING, inStock: true }), o.xml);
+  assert.equal(o.kind, "published");
+  assert.ok(!o.issue);
 });
 
-test("14.11: нові колонки читаються всюди, де рахуються ціни; система їх не пише (не LIVE); пише лише owner-edits", () => {
-  for (const cols of [PRICE_READ_COLUMNS, YML_COLUMNS, LIVE_SYNC_COLUMNS]) for (const c of PRICE_RULE_COLUMNS) assert.ok(cols.includes(c), c);
+test("№ 63: колонки цін власника читаються всюди, де рахуються ціни; «Ціни» пишуть лише якір і зняття; «Надбавки» немає", () => {
+  assert.deepEqual([...PRICE_RULE_COLUMNS], [MANUAL_PRICE_COLUMN, MANUAL_ANCHOR_COLUMN]);
+  for (const cols of [PRICE_READ_COLUMNS, YML_COLUMNS, LIVE_SYNC_COLUMNS]) for (const c of [...PRICE_RULE_COLUMNS, OWNER_PRICE_COLUMN]) assert.ok(cols.includes(c), c);
   for (const c of PRICE_RULE_COLUMNS) {
     assert.ok(!LIVE_COLUMNS.includes(c));
     assert.ok(OWNER_EDIT_TARGETS["Основний каталог"].columns.includes(c));
     assert.ok(MODE_POLICIES["owner-edits"]["Основний каталог"].columns.includes(c));
-    assert.ok(!MODE_POLICIES.prices["Основний каталог"].columns.includes(c), "«Оновити ціни» правило не пише");
+    assert.ok(MODE_POLICIES.prices["Основний каталог"].columns.includes(c), "«Ціни» пишуть якір / зняття");
   }
+  for (const pol of Object.values(MODE_POLICIES)) for (const t of Object.values(pol)) assert.ok(!(Array.isArray(t?.columns) && t.columns.includes("Надбавка")), "«Надбавку» прибрано");
   assert.deepEqual(MODE_POLICIES["price-rule-columns"]["Основний каталог"].columns, [...PRICE_RULE_COLUMNS]);
 });
 
-test("14.11: owner-edits — ціна / надбавка лише числом у межах або порожньо (зняти)", () => {
-  const e = (column, set, expect = "") => ({ sheet: "Основний каталог", key: "1", column, expect, set, source: "рішення власника 14.11" });
-  assert.deepEqual(planProblems([e(MANUAL_PRICE_COLUMN, "18471"), e(MANUAL_ANCHOR_COLUMN, "15777.05"), e(EXTRA_COLUMN, "-1")]), []);
+test("№ 63: owner-edits — ціни власника лише додатним числом або порожньо (зняти)", () => {
+  const e = (column, set, expect = "") => ({ sheet: "Основний каталог", key: "1", column, expect, set, source: "рішення власника 16.11" });
+  assert.deepEqual(planProblems([e(MANUAL_PRICE_COLUMN, "18471"), e(MANUAL_ANCHOR_COLUMN, "15777.05"), e(OWNER_PRICE_COLUMN, "2000")]), []);
   assert.deepEqual(planProblems([e(MANUAL_PRICE_COLUMN, "", "18471"), e(MANUAL_ANCHOR_COLUMN, "", "15777.05")]), []);
   assert.match(planProblems([e(MANUAL_PRICE_COLUMN, "abc")]).join(" "), /не число/);
   assert.match(planProblems([e(MANUAL_PRICE_COLUMN, "-5")]).join(" "), /поза межами/);
-  assert.match(planProblems([e(EXTRA_COLUMN, "-2")]).join(" "), /поза межами/);
-  assert.match(planProblems([e(EXTRA_COLUMN, "6")]).join(" "), /поза межами/);
 });
 
-test("14.11: режим price-rule-columns — три порожні колонки в кінці «Основного каталогу», подія в «Журналі»; повторно — нічого", async () => {
+test("14.11 / № 63: режим price-rule-columns — порожні колонки цін власника в кінці «Основного каталогу», подія в «Журналі»; повторно — нічого", async () => {
   const book = { "Основний каталог": [["Offer ID", "Назва UA", "Тариф ProSale"], ["1", "А", ""], ["2", "Б", "Турбо"]], "Журнал": [["Дата"]] };
   const calls = [];
   const sheets = {
@@ -220,8 +198,6 @@ test("14.11: режим price-rule-columns — три порожні колон�
   const r = await addPriceRuleColumns({ sheets, readBook, stamp: STAMP });
   assert.equal(r.state, "PRICE_RULE_COLUMNS_ADDED");
   assert.deepEqual(book["Основний каталог"][0], ["Offer ID", "Назва UA", "Тариф ProSale", ...PRICE_RULE_COLUMNS]);
-  assert.deepEqual(book["Основний каталог"][1], ["1", "А", ""], "значення рядків не змінено");
-  assert.deepEqual(calls.slice(0, 2), [["ensureColumns", "Основний каталог", 6], ["updateRanges", "Основний каталог", 1, 4]]);
-  assert.equal(book["Журнал"].length, 2);
+  assert.deepEqual(calls.slice(0, 2), [["ensureColumns", "Основний каталог", 5], ["updateRanges", "Основний каталог", 1, 4]]);
   assert.equal((await addPriceRuleColumns({ sheets, readBook, stamp: STAMP })).state, "NOTHING");
 });

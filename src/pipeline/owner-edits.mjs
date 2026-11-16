@@ -9,7 +9,7 @@
  *  наступне «Оновити товари»). */
 import { keyedUpdate, OP, ITEM } from "./safe-write/keyed-update.mjs";
 import { mtText } from "../core/text.mjs";
-import { PRICE_RULE_COLUMNS, EXTRA_COLUMN, EXTRA_MIN, DEFAULT_PRICING, cellNumber, OWNER_PRICE_COLUMN } from "../core/pricing.mjs";
+import { PRICE_RULE_COLUMNS, cellNumber, OWNER_PRICE_COLUMN } from "../core/pricing.mjs";
 
 export const OWNER_EDITS_WRITER = "owner-edits";
 /** Дозволені аркуші / ключі / колонки. */
@@ -51,13 +51,13 @@ export function planProblems(edits) {
     if (e.expect === e.set) p.push(`#${i}: нове значення = поточному`);
     if (!mtText(e.source)) p.push(`#${i}: немає джерела рішення`);
     if (e.column === "Характеристики JSON" || e.column === "Фото JSON") { try { if (!Array.isArray(JSON.parse(e.set))) throw 0; } catch { p.push(`#${i}: «${e.column}» — не JSON-масив`); } }
-    // 14.11: ціна / надбавка — лише порожньо (зняти) або число в межах правила (решту меж перевіряє pricing.priceRule під час розрахунку;
-    // ручна ціна без «Ціна вручну: при ціні постачальника» не діє). Після правок цих колонок — одразу «Ціни» (перерахунок і фід).
+    // № 63 (16.11): «Ціна власника» / «Ціна вручну» — лише порожньо (зняти) або додатне число (як нова РРЦ: далі +5 і ProSale); якір
+    // «Ціна вручну: при ціні постачальника» записують «Ціни» самі. Після правок цих колонок — одразу «Ціни» (перерахунок рядка).
     if (e.column === OWNER_PRICE_COLUMN && e.set !== "") { const n = cellNumber(e.set); if (n === null || Number.isNaN(n) || !(n > 0)) p.push(`#${i}: «${e.column}» — не додатне число`); }
     if (PRICE_RULE_COLUMNS.includes(e.column) && e.set !== "") {
       const n = cellNumber(e.set);
       if (n === null || Number.isNaN(n)) p.push(`#${i}: «${e.column}» — не число`);
-      else if (e.column === EXTRA_COLUMN ? n < EXTRA_MIN || n > DEFAULT_PRICING.extra : !(n > 0)) p.push(`#${i}: «${e.column}» поза межами`);
+      else if (!(n > 0)) p.push(`#${i}: «${e.column}» поза межами`); // № 63: «Надбавку» прибрано — лише додатні ціни
     }
     const k = `${e.sheet}|${e.key}|${e.column}`;
     if (seen.has(k)) p.push(`#${i}: повтор ${k}`);
