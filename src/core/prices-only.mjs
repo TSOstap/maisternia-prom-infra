@@ -61,10 +61,15 @@ export function planPrices({ values, offers, stamp, pricing, removed = new Set()
   const diff = (k) => { const j = LIVE_COLUMNS.indexOf(k); return plan.filter((p) => mtText(p.before[j]) !== mtText(p.next[j])).length; };
   const becameAvailable = plan.filter((p) => p.before[4] !== "+" && p.next[4] === "+").length;
   const becameUnavailable = plan.filter((p) => p.before[4] === "+" && p.next[4] !== "+").length;
+  // Рішення власника 16.11: велика зміна ціни постачальника (більш ніж удвічі) не блокує запис — лише список у підсумку («перевірте»).
+  const COST = LIVE_COLUMNS.indexOf("Ціна постачальника");
+  const big = plan.filter((p) => !p.skip).map((p) => ({ id: p.id, from: Number(mtText(p.before[COST]).replace(",", ".")), to: Number(mtText(p.next[COST]).replace(",", ".")) }))
+    .filter((x) => x.from > 0 && x.to > 0 && (x.to / x.from < 0.5 || x.to / x.from > 2));
   const stats = {
     rows: main.rows.length, changedProducts: changed.length,
     supplierPriceChanged: diff("Ціна постачальника"), salePriceChanged: diff("Ціна кінцева"), availabilityChanged: diff("Наявність"),
     becameAvailable, becameUnavailable, quantityChanged: diff("Кількість постачальника"), skipped,
+    bigPriceChanges: big.length, bigPriceList: big.slice(0, 20),
     // «Наявність власника»: діє (наявність власника замість постачальника) / очищується (постачальник оновив наявність).
     ownerAvailability: { active: plan.filter((p) => p.ownerRule === "owner").length, cleared: plan.filter((p) => p.clearOwner).length },
     // «Ціна власника»: діє (замість ціни з фіду) / знято (ціна у фіді постачальника змінилась або стала такою самою).

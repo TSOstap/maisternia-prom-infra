@@ -51,6 +51,21 @@ const sparse = (w) => async (title, cols) => {
 };
 const nonLive = (r) => Object.fromEntries(Object.entries(r).filter(([k]) => !LIVE_COLUMNS.includes(k)));
 
+test("16.11: ціна постачальника змінилась більш ніж удвічі — запис не блокується, лише список у підсумку (bigPriceChanges)", async () => {
+  const w = world();
+  const r0 = await prices(w, 0);
+  assert.ok(["PRICES_UPDATED", "NO_CHANGES"].includes(r0.state), JSON.stringify(r0).slice(0, 300));
+  const before = rows(w);
+  const sid = mtText(before[1]["ID постачальника"]), oid = mtText(before[1]["Offer ID"]);
+  const was = Number(mtText(before[1]["Ціна постачальника"]).replace(",", "."));
+  const nu = Math.round(was * 3);
+  const xml = perturb.tag(w.xml, sid, "price", String(nu));
+  const plan = planPrices({ values: w.sheets.book[MAIN], offers: (await parseSupplierText(xml, { maximumChars: 1e8, identityFields: true })).offers, stamp: "s", pricing: cfg().pricing });
+  assert.equal(plan.stats.bigPriceChanges, 1);
+  assert.deepEqual(plan.stats.bigPriceList, [{ id: oid, from: was, to: nu }]);
+  assert.deepEqual(plan.changed.map((i) => mtText(plan.rows[i]["Offer ID"])), [oid], "рядок записується");
+});
+
 for (const narrow of [false, true]) test(`«Ціни й наявність»${narrow ? " (вузьке читання колонок)" : ""}: лише змінені рядки й лише 8 колонок LIVE; назви / артикул змінені, відсутні, видалені (CC), «видалений у постачальника» — не чіпаються; «Журнал» — події з ID; повтор — без змін`, async () => {
   const w = world();
   const P = (ww, min, o = {}) => prices(ww, min, { ...o, narrow });

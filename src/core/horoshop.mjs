@@ -79,9 +79,9 @@ export function matchHoroshop(prom, rows, overrides = {}) {
     const top = Math.max(...auto.map((o) => RANK[how.get(o)] || 0));
     const best = auto.filter((o) => (RANK[how.get(o)] || 0) === top);
     const keep = auto.length === oids.length && best.length === 1 ? best[0] : null;
-    for (const o of auto) if (o !== keep) { map.delete(o); stats[how.get(o)]--; stats.ambiguous.push(o); }
+    for (const o of auto) if (o !== keep) { map.delete(o); stats[how.get(o)]--; stats.ambiguous.push(o); how.delete(o); }
   }
-  return { map, stats };
+  return { map, stats, how };
 }
 
 /** Модельні слова: зі цифрами (≥ 3 символи) або латиниця ≥ 4 / кирилиця ≥ 5 (серії без цифр: LFTBA, VMF-BALLON, Тайфун). */
@@ -100,24 +100,28 @@ export function namesAgree(offer, row) {
   for (const t of A) if (B.has(t)) return true;
   return false;
 }
-/** Перевірка пари перед підстановкою → null (можна) | причина. Різні назви — без підстановки НАВІТЬ при однаковій ціні (16.11:
- *  1589397066 — у Prom-фіді генератор Einhell TC-IG 2000, в Excel під тим самим артикулом насос AQUINNA, а ціна Prom = перекреслена
- *  ціна насоса — помилка даних постачальника). Ціна, що змінилась більш ніж удвічі, — теж без підстановки (до перевірки власником). */
-export function pairProblem(offer, row) {
-  if (!namesAgree(offer, row)) return "назви різні — пару не підтверджено";
-  if (offer?.price > 0 && row?.p > 0 && (row.p / offer.price < 0.5 || row.p / offer.price > 2)) return "ціна змінилась більш ніж удвічі";
+/** Перевірка пари перед підстановкою → null (можна) | причина. Рішення власника 16.11 (після перевірки «Захисту»): зіставлені товари —
+ *  ціна й наявність ЛИШЕ з Excel, тож велика зміна ціни (більш ніж удвічі) більше НЕ блокує — її показує підсумок «Цін»
+ *  (prices-only: stats.bigPriceChanges). Без підстановки (ціна й наявність — із Prom-фіду) лише:
+ *   • різні назви — пару не підтверджено; крім винятків власника (confirmed: пару підтвердив власник — config/horoshop-overrides.json;
+ *     16.11: 4331207 — у Excel замість назви каркаса лише «(без АКБ та ЗП)», 4152590 — у Excel помилкова назва насоса);
+ *   • помилка в Excel постачальника — дроп більший за РРЦ (16.11: 2903531 — РРЦ 279 / дроп 800, 4326161 — 140 / 2077; власник:
+ *     «поки ці два товари … не брати»). Постачальник виправить РРЦ — пара застосується сама. */
+export function pairProblem(offer, row, { confirmed = false } = {}) {
+  if (!confirmed && !namesAgree(offer, row)) return "назви різні — пару не підтверджено";
+  if (row?.p > 0 && row?.dr > 0 && row.dr > row.p) return "помилка в Excel: дроп більший за РРЦ";
   return null;
 }
 
-/** Ціна (РРЦ), наявність і дроп Excel в оффери Prom-фіду (новий Map; вхідний не змінюється). Пара, яку не підтверджує ні назва, ні ціна
- *  (або ціна змінилась більш ніж удвічі), — без підстановки (Prom-фід), у stats.skipped. → { offers, stats } */
-export function applyHoroshop(offers, rows, map) {
+/** Ціна (РРЦ), наявність і дроп Excel в оффери Prom-фіду (новий Map; вхідний не змінюється). Пара з проблемою (pairProblem) — без
+ *  підстановки (Prom-фід), у stats.skipped. confirmed — Set Offer ID, пару яких підтвердив власник (винятки). → { offers, stats } */
+export function applyHoroshop(offers, rows, map, confirmed = new Set()) {
   const out = new Map(offers);
   const stats = { matched: 0, price: 0, available: 0, drop: 0, priceChanged: 0, availableChanged: 0, skipped: [] };
   for (const [oid, i] of map) {
     const o = offers.get(oid), r = rows[i];
     if (!o || !r) continue;
-    const why = pairProblem(o, r);
+    const why = pairProblem(o, r, { confirmed: confirmed.has(oid) });
     if (why) { stats.skipped.push({ id: oid, article: r.a, reason: why }); continue; }
     stats.matched++;
     const next = { ...o, source: "horoshop" };
@@ -133,7 +137,8 @@ export function applyHoroshop(offers, rows, map) {
 export function hybridOffers({ parsedOffers, compact, overrides = {} }) {
   const prom = new Map([...parsedOffers].map(([id, o]) => [id, { sku: o.sku }]));
   const m = matchHoroshop(prom, compact.rows, overrides);
-  const ap = applyHoroshop(parsedOffers, compact.rows, m.map);
+  const confirmed = new Set([...m.how].filter(([, kind]) => kind === "override").map(([id]) => id));
+  const ap = applyHoroshop(parsedOffers, compact.rows, m.map, confirmed);
   return {
     offers: ap.offers,
     stats: { date: compact.lastModified || compact.at || "", excelRows: compact.count ?? compact.rows.length, promOffers: parsedOffers.size, ...ap.stats,

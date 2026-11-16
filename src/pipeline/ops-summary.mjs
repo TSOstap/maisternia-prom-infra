@@ -50,7 +50,15 @@ export function ownerSummary(op, report) {
     // Гібрид (рішення власника 16.11): звідки взято ціни й наявність.
     const hs = r.horoshop;
     if (hs?.error) lines.push(`Хорошоп: ${hs.error}`);
-    else if (hs) lines.push(`РРЦ і наявність із Хорошопу (Excel від ${hs.date || "?"}): ${n(hs.matched)} товарів, ціна змінилась у ${n(hs.priceChanged)}; без пари ${n(hs.withoutPair)} — з Prom-фіду${n(hs.ambiguous) ? `; неоднозначних ${n(hs.ambiguous)}` : ""}${n(hs.skipped) ? `; не застосовано (перевірка назви / ціни) ${n(hs.skipped)}: ${(hs.skippedList || []).slice(0, 5).map((x) => x.id).join(", ")}` : ""}`);
+    else if (hs) {
+      // Рішення власника 16.11: не застосовано лише різні назви (крім винятків власника) і помилку Excel (дроп > РРЦ).
+      const by = (re) => (hs.skippedList || []).filter((x) => re.test(String(x.reason || "")));
+      const ids = (xs) => xs.slice(0, 5).map((x) => x.id).join(", ") + (xs.length > 5 ? "…" : "");
+      const names = by(/назви/), drop = by(/дроп/);
+      const skipped = n(hs.skipped) ? `; не застосовано ${n(hs.skipped)} (ціна й наявність — з Prom-фіду)${names.length ? `: різні назви ${names.length} — ${ids(names)}` : ""}${drop.length ? `${names.length ? ";" : ":"} помилка в Excel (дроп більший за РРЦ) ${drop.length} — ${ids(drop)}` : ""}` : "";
+      lines.push(`РРЦ і наявність із Хорошопу (Excel від ${hs.date || "?"}): ${n(hs.matched)} товарів, ціна змінилась у ${n(hs.priceChanged)}; без пари ${n(hs.withoutPair)} — з Prom-фіду${n(hs.ambiguous) ? `; неоднозначних ${n(hs.ambiguous)}` : ""}${skipped}`);
+    }
+    if (n(st.bigPriceChanges)) lines.push(`Ціна постачальника змінилась більш ніж удвічі: ${n(st.bigPriceChanges)} — перевірте: ${(st.bigPriceList || []).slice(0, 8).map((x) => `${x.id} (${x.from} → ${x.to})`).join(", ")}${n(st.bigPriceChanges) > 8 ? "…" : ""}`);
   }
   // Рішення власника 04.11: опрацьовані попередження постачальника переносяться в архів під час «Цін» і «Оновити товари».
   const wa = r.warningsArchive;
