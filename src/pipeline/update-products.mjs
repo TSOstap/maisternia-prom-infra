@@ -87,6 +87,8 @@ export function updateReport(r, intake = null) {
     // ENG-29: підсумок для власника — скільки товарів змінено і скільки з попередженнями постачальника (деталі — аркуш «Попередження постачальника»).
     products: { changed: m.changedProducts ?? null, withWarnings: s.ownerPriority?.productsWithWarnings ?? 0, warnings: s.ownerPriority?.warnings ?? 0, warningsRecorded: s.ownerPriority?.warningsRecorded ?? null },
     prices: { supplierPriceChanged: m.supplierPriceChanged ?? 0, salePriceChanged: m.salePriceChanged ?? 0 },
+    // Гібрид (№ 62): звідки ціни й наявність у «Оновити товари» — Excel Хорошопу (зіставлені) / Prom-фід (без пари або Excel застарів).
+    horoshop: s.horoshop ? (s.horoshop.error ? { error: s.horoshop.error } : { matched: s.horoshop.matched ?? 0, withoutPair: s.horoshop.withoutPair ?? 0, skipped: s.horoshop.skipped ?? 0, date: s.horoshop.date || "" }) : null,
     availability: { changed: m.availabilityChanged ?? 0, becameAvailable: m.becameAvailable ?? 0, becameUnavailable: m.becameUnavailable ?? 0 },
     outOfFeedScope: st.outOfFeedScope ?? 0,
     newItems: r.newItems ? { total: r.newItems.total ?? 0, complete: (r.newItems.ready || []).length, incomplete: r.newItems.incomplete ?? 0, candidates: (r.newItems.candidates || []).length, waiting: r.newItems.waiting ?? 0, addedToQueue: intake?.stats?.added ?? 0, intake: intake?.state ?? null } : null,

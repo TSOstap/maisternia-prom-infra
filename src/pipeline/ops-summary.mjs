@@ -24,6 +24,9 @@ export function ownerSummary(op, report) {
   if (op === "update" && rep) {
     if (rep.products?.changed != null) lines.push(`Оновлено товарів: ${n(rep.products.changed)} (ціни, наявність або дані постачальника)`);
     lines.push(`Ціни: постачальника ${n(rep.prices?.supplierPriceChanged)}, продажу ${n(rep.prices?.salePriceChanged)}; наявність: ${n(rep.availability?.changed)} (з'явились ${n(rep.availability?.becameAvailable)}, зникли ${n(rep.availability?.becameUnavailable)})`);
+    // Гібрид (№ 62): «Оновити товари» теж бере ціни й наявність зіставлених товарів з Excel Хорошопу.
+    if (rep.horoshop?.error) lines.push(`Хорошоп: ${rep.horoshop.error}`);
+    else if (rep.horoshop) lines.push(`Ціни й наявність — з Excel Хорошопу (файл від ${rep.horoshop.date || "?"}): ${n(rep.horoshop.matched)} товарів; без пари ${n(rep.horoshop.withoutPair)} — з Prom-фіду${n(rep.horoshop.skipped) ? `; помилка в Excel (дроп більший за РРЦ) ${n(rep.horoshop.skipped)} — з Prom-фіду` : ""}`);
     if (rep.supplierChanges?.rows) lines.push(`Зміни постачальника в картках: ${n(rep.supplierChanges.rows)}`);
     if (n(rep.products?.withWarnings)) lines.push(`Товари з попередженнями: ${n(rep.products.withWarnings)} (полів: ${n(rep.products.warnings)}) — постачальник змінив поле, яке у вас своє (наше значення збережено), або характеристики. Що саме й з якого значення на яке — аркуш «Попередження постачальника» (Поле, Було → Стало, Наше значення) і колонка «Попередження постачальника» в «Основному каталозі».`);
     if (n(rep.supplierChanges?.params)) lines.push(`Характеристики постачальника змінились у ${n(rep.supplierChanges.params)} товарах — наші характеристики не змінено.`);

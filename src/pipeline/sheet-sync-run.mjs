@@ -20,6 +20,8 @@ import { planPresence, planScopeMarks, presenceInputRows, PRESENCE_COLUMN, PRESE
 import { estimateRequests, DEFAULT_MAX_CHUNK_CHARS } from "./sheets-writer.mjs";
 import { RUN_PLAN_KEY, TRANSFER_PLAN_KEY, PLAN, EVENT_ID_COLUMN, JOURNAL_SHEET, RECOVERY_DONE, openPlansGate, loadPlan, savePlan, isOpen, withEventIds, evidenceCell, appendEvents, journalIds } from "./run-plan.mjs";
 import { sheetDiscount, journalRow, syncControlsState, ccUnchanged } from "./sync-helpers.mjs";
+import { hybridOffers, horoshopFresh } from "../core/horoshop.mjs";
+import { loadHoroshopCompact } from "./horoshop-source.mjs";
 export { sheetDiscount, journalRow, syncControlsState, ccUnchanged };
 
 
@@ -270,7 +272,14 @@ export async function syncSheet(o) {
   }
   return syncSheetRun(o);
 }
-async function syncSheetRun({ sheets, readBook, parsed, fetchFull, stamp, config: config0, now, profile = "medium", catalog = null, session = null, contract = null, controls = null, presence = null, feedScope = null, queueMode = "full", writeBudget = null }) {
+async function syncSheetRun({ sheets, readBook, parsed: parsedFeed, fetchFull, stamp, config: config0, now, profile = "medium", catalog = null, session = null, contract = null, controls = null, presence = null, feedScope = null, queueMode = "full", writeBudget = null, horoshop = undefined }) {
+  // Гібрид (рішення власника 16.11, реєстр № 60–61 і № 62): ціни й наявність зіставлених за артикулом товарів — ЛИШЕ з Excel Хорошопу
+  // і в «Оновити товари» (раніше ця кнопка брала ціни й наявність із Prom-фіду — до наступних «Цін» поверталися ціни з фейковою
+  // знижкою). Без пари — Prom-фід; Excel старший за 36 год — Prom-фід (як у «Цінах»). Назви, фото, характеристики — як раніше (Prom-фід).
+  const hsPlanStore = session?.gw?.store?.getJsonVersioned ? session.gw.store : null;
+  const hsList = horoshop !== undefined ? horoshop : hsPlanStore ? await loadHoroshopCompact(hsPlanStore) : null;
+  const hybrid = hsList?.rows?.length && horoshopFresh(hsList, now) ? hybridOffers({ parsedOffers: parsedFeed.offers, compact: hsList, overrides: hsList.overrides || {} }) : null;
+  const parsed = hybrid ? { ...parsedFeed, offers: hybrid.offers } : parsedFeed;
   // Рішення власника 04.11 (ProSale): тарифи категорій з аркуша «Тарифи ProSale» — ті самі ціни, що в «Цінах» і фіді (інакше
   // «Оновити товари» повертало б ціни без націнки). Немає аркуша — без націнок; збій читання — виняток (нічого не пишеться).
   const config = { ...config0, pricing: withProsale(config0.pricing, (await readBook([PROSALE_SHEET]))?.[PROSALE_SHEET]) };
@@ -621,7 +630,7 @@ async function syncSheetRun({ sheets, readBook, parsed, fetchFull, stamp, config
       // ENG-28: позначки присутності вважаються застосованими лише якщо всі їхні рядки записано (VERIFIED / ALREADY); інакше знімок не підтверджується.
       presence: presenceSummary(presencePlan, presencePlan?.decision === "APPLY" && [...presenceKeys].every((k) => (cardResult?.items || []).some((x) => x.key === k && [ITEM.VERIFIED, ITEM.ALREADY].includes(x.status)))),
       queueUpdate: { outcome: queueResult?.outcome ?? (qChanges.length ? "NOT_RUN" : "NOTHING"), rows: qChanges.length, skipped: queueSkipped, mode: queueOff ? "off" : "full", pendingDecisions: plan.queue.pendingDecisions ?? 0 },
-      preflight, feedScope: scope,
+      preflight, feedScope: scope, horoshop: hybrid ? hybrid.stats : hsList?.rows?.length ? { error: `Excel застарів (файл від ${hsList.lastModified || hsList.at}) — ціни й наявність із Prom-фіду` } : null,
       queueChanged, verify, ack, stats: { ...plan.stats, approved: execApprove.length, rejected: execReject.length, added: 0, possibleDuplicates: queueChanged ? 0 : fin.possibleDuplicates, bound: queueChanged ? 0 : plan.bindings.done, bindRefused: plan.bindings.refused, unbound: queueChanged ? 0 : plan.bindings.undone, mainCountAfter: verify.mainCount },
       warnings: plan.warnings, frozenSimilar: plan.frozenSimilar, journalEntries: journal.length,
       // ENG-28b: режим характеристик і виявлені зміни сирих <param> постачальника (B) — для звіту; FZ без застосування (етап C).
