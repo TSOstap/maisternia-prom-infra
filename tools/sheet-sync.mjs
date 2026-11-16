@@ -43,6 +43,7 @@ import { updatePrices } from "../src/pipeline/prices-run.mjs";
 import { applyOwnerEdits } from "../src/pipeline/owner-edits.mjs";
 import { addProsaleColumns, applyProsaleTariffs } from "../src/pipeline/prosale-columns.mjs";
 import { unfreezeIds, refreezeIds } from "../src/pipeline/unfreeze.mjs";
+import { refreshHoroshopExcel, loadHoroshopCompact } from "../src/pipeline/horoshop-source.mjs";
 import { addPriceRuleColumns } from "../src/pipeline/price-rule-columns.mjs";
 import { addWarningHighlight } from "../src/pipeline/row-highlight.mjs";
 import { addQueueHighlight } from "../src/pipeline/queue-highlight.mjs";
@@ -104,6 +105,7 @@ const addSecret = (v) => { const s = v == null ? "" : String(v); if (s.length >=
 for (const k of ["MM_SHEET_ID", "MM_TEST_SHEET_ID", "GOOGLE_OAUTH_ACCESS_TOKEN", "MM_WATCH_KEY", "MM_W2_KEY"]) addSecret(process.env[k]);
 const addUrlSecrets = (raw) => { addSecret(raw); try { const u = new URL(raw); addSecret(u.search.slice(1)); addSecret(u.host + u.pathname + u.search); for (const [, v] of u.searchParams) { addSecret(v); addSecret(encodeURIComponent(v)); } } catch { /* */ } };
 if (process.env.MM_SUPPLIER_FEED_URL) addUrlSecrets(process.env.MM_SUPPLIER_FEED_URL);
+if (process.env.MM_HOROSHOP_EXCEL_URL) addUrlSecrets(process.env.MM_HOROSHOP_EXCEL_URL);
 if (process.env.MM_WATCH_URL) addUrlSecrets(process.env.MM_WATCH_URL);
 
 // ---------- «Сторож новинок» (Worker) ----------
@@ -368,11 +370,17 @@ try {
       xml = Buffer.concat(c).toString("utf8");
     } else xml = fs.readFileSync(arg("supplier-file"), "utf8");
     report.metrics.supplierFetchMs = Date.now() - tf;
+    // Гібрид (рішення власника 16.11): РРЦ, наявність і дроп — зі списку «Excel (розширений)» Хорошопу у сховищі W2 (той самий, що читає
+    // Cloudflare). --horoshop-refresh (операція «Оновити з Хорошопу»): спершу завантажити Excel і оновити список.
+    const th = Date.now();
+    if (process.argv.includes("--horoshop-refresh")) report.horoshopRefresh = await refreshHoroshopExcel({ url: source === "api" ? process.env.MM_HOROSHOP_EXCEL_URL || "" : "", store: w2Store, now: NOW, ...(arg("horoshop-file") ? { fetchImpl: async () => new Response(fs.readFileSync(arg("horoshop-file")), { headers: { "last-modified": new Date(NOW).toUTCString() } }) } : {}) });
+    const horoshop = await loadHoroshopCompact(w2Store);
+    report.metrics.horoshopFetchMs = Date.now() - th;
     const session = await new WriteGateway({ sheets, read: readBook, store: w2Store }).open({ writer: "sync" });
     // Вузьке читання (лише потрібні колонки) — лише для Sheets API; локальна книга читається цілою.
     const readColumns = readStats.reader ? async (title, columns) => { readStats.reader.metaCache = null; const t0 = Date.now(); const v = await readStats.reader.loadColumns(title, columns); readStats.ms += Date.now() - t0; readStats.sheets[title + " (колонки)"] = (readStats.sheets[title + " (колонки)"] || 0) + 1; return v; } : null;
     try {
-      report.result = await updatePrices({ readBook, xml, stamp, now: NOW, config, controls, session, snapshotStore: w2Store, readColumns });
+      report.result = await updatePrices({ readBook, xml, stamp, now: NOW, config, controls, session, snapshotStore: w2Store, readColumns, horoshop });
       if (session.state === "READY") report.result.warningsArchive = await archiveWarnings({ session, readBook, stamp }).catch((e) => ({ state: "ERROR", reason: String(e?.message || e).slice(0, 200) }));
     } finally { await session.close?.().catch(() => {}); }
   } else if (mode === "reconcile") {

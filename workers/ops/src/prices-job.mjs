@@ -30,6 +30,8 @@ import { openPlansGate, JOURNAL_SHEET } from "../../../src/pipeline/run-plan.mjs
 import { syncControls } from "../../../src/core/sheet-sync.mjs";
 import { mtText } from "../../../src/core/text.mjs";
 import { googleTokenSource } from "./google-auth.mjs";
+import { loadHoroshopCompact } from "../../../src/pipeline/horoshop-source.mjs";
+import { hybridOffers } from "../../../src/core/horoshop.mjs";
 
 const MAIN = "Основний каталог";
 /** Колонки «Основного каталогу», які читає Catalog Controls (identityOf + команди власника). */
@@ -122,6 +124,8 @@ export async function runPricesJob({ env, store, ccContractText, sha256Hex, ccSh
     xml = await res.text();
   } catch (e) { return { result: { state: "ABORTED", reason: "фід постачальника недоступний — нічого не записано" }, metrics: metrics() }; }
   if (xml.length > MAX_FEED_CHARS) return { result: { state: "ABORTED", reason: "фід постачальника завеликий — нічого не записано" }, metrics: metrics() };
+  // Гібрид (рішення власника 16.11): РРЦ, наявність і дроп — зі списку «Excel (розширений)» у сховищі W2 (оновлює GitHub); немає — Prom-фід.
+  const horoshop = await loadHoroshopCompact(store);
 
   // 3. Лише план (перевірка без запису).
   if (dry) {
@@ -131,8 +135,9 @@ export async function runPricesJob({ env, store, ccContractText, sha256Hex, ccSh
     const cc = syncControls(ccState);
     const values = await readColumns(MAIN, PRICE_READ_COLUMNS);
     const pricing = withProsale(config.pricing, (await readBook([PROSALE_SHEET]))?.[PROSALE_SHEET]);
-    const p = planPrices({ values, offers: parsed.offers, stamp, pricing, removed: cc?.removed || new Set(), anomaly: config.policy?.anomaly });
-    return { result: { state: p.abort ? "ABORTED" : "PLANNED", reason: p.abort?.reason || "", stats: p.stats, feed: { offers: parsed.count }, cc: { blocked: cc?.blocked ?? null, removed: cc?.removed?.size ?? null } }, metrics: metrics() };
+    const hy = horoshop?.rows?.length ? hybridOffers({ parsedOffers: parsed.offers, compact: horoshop, overrides: horoshop.overrides || {} }) : null;
+    const p = planPrices({ values, offers: hy ? hy.offers : parsed.offers, stamp, pricing, removed: cc?.removed || new Set(), anomaly: config.policy?.anomaly });
+    return { result: { state: p.abort ? "ABORTED" : "PLANNED", reason: p.abort?.reason || "", stats: p.stats, feed: { offers: parsed.count }, horoshop: hy ? hy.stats : null, cc: { blocked: cc?.blocked ?? null, removed: cc?.removed?.size ?? null } }, metrics: metrics() };
   }
 
   // 4. Запис через шлюз W2 (охоронець режиму prices; записувач знає ID живої таблиці й відмовляє в записі туди).
@@ -144,7 +149,7 @@ export async function runPricesJob({ env, store, ccContractText, sha256Hex, ccSh
     if (session.state !== "READY") return { ...fallback("шлюз запису: " + session.state + " — потрібна звірка (GitHub)"), metrics: metrics() };
     // Стан CC для плану — уже прочитаний вище (кілька секунд тому); перед записом — свіжа звірка відбитка (verify).
     const ccOnce = { state: async () => ccState, verify: (fp) => controls.verify(fp) };
-    const result = await updatePrices({ readBook, xml, stamp, now, config, controls: ccOnce, session, snapshotStore: store, readColumns });
+    const result = await updatePrices({ readBook, xml, stamp, now, config, controls: ccOnce, session, snapshotStore: store, readColumns, horoshop });
     // Рішення власника 04.11: опрацьовані попередження → «Попередження — архів» (збій не змінює результату цін).
     if (session.state === "READY") result.warningsArchive = await archiveWarnings({ session, readBook, stamp }).catch((e) => ({ state: "ERROR", reason: mtText(e?.message || e).slice(0, 200) }));
     return { result, metrics: metrics() };

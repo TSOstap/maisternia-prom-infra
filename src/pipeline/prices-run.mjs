@@ -20,6 +20,7 @@ import { sheetDiscount, journalRow, syncControlsState, ccUnchanged } from "./syn
 import { PROSALE_SHEET, withProsale } from "../core/prosale.mjs";
 import { PRICE_RULE_COLUMNS } from "../core/pricing.mjs";
 import { OWNER_AVAILABILITY_COLUMN } from "../core/owner-availability.mjs";
+import { hybridOffers } from "../core/horoshop.mjs";
 
 const DISCOUNT = "Знижка";
 /** Колонки «Основного каталогу», потрібні плану й запису за ключем (зіставлення з offer — як mtMatch, 8 колонок LIVE, присутність). */
@@ -31,7 +32,7 @@ const cellFor = (k, v) => (k === DISCOUNT ? sheetDiscount(v) : v);
  * readColumns(title, columns) — необов'язкове вузьке читання (Sheets API: лише потрібні колонки — у рази менше запитів), інакше readBook.
  * → { state, reason, report }
  */
-export async function updatePrices({ readBook, xml, stamp, now, config, controls, session, snapshotStore, readColumns = null }) {
+export async function updatePrices({ readBook, xml, stamp, now, config, controls, session, snapshotStore, readColumns = null, horoshop = null }) {
   if (!session || session.state !== "READY") return { state: "BLOCKED", reason: `шлюз запису: ${session?.state ?? "немає сесії"} — спершу з'ясування попередніх операцій` };
   const store = session.gw?.store;
   if (!store?.getJsonVersioned) return { state: "BLOCKED", reason: "немає сховища W2 для контрольного плану" };
@@ -57,8 +58,11 @@ export async function updatePrices({ readBook, xml, stamp, now, config, controls
   const book = readMain ? await readMain() : await readBook([MAIN_TITLE]);
   // Рішення власника 04.11 (ProSale): тарифи категорій — з аркуша «Тарифи ProSale» (немає аркуша — без націнок; збій читання — виняток, нічого не пишеться).
   const pricing = withProsale(config.pricing, (await readBook([PROSALE_SHEET]))?.[PROSALE_SHEET]);
-  const p = planPrices({ values: book[MAIN_TITLE], offers: parsed.offers, stamp, pricing, removed: cc.removed, anomaly: config.policy?.anomaly });
-  const base = { feed: { offers: parsed.count, date: parsed.date }, stats: p.stats, recovery };
+  // Гібрид (рішення власника 16.11, варіант Б): для зіставлених товарів ціна й наявність — з Хорошопу; без пари — Prom-фід (запасне джерело).
+  let offers = parsed.offers, hybrid = null;
+  if (horoshop?.rows?.length) { const h = hybridOffers({ parsedOffers: parsed.offers, compact: horoshop, overrides: horoshop.overrides || {} }); offers = h.offers; hybrid = h.stats; }
+  const p = planPrices({ values: book[MAIN_TITLE], offers, stamp, pricing, removed: cc.removed, anomaly: config.policy?.anomaly });
+  const base = { feed: { offers: parsed.count, date: parsed.date }, stats: p.stats, recovery, ...(hybrid ? { horoshop: hybrid } : horoshop?.error ? { horoshop: { error: horoshop.error } } : {}) };
   if (p.abort) return { state: "ABORTED", reason: p.abort.reason, block: p.abort, ...base };
   if (!p.changed.length) return { state: "NO_CHANGES", reason: "ціни й наявність без змін — нічого не записано", ...base };
 

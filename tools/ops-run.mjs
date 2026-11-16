@@ -22,6 +22,8 @@ export const OP_MODES = Object.freeze({
   update: { mode: "update", cc: true },
   // ENG-29 (рішення власника 03.11): «Оновити ціни й наявність» — операційний фід, лише 8 колонок LIVE.
   prices: { mode: "prices", cc: true },
+  // Гібрид (рішення власника 16.11): «Оновити з Хорошопу» — завантажити «Excel (розширений)», оновити список у W2, потім «Ціни».
+  horoshop: { mode: "prices", cc: true, extra: ["--horoshop-refresh"] },
   "find-new": { mode: "find-new", cc: true },
   transfer: { mode: "transfer", cc: true },
   // ENG-29: розбір «Відкладених товарів» (разова операція власника; не в меню) — спершу план, потім виконання.

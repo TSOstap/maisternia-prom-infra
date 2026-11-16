@@ -31,7 +31,10 @@ export function ownerSummary(op, report) {
     if (rep.queue?.pendingDecisions) lines.push(`У «Нових товарах» чекають перенесення: ${n(rep.queue.pendingDecisions)} (кнопка «Перенести затверджені»)`);
     if (rep.conflicts?.isolated) lines.push(`Ізольовано рядків (не змінювались): ${n(rep.conflicts.isolated)}`);
   }
-  if (op === "prices" && r.stats) {
+  // Гібрид (рішення власника 16.11): «Оновити з Хорошопу» = оновлення списку з «Excel (розширений)» + «Ціни».
+  const hr = report?.horoshopRefresh;
+  if (op === "horoshop" && hr) lines.push(hr.state === "REFRESHED" ? `Excel Хорошопу оновлено: ${n(hr.count)} рядків (файл від ${hr.lastModified || "?"})` : `Excel Хорошопу: ${clip(hr.reason || hr.state)}`);
+  if ((op === "prices" || op === "horoshop") && r.stats) {
     const st = r.stats, sk = st.skipped || {};
     if (st.written != null) lines.push(`Оновлено товарів: ${n(st.written)}${n(st.notWritten) ? `; не записано ${n(st.notWritten)} (таблицю змінено під час операції)` : ""}`);
     lines.push(`Ціни: постачальника ${n(st.supplierPriceChanged)}, продажу ${n(st.salePriceChanged)}; наявність: ${n(st.availabilityChanged)} (з'явились ${n(st.becameAvailable)}, зникли ${n(st.becameUnavailable)}); кількість: ${n(st.quantityChanged)}`);
@@ -44,6 +47,10 @@ export function ownerSummary(op, report) {
     if (n(sk.missing)) lines.push(`Немає у фіді постачальника: ${n(sk.missing)} — їх перевіряє «Оновити товари»`);
     if (n(sk.removed) || n(sk.gone)) lines.push(`Пропущено видалені: ${n(sk.removed) + n(sk.gone)}`);
     if (r.feed?.offers) lines.push(`Товарів у фіді: ${n(r.feed.offers)}`);
+    // Гібрид (рішення власника 16.11): звідки взято ціни й наявність.
+    const hs = r.horoshop;
+    if (hs?.error) lines.push(`Хорошоп: ${hs.error}`);
+    else if (hs) lines.push(`РРЦ і наявність із Хорошопу (Excel від ${hs.date || "?"}): ${n(hs.matched)} товарів, ціна змінилась у ${n(hs.priceChanged)}; без пари ${n(hs.withoutPair)} — з Prom-фіду${n(hs.ambiguous) ? `; неоднозначних ${n(hs.ambiguous)}` : ""}`);
   }
   // Рішення власника 04.11: опрацьовані попередження постачальника переносяться в архів під час «Цін» і «Оновити товари».
   const wa = r.warningsArchive;

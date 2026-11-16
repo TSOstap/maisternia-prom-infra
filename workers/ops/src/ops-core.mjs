@@ -16,19 +16,23 @@ import { runPricesJob } from "./prices-job.mjs";
 import { RemoteStore } from "../../../src/pipeline/safe-write/store.mjs";
 import { ownerSummary } from "../../../src/pipeline/ops-summary.mjs";
 import { FeedStore, runFeedJob, serveFeed } from "./yml-feed.mjs";
+import { horoshopMeta } from "../../../src/pipeline/horoshop-source.mjs";
+import { excelIsNewer } from "../../../src/core/horoshop.mjs";
 
 export const OPS = Object.freeze({
   transfer: "Перенести затверджені",
   "find-new": "Знайти нові товари",
   update: "Оновити товари",
   prices: "Оновити ціни й наявність",
+  // Гібрид (рішення власника 16.11): завантажити «Excel (розширений)» Хорошопу, оновити список у W2, потім «Ціни» (GitHub).
+  horoshop: "Оновити з Хорошопу",
   reconcile: "Звірити незавершені записи",
   "deferred-plan": "Відкладені товари: план",
   deferred: "Відкладені товари: розібрати",
   "drop-deferred": "Відкладені товари: прибрати вкладку",
 });
 /** Типова тривалість (виміряно на TEST 02.11: «Оновити» ≈ 18 хв, «Знайти нові» ≈ 3 хв, «Перенести» 3–13 хв залежно від кількості). */
-const DURATION = Object.freeze({ transfer: "3–15 хвилин", "find-new": "3–5 хвилин", update: "15–20 хвилин", prices: "3–5 хвилин", reconcile: "2–4 хвилини" });
+const DURATION = Object.freeze({ transfer: "3–15 хвилин", "find-new": "3–5 хвилин", update: "15–20 хвилин", prices: "3–5 хвилин", horoshop: "3–6 хвилин", reconcile: "2–4 хвилини" });
 /** «Ціни й наявність» на самому сервері Cloudflare (PRICES_RUNNER="do") — без хвилин GitHub. */
 const DO_DURATION = "1–2 хвилини";
 export const PRICES_JOB_KEY = "prices-job";
@@ -40,7 +44,11 @@ export const FEED_JOB_KEY = "feed-job";
 /** Операції GitHub, що змінюють картки «Основного каталогу», — після них повна збірка YML. */
 const CONTENT_OPS = new Set(["update", "transfer", "deferred"]);
 /** Кнопки меню (ключ кнопок) — лише ці дії; разові операції (відкладені товари) — лише вручну з GitHub. */
-const BUTTON_OPS = new Set(["transfer", "find-new", "update", "prices", "reconcile"]);
+const BUTTON_OPS = new Set(["transfer", "find-new", "update", "prices", "horoshop", "reconcile"]);
+/** Гібрид (рішення власника 16.11): щогодинна перевірка дати зміни «Excel (розширений)» Хорошопу (HEAD, Last-Modified). */
+export const HOROSHOP_CHECK_KEY = "horoshop-check";
+export const HOROSHOP_CHECK_MINUTES = 60;
+export const HOROSHOP_BY = "Хорошоп (щогодинна перевірка)";
 const ACTIVE = new Set(["DISPATCHING", "QUEUED", "RUNNING"]);
 /** Після цього часу без звісток запуск вважається завислим (job ops.yml має timeout-minutes 60) — кнопка знову доступна.
  *  Захист таблиці від цього не залежить: оренда W2 і журнал операцій не дадуть двом записувачам писати одночасно. */
@@ -251,10 +259,12 @@ export class OpsCore {
   }
   async button(body) {
     if (body?.op === "status") return this.status();
-    const op = String(body?.op || "");
+    let op = String(body?.op || "");
     if (!BUTTON_OPS.has(op)) return { state: "ERROR", message: "Невідома дія: " + op.slice(0, 40) };
     const now = this.now(), active = this.activeRun(now);
     if (active) return { state: "BUSY", message: `Уже виконується «${active.label}» (з ${new Date(active.at).toISOString().slice(11, 16)} UTC). Дочекайтеся завершення й натисніть ще раз.` };
+    // Гібрид (рішення власника 16.11): «Ціни» при новому Excel Хорошопу — через GitHub з оновленням списку («Оновити з Хорошопу»).
+    if (op === "prices" && this.env.HOROSHOP_EXCEL_URL) { const h = await this.horoshopNewer(); if (h.newer) op = "horoshop"; }
     const id = randomHex(8);
     this.sql.exec("INSERT INTO runs (id, op, status, at, updated, info) VALUES (?, ?, 'DISPATCHING', ?, ?, ?)", id, op, now, now, JSON.stringify({ by: String(body?.by || "").slice(0, 80) }));
     this.sql.exec("DELETE FROM runs WHERE id NOT IN (SELECT id FROM runs ORDER BY at DESC LIMIT ?)", KEEP_RUNS);
@@ -304,7 +314,7 @@ export class OpsCore {
     // YML для Prom: картки змінились (GitHub) — повна збірка; ціни через GitHub (запасний шлях) — оновлення цін у фіді.
     const op = this.rows("SELECT op FROM runs WHERE id = ?", id)[0]?.op;
     if (ok && CONTENT_OPS.has(op)) await this.enqueueFeed("build", "після «" + (OPS[op] || op) + "»");
-    else if (ok && op === "prices") await this.enqueueFeed("sync", "після «Ціни й наявність» (GitHub)");
+    else if (ok && (op === "prices" || op === "horoshop")) await this.enqueueFeed("sync", "після «" + (OPS[op] || op) + "» (GitHub)");
     return { result: { runId: id } };
   }
 
@@ -344,6 +354,7 @@ export class OpsCore {
     if (this.metaGet(PRICES_JOB_KEY) || this.metaGet(FEED_JOB_KEY)) times.push(now + 1000);
     const ps = this.metaGet(PRICES_SCHEDULE_KEY);
     if (ps?.on) times.push(Math.max(now + 1000, Number(ps.nextAt) || now + MIN));
+    if (this.env.HOROSHOP_EXCEL_URL) times.push(Math.max(now + 1000, Number(this.metaGet(HOROSHOP_CHECK_KEY)?.nextAt) || now + MIN));
     if (times.length) await this.storage.setAlarm(Math.min(...times)); else await this.storage.deleteAlarm();
   }
   /** Alarm: страховий наступний alarm (збій не зупиняє розклад) → черга «Цін» → автопошук, якщо настав його час → точний наступний
@@ -373,7 +384,26 @@ export class OpsCore {
       catch (e) { r = { result: "ERROR", message: "помилка перевірки: " + String(e?.message || e).slice(0, 200) }; }
       this.watchPut({ ...this.watchGet(), last: { at: now, ...r } });
     }
+    // Гібрид (рішення власника 16.11): щогодини — чи оновився «Excel (розширений)» Хорошопу; так → «Оновити з Хорошопу» (GitHub).
+    // Лише коли в цьому виклику не було важкого завдання (межа Free — 50 запитів).
+    const hc = this.metaGet(HOROSHOP_CHECK_KEY) || {};
+    if (!job && !fj && this.env.HOROSHOP_EXCEL_URL && now >= (Number(hc.nextAt) || 0) - 5000) {
+      this.metaPut(HOROSHOP_CHECK_KEY, { ...hc, nextAt: now + HOROSHOP_CHECK_MINUTES * MIN });
+      let h, b = null;
+      try { h = await this.horoshopNewer(); if (h.newer && !this.activeRun(this.now())) b = await this.button({ op: "horoshop", by: HOROSHOP_BY }); }
+      catch (e) { h = { newer: false, reason: "помилка: " + String(e?.message || e).slice(0, 120) }; }
+      this.metaPut(HOROSHOP_CHECK_KEY, { ...this.metaGet(HOROSHOP_CHECK_KEY), last: { at: now, newer: !!h?.newer, lastModified: h?.lastModified || "", reason: h?.reason || "", state: b?.state || "" } });
+    }
     await this.scheduleAlarm();
+  }
+  /** Гібрид (рішення власника 16.11): чи новіший «Excel (розширений)» на сайті постачальника за збережений список (HEAD → Last-Modified). */
+  async horoshopNewer() {
+    const url = this.env.HOROSHOP_EXCEL_URL;
+    if (!url) return { newer: false, reason: "не задано посилання" };
+    let lm = "";
+    try { const r = await this.fetchImpl(url, { method: "HEAD", redirect: "manual" }); if (r.status !== 200) return { newer: false, reason: "HTTP " + r.status }; lm = r.headers.get("last-modified") || ""; }
+    catch { return { newer: false, reason: "мережа" }; }
+    return { newer: excelIsNewer(lm, await horoshopMeta(this.localStore())), lastModified: lm };
   }
 
   // ---------- «Оновити ціни й наявність» на сервері ----------

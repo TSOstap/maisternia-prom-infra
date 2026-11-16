@@ -10,7 +10,7 @@ on:
         description: "Операція"
         required: true
         type: choice
-        options: [reconcile, transfer, find-new, update, prices, deferred-plan, deferred, drop-deferred]
+        options: [reconcile, transfer, find-new, update, prices, horoshop, deferred-plan, deferred, drop-deferred]
       run_id:
         description: "ID запуску в mm-ops (порожній — запуск вручну)"
         required: false
@@ -58,6 +58,7 @@ jobs:
           MM_OPS_URL: ${{ secrets.MM_OPS_URL }}
           MM_OPS_RUNNER_KEY: ${{ secrets.MM_OPS_RUNNER_KEY }}
           MM_SUPPLIER_FEED_URL: ${{ secrets.MM_SUPPLIER_FEED_URL }}
+          MM_HOROSHOP_EXCEL_URL: ${{ secrets.MM_HOROSHOP_EXCEL_URL }}
         run: |
           command -v gcloud >/dev/null || { echo "На runner немає gcloud"; exit 2; }
           node tools/ops-run.mjs --op="$OP"
