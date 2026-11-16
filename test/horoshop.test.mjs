@@ -97,7 +97,7 @@ test("16.11: оновлення списку — у сховище (дані + �
   await store.putJsonIfVersion(HOROSHOP_DATA_KEY, big, (await store.getJsonVersioned(HOROSHOP_DATA_KEY)).version);
   const L = await loadHoroshopCompact(store);
   assert.equal(L.count, 4000); assert.equal(L.overrides["1925870056"], "PRO CUT-160");
-  assert.deepEqual(Object.keys(HOROSHOP_OVERRIDES).sort(), ["1505796771", "1589397066", "1755858542", "1834930772", "1925870056", "2800127025", "3128001246", "3230755031", "3236816949", "3251742263", "3264219912", "3266177617", "3269967625"]);
+  assert.deepEqual(Object.keys(HOROSHOP_OVERRIDES).sort(), ["1505796771", "1589397066", "1755858542", "1834930772", "1925870056", "2800127025", "3128001246", "3230755031", "3236816949", "3251742263", "3264219912", "3266177617", "3269825815", "3269967625", "3277856248"]);
   assert.equal(HOROSHOP_OVERRIDES["3264219912"], "ED-21PBL", "16.11: рядок «2800127025» зник з Excel — власник: «ED-21PBL є на сайті»");
   assert.ok(!("1724170062" in HOROSHOP_OVERRIDES), "NG 502 — власник 16.11 «переводь»: звичайна пара за Offer ID");
 });
