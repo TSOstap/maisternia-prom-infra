@@ -134,6 +134,13 @@ export function applyHoroshop(offers, rows, map, confirmed = new Set()) {
 }
 
 /** Усе разом для «Цін»: розібраний Prom-фід + компактний список Excel. */
+/** Рядки Excel без пари: кількість і перші 50 (артикул, артикул на сайті, назва). */
+function excelNoPair(rows, map) {
+  const used = new Set(map.values());
+  const list = rows.map((r, i) => ({ r, i })).filter(({ i }) => !used.has(i)).map(({ r }) => ({ a: r.a, d: r.d, n: String(r.n || "").slice(0, 80) }));
+  return { excelNoPair: list.length, excelNoPairList: list.slice(0, 50) };
+}
+
 export function hybridOffers({ parsedOffers, compact, overrides = {} }) {
   const prom = new Map([...parsedOffers].map(([id, o]) => [id, { sku: o.sku }]));
   const m = matchHoroshop(prom, compact.rows, overrides);
@@ -145,7 +152,9 @@ export function hybridOffers({ parsedOffers, compact, overrides = {} }) {
       byId: m.stats.byId, byArticle: m.stats.byArticle, byDisplay: m.stats.byDisplay, byOverride: m.stats.override,
       ambiguous: m.stats.ambiguous.length, ambiguousIds: m.stats.ambiguous.slice(0, 50), skipped: ap.stats.skipped.length, skippedList: ap.stats.skipped.slice(0, 50),
       namesDiffer: ap.stats.namesDiffer.length, namesDifferList: ap.stats.namesDiffer.slice(0, 20),
-      withoutPair: parsedOffers.size - ap.stats.matched },
+      withoutPair: parsedOffers.size - ap.stats.matched,
+      // Рядки Excel, яким не знайшлося оффера в Prom-фіді (товари є на сайті постачальника, але не в Prom-фіді) — для пояснення власнику.
+      ...excelNoPair(compact.rows, m.map) },
   };
 }
 
