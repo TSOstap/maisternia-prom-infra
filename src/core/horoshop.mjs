@@ -100,29 +100,29 @@ export function namesAgree(offer, row) {
   for (const t of A) if (B.has(t)) return true;
   return false;
 }
-/** Перевірка пари перед підстановкою → null (можна) | причина. Рішення власника 16.11 (після перевірки «Захисту»): зіставлені товари —
- *  ціна й наявність ЛИШЕ з Excel, тож велика зміна ціни (більш ніж удвічі) більше НЕ блокує — її показує підсумок «Цін»
- *  (prices-only: stats.bigPriceChanges). Без підстановки (ціна й наявність — із Prom-фіду) лише:
- *   • різні назви — пару не підтверджено; крім винятків власника (confirmed: пару підтвердив власник — config/horoshop-overrides.json;
- *     16.11: 4331207 — у Excel замість назви каркаса лише «(без АКБ та ЗП)», 4152590 — у Excel помилкова назва насоса);
- *   • помилка в Excel постачальника — дроп більший за РРЦ (16.11: 2903531 — РРЦ 279 / дроп 800, 4326161 — 140 / 2077; власник:
- *     «поки ці два товари … не брати»). Постачальник виправить РРЦ — пара застосується сама. */
-export function pairProblem(offer, row, { confirmed = false } = {}) {
-  if (!confirmed && !namesAgree(offer, row)) return "назви різні — пару не підтверджено";
+/** Перевірка пари перед підстановкою → null (можна) | причина. Рішення власника 16.11: «якщо товар за артикулом сходиться беремо» —
+ *  зіставлені товари беруть ціну й наявність ЛИШЕ з Excel; ні різні назви, ні велика зміна ціни (більш ніж удвічі) підстановку НЕ
+ *  блокують (обидва — лише рядки «для перевірки» в підсумку «Цін»: stats.namesDiffer тут і stats.bigPriceChanges у prices-only).
+ *  Без підстановки (ціна й наявність — із Prom-фіду) лише помилка в Excel постачальника — дроп більший за РРЦ (16.11: 2903531 — РРЦ 279 /
+ *  дроп 800, 4326161 — 140 / 2077, ще 3 Sigma; власник: «поки ці… товари які постачальника не правильні не брати просто»; продаж за
+ *  такою РРЦ — нижче дропу). Постачальник виправить РРЦ — пара застосується сама. */
+export function pairProblem(offer, row) {
   if (row?.p > 0 && row?.dr > 0 && row.dr > row.p) return "помилка в Excel: дроп більший за РРЦ";
   return null;
 }
 
 /** Ціна (РРЦ), наявність і дроп Excel в оффери Prom-фіду (новий Map; вхідний не змінюється). Пара з проблемою (pairProblem) — без
- *  підстановки (Prom-фід), у stats.skipped. confirmed — Set Offer ID, пару яких підтвердив власник (винятки). → { offers, stats } */
+ *  підстановки (Prom-фід), у stats.skipped. Різні назви — застосовується, у stats.namesDiffer (крім винятків власника — confirmed:
+ *  Set Offer ID, пару яких підтвердив власник). → { offers, stats } */
 export function applyHoroshop(offers, rows, map, confirmed = new Set()) {
   const out = new Map(offers);
-  const stats = { matched: 0, price: 0, available: 0, drop: 0, priceChanged: 0, availableChanged: 0, skipped: [] };
+  const stats = { matched: 0, price: 0, available: 0, drop: 0, priceChanged: 0, availableChanged: 0, skipped: [], namesDiffer: [] };
   for (const [oid, i] of map) {
     const o = offers.get(oid), r = rows[i];
     if (!o || !r) continue;
-    const why = pairProblem(o, r, { confirmed: confirmed.has(oid) });
+    const why = pairProblem(o, r);
     if (why) { stats.skipped.push({ id: oid, article: r.a, reason: why }); continue; }
+    if (!confirmed.has(oid) && !namesAgree(o, r)) stats.namesDiffer.push({ id: oid, article: r.a });
     stats.matched++;
     const next = { ...o, source: "horoshop" };
     if (r.p != null) { stats.price++; if (o.price !== r.p) stats.priceChanged++; next.price = r.p; }
@@ -144,6 +144,7 @@ export function hybridOffers({ parsedOffers, compact, overrides = {} }) {
     stats: { date: compact.lastModified || compact.at || "", excelRows: compact.count ?? compact.rows.length, promOffers: parsedOffers.size, ...ap.stats,
       byId: m.stats.byId, byArticle: m.stats.byArticle, byDisplay: m.stats.byDisplay, byOverride: m.stats.override,
       ambiguous: m.stats.ambiguous.length, ambiguousIds: m.stats.ambiguous.slice(0, 50), skipped: ap.stats.skipped.length, skippedList: ap.stats.skipped.slice(0, 50),
+      namesDiffer: ap.stats.namesDiffer.length, namesDifferList: ap.stats.namesDiffer.slice(0, 20),
       withoutPair: parsedOffers.size - ap.stats.matched },
   };
 }

@@ -51,12 +51,11 @@ export function ownerSummary(op, report) {
     const hs = r.horoshop;
     if (hs?.error) lines.push(`Хорошоп: ${hs.error}`);
     else if (hs) {
-      // Рішення власника 16.11: не застосовано лише різні назви (крім винятків власника) і помилку Excel (дроп > РРЦ).
-      const by = (re) => (hs.skippedList || []).filter((x) => re.test(String(x.reason || "")));
-      const ids = (xs) => xs.slice(0, 5).map((x) => x.id).join(", ") + (xs.length > 5 ? "…" : "");
-      const names = by(/назви/), drop = by(/дроп/);
-      const skipped = n(hs.skipped) ? `; не застосовано ${n(hs.skipped)} (ціна й наявність — з Prom-фіду)${names.length ? `: різні назви ${names.length} — ${ids(names)}` : ""}${drop.length ? `${names.length ? ";" : ":"} помилка в Excel (дроп більший за РРЦ) ${drop.length} — ${ids(drop)}` : ""}` : "";
+      // Рішення власника 16.11: «якщо товар за артикулом сходиться беремо» — не застосовано лише помилку Excel (дроп більший за РРЦ).
+      const ids = (xs, k = 5) => xs.slice(0, k).map((x) => x.id).join(", ") + (xs.length > k ? "…" : "");
+      const skipped = n(hs.skipped) ? `; не застосовано ${n(hs.skipped)} — помилка в Excel (дроп більший за РРЦ), ціна й наявність з Prom-фіду: ${ids(hs.skippedList || [])}` : "";
       lines.push(`РРЦ і наявність із Хорошопу (Excel від ${hs.date || "?"}): ${n(hs.matched)} товарів, ціна змінилась у ${n(hs.priceChanged)}; без пари ${n(hs.withoutPair)} — з Prom-фіду${n(hs.ambiguous) ? `; неоднозначних ${n(hs.ambiguous)}` : ""}${skipped}`);
+      if (n(hs.namesDiffer)) lines.push(`Назви в Excel і Prom-фіді різні (взято за артикулом, для перевірки): ${n(hs.namesDiffer)} — ${ids(hs.namesDifferList || [], 8)}`);
     }
     if (n(st.bigPriceChanges)) lines.push(`Ціна постачальника змінилась більш ніж удвічі: ${n(st.bigPriceChanges)} — перевірте: ${(st.bigPriceList || []).slice(0, 8).map((x) => `${x.id} (${x.from} → ${x.to})`).join(", ")}${n(st.bigPriceChanges) > 8 ? "…" : ""}`);
   }

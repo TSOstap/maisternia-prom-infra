@@ -97,8 +97,8 @@ test("16.11: оновлення списку — у сховище (дані + �
   await store.putJsonIfVersion(HOROSHOP_DATA_KEY, big, (await store.getJsonVersioned(HOROSHOP_DATA_KEY)).version);
   const L = await loadHoroshopCompact(store);
   assert.equal(L.count, 4000); assert.equal(L.overrides["1925870056"], "PRO CUT-160");
-  assert.deepEqual(Object.keys(HOROSHOP_OVERRIDES).sort(), ["1505796771", "1589397066", "1724170062", "1925870056", "2800127025", "3230755031", "3264219912"]);
-  assert.equal(HOROSHOP_OVERRIDES["1724170062"], null, "NG 502 — без пари до перевірки власником");
+  assert.deepEqual(Object.keys(HOROSHOP_OVERRIDES).sort(), ["1505796771", "1589397066", "1925870056", "2800127025", "3230755031", "3264219912"]);
+  assert.ok(!("1724170062" in HOROSHOP_OVERRIDES), "NG 502 — власник 16.11 «переводь»: звичайна пара за Offer ID");
 });
 
 test("16.11: «Excel новіший?» — за Last-Modified; списку немає — так; невідома дата — ні", () => {
@@ -108,14 +108,12 @@ test("16.11: «Excel новіший?» — за Last-Modified; списку не
   assert.equal(excelIsNewer("", { lastModified: "Mon, 16 Nov 2026 00:36:28 GMT" }), false);
 });
 
-test("16.11 (захист): пару підтверджує назва (модельне слово в назвах); різні назви — без підстановки навіть при однаковій ціні; ціна вдвічі — НЕ блокує (рішення власника); дроп > РРЦ — помилка Excel", () => {
+test("16.11 (захист): «якщо товар за артикулом сходиться беремо» — ні різні назви, ні ціна вдвічі не блокують; блокує лише дроп > РРЦ (помилка Excel)", () => {
   const row = { a: "DCB546", d: "DCB546", p: 9699, o: 11748, av: true, n: "Акумулятор DeWalt DCB546 XR", dr: 8729.1 };
-  assert.equal(pairProblem({ price: 11748, nameUa: "Генератор Einhell TC-IG 2000" }, row), "назви різні — пару не підтверджено", "різні назви");
-  assert.equal(pairProblem({ price: 11748, nameUa: "Генератор Einhell TC-IG 2000" }, row, { confirmed: true }), null, "виняток власника — пару підтвердив власник");
-  assert.equal(pairProblem({ price: 5899, nameUa: "Акумулятор DeWalt DCB546", sku: "DCB546" }, row), null, "постачальник змінив ціну, назва та сама — застосовується");
+  assert.equal(pairProblem({ price: 11748, nameUa: "Генератор Einhell TC-IG 2000" }, row), null, "різні назви — не блокують (лише «для перевірки» в підсумку)");
+  assert.equal(pairProblem({ price: 5899, nameUa: "Акумулятор DeWalt DCB546", sku: "DCB546" }, row), null, "постачальник змінив ціну — застосовується");
   assert.equal(pairProblem({ price: 3000, nameUa: "Акумулятор DCB546" }, row), null, "16.11 власник: зіставлені — лише Excel, ціна вдвічі не блокує (GS-0005: Prom 3748 → Excel 1199)");
   assert.equal(pairProblem({ price: 1124, nameUa: "Плита газова SIGMA 2903531" }, { a: "2903531", p: 279, dr: 800, n: "Плита газова SIGMA 2903531" }), "помилка в Excel: дроп більший за РРЦ", "2903531: РРЦ 279, дроп 800");
-  assert.equal(pairProblem({ price: 1124, nameUa: "Плита газова SIGMA 2903531" }, { a: "2903531", p: 279, dr: 800, n: "Плита" }, { confirmed: true }), "помилка в Excel: дроп більший за РРЦ", "помилка Excel — навіть для винятку");
   assert.equal(pairProblem({ price: 100, nameUa: "Плита Kovar K-202" }, { a: "1", p: 150, dr: null, n: "Плита Kovar K-202" }), null, "дропу немає — не помилка");
   assert.equal(namesAgree({ nameUa: "Ніж пожежника kwb (14710)" }, { n: "Ніж складний KWB 014710" }), true, "нулі на початку номера");
   assert.equal(namesAgree({ nameUa: "Водяна помпа Bosna Тайфун 2" }, { n: "Насос вібраційний BOSNA-LG Тайфун-2" }), true, "кирилична серія без цифр");
@@ -123,11 +121,17 @@ test("16.11 (захист): пару підтверджує назва (моде
   assert.equal(namesAgree({ nameUa: "Пила ланцюгова", sku: "DCB546" }, { n: "Акумулятор DeWalt DCB546", a: "DCB546" }), false, "сам артикул не рахується");
   const offers = new Map([["1", { id: "1", price: 5000, available: false, nameUa: "Пила ланцюгова", sku: "DCB546" }]]);
   const ap = applyHoroshop(offers, [row], new Map([["1", 0]]));
-  assert.equal(ap.offers.get("1").price, 5000, "без підстановки");
-  assert.deepEqual(ap.stats.skipped.map((x) => x.id), ["1"]);
+  assert.equal(ap.offers.get("1").price, 9699, "за артикулом — з Excel, навіть коли назви різні");
+  assert.deepEqual(ap.stats.skipped, []);
+  assert.deepEqual(ap.stats.namesDiffer.map((x) => x.id), ["1"], "різні назви — у списку «для перевірки»");
+  const ap2 = applyHoroshop(offers, [row], new Map([["1", 0]]), new Set(["1"]));
+  assert.deepEqual(ap2.stats.namesDiffer, [], "виняток власника — не показується");
+  const bad = applyHoroshop(offers, [{ ...row, p: 279, dr: 800 }], new Map([["1", 0]]));
+  assert.equal(bad.offers.get("1").price, 5000, "дроп > РРЦ — ціна й наявність із Prom-фіду");
+  assert.deepEqual(bad.stats.skipped.map((x) => x.reason), ["помилка в Excel: дроп більший за РРЦ"]);
 });
 
-test("16.11 (винятки власника): пара з винятку застосовується навіть за різних назв (4331207, 4152590); null — без пари (NG 502)", () => {
+test("16.11 (винятки власника): пари з винятків застосовуються й не показуються як «назви різні»; null — без пари", () => {
   const rows = [
     { a: "4331207", d: "4331207", p: 5226, dr: 4651, o: 4716, av: false, n: "(без АКБ та ЗП)" },
     { a: "4152590", d: "4152590", p: 31098, dr: 27366, o: 41997.6, av: false, n: "Насос садовий акумуляторний AQUINNA 36/38" },
@@ -145,11 +149,12 @@ test("16.11 (винятки власника): пара з винятку зас
   assert.equal(h.offers.get("1505796771").source, "horoshop");
   assert.equal(h.offers.get("1724170062").price, 1559, "null — без пари (Prom-фід)");
   assert.equal(h.stats.skipped, 0);
-  // ті самі пари без винятків: знайдено за артикулом, але назви різні — не застосовано
+  assert.equal(h.stats.namesDiffer, 0, "пари з винятків — не «назви різні»");
+  // ті самі пари без винятків: за артикулом — з Excel (рішення власника), різні назви — лише «для перевірки»
   const h2 = hybridOffers({ parsedOffers: offers, compact: { rows, count: rows.length } });
-  assert.equal(h2.offers.get("1589397066").price, 41998);
-  assert.ok(h2.stats.skippedList.some((x) => x.id === "1589397066" && /назви/.test(x.reason)));
-  assert.equal(h2.offers.get("1724170062").price, 649, "без винятку NG 502 зіставився б за Offer ID");
+  assert.equal(h2.offers.get("1589397066").price, 31098);
+  assert.deepEqual(h2.stats.namesDifferList.map((x) => x.id).sort(), ["1505796771", "1589397066"]);
+  assert.equal(h2.offers.get("1724170062").price, 649, "NG 502 — за Offer ID");
 });
 
 test("16.11 (захист): Excel старший за 36 год — не свіжий; дата файлу з Last-Modified", () => {
