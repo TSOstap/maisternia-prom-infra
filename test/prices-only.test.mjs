@@ -39,7 +39,7 @@ async function prices(w, min, o = {}) {
   const sheets = WT.guardedSheets(w.sheets, { spreadsheetId: WT.TEST_SHEET_ID, policy: WT.MODE_POLICIES.prices, headers: headers(w) });
   const session = await new WriteGateway({ sheets, read: o.readBook || w.readBook, store: w.w2 }).open({ writer: "sync" });
   const stamp = new Date(NOW + min * 60_000).toISOString();
-  try { return await updatePrices({ readBook: o.readBook || w.readBook, xml: o.xml || w.xml, stamp, now: NOW + min * 60_000, config: o.config || cfg(), controls: o.controls || okCc(), session, snapshotStore: w.w2, readColumns: o.narrow ? sparse(w) : null }); }
+  try { return await updatePrices({ readBook: o.readBook || w.readBook, xml: o.xml || w.xml, stamp, now: NOW + min * 60_000, config: o.config || cfg(), controls: o.controls || okCc(), session, snapshotStore: w.w2, readColumns: o.narrow ? sparse(w) : null, horoshop: o.horoshop || null }); }
   finally { await session.close(); }
 }
 /** Вузьке читання, як GoogleSheetsCatalogSource.loadColumns: заголовок повністю, у рядках — лише вибрані колонки. */
@@ -50,6 +50,33 @@ const sparse = (w) => async (title, cols) => {
   return [v[0].slice(), ...v.slice(1).map((r) => v[0].map((_, j) => (keep.has(j) ? r[j] ?? "" : "")))];
 };
 const nonLive = (r) => Object.fromEntries(Object.entries(r).filter(([k]) => !LIVE_COLUMNS.includes(k)));
+
+test("16.11: «Дроп-ціна» — дроп з Excel для зіставлених, порожньо для решти; у «Журнал» не йде; повтор — без змін; без колонки — не пишеться", async () => {
+  const w = world();
+  const v = w.sheets.book[MAIN], j = v[0].indexOf("Ціна постачальника");
+  for (let i = 0; i < v.length; i++) v[i].splice(j, 0, i === 0 ? "Дроп-ціна" : ""); // колонка перед «Ціна постачальника» (як у TEST)
+  const r0 = await prices(w, 0);
+  assert.ok(["PRICES_UPDATED", "NO_CHANGES"].includes(r0.state), JSON.stringify(r0).slice(0, 300));
+  const R0 = rows(w), a = R0[1], b = R0[2];
+  const pa = Number(a["Ціна постачальника"]), dropA = Math.round(pa * 0.9);
+  const horoshop = { rows: [{ a: mtText(a["ID постачальника"]), d: "", p: pa, dr: dropA, o: null, av: a["Наявність"] === "+", n: "" }], count: 1, lastModified: new Date(NOW).toUTCString() };
+  const j0 = w.sheets.book[JOURNAL].length;
+  const r = await prices(w, 5, { horoshop });
+  assert.equal(r.state, "PRICES_UPDATED", JSON.stringify(r).slice(0, 300));
+  const byId = (x) => rows(w).find((q) => mtText(q["Offer ID"]) === mtText(x["Offer ID"]));
+  assert.equal(Number(byId(a)["Дроп-ціна"]), dropA, "зіставлений — дроп з Excel");
+  assert.equal(mtText(byId(b)["Дроп-ціна"]), "", "без пари — порожньо");
+  assert.equal(r.stats.dropChanged, 1);
+  assert.ok(!w.sheets.book[JOURNAL].slice(j0).some((e) => e[3] === "Дроп-ціна"), "у «Журнал» не пишеться");
+  assert.equal((await prices(w, 6, { horoshop })).state, "NO_CHANGES", "повтор — без змін");
+  // Без колонки в таблиці — дроп не пишеться (порядок «деплой → вставка колонки» безпечний)
+  const w2 = world();
+  await prices(w2, 0);
+  const a2 = rows(w2)[1], p2 = Number(a2["Ціна постачальника"]);
+  const r2 = await prices(w2, 5, { horoshop: { rows: [{ a: mtText(a2["ID постачальника"]), d: "", p: p2, dr: Math.round(p2 * 0.9), o: null, av: a2["Наявність"] === "+", n: "" }], count: 1, lastModified: new Date(NOW).toUTCString() } });
+  assert.ok(["NO_CHANGES", "PRICES_UPDATED"].includes(r2.state), JSON.stringify(r2).slice(0, 300));
+  assert.equal(r2.stats.dropChanged, 0);
+});
 
 test("16.11: ціна постачальника змінилась більш ніж удвічі — запис не блокується, лише список у підсумку (bigPriceChanges)", async () => {
   const w = world();

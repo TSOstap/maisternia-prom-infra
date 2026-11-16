@@ -16,6 +16,10 @@ import { OWNER_AVAILABILITY_COLUMN, effectiveAvailability } from "./owner-availa
 import { MANUAL_PRICE_COLUMN, MANUAL_ANCHOR_COLUMN, ownerCost } from "./pricing.mjs";
 
 export const MAIN_TITLE = "Основний каталог";
+/** Рішення власника 16.11 («так давай»): «Дроп-ціна» перед «Ціна постачальника» — дроп з Excel Хорошопу для зіставлених товарів, для решти
+ *  порожньо. Пише лише «Оновити ціни й наявність» (не LIVE-колонка, у фід не йде, у «Журнал» не пишеться — довідкова). Немає колонки в
+ *  таблиці — не пишеться (порядок «деплой → вставка колонки» безпечний). */
+export const DROP_COLUMN = "Дроп-ціна";
 const STAMP_COL = LIVE_COLUMNS.indexOf("Оновлено");
 const COST = LIVE_COLUMNS.indexOf("Ціна постачальника");
 export const PRICES_SKIP = Object.freeze({ REMOVED: "REMOVED", GONE: "GONE", MISSING: "MISSING", MISMATCH: "MISMATCH" });
@@ -26,6 +30,7 @@ export const PRICES_SKIP = Object.freeze({ REMOVED: "REMOVED", GONE: "GONE", MIS
  */
 export function planPrices({ values, offers, stamp, pricing, removed = new Set(), anomaly = { maxNewlyMissing: 50, maxNewlyMissingRatio: 0.02 } }) {
   const main = readSheet(values, MAIN_TITLE);
+  const hasDrop = main.header.map((h) => mtText(h).trim()).includes(DROP_COLUMN);
   const offerOf = offers instanceof Map ? (sid) => offers.get(sid) : (sid) => offers[sid];
   const skipped = { removed: 0, gone: 0, missing: 0, mismatch: {} };
   // Рішення власника 16.11 (№ 63): «Ціна власника» — постійна (не очищується); «Ціна вручну» — поки РРЦ та сама (якір пишуть «Ціни»).
@@ -44,13 +49,17 @@ export function planPrices({ values, offers, stamp, pricing, removed = new Set()
     const manual = p.rule?.anchor === "set" ? { set: offer.price, before: { [MANUAL_ANCHOR_COLUMN]: mtText(row[MANUAL_ANCHOR_COLUMN]) } }
       : p.rule?.anchor === "stale" ? { clear: true, before: { [MANUAL_PRICE_COLUMN]: mtText(row[MANUAL_PRICE_COLUMN]), [MANUAL_ANCHOR_COLUMN]: mtText(row[MANUAL_ANCHOR_COLUMN]) } } : null;
     // № 63: «Ціна власника» заповнена, а постачальник змінив РРЦ — попередження власнику (ціна власника лишається).
+    // «Дроп-ціна»: дроп Excel (лише пара з Хорошопу), інакше порожньо; пишеться, коли відрізняється від таблиці.
+    const dropNext = offer.source === "horoshop" && Number.isFinite(offer.drop) ? offer.drop : "";
+    const dropBefore = mtText(row[DROP_COLUMN]).trim(), dropSame = dropNext === "" ? dropBefore === "" : Math.abs(Number(dropBefore.replace(",", ".")) - dropNext) < 0.005 && dropBefore !== "";
+    const drop = hasDrop && !dropSame ? { before: mtText(row[DROP_COLUMN]), next: dropNext } : null;
     const own = ownerCost(row), from = Number(mtText(p.before[COST]).replace(",", ".")), to = Number(mtText(p.next[COST]).replace(",", "."));
     const ownerRrp = own != null && from > 0 && to > 0 && Math.abs(from - to) > 0.005 ? { from, to, own, applied: p.rule?.kind === "owner" } : null;
     // «Оновлено» — лише разом зі справжньою зміною.
     const real = p.before.some((v, j) => j !== STAMP_COL && mtText(v) !== mtText(p.next[j]));
-    return { ...(real ? p : { ...p, next: p.before.slice() }), ownerRule: owner.rule, clearOwner, manual, ownerRrp, ruleKind: p.rule?.kind ?? null };
+    return { ...(real ? p : { ...p, next: p.before.slice() }), ownerRule: owner.rule, clearOwner, manual, ownerRrp, drop, ruleKind: p.rule?.kind ?? null };
   });
-  const changed = plan.map((p, i) => (p.clearOwner || p.manual || p.before.some((v, j) => mtText(v) !== mtText(p.next[j])) ? i : -1)).filter((i) => i >= 0);
+  const changed = plan.map((p, i) => (p.clearOwner || p.manual || p.drop || p.before.some((v, j) => mtText(v) !== mtText(p.next[j])) ? i : -1)).filter((i) => i >= 0);
   const diff = (k) => { const j = LIVE_COLUMNS.indexOf(k); return plan.filter((p) => mtText(p.before[j]) !== mtText(p.next[j])).length; };
   const becameAvailable = plan.filter((p) => p.before[4] !== "+" && p.next[4] === "+").length;
   const becameUnavailable = plan.filter((p) => p.before[4] === "+" && p.next[4] !== "+").length;
@@ -61,7 +70,7 @@ export function planPrices({ values, offers, stamp, pricing, removed = new Set()
     rows: main.rows.length, changedProducts: changed.length,
     supplierPriceChanged: diff("Ціна постачальника"), salePriceChanged: diff("Ціна кінцева"), availabilityChanged: diff("Наявність"),
     becameAvailable, becameUnavailable, quantityChanged: diff("Кількість постачальника"), skipped,
-    bigPriceChanges: big.length, bigPriceList: big.slice(0, 20),
+    bigPriceChanges: big.length, bigPriceList: big.slice(0, 20), dropChanged: plan.filter((p) => p.drop).length,
     // «Наявність власника»: діє (наявність власника замість постачальника) / очищується (постачальник оновив наявність).
     ownerAvailability: { active: plan.filter((p) => p.ownerRule === "owner").length, cleared: plan.filter((p) => p.clearOwner).length },
     // № 63: «Ціна власника» — діє (постійна) / постачальник змінив РРЦ (попередження); «Ціна вручну» — діє / нова (записано якір) / знято.

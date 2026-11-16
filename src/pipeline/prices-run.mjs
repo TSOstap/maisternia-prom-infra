@@ -13,7 +13,7 @@ import { CONFIRMED_SNAPSHOT_KEY, PRESENCE_COLUMN } from "../core/supplier-presen
 import { syncControls } from "../core/sheet-sync.mjs";
 import { LIVE_COLUMNS } from "../core/sync-plan.mjs";
 import { mtText } from "../core/text.mjs";
-import { planPrices, MAIN_TITLE } from "../core/prices-only.mjs";
+import { planPrices, MAIN_TITLE, DROP_COLUMN } from "../core/prices-only.mjs";
 import { OP, ITEM } from "./safe-write/keyed-update.mjs";
 import { RUN_PLAN_KEY, PLAN, RECOVERY_DONE, EVENT_ID_COLUMN, openPlansGate, loadPlan, savePlan, withEventIds, evidenceCell, appendEvents, JOURNAL_SHEET } from "./run-plan.mjs";
 import { sheetDiscount, journalRow, syncControlsState, ccUnchanged } from "./sync-helpers.mjs";
@@ -25,7 +25,7 @@ import { hybridOffers, horoshopFresh } from "../core/horoshop.mjs";
 
 const DISCOUNT = "Знижка";
 /** Колонки «Основного каталогу», потрібні плану й запису за ключем (зіставлення з offer — як mtMatch, 8 колонок LIVE, присутність). */
-export const PRICE_READ_COLUMNS = Object.freeze(["Offer ID", "Категорія Prom ID", "Тариф ProSale", "ID постачальника", "Артикул постачальника", "Назва постачальника UA", "Назва постачальника RU", "URL постачальника", "Ціна власника", ...PRICE_RULE_COLUMNS, ...LIVE_COLUMNS, PRESENCE_COLUMN, OWNER_AVAILABILITY_COLUMN]);
+export const PRICE_READ_COLUMNS = Object.freeze(["Offer ID", "Категорія Prom ID", "Тариф ProSale", "Дроп-ціна", "ID постачальника", "Артикул постачальника", "Назва постачальника UA", "Назва постачальника RU", "URL постачальника", "Ціна власника", ...PRICE_RULE_COLUMNS, ...LIVE_COLUMNS, PRESENCE_COLUMN, OWNER_AVAILABILITY_COLUMN]);
 const cellFor = (k, v) => (k === DISCOUNT ? sheetDiscount(v) : v);
 
 /**
@@ -85,6 +85,8 @@ export async function updatePrices({ readBook, xml, stamp, now, config, controls
     // (з очікуваними значеннями: правка власника між читанням і записом — рядок не пишеться). «Ціна власника» не очищується.
     if (pl.manual?.set != null) { expect[MANUAL_ANCHOR_COLUMN] = pl.manual.before[MANUAL_ANCHOR_COLUMN]; set[MANUAL_ANCHOR_COLUMN] = pl.manual.set; }
     if (pl.manual?.clear) for (const k of [MANUAL_PRICE_COLUMN, MANUAL_ANCHOR_COLUMN]) { expect[k] = pl.manual.before[k]; set[k] = ""; }
+    // «Дроп-ціна» (рішення власника 16.11): дроп Excel / порожньо — без події в «Журналі» (довідкова колонка).
+    if (pl.drop) { expect[DROP_COLUMN] = pl.drop.before; set[DROP_COLUMN] = pl.drop.next; }
     return { key: pl.id, identity: { "ID постачальника": mtText(row["ID постачальника"]) }, expect, set };
   });
   // Контрольний план ДО першого запису: події з ID і докази (відбитки «було» / «стало» змінених клітинок).

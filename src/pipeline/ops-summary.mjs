@@ -63,6 +63,7 @@ export function ownerSummary(op, report) {
       lines.push(`РРЦ і наявність із Хорошопу (Excel від ${hs.date || "?"}): ${n(hs.matched)} товарів, ціна змінилась у ${n(hs.priceChanged)}; без пари ${n(hs.withoutPair)} — з Prom-фіду${n(hs.ambiguous) ? `; неоднозначних ${n(hs.ambiguous)}` : ""}${skipped}`);
       if (n(hs.namesDiffer)) lines.push(`Назви в Excel і Prom-фіді різні (взято за артикулом, для перевірки): ${n(hs.namesDiffer)} — ${ids(hs.namesDifferList || [], 8)}`);
     }
+    if (n(st.dropChanged)) lines.push(`«Дроп-ціна» (з Excel): оновлено ${n(st.dropChanged)}`);
     if (n(st.bigPriceChanges)) lines.push(`Ціна постачальника змінилась більш ніж удвічі: ${n(st.bigPriceChanges)} — перевірте: ${(st.bigPriceList || []).slice(0, 8).map((x) => `${x.id} (${x.from} → ${x.to})`).join(", ")}${n(st.bigPriceChanges) > 8 ? "…" : ""}`);
   }
   // Рішення власника 04.11: опрацьовані попередження постачальника переносяться в архів під час «Цін» і «Оновити товари».

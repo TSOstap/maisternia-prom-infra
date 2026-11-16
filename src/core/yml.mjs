@@ -148,9 +148,10 @@ function statusAllowed(r, missingPolicy, conflictPolicy) {
 function expectedPrices(r, price, available, pricing) {
   const ps = prosaleFor(r, pricing);
   // Рішення власника 16.11 (№ 63): правило рядка («Ціна власника» / «Ціна вручну» — як нова РРЦ) — основний варіант.
-  const own = rowPrices(r, price, available, pricing, ps);
+  const dr = Number(String(r["Дроп-ціна"] ?? "").replace(",", ".")), drop = dr > 0 ? dr : null; // «Дроп-ціна» — захист «нижче дропу», як у «Цінах»
+  const own = rowPrices(r, price, available, pricing, ps, drop);
   const variants = [own];
-  if (ps) variants.push(rowPrices(r, price, available, pricing));
+  if (ps) variants.push(rowPrices(r, price, available, pricing, null, drop));
   // Перехідний стан: правило вже записано, а «Ціни» ще не перерахували рядок — чинні стандартні ціни теж погоджені (не ізолюємо товар).
   if (own.rule.kind !== "standard") {
     variants.push(mtPrices(price, available, pricing, ps));
