@@ -50,7 +50,7 @@ export function ownerSummary(op, report) {
     // Гібрид (рішення власника 16.11): звідки взято ціни й наявність.
     const hs = r.horoshop;
     if (hs?.error) lines.push(`Хорошоп: ${hs.error}`);
-    else if (hs) lines.push(`РРЦ і наявність із Хорошопу (Excel від ${hs.date || "?"}): ${n(hs.matched)} товарів, ціна змінилась у ${n(hs.priceChanged)}; без пари ${n(hs.withoutPair)} — з Prom-фіду${n(hs.ambiguous) ? `; неоднозначних ${n(hs.ambiguous)}` : ""}`);
+    else if (hs) lines.push(`РРЦ і наявність із Хорошопу (Excel від ${hs.date || "?"}): ${n(hs.matched)} товарів, ціна змінилась у ${n(hs.priceChanged)}; без пари ${n(hs.withoutPair)} — з Prom-фіду${n(hs.ambiguous) ? `; неоднозначних ${n(hs.ambiguous)}` : ""}${n(hs.skipped) ? `; не застосовано (перевірка назви / ціни) ${n(hs.skipped)}: ${(hs.skippedList || []).slice(0, 5).map((x) => x.id).join(", ")}` : ""}`);
   }
   // Рішення власника 04.11: опрацьовані попередження постачальника переносяться в архів під час «Цін» і «Оновити товари».
   const wa = r.warningsArchive;

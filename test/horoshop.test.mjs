@@ -6,7 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { readXlsxColumns } from "../src/core/xlsx-lite.mjs";
-import { compactFromExcel, matchHoroshop, applyHoroshop, hybridOffers, excelIsNewer, normArticle, EXCEL_COLUMN_LIST, HOROSHOP_DATA_KEY, HOROSHOP_META_KEY } from "../src/core/horoshop.mjs";
+import { compactFromExcel, matchHoroshop, applyHoroshop, hybridOffers, excelIsNewer, horoshopFresh, namesAgree, pairProblem, normArticle, EXCEL_COLUMN_LIST, HOROSHOP_DATA_KEY, HOROSHOP_META_KEY } from "../src/core/horoshop.mjs";
 import { refreshHoroshopExcel, loadHoroshopCompact, horoshopMeta, HOROSHOP_OVERRIDES } from "../src/pipeline/horoshop-source.mjs";
 import { parseSupplierText } from "../src/core/supplier-feed.mjs";
 import { MemoryStore } from "../src/pipeline/safe-write/store.mjs";
@@ -16,9 +16,9 @@ const XLSX = fs.readFileSync(path.join(here, "fixtures", "horoshop-mini.xlsx"));
 
 test("16.11: читач xlsx — лише потрібні колонки, спільні рядки й числа, сутності XML; порожній артикул — далі відкидає compactFromExcel", () => {
   const r = readXlsxColumns(XLSX, EXCEL_COLUMN_LIST);
-  assert.deepEqual(r.missing, []);
+  assert.deepEqual(r.missing, ["Бренд"], "у тестовому файлі немає колонки «Бренд» (необовʼязкова)");
   assert.equal(r.rows.length, 5);
-  assert.deepEqual(r.rows[0], ["DCB546", "DCB546", "9699.00", "8729.10", "11748.00", "В наявності", "0"]);
+  assert.deepEqual(r.rows[0], ["DCB546", "DCB546", "9699.00", "8729.10", "11748.00", "В наявності", "0", "Акумулятор DeWalt DCB546 & XR", ""]);
   assert.deepEqual(r.rows[1].slice(0, 4), ["2800127025", "ED-21PBL", "2039", "1835.1"]);
   assert.ok(r.header.includes("Описание (UA)"), "заголовок — повністю");
   assert.deepEqual(readXlsxColumns(XLSX, ["Артикул", "Немає такої"]).missing, ["Немає такої"]);
@@ -28,7 +28,7 @@ test("16.11: читач xlsx — лише потрібні колонки, сп�
 test("16.11: компактний список — РРЦ / дроп / стара ціна числами, наявність так / ні, без артикула — пропуск; немає колонки — помилка", () => {
   const c = compactFromExcel(readXlsxColumns(XLSX, EXCEL_COLUMN_LIST));
   assert.equal(c.count, 4);
-  assert.deepEqual(c.rows[0], { a: "DCB546", d: "DCB546", p: 9699, dr: 8729.1, o: 11748, av: true });
+  assert.deepEqual(c.rows[0], { a: "DCB546", d: "DCB546", p: 9699, dr: 8729.1, o: 11748, av: true, n: "Акумулятор DeWalt DCB546 & XR", b: "" });
   assert.equal(c.rows[1].av, false);
   assert.throws(() => compactFromExcel({ rows: [], missing: ["Цена"] }), /немає колонок Цена/);
 });
@@ -105,4 +105,26 @@ test("16.11: «Excel новіший?» — за Last-Modified; списку не
   assert.equal(excelIsNewer("Mon, 16 Nov 2026 00:36:28 GMT", { lastModified: "Mon, 16 Nov 2026 00:36:28 GMT" }), false);
   assert.equal(excelIsNewer("Mon, 16 Nov 2026 00:00:00 GMT", null), true);
   assert.equal(excelIsNewer("", { lastModified: "Mon, 16 Nov 2026 00:36:28 GMT" }), false);
+});
+
+test("16.11 (захист): пару підтверджує назва (модельне слово в назвах); різні назви — без підстановки навіть при однаковій ціні; ціна вдвічі — без підстановки", () => {
+  const row = { a: "DCB546", d: "DCB546", p: 9699, o: 11748, av: true, n: "Акумулятор DeWalt DCB546 XR", dr: 8729.1 };
+  assert.equal(pairProblem({ price: 11748, nameUa: "Генератор Einhell TC-IG 2000" }, row), "назви різні — пару не підтверджено", "як 1589397066: ціна збіглася, товари різні");
+  assert.equal(pairProblem({ price: 5899, nameUa: "Акумулятор DeWalt DCB546", sku: "DCB546" }, row), null, "постачальник змінив ціну, назва та сама — застосовується");
+  assert.equal(pairProblem({ price: 3000, nameUa: "Акумулятор DCB546" }, row), "ціна змінилась більш ніж удвічі");
+  assert.equal(namesAgree({ nameUa: "Ніж пожежника kwb (14710)" }, { n: "Ніж складний KWB 014710" }), true, "нулі на початку номера");
+  assert.equal(namesAgree({ nameUa: "Водяна помпа Bosna Тайфун 2" }, { n: "Насос вібраційний BOSNA-LG Тайфун-2" }), true, "кирилична серія без цифр");
+  assert.equal(namesAgree({ nameUa: "Присоска BIHUI LFTBA" }, { n: "Присосок вібраційний BIHUI LFTBA" }), true, "латинська модель без цифр");
+  assert.equal(namesAgree({ nameUa: "Пила ланцюгова", sku: "DCB546" }, { n: "Акумулятор DeWalt DCB546", a: "DCB546" }), false, "сам артикул не рахується");
+  const offers = new Map([["1", { id: "1", price: 5000, available: false, nameUa: "Пила ланцюгова", sku: "DCB546" }]]);
+  const ap = applyHoroshop(offers, [row], new Map([["1", 0]]));
+  assert.equal(ap.offers.get("1").price, 5000, "без підстановки");
+  assert.deepEqual(ap.stats.skipped.map((x) => x.id), ["1"]);
+});
+
+test("16.11 (захист): Excel старший за 36 год — не свіжий; дата файлу з Last-Modified", () => {
+  const now = Date.parse("2026-11-16T12:00:00Z");
+  assert.equal(horoshopFresh({ lastModified: "Mon, 16 Nov 2026 00:36:28 GMT" }, now), true);
+  assert.equal(horoshopFresh({ lastModified: "Fri, 13 Nov 2026 00:36:28 GMT" }, now), false);
+  assert.equal(horoshopFresh({}, now), false);
 });

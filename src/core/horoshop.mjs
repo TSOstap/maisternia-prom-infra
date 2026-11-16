@@ -10,7 +10,9 @@
  *  Правила власника («Ціна власника», «Ціна вручну», «Наявність власника»), РРЦ + 5 і ProSale — далі, у prices-only (без змін). */
 
 /** Колонки «Excel (розширений)» (назви — як у вивантаженні Хорошопу). */
-export const EXCEL_COLUMNS = Object.freeze({ art: "Артикул", disp: "Артикул для отображения на сайте", price: "Цена", drop: "Дроп ціна", old: "Старая цена", avail: "Наличие", qty: "Количество" });
+export const EXCEL_COLUMNS = Object.freeze({ art: "Артикул", disp: "Артикул для отображения на сайте", price: "Цена", drop: "Дроп ціна", old: "Старая цена", avail: "Наличие", qty: "Количество", name: "Название (UA)", brand: "Бренд" });
+/** Excel старший за це — не застосовується (ціни й наявність із Prom-фіду; підсумок «Цін» просить оновити Excel). */
+export const HOROSHOP_MAX_AGE_HOURS = 36;
 export const EXCEL_COLUMN_LIST = Object.freeze(Object.values(EXCEL_COLUMNS));
 /** Ключі сховища W2 (Durable Object): дані й коротка мітка (дата зміни файлу — для щогодинної перевірки без читання даних). */
 export const HOROSHOP_DATA_KEY = "state/horoshop/excel-compact.json";
@@ -24,13 +26,15 @@ const num = (v) => { const n = Number(String(v ?? "").replace(/\s/g, "").replace
 const availOf = (v) => { const s = String(v ?? "").trim().toLowerCase(); if (s === "в наявності" || s === "в наличии") return true; if (s === "немає в наявності" || s === "нет в наличии") return false; return null; };
 
 /** Рядки readXlsxColumns(…, EXCEL_COLUMN_LIST) → { rows: [{ a, d, p, dr, o, av }], count } (короткі ключі — менший запис у сховищі). */
+const OPTIONAL = new Set([EXCEL_COLUMNS.qty, EXCEL_COLUMNS.name, EXCEL_COLUMNS.brand]);
 export function compactFromExcel({ rows, missing = [] }) {
-  if (missing.length) throw new Error("Excel Хорошопу: немає колонок " + missing.join(", "));
+  const need = missing.filter((c) => !OPTIONAL.has(c));
+  if (need.length) throw new Error("Excel Хорошопу: немає колонок " + need.join(", "));
   const out = [];
   for (const r of rows) {
     const a = String(r[0] ?? "").trim();
     if (!a) continue;
-    out.push({ a, d: String(r[1] ?? "").trim(), p: num(r[2]), dr: num(r[3]), o: num(r[4]), av: availOf(r[5]) });
+    out.push({ a, d: String(r[1] ?? "").trim(), p: num(r[2]), dr: num(r[3]), o: num(r[4]), av: availOf(r[5]), n: String(r[7] ?? "").trim(), b: String(r[8] ?? "").trim() });
   }
   return { rows: out, count: out.length };
 }
@@ -80,13 +84,41 @@ export function matchHoroshop(prom, rows, overrides = {}) {
   return { map, stats };
 }
 
-/** Ціна (РРЦ), наявність і дроп Excel в оффери Prom-фіду (новий Map; вхідний не змінюється). → { offers, stats } */
+/** Модельні слова: зі цифрами (≥ 3 символи) або латиниця ≥ 4 / кирилиця ≥ 5 (серії без цифр: LFTBA, VMF-BALLON, Тайфун). */
+const PUNCT = /[«»"'(),;:+]/g;
+const clean = (t) => t.replace(/[^A-ZА-ЯІЇЄҐ0-9]/g, "");
+// Слово з дефісом / крапкою / скісною — і цілим («BOSNALG»), і частинами («BOSNA», «LG»).
+const words = (s) => new Set(String(s ?? "").toUpperCase().replace(PUNCT, " ").split(/\s+/)
+  .flatMap((t) => [clean(t), ...t.split(/[-./]/).map(clean)])
+  .map((t) => (/^\d+$/.test(t) ? t.replace(/^0+(?=\d)/, "") : t)) // «014710» = «14710»
+  .filter((t) => (t.length >= 3 && /\d/.test(t)) || (t.length >= 4 && /^[A-Z]+$/.test(t)) || (t.length >= 5 && /^[А-ЯІЇЄҐ]+$/.test(t))));
+/** Чи назви оффера Prom-фіду й рядка Excel про той самий товар: спільне модельне слово в НАЗВАХ (сам артикул, за яким знайдено пару,
+ *  не рахується — інакше перевірка завжди «погоджується»). Немає назви в Excel — перевірити нічим (true). */
+export function namesAgree(offer, row) {
+  if (!String(row?.n || "").trim()) return true;
+  const A = words([offer?.nameUa, offer?.nameRu].join(" ")), B = words(row.n);
+  for (const t of A) if (B.has(t)) return true;
+  return false;
+}
+/** Перевірка пари перед підстановкою → null (можна) | причина. Різні назви — без підстановки НАВІТЬ при однаковій ціні (16.11:
+ *  1589397066 — у Prom-фіді генератор Einhell TC-IG 2000, в Excel під тим самим артикулом насос AQUINNA, а ціна Prom = перекреслена
+ *  ціна насоса — помилка даних постачальника). Ціна, що змінилась більш ніж удвічі, — теж без підстановки (до перевірки власником). */
+export function pairProblem(offer, row) {
+  if (!namesAgree(offer, row)) return "назви різні — пару не підтверджено";
+  if (offer?.price > 0 && row?.p > 0 && (row.p / offer.price < 0.5 || row.p / offer.price > 2)) return "ціна змінилась більш ніж удвічі";
+  return null;
+}
+
+/** Ціна (РРЦ), наявність і дроп Excel в оффери Prom-фіду (новий Map; вхідний не змінюється). Пара, яку не підтверджує ні назва, ні ціна
+ *  (або ціна змінилась більш ніж удвічі), — без підстановки (Prom-фід), у stats.skipped. → { offers, stats } */
 export function applyHoroshop(offers, rows, map) {
   const out = new Map(offers);
-  const stats = { matched: 0, price: 0, available: 0, drop: 0, priceChanged: 0, availableChanged: 0 };
+  const stats = { matched: 0, price: 0, available: 0, drop: 0, priceChanged: 0, availableChanged: 0, skipped: [] };
   for (const [oid, i] of map) {
     const o = offers.get(oid), r = rows[i];
     if (!o || !r) continue;
+    const why = pairProblem(o, r);
+    if (why) { stats.skipped.push({ id: oid, article: r.a, reason: why }); continue; }
     stats.matched++;
     const next = { ...o, source: "horoshop" };
     if (r.p != null) { stats.price++; if (o.price !== r.p) stats.priceChanged++; next.price = r.p; }
@@ -106,8 +138,15 @@ export function hybridOffers({ parsedOffers, compact, overrides = {} }) {
     offers: ap.offers,
     stats: { date: compact.lastModified || compact.at || "", excelRows: compact.count ?? compact.rows.length, promOffers: parsedOffers.size, ...ap.stats,
       byId: m.stats.byId, byArticle: m.stats.byArticle, byDisplay: m.stats.byDisplay, byOverride: m.stats.override,
-      ambiguous: m.stats.ambiguous.length, ambiguousIds: m.stats.ambiguous.slice(0, 50), withoutPair: parsedOffers.size - ap.stats.matched },
+      ambiguous: m.stats.ambiguous.length, ambiguousIds: m.stats.ambiguous.slice(0, 50), skipped: ap.stats.skipped.length, skippedList: ap.stats.skipped.slice(0, 50),
+      withoutPair: parsedOffers.size - ap.stats.matched },
   };
+}
+
+/** Чи список Excel достатньо свіжий для «Цін» (дата файлу або збереження не старша за HOROSHOP_MAX_AGE_HOURS). */
+export function horoshopFresh(compact, now, maxAgeHours = HOROSHOP_MAX_AGE_HOURS) {
+  const t = Date.parse(compact?.lastModified || compact?.at || "");
+  return Number.isFinite(t) && (Number(now) - t) / 3_600_000 <= maxAgeHours;
 }
 
 /** Чи новіший файл на сайті за збережений список (Last-Modified). Невідомо — «так» лише коли списку ще немає. */

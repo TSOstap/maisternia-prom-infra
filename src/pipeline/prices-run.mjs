@@ -20,7 +20,7 @@ import { sheetDiscount, journalRow, syncControlsState, ccUnchanged } from "./syn
 import { PROSALE_SHEET, withProsale } from "../core/prosale.mjs";
 import { PRICE_RULE_COLUMNS } from "../core/pricing.mjs";
 import { OWNER_AVAILABILITY_COLUMN } from "../core/owner-availability.mjs";
-import { hybridOffers } from "../core/horoshop.mjs";
+import { hybridOffers, horoshopFresh } from "../core/horoshop.mjs";
 
 const DISCOUNT = "Знижка";
 /** Колонки «Основного каталогу», потрібні плану й запису за ключем (зіставлення з offer — як mtMatch, 8 колонок LIVE, присутність). */
@@ -60,9 +60,11 @@ export async function updatePrices({ readBook, xml, stamp, now, config, controls
   const pricing = withProsale(config.pricing, (await readBook([PROSALE_SHEET]))?.[PROSALE_SHEET]);
   // Гібрид (рішення власника 16.11, варіант Б): для зіставлених товарів ціна й наявність — з Хорошопу; без пари — Prom-фід (запасне джерело).
   let offers = parsed.offers, hybrid = null;
-  if (horoshop?.rows?.length) { const h = hybridOffers({ parsedOffers: parsed.offers, compact: horoshop, overrides: horoshop.overrides || {} }); offers = h.offers; hybrid = h.stats; }
+  // Свіжість: Excel старший за HOROSHOP_MAX_AGE_HOURS — не застосовується (ціни й наявність із Prom-фіду; підсумок просить оновити Excel).
+  const hsStale = Boolean(horoshop?.rows?.length) && !horoshopFresh(horoshop, now);
+  if (horoshop?.rows?.length && !hsStale) { const h = hybridOffers({ parsedOffers: parsed.offers, compact: horoshop, overrides: horoshop.overrides || {} }); offers = h.offers; hybrid = h.stats; }
   const p = planPrices({ values: book[MAIN_TITLE], offers, stamp, pricing, removed: cc.removed, anomaly: config.policy?.anomaly });
-  const base = { feed: { offers: parsed.count, date: parsed.date }, stats: p.stats, recovery, ...(hybrid ? { horoshop: hybrid } : horoshop?.error ? { horoshop: { error: horoshop.error } } : {}) };
+  const base = { feed: { offers: parsed.count, date: parsed.date }, stats: p.stats, recovery, ...(hybrid ? { horoshop: hybrid } : hsStale ? { horoshop: { error: `Excel застарів (файл від ${horoshop.lastModified || horoshop.at}) — ціни й наявність із Prom-фіду; оновіть «Excel (розширений)» у Хорошопі` } } : {}) };
   if (p.abort) return { state: "ABORTED", reason: p.abort.reason, block: p.abort, ...base };
   if (!p.changed.length) return { state: "NO_CHANGES", reason: "ціни й наявність без змін — нічого не записано", ...base };
 
