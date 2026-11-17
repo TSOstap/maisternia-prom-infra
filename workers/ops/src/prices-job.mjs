@@ -137,7 +137,11 @@ export async function runPricesJob({ env, store, ccContractText, sha256Hex, ccSh
     const pricing = withProsale(config.pricing, (await readBook([PROSALE_SHEET]))?.[PROSALE_SHEET]);
     const hy = horoshop?.rows?.length ? hybridOffers({ parsedOffers: parsed.offers, compact: horoshop, overrides: horoshop.overrides || {} }) : null;
     const p = planPrices({ values, offers: hy ? hy.offers : parsed.offers, stamp, pricing, removed: cc?.removed || new Set(), anomaly: config.policy?.anomaly });
-    return { result: { state: p.abort ? "ABORTED" : "PLANNED", reason: p.abort?.reason || "", stats: p.stats, feed: { offers: parsed.count }, horoshop: hy ? hy.stats : null, cc: { blocked: cc?.blocked ?? null, removed: cc?.removed?.size ?? null } }, metrics: metrics() };
+    // Діагностика для власника: оффери фіду постачальника, яких немає в «Основному каталозі» (перші 300).
+    const hdr = (values?.[0] || []).map((x) => mtText(x).trim()), oi = hdr.indexOf("Offer ID");
+    const inMain = new Set((values || []).slice(1).map((r) => mtText(r?.[oi]).trim()).filter(Boolean));
+    const notInMain = [...parsed.offers.keys()].filter((id) => !inMain.has(String(id)));
+    return { result: { state: p.abort ? "ABORTED" : "PLANNED", reason: p.abort?.reason || "", stats: p.stats, feed: { offers: parsed.count, notInMain: notInMain.length, notInMainList: notInMain.slice(0, 300).map((id) => ({ id, name: String(parsed.offers.get(id)?.name || "").slice(0, 80) })) }, horoshop: hy ? hy.stats : null, cc: { blocked: cc?.blocked ?? null, removed: cc?.removed?.size ?? null } }, metrics: metrics() };
   }
 
   // 4. Запис через шлюз W2 (охоронець режиму prices; записувач знає ID живої таблиці й відмовляє в записі туди).
