@@ -472,7 +472,7 @@ export class OpsCore {
     if (this.metaGet(PRICES_JOB_KEY) || this.metaGet(FEED_JOB_KEY)) return "оновлюється YML";
     return "";
   }
-  /** Оператор: status | on | off. Увімкнути можна лише з токеном і адресою нашого YML на сервері. */
+  /** Оператор: status | on | off | recheck. Увімкнути можна лише з токеном і адресою нашого YML на сервері. */
   async promImportAdmin(b) {
     const action = String(b?.action || "status");
     if (action === "on" || action === "off") {
@@ -481,6 +481,14 @@ export class OpsCore {
       // Увімкнення оператором (напр. після нового токена) знімає паузу після помилки — перевірка за хвилину.
       this.metaPut(PROM_IMPORT_KEY, { ...this.promImportGet(), on: action === "on", nextAt: action === "on" ? this.now() + MIN : null, ...(action === "on" ? { retryAt: 0 } : {}) });
       await this.scheduleAlarm();
+    }
+    // Перечитати статус останнього імпорту (оператор): підсумок у «Стані» — з актуальними лічильниками Prom.
+    if (action === "recheck") {
+      const cur = this.promImportGet(), id = cur.last?.importId;
+      if (!id || cur.current) return { error: { code: "NOTHING", message: cur.current ? "імпорт ще виконується" : "немає завершеного імпорту" } };
+      const s = await promImportStatus({ token: this.env.PROM_API_TOKEN, id, fetchImpl: this.fetchImpl });
+      if (!s.ok) return { error: { code: "PROM", message: s.reason } };
+      this.metaPut(PROM_IMPORT_KEY, { ...cur, last: { ...cur.last, result: s.status, message: `імпорт від ${kyivTime(cur.lastAt)}: ${statusText(s)}`, counts: s.counts } });
     }
     const st = this.promImportGet();
     const d = decidePromImport({ st: { ...st, on: true }, changedAt: this.feed.meta()?.changedAt, now: this.now(), busy: this.promBusy() });

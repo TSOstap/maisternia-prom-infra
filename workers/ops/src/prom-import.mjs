@@ -90,13 +90,21 @@ export async function promImportStatus({ token, id, fetchImpl }) {
   if (r.status !== 200 || !j) return { ok: false, reason: `Prom HTTP ${r.status}` };
   const status = String(j.status || "");
   const n = (k) => (Number.isFinite(Number(j[k])) ? Number(j[k]) : null);
-  const counts = { total: n("total"), updated: n("updated"), notChanged: n("not_changed"), created: n("created"), withErrors: n("with_errors_count") };
-  return { ok: true, status, final: FINAL.has(status), counts };
+  const counts = { total: n("total"), imported: n("imported"), updated: n("updated"), notChanged: n("not_changed"), created: n("created"), withErrors: n("with_errors_count") };
+  return { ok: true, status, final: isFinal(status, counts), counts };
+}
+
+/** 18.11 (перший живий запуск): Prom віддає PARTIAL ще під час обробки (лічильники 0 з 5472), а потім — PARTIAL з повними
+ *  лічильниками (оновлено 4 + без змін 5468 = 5472). Тому PARTIAL — фінал лише коли оброблено всі позиції. */
+export function isFinal(status, c = {}) {
+  if (status === "SUCCESS" || status === "FATAL") return true;
+  if (status !== "PARTIAL" || !(Number(c.total) > 0)) return false;
+  return (Number(c.imported) || 0) + (Number(c.notChanged) || 0) + (Number(c.withErrors) || 0) >= Number(c.total);
 }
 
 /** Короткий підсумок для власника (меню «Стан останньої операції»). */
 export function statusText(s) {
-  const word = { SUCCESS: "готово", PARTIAL: "частково", FATAL: "помилка" }[s.status] || s.status || "невідомо";
+  const word = { SUCCESS: "готово", PARTIAL: "готово (статус Prom PARTIAL)", FATAL: "помилка" }[s.status] || s.status || "невідомо";
   const c = s.counts || {};
   const parts = [];
   if (c.updated != null) parts.push(`оновлено ${c.updated}`);

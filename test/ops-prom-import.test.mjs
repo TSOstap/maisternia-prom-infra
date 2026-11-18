@@ -206,3 +206,42 @@ test("автоімпорт у mm-ops: без токена не вмикаєть�
   await core2.runFeedQueued({ kind: "sync", reason: "тест" });
   assert.equal(core2.promImportGet().nextAt, c.t + 15 * M);
 });
+
+test("автоімпорт: PARTIAL — фінал лише коли оброблено всі позиції (18.11: спершу PARTIAL з нулями, потім 4 + 5468 = 5472)", () => {
+  assert.equal(PI.isFinal("SUCCESS", {}), true);
+  assert.equal(PI.isFinal("FATAL", {}), true);
+  assert.equal(PI.isFinal("PROCESSING", { total: 1, imported: 1 }), false);
+  assert.equal(PI.isFinal("PARTIAL", { total: 5472, imported: 0, notChanged: 0, withErrors: 0 }), false);
+  assert.equal(PI.isFinal("PARTIAL", { total: 5472, imported: 4, notChanged: 5468, withErrors: 0 }), true);
+  assert.equal(PI.isFinal("PARTIAL", { total: 0 }), false);
+  assert.equal(PI.statusText({ status: "PARTIAL", counts: { total: 5472, imported: 4, updated: 4, notChanged: 5468, created: 0, withErrors: 0 } }), "готово (статус Prom PARTIAL) — оновлено 4, без змін 5468, усього 5472");
+});
+
+test("автоімпорт у mm-ops: PARTIAL під час обробки — чекати далі; повні лічильники — завершено; «recheck» перечитує підсумок", { skip }, async () => {
+  const c = { t: Date.parse("2026-11-18T01:53:00Z") };
+  let reply = { status: "PARTIAL", total: 5472, imported: 0, updated: 0, not_changed: 0, with_errors_count: 0 };
+  const fetchImpl = async (url) => {
+    const u = String(url);
+    if (u.endsWith("/products/import_url")) return new Response(JSON.stringify({ id: "6afd", status: "success" }), { status: 200 });
+    if (u.includes("/products/import/status/")) return new Response(JSON.stringify(reply), { status: 200 });
+    throw new Error("неочікувана адреса: " + u);
+  };
+  const core = new OpsCore(fakeStorage(), ENV, { now: () => c.t, fetchImpl });
+  core.feed.putMeta({ ver: 1, count: 5472, changedAt: c.t - M });
+  await core.promImportAdmin({ action: "on" });
+  c.t += M; await core.alarm();
+  assert.equal(core.promImportGet().current.id, "6afd");
+  c.t += 5 * M; await core.alarm();
+  assert.ok(core.promImportGet().current, "PARTIAL з нулями — ще обробляється");
+  reply = { ...reply, imported: 4, updated: 4, not_changed: 5468 };
+  c.t += 5 * M; await core.alarm();
+  let st = core.promImportGet();
+  assert.equal(st.current, null); assert.equal(st.last.result, "PARTIAL");
+  assert.match(st.last.message, /імпорт від 03:54: готово \(статус Prom PARTIAL\) — оновлено 4, без змін 5468, усього 5472/);
+  // recheck: Prom згодом віддав інші лічильники — підсумок оновлюється; без завершеного імпорту — помилка.
+  reply = { ...reply, status: "SUCCESS" };
+  await core.promImportAdmin({ action: "recheck" });
+  assert.match(core.promImportGet().last.message, /^імпорт від 03:54: готово — оновлено 4/);
+  const bare = new OpsCore(fakeStorage(), ENV, { now: () => c.t, fetchImpl });
+  assert.equal((await bare.promImportAdmin({ action: "recheck" })).error.code, "NOTHING");
+});
