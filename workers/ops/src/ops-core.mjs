@@ -18,6 +18,7 @@ import { ownerSummary } from "../../../src/pipeline/ops-summary.mjs";
 import { FeedStore, runFeedJob, serveFeed } from "./yml-feed.mjs";
 import { horoshopMeta } from "../../../src/pipeline/horoshop-source.mjs";
 import { excelIsNewer } from "../../../src/core/horoshop.mjs";
+import { PROM_IMPORT_KEY, PROM_IMPORT, promImportReady, decidePromImport, startPromImport, promImportStatus, statusText, kyivTime } from "./prom-import.mjs";
 
 export const OPS = Object.freeze({
   transfer: "Перенести затверджені",
@@ -45,10 +46,11 @@ export const FEED_JOB_KEY = "feed-job";
 const CONTENT_OPS = new Set(["update", "transfer", "deferred"]);
 /** Кнопки меню (ключ кнопок) — лише ці дії; разові операції (відкладені товари) — лише вручну з GitHub. */
 const BUTTON_OPS = new Set(["transfer", "find-new", "update", "prices", "horoshop", "reconcile"]);
-/** Гібрид (рішення власника 16.11): щогодинна перевірка дати зміни «Excel (розширений)» Хорошопу (HEAD, Last-Modified). */
+/** Гібрид (рішення власника 16.11): перевірка дати зміни «Excel (розширений)» Хорошопу (HEAD, Last-Modified).
+ *  18.11 (автоімпорт у Prom): кожні 15 хв замість щогодини — щоб нове Excel потрапляло в Prom за 15–30 хв, а не за годину. */
 export const HOROSHOP_CHECK_KEY = "horoshop-check";
-export const HOROSHOP_CHECK_MINUTES = 60;
-export const HOROSHOP_BY = "Хорошоп (щогодинна перевірка)";
+export const HOROSHOP_CHECK_MINUTES = 15;
+export const HOROSHOP_BY = "Хорошоп (перевірка кожні 15 хв)";
 const ACTIVE = new Set(["DISPATCHING", "QUEUED", "RUNNING"]);
 /** Після цього часу без звісток запуск вважається завислим (job ops.yml має timeout-minutes 60) — кнопка знову доступна.
  *  Захист таблиці від цього не залежить: оренда W2 і журнал операцій не дадуть двом записувачам писати одночасно. */
@@ -177,6 +179,8 @@ export class OpsCore {
       if (m === "POST" && p === "/admin/watch") { const b = await req.json().catch(() => ({})); return json(await this.watchSwitch(b?.on === true)); }
       if (m === "POST" && p === "/admin/prices-job") return json(await this.pricesJob({ dry: true }));
       if (m === "POST" && p === "/admin/prices-schedule") { const b = await req.json().catch(() => ({})); return json(await this.pricesSchedule(b)); }
+      // Автоімпорт у Prom (рішення власника 18.11): стан; {action:"on"|"off"} — увімкнути / вимкнути.
+      if ((m === "GET" || m === "POST") && p === "/admin/prom-import") return json(await this.promImportAdmin(m === "POST" ? await req.json().catch(() => ({})) : {}));
       if (m === "POST" && p === "/admin/watch-check") { const b = await req.json().catch(() => ({})); return json(await this.watchCheck(this.now(), { dry: b?.dry !== false })); }
       return json({ error: { code: "NOT_FOUND", message: "не знайдено" } }, 404);
     } catch (e) {
@@ -254,6 +258,12 @@ export class OpsCore {
     const w = this.watchGet();
     const ym = this.feed.meta(), fl = this.metaGet("feed-last");
     if (ym?.ver) last.push({ op: "yml", label: "YML для Prom", status: fl?.state === "ERROR" ? "помилка" : "готово", at: ym.changedAt, updated: ym.changedAt, summary: `товарів у файлі: ${ym.count}; остання зміна цін — ${new Date(ym.changedAt).toISOString().slice(0, 16).replace("T", " ")} UTC` + (fl?.state === "ERROR" ? "; помилка: " + fl.reason : "") });
+    const pi = this.metaGet(PROM_IMPORT_KEY);
+    if (pi?.on) {
+      const wait = pi.check && ["GAP", "LIMIT", "BUSY", "PAUSE"].includes(pi.check.result) && pi.check.at > (pi.last?.at || 0) ? "; чекає: " + pi.check.message : "";
+      const at = pi.last?.at || pi.check?.at || null;
+      if (at) last.push({ op: "prom-import", label: "Автоімпорт у Prom (після зміни фіду)", status: pi.current ? "виконується" : "увімкнено", at, updated: at, summary: (pi.last?.message || pi.check?.message || "") + wait });
+    }
     if (w.on && w.last) last.push({ op: "watch", label: "Автоперевірка новинок (кожні " + WATCH.everyMinutes + " хв)", status: "увімкнено", at: w.last.at, updated: w.last.at, summary: w.last.message || w.last.result || "" });
     return { active: active ? { op: active.op, label: active.label, status: active.status, at: active.at } : null, last };
   }
@@ -354,6 +364,8 @@ export class OpsCore {
     if (this.metaGet(PRICES_JOB_KEY) || this.metaGet(FEED_JOB_KEY)) times.push(now + 1000);
     const ps = this.metaGet(PRICES_SCHEDULE_KEY);
     if (ps?.on) times.push(Math.max(now + 1000, Number(ps.nextAt) || now + MIN));
+    const pi = this.metaGet(PROM_IMPORT_KEY);
+    if (pi?.on) times.push(Math.max(now + 1000, Number(pi.nextAt) || now + MIN));
     if (this.env.HOROSHOP_EXCEL_URL) times.push(Math.max(now + 1000, Number(this.metaGet(HOROSHOP_CHECK_KEY)?.nextAt) || now + MIN));
     if (times.length) await this.storage.setAlarm(Math.min(...times)); else await this.storage.deleteAlarm();
   }
@@ -393,6 +405,13 @@ export class OpsCore {
       try { h = await this.horoshopNewer(); if (h.newer && !this.activeRun(this.now())) b = await this.button({ op: "horoshop", by: HOROSHOP_BY }); }
       catch (e) { h = { newer: false, reason: "помилка: " + String(e?.message || e).slice(0, 120) }; }
       this.metaPut(HOROSHOP_CHECK_KEY, { ...this.metaGet(HOROSHOP_CHECK_KEY), last: { at: now, newer: !!h?.newer, lastModified: h?.lastModified || "", reason: h?.reason || "", state: b?.state || "" } });
+    }
+    // Автоімпорт у Prom (рішення власника 18.11): фід змінився — імпорт лише нашого посилання (ціна, наявність, знижка).
+    // Лише без важкого завдання в цьому виклику (межа Free — 50 запитів); помилки не кидаються.
+    const pi = this.metaGet(PROM_IMPORT_KEY);
+    if (pi?.on && !job && !fj && now >= (Number(pi.nextAt) || 0) - 5000) {
+      try { await this.promImportTick(this.now()); }
+      catch (e) { this.metaPut(PROM_IMPORT_KEY, { ...this.metaGet(PROM_IMPORT_KEY), nextAt: this.now() + PROM_IMPORT.everyMinutes * MIN, last: { at: now, result: "ERROR", message: "помилка автоімпорту: " + String(e?.message || e).slice(0, 200) } }); }
     }
     await this.scheduleAlarm();
   }
@@ -444,6 +463,58 @@ export class OpsCore {
     if (state === "PRICES_UPDATED" || state === "PARTIAL") await this.enqueueFeed("sync", "після «Ціни й наявність»");
   }
 
+  // ---------- автоімпорт у Prom (рішення власника 18.11; prom-import.mjs) ----------
+  promImportGet() { return this.metaGet(PROM_IMPORT_KEY) || { on: false }; }
+  /** Зараз іде операція або оновлюється YML — імпорт після завершення (щоб не витратити 2-годинний проміжок на старий фід). */
+  promBusy() {
+    const a = this.activeRun(this.now());
+    if (a) return `виконується «${a.label}»`;
+    if (this.metaGet(PRICES_JOB_KEY) || this.metaGet(FEED_JOB_KEY)) return "оновлюється YML";
+    return "";
+  }
+  /** Оператор: status | on | off. Увімкнути можна лише з токеном і адресою нашого YML на сервері. */
+  async promImportAdmin(b) {
+    const action = String(b?.action || "status");
+    if (action === "on" || action === "off") {
+      const ready = promImportReady(this.env);
+      if (action === "on" && !ready.ok) return { error: { code: "NOT_READY", message: ready.reason } };
+      // Увімкнення оператором (напр. після нового токена) знімає паузу після помилки — перевірка за хвилину.
+      this.metaPut(PROM_IMPORT_KEY, { ...this.promImportGet(), on: action === "on", nextAt: action === "on" ? this.now() + MIN : null, ...(action === "on" ? { retryAt: 0 } : {}) });
+      await this.scheduleAlarm();
+    }
+    const st = this.promImportGet();
+    const d = decidePromImport({ st: { ...st, on: true }, changedAt: this.feed.meta()?.changedAt, now: this.now(), busy: this.promBusy() });
+    return { ...st, ready: promImportReady(this.env), limits: { minGapMinutes: PROM_IMPORT.minGapMinutes, maxPerDay: PROM_IMPORT.maxPerDay, fields: PROM_IMPORT.fields }, decision: d.go ? "запустився б зараз" : d.message, alarmAt: await this.storage.getAlarm() };
+  }
+  /** Один крок: імпорт іде — статус; ні — рішення і, якщо можна, запуск. Стан — meta «prom-import». */
+  async promImportTick(now) {
+    let st = { ...this.promImportGet(), nextAt: now + PROM_IMPORT.everyMinutes * MIN };
+    const ready = promImportReady(this.env);
+    if (!ready.ok) { this.metaPut(PROM_IMPORT_KEY, { ...st, last: { at: now, result: "NOT_READY", message: ready.reason } }); return; }
+    const token = this.env.PROM_API_TOKEN;
+    if (st.current) {
+      const from = kyivTime(st.current.at);
+      if (now - st.current.at < PROM_IMPORT.statusAfterMinutes * MIN) { this.metaPut(PROM_IMPORT_KEY, { ...st, nextAt: st.current.at + PROM_IMPORT.statusAfterMinutes * MIN }); return; }
+      const s = await promImportStatus({ token, id: st.current.id, fetchImpl: this.fetchImpl });
+      if (s.ok && s.final) st = { ...st, current: null, last: { at: now, result: s.status, message: `імпорт від ${from}: ${statusText(s)}`, counts: s.counts, importId: st.current.id } };
+      else if (now - st.current.at > PROM_IMPORT.staleMinutes * MIN) st = { ...st, current: null, last: { at: now, result: "UNKNOWN", message: `імпорт від ${from}: статус так і не отримано (${s.ok ? s.status || "без статусу" : s.reason})`, importId: st.current.id } };
+      else st = { ...st, nextAt: now + PROM_IMPORT.statusAfterMinutes * MIN };
+      this.metaPut(PROM_IMPORT_KEY, st);
+      return;
+    }
+    const changedAt = Number(this.feed.meta()?.changedAt) || 0;
+    const d = decidePromImport({ st, changedAt, now, busy: this.promBusy() });
+    if (!d.go) { this.metaPut(PROM_IMPORT_KEY, { ...st, check: { at: now, result: d.result, message: d.message } }); return; }
+    const r = await startPromImport({ token, feedUrl: this.env.PROM_FEED_URL, fetchImpl: this.fetchImpl });
+    if (r.ok) {
+      st = { ...st, current: { id: r.id, at: now, changedAt }, lastAt: now, day: d.day, count: d.count + 1, importedChangedAt: changedAt, retryAt: 0, nextAt: now + PROM_IMPORT.statusAfterMinutes * MIN, check: null, last: { at: now, result: "STARTED", message: `імпорт запущено о ${kyivTime(now)} (сьогодні ${d.count + 1}-й з ${PROM_IMPORT.maxPerDay})`, importId: r.id } };
+    } else {
+      const pause = (r.auth ? PROM_IMPORT.authPauseMinutes : PROM_IMPORT.retryMinutes) * MIN;
+      st = { ...st, retryAt: now + pause, check: null, last: { at: now, result: "START_FAILED", message: "не вдалося запустити: " + r.reason + (r.auth ? " — перевірте токен Prom і права «Продукти та групи» (читання і запис)" : "") } };
+    }
+    this.metaPut(PROM_IMPORT_KEY, st);
+  }
+
   // ---------- YML для Prom ----------
   /** Черга: повна збірка поглинає оновлення цін (вона й так бере свіжі ціни). */
   async enqueueFeed(kind, reason) {
@@ -459,6 +530,8 @@ export class OpsCore {
   async runFeedQueued(fj) {
     const out = await this.feedJob(fj.kind);
     this.metaPut("feed-last", { at: this.now(), kind: fj.kind, why: fj.reason || "", state: out.state, reason: out.reason || "", count: out.count ?? null, patched: out.patched ?? null, metrics: out.metrics || null });
+    const pi = this.metaGet(PROM_IMPORT_KEY);
+    if (pi?.on && (out.state === "BUILT" || (out.state === "SYNCED" && Number(out.patched) > 0))) this.metaPut(PROM_IMPORT_KEY, { ...pi, nextAt: this.now() + MIN });
     return out;
   }
   /** Оператор: status | build | sync (одразу, з результатом) | hold {ids} (тимчасово не публікувати — рішення власника) → збірка. */

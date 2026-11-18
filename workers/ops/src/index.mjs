@@ -3,6 +3,7 @@
  *  ADMIN_KEY (оператор: вхідні файли, перенесення стану W2), GITHUB_TOKEN (fine-grained, лише Actions: write цього репозиторію),
  *  SUPPLIER_FEED_URL (фід постачальника для автопошуку новинок — alarm цього DO);
  *  FEED_KEY (секрет у постійній адресі YML для Prom: /yml/<FEED_KEY>.xml — Prom не надсилає заголовків, тому ключ — в адресі);
+ *  PROM_API_TOKEN, PROM_FEED_URL (18.11: автоімпорт у Prom після зміни YML — prom-import.mjs; токен кабінету й точна адреса нашого YML);
  *  змінні GITHUB_REPO, GITHUB_WORKFLOW, GITHUB_REF. */
 import { DurableObject } from "cloudflare:workers";
 import { OpsCore, roleFor, json, sameKey } from "./ops-core.mjs";
