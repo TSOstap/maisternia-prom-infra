@@ -4,7 +4,8 @@
     "extra": 5,
     "markup": 0.25,
     "discount": 20,
-    "rounding": 0.01
+    "rounding": 0.01,
+    "whole": true
   },
   "supplier": {
     "allowedUrlPattern": "^https://market-tools\\.com\\.ua/",

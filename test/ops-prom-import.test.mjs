@@ -208,7 +208,11 @@ test("автоімпорт у mm-ops: без токена не вмикаєть�
 });
 
 test("автоімпорт: PARTIAL — фінал лише коли оброблено всі позиції (18.11: спершу PARTIAL з нулями, потім 4 + 5468 = 5472)", () => {
-  assert.equal(PI.isFinal("SUCCESS", {}), true);
+  // 18.11 10:08: SUCCESS з нулями на початку обробки — ще не фінал; SUCCESS з повними лічильниками — фінал.
+  assert.equal(PI.isFinal("SUCCESS", {}), false);
+  assert.equal(PI.isFinal("SUCCESS", { total: 0, imported: 0, updated: 0, notChanged: 0, created: 0, withErrors: 0 }), false);
+  assert.equal(PI.isFinal("SUCCESS", { total: 5472, imported: 390, updated: 390, notChanged: 5082, created: 0, withErrors: 0 }), true);
+  assert.equal(PI.isFinal("SUCCESS", { total: 8, updated: 3, notChanged: 5, withErrors: 0 }), true, "без imported — за updated + created");
   assert.equal(PI.isFinal("FATAL", {}), true);
   assert.equal(PI.isFinal("PROCESSING", { total: 1, imported: 1 }), false);
   assert.equal(PI.isFinal("PARTIAL", { total: 5472, imported: 0, notChanged: 0, withErrors: 0 }), false);
@@ -233,6 +237,10 @@ test("автоімпорт у mm-ops: PARTIAL під час обробки — �
   assert.equal(core.promImportGet().current.id, "6afd");
   c.t += 5 * M; await core.alarm();
   assert.ok(core.promImportGet().current, "PARTIAL з нулями — ще обробляється");
+  reply = { status: "SUCCESS", total: 0, imported: 0, updated: 0, not_changed: 0, with_errors_count: 0 };
+  c.t += 5 * M; await core.alarm();
+  assert.ok(core.promImportGet().current, "SUCCESS з нулями (усього 0) — ще обробляється (18.11 10:08)");
+  reply = { status: "PARTIAL", total: 5472, imported: 0, updated: 0, not_changed: 0, with_errors_count: 0 };
   reply = { ...reply, imported: 4, updated: 4, not_changed: 5468 };
   c.t += 5 * M; await core.alarm();
   let st = core.promImportGet();

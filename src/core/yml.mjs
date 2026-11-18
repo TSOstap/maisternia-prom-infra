@@ -151,11 +151,15 @@ function expectedPrices(r, price, available, pricing) {
   const dr = Number(String(r["Дроп-ціна"] ?? "").replace(",", ".")), drop = dr > 0 ? dr : null; // «Дроп-ціна» — захист «нижче дропу», як у «Цінах»
   const own = rowPrices(r, price, available, pricing, ps, drop);
   const variants = [own];
-  if (ps) variants.push(rowPrices(r, price, available, pricing, null, drop));
-  // Перехідний стан: правило вже записано, а «Ціни» ще не перерахували рядок — чинні стандартні ціни теж погоджені (не ізолюємо товар).
-  if (own.rule.kind !== "standard") {
-    variants.push(mtPrices(price, available, pricing, ps));
-    if (ps) variants.push(mtPrices(price, available, pricing));
+  // № 87 (ціни без копійок): перехідний стан — «Ціни» ще не перерахували рядок, чинні ціни з копійками теж погоджені (не ізолюємо товар).
+  for (const pr of pricing.whole === true ? [pricing, { ...pricing, whole: false }] : [pricing]) {
+    if (pr !== pricing) variants.push(rowPrices(r, price, available, pr, ps, drop));
+    if (ps) variants.push(rowPrices(r, price, available, pr, null, drop));
+    // Перехідний стан: правило вже записано, а «Ціни» ще не перерахували рядок — чинні стандартні ціни теж погоджені (не ізолюємо товар).
+    if (own.rule.kind !== "standard") {
+      variants.push(mtPrices(price, available, pr, ps));
+      if (ps) variants.push(mtPrices(price, available, pr));
+    }
   }
   const same = (e) => Number(r["Ціна"]) === e.base && Number(r["Ціна кінцева"]) === e.final;
   return variants.find(same) || own;

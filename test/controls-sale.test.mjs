@@ -73,7 +73,7 @@ test("XML-синхронізація не повертає в продаж: hold
   const { rows: ymlRows, problems } = holdRowsForYml(rows, held);
   assert.deepEqual(problems, []);
   const sink = memorySink();
-  const built = await buildYml({ rows: ymlRows, groups, manifest, meta: { syncState: "OK", lastSuccess: STAMP, now: NOW + 60000 }, config: config.yml, maximumBytes: 50_000_000, sink, missingPolicy: "unavailable", conflictPolicy: "isolate" });
+  const built = await buildYml({ rows: ymlRows, groups, manifest, meta: { syncState: "OK", lastSuccess: STAMP, now: NOW + 60000 }, config: config.yml, pricing: config.pricing, maximumBytes: 50_000_000, sink, missingPolicy: "unavailable", conflictPolicy: "isolate" });
   const offer = new RegExp(`<offer id="${id}"[^>]*>[\\s\\S]*?</offer>`).exec(sink.text())[0];
   assert.match(offer, /available="false"/);
   assert.ok(offer.includes(`<price>${Number(rowOf(w, id)["Ціна"]).toFixed(2)}</price>`));

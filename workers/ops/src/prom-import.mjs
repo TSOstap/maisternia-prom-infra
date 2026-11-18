@@ -95,11 +95,15 @@ export async function promImportStatus({ token, id, fetchImpl }) {
 }
 
 /** 18.11 (перший живий запуск): Prom віддає PARTIAL ще під час обробки (лічильники 0 з 5472), а потім — PARTIAL з повними
- *  лічильниками (оновлено 4 + без змін 5468 = 5472). Тому PARTIAL — фінал лише коли оброблено всі позиції. */
+ *  лічильниками (оновлено 4 + без змін 5468 = 5472). 18.11 10:08: на початку обробки (~15 хв) Prom віддає й SUCCESS з нулями
+ *  (усього 0), далі PARTIAL 0 / 5472, потім повні лічильники. Тому SUCCESS / PARTIAL — фінал лише коли оброблено всі позиції;
+ *  FATAL — одразу. Завислий імпорт закриває staleMinutes. */
 export function isFinal(status, c = {}) {
-  if (status === "SUCCESS" || status === "FATAL") return true;
-  if (status !== "PARTIAL" || !(Number(c.total) > 0)) return false;
-  return (Number(c.imported) || 0) + (Number(c.notChanged) || 0) + (Number(c.withErrors) || 0) >= Number(c.total);
+  if (status === "FATAL") return true;
+  if ((status !== "SUCCESS" && status !== "PARTIAL") || !(Number(c.total) > 0)) return false;
+  const n = (v) => Number(v) || 0;
+  const done = Math.max(n(c.imported), n(c.updated) + n(c.created));
+  return done + n(c.notChanged) + n(c.withErrors) >= Number(c.total);
 }
 
 /** Короткий підсумок для власника (меню «Стан останньої операції»). */

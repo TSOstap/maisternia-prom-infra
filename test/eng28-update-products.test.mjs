@@ -113,7 +113,7 @@ test("ENG-28 «Оновити товари»: перший повний фід �
   assert.equal(r.presence.gone, 0);
   assert.equal(r.confirmed, true);
   const ra = byId(w, mtText(a["Offer ID"]));
-  const p = mtPrices(777, mtText(ra["Наявність"]) === "+");
+  const p = mtPrices(777, mtText(ra["Наявність"]) === "+", cfg().pricing); // № 87: та сама формула, що в синхронізації (робочий конфіг)
   assert.equal(Number(ra["Ціна постачальника"]), 777);
   assert.equal(Number(ra["Ціна кінцева"]), p.final);
   assert.equal(mtText(byId(w, mtText(b["Offer ID"]))["Наявність"]), "-");

@@ -8,4 +8,7 @@ import base from "../../config/default.json" with { type: "json" };
 
 const legacy = structuredClone(base);
 legacy.ownerPriority = { enabled: false };
+// Рішення власника 18.11 (№ 87): робочий конфіг — ціни без копійок (pricing.whole). Регресія прийнятої механіки й паритет із LIVE
+// (Apps Script, ціни з копійками) — на старій формулі; цілі ціни й перехідний стан фіду — test/whole-prices.test.mjs.
+legacy.pricing = { ...legacy.pricing, whole: false };
 export default legacy;

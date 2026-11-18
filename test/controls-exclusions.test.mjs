@@ -38,7 +38,7 @@ const published = (feed, ids = [ID]) => new Map(ids.map((id) => [id, { feed }]))
 async function ymlOf(w, st) {
   const rows = controlsRowsForYml(mainRows(w), st).rows, groups = groupsOf(w), sink = memorySink();
   const success = mtText(mainRows(w)[0]["Оновлено"]);
-  await buildYml({ rows, groups, manifest: approvalManifest(rows, groups), meta: { syncState: "OK", lastSuccess: success, now: Date.parse(success) + 60000 }, config: config.yml, maximumBytes: 50_000_000, sink, missingPolicy: "unavailable", conflictPolicy: "isolate" });
+  await buildYml({ rows, groups, manifest: approvalManifest(rows, groups), meta: { syncState: "OK", lastSuccess: success, now: Date.parse(success) + 60000 }, config: config.yml, pricing: config.pricing, maximumBytes: 50_000_000, sink, missingPolicy: "unavailable", conflictPolicy: "isolate" });
   return sink.text();
 }
 

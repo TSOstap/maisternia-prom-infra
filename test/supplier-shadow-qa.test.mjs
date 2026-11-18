@@ -130,6 +130,7 @@ async function cliEnv(handler) {
   config.supplier.minimumOffers = 10;
   config.supplier.allowedUrlPattern = "^http://127\\.0\\.0\\.1:";
   config.supplier.fetchTimeoutMs = 1500;
+  config.pricing = { ...config.pricing, whole: false }; // № 87: тіньова звірка з LIVE (Apps Script) — стара формула з копійками
   await fsp.writeFile(path.join(dir, "config.json"), JSON.stringify(config));
   const g = objectsFromValues(s.groups, GROUP_HEADERS), q = objectsFromValues(s.sheets["Нові товари"], YML_HEADERS);
   await fsp.writeFile(path.join(dir, "expected.json"), JSON.stringify({ main: s.manifestMain, new92: approvalManifest(q, g) }));

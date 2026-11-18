@@ -9,7 +9,9 @@ import { matchOffer, planRows, LIVE_COLUMNS } from "../src/core/sync-plan.mjs";
 import { buildYml, memorySink, objectsFromValues } from "../src/core/yml.mjs";
 import { GROUP_HEADERS, YML_HEADERS } from "../src/core/seal.mjs";
 import { generateSynthetic, prng } from "../src/synth/generator.mjs";
-import config from "../config/default.json" with { type: "json" };
+import config0 from "../config/default.json" with { type: "json" };
+// № 87: паритет із LIVE (Apps Script) — стара формула з копійками; робочі цілі ціни (pricing.whole) — test/whole-prices.test.mjs.
+const config = { ...config0, pricing: { ...config0.pricing, whole: false } };
 
 const gas = loadLiveAppsScript();
 const NOW = Date.parse("2026-10-21T09:00:00.000Z");

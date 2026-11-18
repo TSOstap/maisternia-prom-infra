@@ -124,7 +124,7 @@ test("SEO окремо від назв, описів і «Запитів»: YML 
   assert.equal((await syncAndIntake({ ...w, sheets: w.mem }, w.xml, { stamp: STAMP, now: NOW, config, controls: await ccControls(w) })).state, "SYNCED");
   const yml = async () => {
     const rows = mainRows(w), groups = objectsFromValues(w.book[SHEET.groups], GROUP_HEADERS), sink = memorySink();
-    await buildYml({ rows, groups, manifest: approvalManifest(rows, groups), meta: { syncState: "OK", lastSuccess: STAMP, now: NOW + 60000 }, config: config.yml, maximumBytes: 50_000_000, sink, missingPolicy: "unavailable", conflictPolicy: "isolate" });
+    await buildYml({ rows, groups, manifest: approvalManifest(rows, groups), meta: { syncState: "OK", lastSuccess: STAMP, now: NOW + 60000 }, config: config.yml, pricing: config.pricing, maximumBytes: 50_000_000, sink, missingPolicy: "unavailable", conflictPolicy: "isolate" });
     return sink.text();
   };
   const before = await yml();

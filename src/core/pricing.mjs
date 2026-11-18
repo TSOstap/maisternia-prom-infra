@@ -61,11 +61,27 @@ export function effectiveCost(row, rrp, drop = null) {
   return { cost: rrp, kind: "standard", notes, anchor: null };
 }
 
+/** Рішення власника 18.11.2026 (№ 87): ціни без копійок (pricing.whole = true). «Ціна» (база, у фід) кратна кроку, при якому
+ *  «Ціна кінцева» = база × (1 − знижка) теж ціла: знижка 20 % → крок 5 грн. Округлення ВНИЗ — покупець платить на 0–3,99 грн менше;
+ *  не нижче ефективної РРЦ (+5 грн перекриває округлення; інакше — крок угору). Без прапорця — точно як раніше (з копійками). */
+export function wholeStep(discount) {
+  const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+  return 100 / gcd(100, 100 - discount);
+}
+
 function fromFinal0(final0, available, pricing, prosale) {
-  const final = prosale ? prosaleFinal(final0, prosale) : final0;
+  const raw = prosale ? prosaleFinal(final0, prosale) : final0;
+  let final = raw;
+  let base = mtMoney(Math.round((raw * (1 + pricing.markup)) / pricing.rounding) * pricing.rounding);
+  if (pricing.whole === true) {
+    const step = wholeStep(pricing.discount), keep = 1 - pricing.discount / 100;
+    base = Math.floor((raw * (1 + pricing.markup)) / step + 1e-7) * step;
+    if (mtMoney(base * keep) + 1e-9 < final0 - pricing.extra) base += step; // захист «не нижче РРЦ» (за чинних +5 не спрацьовує)
+    final = mtMoney(base * keep);
+  }
   return {
     final,
-    base: mtMoney(Math.round((final * (1 + pricing.markup)) / pricing.rounding) * pricing.rounding),
+    base,
     discount: available ? pricing.discount + "%" : "",
     availability: available ? "+" : "-",
   };
