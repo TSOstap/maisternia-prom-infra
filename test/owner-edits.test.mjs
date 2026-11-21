@@ -55,6 +55,10 @@ test("правки власника: значення змінилось піс�
   assert.ok(planProblems([{ sheet: MAIN, key: id, column: "Ціна", expect: "1", set: "2", source: "т" }]).length);
   assert.ok(planProblems([{ sheet: MAIN, key: id, column: "Характеристики JSON", expect: "[]", set: "{", source: "т" }]).length);
   assert.ok(planProblems([{ sheet: "Групи", key: "1", column: "Назва", expect: "a", set: "b", source: "т" }]).length);
+  // 21.11: «Тариф ProSale» товару — лише відомий тариф або порожньо.
+  assert.deepEqual(planProblems([{ sheet: MAIN, key: id, column: "Тариф ProSale", expect: "", set: "Економ", source: "т" }]), []);
+  assert.deepEqual(planProblems([{ sheet: MAIN, key: id, column: "Тариф ProSale", expect: "Економ", set: "", source: "т" }]), []);
+  assert.match(planProblems([{ sheet: MAIN, key: id, column: "Тариф ProSale", expect: "", set: "Дешевий", source: "т" }]).join(" "), /невідомий тариф/);
   // Охоронець режиму не дасть писати поза переліком навіть напряму.
   await assert.rejects(Promise.resolve().then(() => w.guarded.updateRanges([{ title: MAIN, row: 2, col: 6, values: [["1"]] }])));
 });

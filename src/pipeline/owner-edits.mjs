@@ -10,6 +10,7 @@
 import { keyedUpdate, OP, ITEM } from "./safe-write/keyed-update.mjs";
 import { mtText } from "../core/text.mjs";
 import { PRICE_RULE_COLUMNS, cellNumber, OWNER_PRICE_COLUMN } from "../core/pricing.mjs";
+import { PROSALE_TARIFF_COLUMN, TARIFFS } from "../core/prosale.mjs";
 
 export const OWNER_EDITS_WRITER = "owner-edits";
 /** Дозволені аркуші / ключі / колонки. */
@@ -19,7 +20,9 @@ export const OWNER_EDIT_TARGETS = Object.freeze({
     // Рішення власника 14.11 (ціни за конкурентами): ручна ціна, ціна постачальника на момент її встановлення, надбавка (src/core/pricing.mjs).
     ...PRICE_RULE_COLUMNS,
     // Рішення власника 15.11: «Ціна власника» від імені власника — знімається сама, коли ціна у фіді постачальника зміниться (prices-only).
-    OWNER_PRICE_COLUMN]) }),
+    OWNER_PRICE_COLUMN,
+    // Рішення власника 21.11: тариф окремого товару (колонка 04.11; «Економ» = без націнки ProSale). Після правки — «Ціни».
+    PROSALE_TARIFF_COLUMN]) }),
   // «Залишити наше» система не виконує (дія лише «Прийняти значення постачальника») — тому «Стан дії» позначає розгляд власником.
   "Попередження постачальника": Object.freeze({ key: "Ключ", columns: Object.freeze(["Дія власника", "Стан дії"]) }),
   // 04.11: наші пошукові запити для новинок до затвердження (у черзі запис робить SEO власним — синхронізація його не перезаписує).
@@ -59,6 +62,8 @@ export function planProblems(edits) {
       if (n === null || Number.isNaN(n)) p.push(`#${i}: «${e.column}» — не число`);
       else if (!(n > 0)) p.push(`#${i}: «${e.column}» поза межами`); // № 63: «Надбавку» прибрано — лише додатні ціни
     }
+    // 21.11: тариф товару — порожньо (тариф категорії) або назва тарифу (Економ / Звичайний / Більше продажів / Турбо).
+    if (e.column === PROSALE_TARIFF_COLUMN && e.set !== "" && !(TARIFFS[e.set.trim().toLowerCase()] > 0)) p.push(`#${i}: «${e.column}» — невідомий тариф «${e.set}»`);
     const k = `${e.sheet}|${e.key}|${e.column}`;
     if (seen.has(k)) p.push(`#${i}: повтор ${k}`);
     seen.add(k);
