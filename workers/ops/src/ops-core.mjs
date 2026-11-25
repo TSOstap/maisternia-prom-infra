@@ -50,11 +50,18 @@ const BUTTON_OPS = new Set(["transfer", "find-new", "update", "prices", "horosho
  *  18.11 (автоімпорт у Prom): кожні 15 хв замість щогодини — щоб нове Excel потрапляло в Prom за 15–30 хв, а не за годину. */
 export const HOROSHOP_CHECK_KEY = "horoshop-check";
 export const HOROSHOP_CHECK_MINUTES = 15;
+/** Новий Excel уже є, але йде інша операція — перевірити ще раз через 3 хв (25.11). */
+export const HOROSHOP_RETRY_MINUTES = 3;
 export const HOROSHOP_BY = "Хорошоп (перевірка кожні 15 хв)";
 const ACTIVE = new Set(["DISPATCHING", "QUEUED", "RUNNING"]);
 /** Після цього часу без звісток запуск вважається завислим (job ops.yml має timeout-minutes 60) — кнопка знову доступна.
  *  Захист таблиці від цього не залежить: оренда W2 і журнал операцій не дадуть двом записувачам писати одночасно. */
 export const ACTIVE_MS = 90 * 60_000;
+/** 25.11 (власник «так»): запуск без звісток закривається сам (FAILED, стан STALE), щоб не блокувати кнопки й автоімпорт.
+ *  На сервері — 20 хв (межа виклику DO — 15 хв); у черзі GitHub — 20 хв; виконується на GitHub — 65 хв (job має timeout-minutes 60).
+ *  Якщо GitHub таки виконає запуск, runStart / runFinish поставлять справжній стан. */
+export const STALE_MS = Object.freeze({ cloudflare: 20 * 60_000, queued: 20 * 60_000, running: 65 * 60_000 });
+export const staleLimit = (r) => (r.runner === "cloudflare" ? STALE_MS.cloudflare : r.status === "RUNNING" ? STALE_MS.running : STALE_MS.queued);
 const INPUT_NAME = /^[a-z0-9-]{1,40}$/;
 const MAX_INPUT_CHARS = 1_500_000;
 const KEEP_RUNS = 200;
@@ -241,8 +248,19 @@ export class OpsCore {
       return { id: r.id, op: r.op, label: (OPS[r.op] || r.op) + (info.by === AUTO_BY ? " (автоматично)" : ""), status: r.status, at: r.at, updated: r.updated, ...info };
     });
   }
-  activeRun(now = this.now()) {
-    return this.recentRuns(10).find((r) => ACTIVE.has(r.status) && now - r.updated < ACTIVE_MS) || null;
+  activeRun(now = this.now(), { skip = null } = {}) {
+    return this.recentRuns(10).find((r) => ACTIVE.has(r.status) && !skip?.has(r.op) && now - r.updated < ACTIVE_MS) || null;
+  }
+  /** 25.11: завислі запуски (STALE_MS) → FAILED / STALE з поясненням. → кількість закритих. */
+  closeStaleRuns(now = this.now()) {
+    let n = 0;
+    for (const r of this.recentRuns(20)) {
+      if (!ACTIVE.has(r.status) || now - r.updated < staleLimit(r)) continue;
+      const min = Math.round((now - r.updated) / MIN);
+      this.setRun(r.id, "FAILED", { state: "STALE", reason: "завис", summary: `Закрито сервером: ${min} хв без звісток (${r.status === "RUNNING" ? "виконувався" : "чекав у черзі"}${r.runner ? ", " + r.runner : ""})` });
+      n++;
+    }
+    return n;
   }
   setRun(id, status, patch = {}) {
     const cur = this.rows("SELECT info FROM runs WHERE id = ?", id)[0];
@@ -374,6 +392,7 @@ export class OpsCore {
   async alarm() {
     const now = this.now();
     await this.storage.setAlarm(now + WATCH.everyMinutes * MIN);
+    this.closeStaleRuns(now);
     // Розклад «Цін»: настав час і нічого не виконується — запуск того самого шляху, що й кнопка (черга → одразу тут).
     const ps = this.metaGet(PRICES_SCHEDULE_KEY);
     if (ps?.on && now >= (Number(ps.nextAt) || 0) - 5000) {
@@ -388,23 +407,26 @@ export class OpsCore {
     // Одне важке завдання на виклик (межа Free — 50 запитів): YML — у наступному виклику, якщо щойно виконувались «Ціни».
     const fj = job ? null : this.metaGet(FEED_JOB_KEY);
     if (fj) { this.metaDel(FEED_JOB_KEY); await this.runFeedQueued(fj); }
-    const w = this.watchGet();
-    if (w.on && now >= (Number(w.nextAt) || 0) - 5000) {
-      this.watchPut({ ...w, nextAt: now + WATCH.everyMinutes * MIN });
-      let r;
-      try { r = await this.watchCheck(this.now(), { dry: false }); }
-      catch (e) { r = { result: "ERROR", message: "помилка перевірки: " + String(e?.message || e).slice(0, 200) }; }
-      this.watchPut({ ...this.watchGet(), last: { at: now, ...r } });
-    }
-    // Гібрид (рішення власника 16.11): щогодини — чи оновився «Excel (розширений)» Хорошопу; так → «Оновити з Хорошопу» (GitHub).
+    // Гібрид (рішення власника 16.11): кожні 15 хв — чи оновився «Excel (розширений)» Хорошопу; так → «Оновити з Хорошопу» (GitHub).
     // Лише коли в цьому виклику не було важкого завдання (межа Free — 50 запитів).
+    // 25.11 (власник «так»): перед автоперевіркою новинок; новий Excel чекає на іншу операцію — повтор через 3 хв, новинки не запускаються.
     const hc = this.metaGet(HOROSHOP_CHECK_KEY) || {};
+    let excelWaits = hc.last?.newer === true && (!hc.last?.state || hc.last.state === "BUSY");
     if (!job && !fj && this.env.HOROSHOP_EXCEL_URL && now >= (Number(hc.nextAt) || 0) - 5000) {
       this.metaPut(HOROSHOP_CHECK_KEY, { ...hc, nextAt: now + HOROSHOP_CHECK_MINUTES * MIN });
       let h, b = null;
       try { h = await this.horoshopNewer(); if (h.newer && !this.activeRun(this.now())) b = await this.button({ op: "horoshop", by: HOROSHOP_BY }); }
       catch (e) { h = { newer: false, reason: "помилка: " + String(e?.message || e).slice(0, 120) }; }
-      this.metaPut(HOROSHOP_CHECK_KEY, { ...this.metaGet(HOROSHOP_CHECK_KEY), last: { at: now, newer: !!h?.newer, lastModified: h?.lastModified || "", reason: h?.reason || "", state: b?.state || "" } });
+      excelWaits = h?.newer === true && (!b || b.state === "BUSY");
+      this.metaPut(HOROSHOP_CHECK_KEY, { ...this.metaGet(HOROSHOP_CHECK_KEY), ...(excelWaits ? { nextAt: now + HOROSHOP_RETRY_MINUTES * MIN } : {}), last: { at: now, newer: !!h?.newer, lastModified: h?.lastModified || "", reason: h?.reason || "", state: b?.state || "" } });
+    }
+    const w = this.watchGet();
+    if (w.on && now >= (Number(w.nextAt) || 0) - 5000) {
+      this.watchPut({ ...w, nextAt: now + WATCH.everyMinutes * MIN });
+      let r;
+      try { r = excelWaits ? { result: "BUSY", message: "новий Excel постачальника чекає на оновлення цін — новинки наступного разу" } : await this.watchCheck(this.now(), { dry: false }); }
+      catch (e) { r = { result: "ERROR", message: "помилка перевірки: " + String(e?.message || e).slice(0, 200) }; }
+      this.watchPut({ ...this.watchGet(), last: { at: now, ...r } });
     }
     // Автоімпорт у Prom (рішення власника 18.11): фід змінився — імпорт лише нашого посилання (ціна, наявність, знижка).
     // Лише без важкого завдання в цьому виклику (межа Free — 50 запитів); помилки не кидаються.
@@ -465,9 +487,10 @@ export class OpsCore {
 
   // ---------- автоімпорт у Prom (рішення власника 18.11; prom-import.mjs) ----------
   promImportGet() { return this.metaGet(PROM_IMPORT_KEY) || { on: false }; }
-  /** Зараз іде операція або оновлюється YML — імпорт після завершення (щоб не витратити 2-годинний проміжок на старий фід). */
+  /** Зараз іде операція або оновлюється YML — імпорт після завершення (щоб не витратити 2-годинний проміжок на старий фід).
+   *  25.11 (власник «так»): «Знайти нові товари» YML не змінює — імпорт її не чекає. */
   promBusy() {
-    const a = this.activeRun(this.now());
+    const a = this.activeRun(this.now(), { skip: new Set(["find-new"]) });
     if (a) return `виконується «${a.label}»`;
     if (this.metaGet(PRICES_JOB_KEY) || this.metaGet(FEED_JOB_KEY)) return "оновлюється YML";
     return "";
@@ -505,6 +528,7 @@ export class OpsCore {
       if (now - st.current.at < PROM_IMPORT.statusAfterMinutes * MIN) { this.metaPut(PROM_IMPORT_KEY, { ...st, nextAt: st.current.at + PROM_IMPORT.statusAfterMinutes * MIN }); return; }
       const s = await promImportStatus({ token, id: st.current.id, fetchImpl: this.fetchImpl });
       if (s.ok && s.final) st = { ...st, current: null, last: { at: now, result: s.status, message: `імпорт від ${from}: ${statusText(s)}`, counts: s.counts, importId: st.current.id } };
+      else if (s.ok && !(Number(s.counts?.total) > 0) && (s.status === "SUCCESS" || s.status === "PARTIAL") && now - st.current.at > PROM_IMPORT.emptyMinutes * MIN) st = { ...st, current: null, last: { at: now, result: "EMPTY", message: `імпорт від ${from}: Prom нічого не оновлював (файл не змінився)`, counts: s.counts, importId: st.current.id } };
       else if (now - st.current.at > PROM_IMPORT.staleMinutes * MIN) st = { ...st, current: null, last: { at: now, result: "UNKNOWN", message: `імпорт від ${from}: статус так і не отримано (${s.ok ? s.status || "без статусу" : s.reason})`, importId: st.current.id } };
       else st = { ...st, nextAt: now + PROM_IMPORT.statusAfterMinutes * MIN };
       this.metaPut(PROM_IMPORT_KEY, st);
