@@ -18,7 +18,7 @@ import { ownerSummary } from "../../../src/pipeline/ops-summary.mjs";
 import { FeedStore, runFeedJob, serveFeed } from "./yml-feed.mjs";
 import { horoshopMeta } from "../../../src/pipeline/horoshop-source.mjs";
 import { excelIsNewer } from "../../../src/core/horoshop.mjs";
-import { PROM_IMPORT_KEY, PROM_IMPORT, promImportReady, decidePromImport, startPromImport, promImportStatus, statusText, kyivTime } from "./prom-import.mjs";
+import { GONE, hideInProm, PROM_IMPORT_KEY, PROM_IMPORT, promImportReady, decidePromImport, startPromImport, promImportStatus, statusText, kyivTime } from "./prom-import.mjs";
 
 export const OPS = Object.freeze({
   transfer: "Перенести затверджені",
@@ -44,6 +44,8 @@ export const SCHEDULE_BY = "Розклад (сервер)";
 export const FEED_JOB_KEY = "feed-job";
 /** Операції GitHub, що змінюють картки «Основного каталогу», — після них повна збірка YML. */
 const CONTENT_OPS = new Set(["update", "transfer", "deferred"]);
+/** 25.11: черга «зникли з наявності» → Prom API (prom-import.mjs hideInProm). */
+export const PROM_GONE_KEY = "prom-gone";
 /** Кнопки меню (ключ кнопок) — лише ці дії; разові операції (відкладені товари) — лише вручну з GitHub. */
 const BUTTON_OPS = new Set(["transfer", "find-new", "update", "prices", "horoshop", "reconcile"]);
 /** Гібрид (рішення власника 16.11): перевірка дати зміни «Excel (розширений)» Хорошопу (HEAD, Last-Modified).
@@ -282,6 +284,8 @@ export class OpsCore {
       const at = pi.last?.at || pi.check?.at || null;
       if (at) last.push({ op: "prom-import", label: "Автоімпорт у Prom (після зміни фіду)", status: pi.current ? "виконується" : "увімкнено", at, updated: at, summary: (pi.last?.message || pi.check?.message || "") + wait });
     }
+    const gn = this.metaGet(PROM_GONE_KEY);
+    if (gn?.last) last.push({ op: "prom-gone", label: "Зникли з наявності → Prom одразу", status: gn.queue?.length ? "виконується" : "готово", at: gn.last.at, updated: gn.last.at, summary: gn.last.message || "" });
     if (w.on && w.last) last.push({ op: "watch", label: "Автоперевірка новинок (кожні " + WATCH.everyMinutes + " хв)", status: "увімкнено", at: w.last.at, updated: w.last.at, summary: w.last.message || w.last.result || "" });
     return { active: active ? { op: active.op, label: active.label, status: active.status, at: active.at } : null, last };
   }
@@ -382,6 +386,8 @@ export class OpsCore {
     if (this.metaGet(PRICES_JOB_KEY) || this.metaGet(FEED_JOB_KEY)) times.push(now + 1000);
     const ps = this.metaGet(PRICES_SCHEDULE_KEY);
     if (ps?.on) times.push(Math.max(now + 1000, Number(ps.nextAt) || now + MIN));
+    const gq = this.metaGet(PROM_GONE_KEY);
+    if (gq?.queue?.length) times.push(Math.max(now + 1000, Number(gq.nextAt) || now + 1000));
     const pi = this.metaGet(PROM_IMPORT_KEY);
     if (pi?.on) times.push(Math.max(now + 1000, Number(pi.nextAt) || now + MIN));
     if (this.env.HOROSHOP_EXCEL_URL) times.push(Math.max(now + 1000, Number(this.metaGet(HOROSHOP_CHECK_KEY)?.nextAt) || now + MIN));
@@ -432,6 +438,12 @@ export class OpsCore {
     }
     // Автоімпорт у Prom (рішення власника 18.11): фід змінився — імпорт лише нашого посилання (ціна, наявність, знижка).
     // Лише без важкого завдання в цьому виклику (межа Free — 50 запитів); помилки не кидаються.
+    // 25.11: зниклі з наявності — у Prom одразу (API), лише без важкого завдання в цьому виклику.
+    const gq = this.metaGet(PROM_GONE_KEY);
+    if (!job && !fj && gq?.queue?.length && now >= (Number(gq.nextAt) || 0) - 5000) {
+      try { await this.goneTick(this.now()); }
+      catch (e) { this.metaPut(PROM_GONE_KEY, { ...this.metaGet(PROM_GONE_KEY), nextAt: this.now() + GONE.retryMinutes * MIN, last: { at: now, result: "ERROR", message: "помилка: " + String(e?.message || e).slice(0, 120) } }); }
+    }
     const pi = this.metaGet(PROM_IMPORT_KEY);
     if (pi?.on && !job && !fj && now >= (Number(pi.nextAt) || 0) - 5000) {
       try { await this.promImportTick(this.now()); }
@@ -566,12 +578,34 @@ export class OpsCore {
     this.metaPut("feed-last", { at: this.now(), kind: fj.kind, why: fj.reason || "", state: out.state, reason: out.reason || "", count: out.count ?? null, patched: out.patched ?? null, metrics: out.metrics || null });
     const pi = this.metaGet(PROM_IMPORT_KEY);
     if (pi?.on && (out.state === "BUILT" || (out.state === "SYNCED" && Number(out.patched) > 0))) this.metaPut(PROM_IMPORT_KEY, { ...pi, nextAt: this.now() + MIN });
+    await this.enqueueGone(out.gone);
     return out;
+  }
+  /** 25.11: Offer ID, що зникли з наявності у фіді, — у чергу (запит до Prom — у наступному виклику, щоб не перевищити 50 запитів). */
+  async enqueueGone(ids) {
+    const list = [...new Set((Array.isArray(ids) ? ids : []).map(String))];
+    if (!list.length || !this.env.PROM_API_TOKEN) return;
+    const g = this.metaGet(PROM_GONE_KEY) || {};
+    this.metaPut(PROM_GONE_KEY, { ...g, queue: [...new Set([...(g.queue || []), ...list])], tries: 0, nextAt: this.now() });
+    await this.scheduleAlarm();
+  }
+  /** Один крок черги: сховати в Prom; збій — до GONE.tries повторів; забагато — лише імпортом. */
+  async goneTick(now) {
+    const g = this.metaGet(PROM_GONE_KEY);
+    if (!g?.queue?.length) return;
+    const queue = g.queue;
+    if (queue.length > GONE.max) { this.metaPut(PROM_GONE_KEY, { last: { at: now, result: "TOO_MANY", message: `зникли ${queue.length} товарів (межа ${GONE.max}) — сховає імпорт` } }); return; }
+    const r = await hideInProm({ token: this.env.PROM_API_TOKEN, ids: queue, fetchImpl: this.fetchImpl });
+    const bad = Object.keys(r.errors || {}).length;
+    if (r.ok) { this.metaPut(PROM_GONE_KEY, { last: { at: now, result: "HIDDEN", message: `зникли з наявності — сховано в Prom одразу: ${r.done.length} з ${queue.length}${bad ? `, помилок ${bad}` : ""}` } }); return; }
+    const tries = (Number(g.tries) || 0) + 1;
+    const last = { at: now, result: "FAILED", message: `не сховано в Prom: ${r.reason}${tries >= GONE.tries ? " — сховає імпорт" : " — повтор"}` };
+    this.metaPut(PROM_GONE_KEY, tries >= GONE.tries ? { last } : { queue: r.rest, tries, nextAt: now + GONE.retryMinutes * MIN, last });
   }
   /** Оператор: status | build | sync (одразу, з результатом) | hold {ids} (тимчасово не публікувати — рішення власника) → збірка. */
   async ymlAdmin(b) {
     const action = String(b?.action || "status");
-    if (action === "build" || action === "sync") { const out = await this.feedJob(action); this.metaPut("feed-last", { at: this.now(), kind: action, why: "оператор", state: out.state, reason: out.reason || "", count: out.count ?? null, patched: out.patched ?? null, metrics: out.metrics || null }); return out; }
+    if (action === "build" || action === "sync") { const out = await this.feedJob(action); await this.enqueueGone(out.gone); this.metaPut("feed-last", { at: this.now(), kind: action, why: "оператор", state: out.state, reason: out.reason || "", count: out.count ?? null, patched: out.patched ?? null, metrics: out.metrics || null }); return out; }
     if (action === "hold") {
       if (!Array.isArray(b?.ids) || b.ids.some((x) => !/^\d+$/.test(String(x)))) return { error: { code: "BAD_REQUEST", message: "ids — масив Offer ID" } };
       this.feed.setHold(b.ids); await this.enqueueFeed("build", "зміна списку тимчасово не публікованих");

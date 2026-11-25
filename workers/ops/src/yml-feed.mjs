@@ -101,6 +101,14 @@ export class FeedStore {
 }
 
 const configNow = () => productionConfig(structuredClone(defaultConfig));
+/** Наявність у готовому offer (атрибут available). */
+export const isAvailable = (xml) => /^<offer id="[^"]+" available="true"/.test(xml);
+/** Offer ID версії, що зараз у наявності (пачки по одній — пам'ять на одну пачку). */
+export function availableIds(feed, ver) {
+  const out = new Set();
+  if (ver && !feed.legacy(ver)) feed.eachChunk(ver, (c) => c.ids.forEach((id, i) => { if (isAvailable(c.offers[i])) out.add(id); }));
+  return out;
+}
 const objects = (values) => { const h = values[0].map((x) => mtText(x)); return values.slice(1).map((r) => Object.fromEntries(h.map((k, i) => [k, r[i] ?? ""]))); };
 
 /**
@@ -119,6 +127,7 @@ export async function buildFeed({ feed, reader, cc, now = Date.now(), config = c
   const total = (await reader.metadata()).find((s) => s.title === MAIN)?.rows || 0;
   const hold = feed.hold();
   const lastGood = { get: (id) => (prevVer ? feed.get(prevVer, id) : null) };
+  const wasAvailable = availableIds(feed, prevVer), vanished = [];
   const opts = { groupMap, pricing, missingPolicy: config.policy?.missing || "block", conflictPolicy: config.policy?.conflict || "block", removed: cc.removed, inStock: config.yml.readyToShip === true, isolateRows: true, lastGood };
   const stats = { published: 0, removed: 0, excluded: 0, held: 0, gone: 0, hold: 0, issues: [] };
   const seen = new Set();
@@ -148,6 +157,7 @@ export async function buildFeed({ feed, reader, cc, now = Date.now(), config = c
         if (o.kind === "excluded") { stats.excluded++; continue; }
         if (o.forced) { if (gone) stats.gone++; else stats.held++; }
         batch.push([ord++, id, o.xml]);
+        if (wasAvailable.has(id) && !isAvailable(o.xml)) vanished.push(id);
         stats.published++;
       }
       for (const [, id, xml] of batch) {
@@ -165,7 +175,7 @@ export async function buildFeed({ feed, reader, cc, now = Date.now(), config = c
     // Попередня версія лишається (її можуть дочитувати); старші — прибираються.
     feed.dropOlder(prevVer || ver);
   });
-  return { ver, count: stats.published, stats };
+  return { ver, count: stats.published, stats, gone: vanished };
 }
 
 /**
@@ -187,7 +197,7 @@ export async function syncFeed({ feed, reader, cc, now = Date.now(), config = co
     if (!id || hold.has(id) || cc.removed.has(id) || cc.held.has(id) || mtText(r[PRESENCE_COLUMN]).trim() === PRESENCE.GONE) continue;
     byId.set(id, r);
   }
-  const updates = [], changed = [];
+  const updates = [], changed = [], gone = [];
   let skipped = 0, seen = 0;
   // Пачки по одній: змінені offer — у пам'яті лише змінені пачки (записуються одним рядком кожна).
   feed.eachChunk(meta.ver, (c) => {
@@ -198,7 +208,7 @@ export async function syncFeed({ feed, reader, cc, now = Date.now(), config = co
       seen++;
       let next;
       try { next = patchOfferLive(c.offers[i], r, { pricing, inStock: config.yml.readyToShip === true }); } catch { skipped++; return; }
-      if (next !== c.offers[i]) { c.offers[i] = next; updates.push(id); touched = true; }
+      if (next !== c.offers[i]) { if (isAvailable(c.offers[i]) && !isAvailable(next)) gone.push(id); c.offers[i] = next; updates.push(id); touched = true; }
     });
     if (touched) changed.push(c);
   });
@@ -208,7 +218,7 @@ export async function syncFeed({ feed, reader, cc, now = Date.now(), config = co
     if (updates.length) feed.putMeta({ ...feed.meta(), changedAt: now, lastSync: { at: now, patched: updates.length } });
     else feed.putMeta({ ...feed.meta(), lastSync: { at: now, patched: 0 } });
   });
-  return { patched: updates.length, skipped, notPublished };
+  return { patched: updates.length, skipped, notPublished, gone };
 }
 
 /** Віддача фіду потоком (пам'ять — одна сторінка offer). */
@@ -257,5 +267,5 @@ export async function runFeedJob({ kind, env, store, feed, ccContractText, sha25
     return { state: "SYNCED", ...r, metrics: { ms: Date.now() - t0, subrequests: calls } };
   }
   const b = await buildFeed({ feed, reader, cc, now, config });
-  return { state: "BUILT", ver: b.ver, count: b.count, stats: b.stats, metrics: { ms: Date.now() - t0, subrequests: calls } };
+  return { state: "BUILT", ver: b.ver, count: b.count, stats: b.stats, gone: b.gone, metrics: { ms: Date.now() - t0, subrequests: calls } };
 }

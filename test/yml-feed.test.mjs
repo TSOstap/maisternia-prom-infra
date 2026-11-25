@@ -168,3 +168,20 @@ test("04.11: версія у старій таблиці yml_offer (до пач�
   assert.equal(s.needBuild, true);
   assert.ok(ids.length);
 });
+
+test("25.11: список зниклих з наявності — і після «Цін» (sync), і після повної збірки (build); «з'явились» і ті самі — не входять", { skip }, async () => {
+  const b = book(), feed = db(), rows = rowsOf(b), ids = rows.map((r) => mtText(r["Offer ID"]));
+  feed.setHold([]);
+  const h = b[MAIN][0], col = (k) => h.indexOf(k);
+  const put = (i, v) => { const nr = setLive(rowsOf(b)[i], v); for (const k of ["Ціна постачальника", "Ціна", "Ціна кінцева", "Знижка", "Наявність", "Кількість постачальника"]) b[MAIN][i + 1][col(k)] = nr[k]; };
+  const price = (i) => Number(rows[i]["Ціна постачальника"]);
+  for (const i of [5, 6, 7]) put(i, { price: price(i), available: i !== 7, qty: "" });
+  const first = await buildFeed({ feed, reader: reader(b), cc: cc0(), now: NOW, config });
+  assert.deepEqual(first.gone, [], "перша збірка — порівнювати нема з чим");
+  put(5, { price: price(5), available: false, qty: "" }); put(7, { price: price(7), available: true, qty: "" });
+  const s = await syncFeed({ feed, reader: reader(b), cc: cc0(), now: NOW + 60_000, config });
+  assert.deepEqual(s.gone, [ids[5]]);
+  put(6, { price: price(6), available: false, qty: "" });
+  const b2 = await buildFeed({ feed, reader: reader(b), cc: cc0(), now: NOW + 120_000, config });
+  assert.deepEqual(b2.gone, [ids[6]], "у збірці — лише нове зникнення, 5-й уже був «немає»");
+});

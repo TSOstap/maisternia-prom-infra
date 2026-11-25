@@ -147,3 +147,37 @@ test("розклад «Цін»: GitHub не прийняв запуск (HTTP 5
   assert.equal(core.recentRuns(1)[0].status, "QUEUED");
   assert.equal(core.metaGet("prices-schedule").nextAt, c.t + 120 * M);
 });
+
+test("зникли з наявності → Prom одразу: запит пачкою за Offer ID, «немає»; збій — повтор через 10 хв, після 3 збоїв — імпорт; понад межу — лише імпорт", { skip }, async () => {
+  const c = { t: Date.parse("2026-11-25T16:00:00Z") };
+  const posts = [];
+  let reply = () => new Response(JSON.stringify({ processed_ids: ["11", "12"], errors: {}, warnings: {} }), { status: 200 });
+  const fetchImpl = async (url, init = {}) => { if (String(url) === "https://my.prom.ua/api/v1/products/edit_by_external_id") { assert.equal(init.headers.authorization, "Bearer " + ENV.PROM_API_TOKEN); posts.push(JSON.parse(init.body)); return reply(); } throw new Error("неочікувана адреса: " + url); };
+  const storage = fakeStorage();
+  const core = new OpsCore(storage, ENV, { now: () => c.t, fetchImpl, feedJobImpl: async () => ({ state: "SYNCED", patched: 2, gone: ["11", "12"] }) });
+  await core.runFeedQueued({ kind: "sync", reason: "тест" });
+  assert.equal(posts.length, 0, "запит — у наступному виклику");
+  assert.ok((await storage.getAlarm()) <= c.t + 1000);
+  c.t += 2000; await core.alarm();
+  assert.deepEqual(posts[0], [{ id: "11", presence: "not_available" }, { id: "12", presence: "not_available" }]);
+  let g = core.metaGet("prom-gone");
+  assert.equal(g.queue, undefined); assert.equal(g.last.result, "HIDDEN"); assert.match(g.last.message, /2 з 2/);
+  assert.ok(core.status().last.some((x) => x.op === "prom-gone"));
+  // Нічого не зникло — без запитів.
+  await core.enqueueGone([]); c.t += 2000; await core.alarm();
+  assert.equal(posts.length, 1);
+  // Prom недоступний — 3 спроби, потім сховає імпорт.
+  reply = () => new Response("<html>", { status: 502 });
+  await core.enqueueGone(["21"]);
+  for (let i = 0; i < 3; i++) { c.t += 10 * M + 1000; await core.alarm(); }
+  assert.equal(posts.length, 4);
+  g = core.metaGet("prom-gone");
+  assert.equal(g.queue, undefined); assert.equal(g.last.result, "FAILED"); assert.match(g.last.message, /сховає імпорт/);
+  // Масове зникнення (схоже на збій джерела) — не ховаємо.
+  await core.enqueueGone(Array.from({ length: 301 }, (_, i) => String(1000 + i)));
+  c.t += 2000; await core.alarm();
+  assert.equal(posts.length, 4); assert.equal(core.metaGet("prom-gone").last.result, "TOO_MANY");
+  // Без токена Prom — черги немає.
+  const bare = new OpsCore(fakeStorage(), { ...ENV, PROM_API_TOKEN: "" }, { now: () => c.t, fetchImpl });
+  await bare.enqueueGone(["1"]); assert.equal(bare.metaGet("prom-gone"), null);
+});

@@ -43,8 +43,12 @@ function compactClosed(entries, lastByOp) {
   });
 }
 
+/** 25.11 (власник «так» на скорочення): 5000 записів = 6,8 млн символів, які кожен запис кілька разів повністю читає й переписує.
+ *  800 останніх — кілька днів роботи; відкриті операції й ті, що потребують рішення, лишаються завжди. */
+export const JOURNAL_MAX_ENTRIES = 800;
+
 export class OpJournal {
-  constructor({ store, resource, now = Date.now, maxEntries = 5000 }) { this.store = store; this.resource = resource; this.now = now; this.maxEntries = maxEntries; }
+  constructor({ store, resource, now = Date.now, maxEntries = JOURNAL_MAX_ENTRIES }) { this.store = store; this.resource = resource; this.now = now; this.maxEntries = maxEntries; }
   async entries() { return (await this.store.getJsonVersioned(journalKey(this.resource))).value?.entries || []; }
   /** Дописати запис від імені оренди (token). Перевірки: оренда чинна; token не менший за найбільший у журналі; CAS. */
   async append(lease, rec) {

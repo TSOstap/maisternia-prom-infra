@@ -108,6 +108,25 @@ export function isFinal(status, c = {}) {
   return done + n(c.notChanged) + n(c.withErrors) >= Number(c.total);
 }
 
+/** 25.11 (власник «давай»): товари, що зникли з наявності, — «немає» у Prom одразу (POST /products/edit_by_external_id, ID — наш Offer ID;
+ *  перевірено 25.11: токен імпорту приймається, діє миттєво), не чекаючи імпорту (до 2 год і 10 на добу). Лише «немає» — «є» ставить імпорт.
+ *  Більше max за раз — не ховаємо (схоже на збій джерела), спрацює імпорт. */
+export const GONE = Object.freeze({ perRequest: 100, max: 300, tries: 3, retryMinutes: 10 });
+export async function hideInProm({ token, ids, fetchImpl }) {
+  const done = [], errors = {};
+  for (let i = 0; i < ids.length; i += GONE.perRequest) {
+    const part = ids.slice(i, i + GONE.perRequest);
+    let r;
+    try { r = await fetchImpl(PROM_IMPORT.api + "/products/edit_by_external_id", { method: "POST", headers: headers(token), body: JSON.stringify(part.map((id) => ({ id: String(id), presence: "not_available" }))) }); }
+    catch (e) { return { ok: false, done, errors, rest: ids.slice(i), reason: "Prom недоступний (" + String(e?.name || "мережа") + ")" }; }
+    const { j, t } = await readJson(r);
+    if (r.status !== 200 || !j) return { ok: false, done, errors, rest: ids.slice(i), reason: `Prom HTTP ${r.status}: ${String(j?.error?.message || t).slice(0, 120)}` };
+    done.push(...(Array.isArray(j.processed_ids) ? j.processed_ids.map(String) : []));
+    Object.assign(errors, j.errors && typeof j.errors === "object" ? j.errors : {});
+  }
+  return { ok: true, done, errors, rest: [] };
+}
+
 /** Короткий підсумок для власника (меню «Стан останньої операції»). */
 export function statusText(s) {
   const word = { SUCCESS: "готово", PARTIAL: "готово (статус Prom PARTIAL)", FATAL: "помилка" }[s.status] || s.status || "невідомо";

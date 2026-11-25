@@ -6,7 +6,7 @@ import { MemorySheets } from "../src/pipeline/sheets-writer.mjs";
 import { OP, cellDigest, cellMatches, DIGEST_MIN_CHARS } from "../src/pipeline/safe-write/keyed-update.mjs";
 import { WriteGateway } from "../src/pipeline/safe-write/gateway.mjs";
 import { MemoryStore } from "../src/pipeline/safe-write/store.mjs";
-import { compactDetail } from "../src/pipeline/safe-write/journal.mjs";
+import { compactDetail, OpJournal, JOURNAL_MAX_ENTRIES } from "../src/pipeline/safe-write/journal.mjs";
 
 const T = "Основний каталог";
 const H = ["Offer ID", "ID постачальника", "Назва UA", "Опис постачальника UA", "Ціна", "Наявність", "Фото JSON", "SEO рішення"];
@@ -93,4 +93,19 @@ test("журнал: намір ЗАВЕРШЕНОЇ операції (≥ 4 КБ
   assert.ok(!b.compacted, "відкритий намір не стиснуто");
   assert.equal((await j.intentOf("op-b")).detail.items.length, 100, "дані для з'ясування відкритої операції цілі");
   assert.deepEqual((await j.unresolved()).map((x) => x.opId), ["op-b"]);
+});
+
+test("25.11: журнал тримає останні 800 записів; відкрита операція (INTENT без результату) лишається, хоч і давня; номери й token не губляться", async () => {
+  let t = 1_000;
+  const store = new MemoryStore();
+  const j = new OpJournal({ store, resource: "sheets-main", now: () => t });
+  const lease = { token: 1, scope: "sync", assertCurrent: async () => {} };
+  await j.append(lease, { phase: "INTENT", opId: "op-open", writer: "sync", detail: { title: T } });
+  for (let i = 0; i < JOURNAL_MAX_ENTRIES; i++) { t++; await j.append({ ...lease, token: 2 + i }, { phase: i % 2 ? "VERIFIED" : "INTENT", opId: "op-" + Math.floor(i / 2), writer: "sync", detail: { title: T } }); }
+  const e = await j.entries();
+  assert.equal(e.length, JOURNAL_MAX_ENTRIES + 1, "800 останніх + відкрита");
+  assert.ok(e.some((x) => x.opId === "op-open"));
+  assert.equal(e.at(-1).seq, JOURNAL_MAX_ENTRIES + 1);
+  assert.equal(Math.max(...e.map((x) => x.token)), JOURNAL_MAX_ENTRIES + 1);
+  await assert.rejects(j.append({ ...lease, token: 5 }, { phase: "INTENT", opId: "op-stale" }), /STALE|відхилено/);
 });
