@@ -165,6 +165,9 @@ function expectedPrices(r, price, available, pricing) {
   return variants.find(same) || own;
 }
 
+/** Брендів немає в довіднику Prom (25.11.2026, звіт імпорту «Неизвестный производитель», 18 товарів): Prom їх не приймає, а на сторінці
+ *  стоїть чужий виробник (Dacia, GMP, Yanchuan, Energy). Поле виробника для них не відправляється; у таблиці й назві бренд лишається. */
+export const VENDORS_UNKNOWN_TO_PROM = new Set(["Zymmer", "YMASU", "Yasui", "Edbird", "VMF EURO", "СИЧ", "LADDER STANDART", "OnDragon", "Bulltech", "Power Value", "NOVGEN", "Ripper", "DroGO", "Energy Drive", "Gabra", "Super Oil"]);
 /** Характеристика для Prom (рішення власника 25.11.2026, № 116). Звіт імпорту Prom: «Характеристика … с единицей измерения должна быть
  *  числом» — користувацьку характеристику з одиницею й нечисловим значенням (габарити 180×120×200, діапазон 8–12, «До 400») він відкидає
  *  або губить одиницю. Тому число лишається числом з одиницею, а решта — текст разом з одиницею, без unit. Дані в таблиці не змінюються. */
@@ -221,6 +224,7 @@ export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missin
   }
   // Збережений «Код товару Prom» — не артикул постачальника й не внутрішній ID Prom.
   for (const [tag, column] of [["vendorCode", "Код товару Prom"], ["vendor", "Виробник"], ["country", "Країна"], ["gtin", "GTIN"], ["keywords", "Запити RU"], ["keywords_ua", "Запити UA"]]) {
+    if (tag === "vendor" && VENDORS_UNKNOWN_TO_PROM.has(mtText(r[column]).trim())) continue;
     if (r[column]) body.push(element(tag, r[column]));
   }
   if (mtText(r["Запити UA"]).length > 1024 || mtText(r["Запити RU"]).length > 1024) throw new Error("Запити довші за ліміт Prom; ID " + id);

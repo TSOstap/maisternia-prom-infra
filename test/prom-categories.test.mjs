@@ -35,6 +35,9 @@ test("категорія з Prom має пріоритет: ID і посилан
   assert.notEqual(approvalManifest(plan.rows, objectsFromValues(sim.book[SHEET.groups], GROUP_HEADERS)).contentSha, approvalManifest(rows, objectsFromValues(sim.book[SHEET.groups], GROUP_HEADERS)).contentSha, "паспорт потребує оновлення (окремий погоджений запис)");
   const groups = Object.fromEntries(objectsFromValues(sim.book[SHEET.groups], GROUP_HEADERS).map((g) => [mtText(g["Ідентифікатор_групи"]), g]));
   const xml = offerXml(na, Date.parse(na["Оновлено"]), groups);
+  // 25.11 (№ 116): бренд, якого немає в довіднику Prom, не відправляється; звичайний — відправляється.
+  assert.match(offerXml({ ...na, "Виробник": "Bosch" }, Date.parse(na["Оновлено"]), groups), /<vendor>Bosch<\/vendor>/);
+  assert.doesNotMatch(offerXml({ ...na, "Виробник": "Gabra" }, Date.parse(na["Оновлено"]), groups), /<vendor>/);
   assert.match(xml, /<portal_category_id>999001<\/portal_category_id>/);
   assert.match(xml, /<portal_category_url>https:\/\/prom\.ua\/Nova-kategoriya<\/portal_category_url>/);
 });
