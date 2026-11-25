@@ -177,6 +177,8 @@ test("25.11 (№ 116): «є» — лише коли Excel «є» і Prom-фід 
   assert.deepEqual(r.stats.feedGone, ["2"], "Excel «є», фід «немає»; помилка Excel (дроп > РРЦ) — не рахується");
   assert.equal(r.offers.get("2").price, 100, "ціна — з Excel"); assert.equal(r.offers.get("2").source, "horoshop");
   assert.equal(offers.get("2").available, false, "вхід не змінено");
+  const stale = applyHoroshop(new Map([["1925870056", { id: "1925870056", price: 100, available: false, nameUa: "CUT-160", sku: "x" }]]), [row("PRO CUT-160", true)], new Map([["1925870056", 0]]));
+  assert.equal(stale.offers.get("1925870056").available, true, "CUT-160: стара картка постачальника — наявність лише з Excel"); assert.deepEqual(stale.stats.feedGone, []);
   const big = FEED_GONE_MAX + 1, R = Array.from({ length: big }, (_, i) => row("B" + i, true)), O = new Map(R.map((x, i) => ["9" + i, { id: "9" + i, price: 1, available: false, nameUa: x.n, sku: x.a }]));
   const b = applyHoroshop(O, R, new Map(R.map((_, i) => ["9" + i, i])));
   assert.equal(b.stats.feedGoneIgnored, big); assert.deepEqual(b.stats.feedGone, []);

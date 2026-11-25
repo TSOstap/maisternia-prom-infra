@@ -17,6 +17,9 @@ export const HOROSHOP_MAX_AGE_HOURS = 36;
  *  Excel оновлює власник (раз-два на добу), Prom-фід постачальник оновлює сам протягом дня. Масова розбіжність (понад межу) схожа на
  *  збій фіду — тоді діє лише Excel, а підсумок «Цін» про це пише. */
 export const FEED_GONE_MAX = 300;
+/** Картки, де «немає» у Prom-фіді нічого не означає: 1925870056 Edon PRO CUT-160 — у постачальника дві картки, продається нова
+ *  3271416398 (у нас відхилена як дубль, 12.11.2026), а стара у фіді завжди «немає». Наявність — лише з Excel. */
+export const FEED_STALE_CARDS = new Set(["1925870056"]);
 export const EXCEL_COLUMN_LIST = Object.freeze(Object.values(EXCEL_COLUMNS));
 /** Ключі сховища W2 (Durable Object): дані й коротка мітка (дата зміни файлу — для щогодинної перевірки без читання даних). */
 export const HOROSHOP_DATA_KEY = "state/horoshop/excel-compact.json";
@@ -122,7 +125,7 @@ export function pairProblem(offer, row) {
 export function applyHoroshop(offers, rows, map, confirmed = new Set()) {
   const out = new Map(offers);
   const stats = { matched: 0, price: 0, available: 0, drop: 0, priceChanged: 0, availableChanged: 0, skipped: [], namesDiffer: [], feedGone: [], feedGoneIgnored: 0 };
-  const gone = [...map].filter(([oid, i]) => offers.get(oid)?.available === false && rows[i]?.av === true && !pairProblem(offers.get(oid), rows[i])).map(([oid]) => oid);
+  const gone = [...map].filter(([oid, i]) => !FEED_STALE_CARDS.has(oid) && offers.get(oid)?.available === false && rows[i]?.av === true && !pairProblem(offers.get(oid), rows[i])).map(([oid]) => oid);
   if (gone.length > FEED_GONE_MAX) stats.feedGoneIgnored = gone.length;
   else stats.feedGone = gone;
   const hide = new Set(stats.feedGone);
