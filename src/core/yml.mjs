@@ -165,6 +165,20 @@ function expectedPrices(r, price, available, pricing) {
   return variants.find(same) || own;
 }
 
+/** Характеристика для Prom (рішення власника 25.11.2026, № 116). Звіт імпорту Prom: «Характеристика … с единицей измерения должна быть
+ *  числом» — користувацьку характеристику з одиницею й нечисловим значенням (габарити 180×120×200, діапазон 8–12, «До 400») він відкидає
+ *  або губить одиницю. Тому число лишається числом з одиницею, а решта — текст разом з одиницею, без unit. Дані в таблиці не змінюються. */
+const NUMBER_VALUE = /^-?\d+(?:[.,]\d+)?$/;
+export function promParam(value, unit) {
+  const v = value.trim(), u = unit.trim();
+  if (!u || !v || NUMBER_VALUE.test(v)) return { value, unit };
+  // Одиниця вже є в тексті окремим словом — не дублювати.
+  const has = new RegExp("(^|[^\\p{L}])" + u.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "($|[^\\p{L}])", "u").test(v);
+  if (has) return { value: v, unit: "" };
+  const tail = /^(.*\S)\s*(\([^()]*\p{L}{2}[^()]*\))$/u.exec(v); // «1.6–3.2 (5 шт.)» → «1.6–3.2 мм (5 шт.)»
+  const gap = u === "°" ? "" : /\p{L}{2}$/u.test(tail ? tail[1] : v) ? ", " : " "; // «10 вгору, 10 вниз» → «…, м»
+  return { value: tail ? tail[1] + gap + u + " " + tail[2] : v + gap + u, unit: "" };
+}
 export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missingPolicy = "block", conflictPolicy = "block", opts = {}) {
   const id = mtText(r["Offer ID"]);
   const held = opts.held === true;
@@ -222,7 +236,8 @@ export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missin
     if (!param || typeof param.name !== "string" || !param.name.trim() || typeof param.value !== "string" || typeof param.unit !== "string") {
       throw new Error("Невалідна характеристика; ID " + id);
     }
-    body.push('<param name="' + xmlAttr(param.name) + '"' + (param.unit ? ' unit="' + xmlAttr(param.unit) + '"' : "") + ">" + xmlEscape(param.value) + "</param>");
+    const { value, unit } = promParam(param.value, param.unit);
+    body.push('<param name="' + xmlAttr(param.name) + '"' + (unit ? ' unit="' + xmlAttr(unit) + '"' : "") + ">" + xmlEscape(value) + "</param>");
   }
   body.push("</offer>");
   return body.join("");

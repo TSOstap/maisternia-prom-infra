@@ -6,7 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { readXlsxColumns } from "../src/core/xlsx-lite.mjs";
-import { compactFromExcel, matchHoroshop, applyHoroshop, hybridOffers, excelIsNewer, horoshopFresh, namesAgree, pairProblem, normArticle, EXCEL_COLUMN_LIST, HOROSHOP_DATA_KEY, HOROSHOP_META_KEY } from "../src/core/horoshop.mjs";
+import { compactFromExcel, matchHoroshop, applyHoroshop, hybridOffers, excelIsNewer, horoshopFresh, namesAgree, pairProblem, normArticle, FEED_GONE_MAX, EXCEL_COLUMN_LIST, HOROSHOP_DATA_KEY, HOROSHOP_META_KEY } from "../src/core/horoshop.mjs";
 import { refreshHoroshopExcel, loadHoroshopCompact, horoshopMeta, HOROSHOP_OVERRIDES } from "../src/pipeline/horoshop-source.mjs";
 import { parseSupplierText } from "../src/core/supplier-feed.mjs";
 import { MemoryStore } from "../src/pipeline/safe-write/store.mjs";
@@ -68,12 +68,13 @@ test("16.11: підстановка — РРЦ, наявність і дроп �
   const h = hybridOffers({ parsedOffers: parsed.offers, compact: { rows: ROWS, count: ROWS.length, lastModified: "Mon, 16 Nov 2026 00:36:28 GMT" } });
   assert.equal(JSON.stringify([...parsed.offers.entries()]), before);
   const o = h.offers.get("2492383482");
-  assert.equal(o.price, 9699); assert.equal(o.available, true); assert.equal(o.drop, 8729.1); assert.equal(o.source, "horoshop"); assert.equal(o.nameUa, "Акумулятор");
+  assert.equal(o.price, 9699); assert.equal(o.drop, 8729.1);
+  assert.equal(o.available, false, "25.11 (№ 116): Excel «є», Prom-фід «немає» → «немає»"); assert.deepEqual(h.stats.feedGoneList, ["2492383482"]); assert.equal(o.source, "horoshop"); assert.equal(o.nameUa, "Акумулятор");
   assert.equal(h.offers.get("104").price, 999, "без пари — Prom-фід");
   assert.equal(h.stats.matched, 1); assert.equal(h.stats.withoutPair, 1); assert.equal(h.stats.priceChanged, 1);
   assert.match(h.stats.date, /16 Nov 2026/);
   const ap = applyHoroshop(parsed.offers, ROWS, new Map([["2492383482", 0]]));
-  assert.equal(ap.stats.availableChanged, 1); assert.equal(ap.stats.drop, 1);
+  assert.equal(ap.stats.availableChanged, 0); assert.equal(ap.stats.drop, 1);
 });
 
 test("16.11: оновлення списку — у сховище (дані + мітка), неповний / зламаний файл і HTTP-помилка не чіпають список; читання на обох шляхах", async () => {
@@ -163,4 +164,21 @@ test("16.11 (захист): Excel старший за 36 год — не сві�
   assert.equal(horoshopFresh({ lastModified: "Mon, 16 Nov 2026 00:36:28 GMT" }, now), true);
   assert.equal(horoshopFresh({ lastModified: "Fri, 13 Nov 2026 00:36:28 GMT" }, now), false);
   assert.equal(horoshopFresh({}, now), false);
+});
+
+test("25.11 (№ 116): «є» — лише коли Excel «є» і Prom-фід не «немає»; помилка Excel — як раніше; масова розбіжність — лише Excel", () => {
+  const row = (a, av, x = {}) => ({ a, d: a, p: 100, dr: 90, o: null, av, n: "Товар " + a, ...x });
+  const off = (id, available) => [id, { id, price: 100, available, nameUa: "Товар A" + id, sku: "A" + id }];
+  const rows = [row("A1", true), row("A2", true), row("A3", false), row("A4", false), row("A5", true), row("A6", null), row("A7", true, { p: 10, dr: 90 })];
+  const offers = new Map([off("1", true), off("2", false), off("3", true), off("4", false), off("5", null), off("6", false), off("7", false)]);
+  const map = new Map(rows.map((_, i) => [String(i + 1), i]));
+  const r = applyHoroshop(offers, rows, map);
+  assert.deepEqual([...r.offers.values()].map((o) => o.available), [true, false, false, false, true, false, false]);
+  assert.deepEqual(r.stats.feedGone, ["2"], "Excel «є», фід «немає»; помилка Excel (дроп > РРЦ) — не рахується");
+  assert.equal(r.offers.get("2").price, 100, "ціна — з Excel"); assert.equal(r.offers.get("2").source, "horoshop");
+  assert.equal(offers.get("2").available, false, "вхід не змінено");
+  const big = FEED_GONE_MAX + 1, R = Array.from({ length: big }, (_, i) => row("B" + i, true)), O = new Map(R.map((x, i) => ["9" + i, { id: "9" + i, price: 1, available: false, nameUa: x.n, sku: x.a }]));
+  const b = applyHoroshop(O, R, new Map(R.map((_, i) => ["9" + i, i])));
+  assert.equal(b.stats.feedGoneIgnored, big); assert.deepEqual(b.stats.feedGone, []);
+  assert.ok([...b.offers.values()].every((o) => o.available === true), "схоже на збій фіду — наявність з Excel");
 });

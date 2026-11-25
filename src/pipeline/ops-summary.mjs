@@ -61,6 +61,9 @@ export function ownerSummary(op, report) {
       const ids = (xs, k = 5) => xs.slice(0, k).map((x) => x.id).join(", ") + (xs.length > k ? "…" : "");
       const skipped = n(hs.skipped) ? `; не застосовано ${n(hs.skipped)} — помилка в Excel (дроп більший за РРЦ), ціна й наявність з Prom-фіду: ${ids(hs.skippedList || [])}` : "";
       lines.push(`РРЦ і наявність із Хорошопу (Excel від ${hs.date || "?"}): ${n(hs.matched)} товарів, ціна змінилась у ${n(hs.priceChanged)}; без пари ${n(hs.withoutPair)} — з Prom-фіду${n(hs.ambiguous) ? `; неоднозначних ${n(hs.ambiguous)}` : ""}${skipped}`);
+      // Рішення власника 25.11: «ховати, якщо «немає» каже хоч одне джерело».
+      if (n(hs.feedGone)) lines.push(`«Немає» за Prom-фідом постачальника (в Excel ще «є»): ${n(hs.feedGone)} — ${(hs.feedGoneList || []).slice(0, 8).join(", ")}${n(hs.feedGone) > 8 ? "…" : ""}`);
+      if (n(hs.feedGoneIgnored)) lines.push(`Увага: Prom-фід каже «немає» у ${n(hs.feedGoneIgnored)} товарів, які в Excel є, — схоже на збій фіду, наявність лише з Excel`);
       if (n(hs.namesDiffer)) lines.push(`Назви в Excel і Prom-фіді різні (взято за артикулом, для перевірки): ${n(hs.namesDiffer)} — ${ids(hs.namesDifferList || [], 8)}`);
     }
     if (n(st.dropChanged)) lines.push(`«Дроп-ціна» (з Excel): оновлено ${n(st.dropChanged)}`);

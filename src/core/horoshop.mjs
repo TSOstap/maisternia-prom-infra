@@ -13,6 +13,10 @@
 export const EXCEL_COLUMNS = Object.freeze({ art: "Артикул", disp: "Артикул для отображения на сайте", price: "Цена", drop: "Дроп ціна", old: "Старая цена", avail: "Наличие", qty: "Количество", name: "Название (UA)", brand: "Бренд" });
 /** Excel старший за це — не застосовується (ціни й наявність із Prom-фіду; підсумок «Цін» просить оновити Excel). */
 export const HOROSHOP_MAX_AGE_HOURS = 36;
+/** Рішення власника 25.11.2026 (№ 116; G0156 замовили, коли Excel ще казав «є»): «ховати, якщо «немає» каже хоч одне джерело» —
+ *  Excel оновлює власник (раз-два на добу), Prom-фід постачальник оновлює сам протягом дня. Масова розбіжність (понад межу) схожа на
+ *  збій фіду — тоді діє лише Excel, а підсумок «Цін» про це пише. */
+export const FEED_GONE_MAX = 300;
 export const EXCEL_COLUMN_LIST = Object.freeze(Object.values(EXCEL_COLUMNS));
 /** Ключі сховища W2 (Durable Object): дані й коротка мітка (дата зміни файлу — для щогодинної перевірки без читання даних). */
 export const HOROSHOP_DATA_KEY = "state/horoshop/excel-compact.json";
@@ -111,12 +115,17 @@ export function pairProblem(offer, row) {
   return null;
 }
 
-/** Ціна (РРЦ), наявність і дроп Excel в оффери Prom-фіду (новий Map; вхідний не змінюється). Пара з проблемою (pairProblem) — без
+/** Ціна (РРЦ), наявність і дроп Excel в оффери Prom-фіду (новий Map; вхідний не змінюється). Наявність: «є» — лише коли Excel каже «є»
+ *  і Prom-фід не каже «немає» (25.11.2026, № 116; FEED_GONE_MAX). Пара з проблемою (pairProblem) — без
  *  підстановки (Prom-фід), у stats.skipped. Різні назви — застосовується, у stats.namesDiffer (крім винятків власника — confirmed:
  *  Set Offer ID, пару яких підтвердив власник). → { offers, stats } */
 export function applyHoroshop(offers, rows, map, confirmed = new Set()) {
   const out = new Map(offers);
-  const stats = { matched: 0, price: 0, available: 0, drop: 0, priceChanged: 0, availableChanged: 0, skipped: [], namesDiffer: [] };
+  const stats = { matched: 0, price: 0, available: 0, drop: 0, priceChanged: 0, availableChanged: 0, skipped: [], namesDiffer: [], feedGone: [], feedGoneIgnored: 0 };
+  const gone = [...map].filter(([oid, i]) => offers.get(oid)?.available === false && rows[i]?.av === true && !pairProblem(offers.get(oid), rows[i])).map(([oid]) => oid);
+  if (gone.length > FEED_GONE_MAX) stats.feedGoneIgnored = gone.length;
+  else stats.feedGone = gone;
+  const hide = new Set(stats.feedGone);
   for (const [oid, i] of map) {
     const o = offers.get(oid), r = rows[i];
     if (!o || !r) continue;
@@ -126,7 +135,7 @@ export function applyHoroshop(offers, rows, map, confirmed = new Set()) {
     stats.matched++;
     const next = { ...o, source: "horoshop" };
     if (r.p != null) { stats.price++; if (o.price !== r.p) stats.priceChanged++; next.price = r.p; }
-    if (r.av != null) { stats.available++; if (o.available !== r.av) stats.availableChanged++; next.available = r.av; }
+    if (r.av != null) { stats.available++; const av = r.av && !hide.has(oid); if (o.available !== av) stats.availableChanged++; next.available = av; }
     if (r.dr != null) { stats.drop++; next.drop = r.dr; }
     out.set(oid, next);
   }
@@ -152,6 +161,7 @@ export function hybridOffers({ parsedOffers, compact, overrides = {} }) {
       byId: m.stats.byId, byArticle: m.stats.byArticle, byDisplay: m.stats.byDisplay, byOverride: m.stats.override,
       ambiguous: m.stats.ambiguous.length, ambiguousIds: m.stats.ambiguous.slice(0, 50), skipped: ap.stats.skipped.length, skippedList: ap.stats.skipped.slice(0, 50),
       namesDiffer: ap.stats.namesDiffer.length, namesDifferList: ap.stats.namesDiffer.slice(0, 20),
+      feedGone: ap.stats.feedGone.length, feedGoneList: ap.stats.feedGone.slice(0, 50), feedGoneIgnored: ap.stats.feedGoneIgnored,
       withoutPair: parsedOffers.size - ap.stats.matched,
       // Рядки Excel, яким не знайшлося оффера в Prom-фіді (товари є на сайті постачальника, але не в Prom-фіді) — для пояснення власнику.
       ...excelNoPair(compact.rows, m.map) },
