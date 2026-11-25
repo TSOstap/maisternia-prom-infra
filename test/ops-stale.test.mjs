@@ -133,3 +133,17 @@ test("імпорт «файл не змінився»: лічильники та
   const st = core.promImportGet();
   assert.equal(st.current, null); assert.equal(st.last.result, "EMPTY"); assert.match(st.last.message, /не змінився/);
 });
+
+test("розклад «Цін»: GitHub не прийняв запуск (HTTP 500) — повтор через 15 хв, а не через 2 год", { skip }, async () => {
+  const c = { t: Date.parse("2026-11-25T15:44:00Z") };
+  let status = 500;
+  const fetchImpl = async (url) => { if (String(url).startsWith("https://api.github.com/")) return new Response(status === 204 ? null : "{}", { status }); throw new Error("неочікувана адреса: " + url); };
+  const core = new OpsCore(fakeStorage(), ENV, { now: () => c.t, fetchImpl });
+  await core.pricesSchedule({ on: true, everyMinutes: 120 });
+  c.t += M; await core.alarm();
+  assert.equal(core.recentRuns(1)[0].status, "DISPATCH_FAILED");
+  assert.equal(core.metaGet("prices-schedule").nextAt, c.t + 15 * M);
+  status = 204; c.t += 15 * M; await core.alarm();
+  assert.equal(core.recentRuns(1)[0].status, "QUEUED");
+  assert.equal(core.metaGet("prices-schedule").nextAt, c.t + 120 * M);
+});

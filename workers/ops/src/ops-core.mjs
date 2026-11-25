@@ -401,6 +401,8 @@ export class OpsCore {
       this.metaPut(PRICES_SCHEDULE_KEY, { ...this.metaGet(PRICES_SCHEDULE_KEY), last: { at: now, state: b?.state ?? "QUEUED", message: String(b?.message || "").slice(0, 200) } });
       // 04.11: зайнято іншою операцією («Уже виконується») — не чекати весь інтервал, повторити через 10 хв.
       if (b?.state === "BUSY") this.metaPut(PRICES_SCHEDULE_KEY, { ...this.metaGet(PRICES_SCHEDULE_KEY), nextAt: now + 10 * MIN });
+      // 25.11: GitHub тимчасово не прийняв запуск (напр. HTTP 500) — повтор через 15 хв, а не через весь інтервал.
+      if (b?.state === "ERROR") this.metaPut(PRICES_SCHEDULE_KEY, { ...this.metaGet(PRICES_SCHEDULE_KEY), nextAt: now + 15 * MIN });
     }
     const job = this.metaGet(PRICES_JOB_KEY);
     if (job) { this.metaDel(PRICES_JOB_KEY); await this.runPricesQueued(job); }
