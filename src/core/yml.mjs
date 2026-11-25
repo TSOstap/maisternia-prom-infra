@@ -165,9 +165,9 @@ function expectedPrices(r, price, available, pricing) {
   return variants.find(same) || own;
 }
 
-/** Брендів немає в довіднику Prom (25.11.2026, звіт імпорту «Неизвестный производитель», 18 товарів): Prom їх не приймає, а на сторінці
+/** Брендів немає в довіднику Prom (25.11.2026, звіт імпорту «Неизвестный производитель», 19 товарів): Prom їх не приймає, а на сторінці
  *  стоїть чужий виробник (Dacia, GMP, Yanchuan, Energy). Поле виробника для них не відправляється; у таблиці й назві бренд лишається. */
-export const VENDORS_UNKNOWN_TO_PROM = new Set(["Zymmer", "YMASU", "Yasui", "Edbird", "VMF EURO", "СИЧ", "LADDER STANDART", "OnDragon", "Bulltech", "Power Value", "NOVGEN", "Ripper", "DroGO", "Energy Drive", "Gabra", "Super Oil"]);
+export const VENDORS_UNKNOWN_TO_PROM = new Set(["Zymmer", "YMASU", "Yasui", "Edbird", "VMF EURO", "СИЧ", "LADDER STANDART", "OnDragon", "Bulltech", "Power Value", "NOVGEN", "Ripper", "DroGO", "Energy Drive", "Gabra", "Super Oil", "MAXXT"]);
 /** Характеристика для Prom (рішення власника 25.11.2026, № 116). Звіт імпорту Prom: «Характеристика … с единицей измерения должна быть
  *  числом» — користувацьку характеристику з одиницею й нечисловим значенням (габарити 180×120×200, діапазон 8–12, «До 400») він відкидає
  *  або губить одиницю. Тому число лишається числом з одиницею, а решта — текст разом з одиницею, без unit. Дані в таблиці не змінюються. */
