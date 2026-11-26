@@ -168,6 +168,15 @@ function expectedPrices(r, price, available, pricing) {
 /** Брендів немає в довіднику Prom (25.11.2026, звіт імпорту «Неизвестный производитель», 19 товарів): Prom їх не приймає, а на сторінці
  *  стоїть чужий виробник (Dacia, GMP, Yanchuan, Energy). Поле виробника для них не відправляється; у таблиці й назві бренд лишається. */
 export const VENDORS_UNKNOWN_TO_PROM = new Set(["Zymmer", "YMASU", "Yasui", "Edbird", "VMF EURO", "СИЧ", "LADDER STANDART", "OnDragon", "Bulltech", "Power Value", "NOVGEN", "Ripper", "DroGO", "Energy Drive", "Gabra", "Super Oil", "MAXXT"]);
+/** Рішення власника 26.11.2026 (№ 117): бренд, якого немає в довіднику Prom, — у користувацьку характеристику «Бренд»,
+ *  якщо в товарі ще немає характеристики «Бренд» / «Виробник» (дані власника мають пріоритет). Таблиця не змінюється. */
+const BRAND_PARAM_NAME = /^(бренд|виробник|производитель|brand)(\s*\/.*)?$/iu; // «Бренд», «Бренд / Назва»; не «Виробник та модель двигуна»
+export function brandParam(vendor, params) {
+  const v = mtText(vendor).trim();
+  if (!VENDORS_UNKNOWN_TO_PROM.has(v)) return null;
+  if ((params || []).some((p) => p && BRAND_PARAM_NAME.test(String(p.name || "").trim()))) return null;
+  return { name: "Бренд", value: v, unit: "" };
+}
 /** Характеристика для Prom (рішення власника 25.11.2026, № 116). Звіт імпорту Prom: «Характеристика … с единицей измерения должна быть
  *  числом» — користувацьку характеристику з одиницею й нечисловим значенням (габарити 180×120×200, діапазон 8–12, «До 400») він відкидає
  *  або губить одиницю. Тому число лишається числом з одиницею, а решта — текст разом з одиницею, без unit. Дані в таблиці не змінюються. */
@@ -243,6 +252,8 @@ export function offerXml(r, success, groupMap, pricing = DEFAULT_PRICING, missin
     const { value, unit } = promParam(param.value, param.unit);
     body.push('<param name="' + xmlAttr(param.name) + '"' + (unit ? ' unit="' + xmlAttr(unit) + '"' : "") + ">" + xmlEscape(value) + "</param>");
   }
+  const brand = brandParam(r["Виробник"], params);
+  if (brand) body.push('<param name="' + xmlAttr(brand.name) + '">' + xmlEscape(brand.value) + "</param>");
   body.push("</offer>");
   return body.join("");
 }

@@ -1,7 +1,7 @@
 // 25.11.2026 (№ 116): характеристики з одиницею й нечисловим значенням — одиниця в тексті (Prom приймає одиницю лише з числом).
 import test from "node:test";
 import assert from "node:assert/strict";
-import { promParam } from "../src/core/yml.mjs";
+import { promParam, brandParam } from "../src/core/yml.mjs";
 
 const P = (v, u) => { const x = promParam(v, u); return x.unit ? x.value + " |" + x.unit : x.value; };
 
@@ -34,4 +34,18 @@ test("одиниця вже в тексті — не дублюється; ча�
   assert.equal(P("10 мм / 3", "м"), "10 мм / 3 м");
   assert.equal(P("3 л/хв і 5", "л/хв"), "3 л/хв і 5");
   assert.equal(P("5 (град.)", "град."), "5 (град.)");
+});
+
+test("26.11 (№ 117): бренд, якого немає в довіднику Prom, — характеристика «Бренд», якщо такої ще немає", () => {
+  assert.deepEqual(brandParam("YMASU", [{ name: "Потужність", value: "3", unit: "кВт" }]), { name: "Бренд", value: "YMASU", unit: "" });
+  assert.deepEqual(brandParam(" Gabra ", []), { name: "Бренд", value: "Gabra", unit: "" });
+  assert.deepEqual(brandParam("Yasui", [{ name: "Марка двигуна", value: "Yasui", unit: "" }]), { name: "Бренд", value: "Yasui", unit: "" });
+  assert.deepEqual(brandParam("Yasui", [{ name: "Виробник та модель двигуна", value: "Yasui Y98G", unit: "" }]), { name: "Бренд", value: "Yasui", unit: "" }, "це про двигун");
+  assert.equal(brandParam("Bosch", []), null, "бренд є в довіднику — йде в <vendor>");
+  assert.equal(brandParam("", []), null);
+  assert.equal(brandParam("СИЧ", [{ name: "Бренд", value: "СИЧ", unit: "" }]), null, "уже є «Бренд»");
+  assert.equal(brandParam("Ripper", [{ name: "Бренд", value: "Ripper (Mar-Pol)", unit: "" }]), null, "дані власника мають пріоритет");
+  assert.equal(brandParam("MAXXT", [{ name: "Виробник", value: "MAXXT", unit: "" }]), null);
+  assert.equal(brandParam("Super Oil", [{ name: "Бренд / Назва", value: "Super Oil", unit: "" }]), null);
+  assert.deepEqual(brandParam("YMASU", [{ name: "Країна реєстрації бренду", value: "Польща", unit: "" }]), { name: "Бренд", value: "YMASU", unit: "" });
 });
